@@ -155,6 +155,7 @@ uint32_t Texture::LoadTexture(const wchar_t* fileName)
 		}
 	}
 
+	return 0;
 }
 
 void Texture::Initialize(ID3D12Device* device)

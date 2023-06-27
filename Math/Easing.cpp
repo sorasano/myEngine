@@ -9,7 +9,7 @@ DirectX::XMFLOAT2 EaseIn(DirectX::XMFLOAT2 start, DirectX::XMFLOAT2 end, float t
 	float nowTime;
 
 	//ここにイージングの式を入れる
-	nowTime = pow(timer, 3);
+	nowTime = static_cast<float>(pow(timer, 3));
 
 	DirectX::XMFLOAT2 resultVec;
 	resultVec.x = start.x * (1.0f - nowTime) + end.x * nowTime;
@@ -23,7 +23,7 @@ DirectX::XMFLOAT2 EaseOut(DirectX::XMFLOAT2 start, DirectX::XMFLOAT2 end, float 
 	float nowTime;
 
 	//ここにイージングの式を入れる
-	nowTime = 1 - pow(1 - timer, 3);
+	nowTime = static_cast <float>(1 - pow(1 - timer, 3));
 
 	DirectX::XMFLOAT2 resultVec;
 	resultVec.x = start.x * (1.0f - nowTime) + end.x * nowTime;

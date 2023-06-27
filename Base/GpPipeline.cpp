@@ -75,7 +75,7 @@ void GpPipeline::SetPipeline(ID3DBlob* vsBlob, ID3DBlob* psBlob, std::vector<D3D
 
 	// 頂点レイアウトの設定
 	desc.InputLayout.pInputElementDescs = inputLayout.data();
-	desc.InputLayout.NumElements = inputLayout.size();
+	desc.InputLayout.NumElements = static_cast<UINT>(inputLayout.size());
 
 	// 図形の形状設定
 	if (primitiveNum == 0) {
