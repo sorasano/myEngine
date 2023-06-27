@@ -74,7 +74,7 @@ public:
 	ComPtr<ID3D12PipelineState> GetPipelinestate() { return pipelinestate; };
 	ComPtr<ID3D12RootSignature> GetRootSignature() { return rootsignature; };
 	CD3DX12_GPU_DESCRIPTOR_HANDLE GetSrv() { return gpuDescHandleSRV; };
-	UINT GetIndicesSize() { return indices.size(); };
+	UINT GetIndicesSize() { return (UINT)sizeof(indices.size()); };
 public:
 	DirectXCommon* dx = nullptr;
 	ComPtr<ID3D12Resource> constBuffMaterial;
@@ -82,8 +82,8 @@ public:
 	D3D12_RECT scissorRect{};
 	D3D12_VIEWPORT viewport{};
 
-	D3D12_INDEX_BUFFER_VIEW ibView;
-	D3D12_VERTEX_BUFFER_VIEW vbView;		//頂点バッファビュー
+	D3D12_INDEX_BUFFER_VIEW ibView = {};
+	D3D12_VERTEX_BUFFER_VIEW vbView = {};		//頂点バッファビュー
 	uint32_t textureIndex = 0;	//テクスチャ番号
 
 private:
@@ -121,7 +121,7 @@ private:
 	// デスクリプタヒープ
 	ComPtr<ID3D12DescriptorHeap> descHeap;
 	// デスクリプタサイズ
-	UINT descriptorHandleIncrementSize;
+	UINT descriptorHandleIncrementSize = 0;
 	// テクスチャバッファ
 	ComPtr<ID3D12Resource> texbuff;
 	// シェーダリソースビューのハンドル(CPU)

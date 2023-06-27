@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-#include "fbxsdk.h"
 #include "FbxModel.h"
 
 #include <d3d12.h>

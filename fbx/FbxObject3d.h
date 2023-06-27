@@ -84,7 +84,7 @@ private:
 	//ローカル座標
 	XMFLOAT3 position = { 0,0,0 };
 	//ローカルワールド変換行列
-	XMMATRIX matWorld;
+	XMMATRIX matWorld = {};
 	//モデル
 	FbxModel* model = nullptr;
 

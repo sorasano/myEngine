@@ -4,7 +4,14 @@
 #include <vector>
 #include <DirectXmath.h>
 #include <DirectXTex.h>
+
+#pragma warning(push)
+#pragma warning(disable:26495)
+#pragma warning(disable:26813)
+#pragma warning(disable:26451)
 #include <fbxsdk.h>
+#pragma warning(pop)
+
 
 #include "windows.h"
 #include "wrl.h"

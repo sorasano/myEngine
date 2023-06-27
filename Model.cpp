@@ -20,7 +20,6 @@ Model* Model::GetInstance()
 void Model::Initialize(DirectXCommon* dx_, const std::string& filename, const std::string& resourcename)
 {
 	dx = dx_;
-	HRESULT result;
 
 	//デスクリプタ初期化
 	InitializeDesc();

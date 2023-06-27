@@ -35,7 +35,7 @@ private:
 	//カメラ
 	std::unique_ptr<Camera> camera_;
 
-	ID3D12GraphicsCommandList* commandList;
+	ID3D12GraphicsCommandList* commandList = nullptr;
 
 	//オブジェクト
 	std::unique_ptr<Object3D> object3Ds_;
@@ -66,8 +66,8 @@ private:
 	Sprite* test2Sprite = nullptr;
 
 	//パーティクル
-	ParticleManager* particle1;
-	ParticleManager* particle2;
+	ParticleManager* particle1 = nullptr;
+	ParticleManager* particle2 = nullptr;
 
 	//アフィン変換情報
 	XMFLOAT3 scale_ = { 1,1,1 };
@@ -81,7 +81,7 @@ private:
 	XMFLOAT3 up = { 0, 1, 0 };
 
 	//当たり判定
-	bool hit;
+	bool hit = false;
 
 };
 

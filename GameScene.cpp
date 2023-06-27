@@ -22,7 +22,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 	this->input_ = input_;
 
 	//•`‰æ‰Šú‰»ˆ—@‚±‚±‚©‚ç
-	HRESULT result;
 
 	//ƒJƒƒ‰
 	//ƒJƒƒ‰‰Šú‰»

@@ -23,11 +23,11 @@ public:
 	ConstBufferCamera* constMap = nullptr;
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff;
 
-	XMMATRIX matView;
-	XMMATRIX matProjection;
-	XMFLOAT3 eye;
-	XMFLOAT3 target;
-	XMFLOAT3 up;
+	XMMATRIX matView = {};
+	XMMATRIX matProjection = {};
+	XMFLOAT3 eye = {};
+	XMFLOAT3 target = {};
+	XMFLOAT3 up = {} ;
 
 public:
 
