@@ -12,49 +12,27 @@ Player::Player()
 
 Player::~Player()
 {
+	FBX_SAFE_DELETE(playerObject);
 }
 
-void Player::Initialize(DirectXCommon* dx,Model* model)
+void Player::Initialize(FbxModel* model)
 {
-	//引数から受け取った値を代入
-	this->dx_ = dx;
-	this->model_ = model;
+	//3dオブジェクト生成とモデルのセット
+	playerObject = new FbxObject3D;
+	playerObject->Initialize();
+	playerObject->SetModel(model);
 
-	//オブジェクト初期化
-	Object3D* newObject = new Object3D();
-	newObject->Initialize(dx_, model_);
-	object3d_.reset(newObject);
 }
 
-void Player::Update(XMMATRIX& matView, XMMATRIX& matProjection)
+void Player::Update()
 {
-	//position_.x += 0.02;
-
-
-
-	object3d_->setPosition(position_);
-	object3d_->setRotation(rotation_);
-	object3d_->setScale(scale_);
-	//オブジェクト更新
-	object3d_->Update(matView, matProjection);
+	playerObject->SetPosition(position_);
+	playerObject->SetScale(scale_);
+	playerObject->SetRotate(rotation_);
+	playerObject->Update();
 }
 
-void Player::Draw()
+void Player::Draw(ID3D12GraphicsCommandList* cmdList)
 {
-	object3d_->Draw(model_->vbView, model_->ibView);
-}
-
-void Player::setPosition(XMFLOAT3 pos)
-{ 
-	position_ = pos;
-}
-
-void Player::setRotation(XMFLOAT3 rot)
-{
-	rotation_ = rot;
-}
-
-void Player::setScale(XMFLOAT3 sca)
-{
-	scale_ = sca;
+	playerObject->Draw(cmdList);
 }

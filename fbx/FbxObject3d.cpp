@@ -205,6 +205,15 @@ void FbxObject3D::Initialize()
 		nullptr,
 		IID_PPV_ARGS(&constBuffSkin)
 	);
+
+	//定数バッファへデータ転送
+	ConstBufferDataSkin* constMapSkin = nullptr;
+	result = constBuffSkin->Map(0, nullptr, (void**)&constMapSkin);
+	for (int i = 0; i < MAX_BONES; i++)
+	{
+		constMapSkin->bones[i] = XMMatrixIdentity();
+	}
+	constBuffSkin->Unmap(0, nullptr);
 }
 
 void FbxObject3D::Update()

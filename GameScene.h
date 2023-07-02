@@ -37,24 +37,17 @@ private:
 
 	ID3D12GraphicsCommandList* commandList = nullptr;
 
-	//オブジェクト
-	std::unique_ptr<Object3D> object3Ds_;
-	//球オブジェクト
-	std::unique_ptr<Model> sphereModel_;
-	std::unique_ptr<Sphere> sphere_;
-
-	std::unique_ptr<Model> sphereRedModel_;
-	std::unique_ptr<Sphere> sphereRed_;
-
 	//Fbx
-	FbxModel* fbxModel1 = nullptr;
-	FbxObject3D* fbxObject1 = nullptr;
+	FbxModel* playerModel = nullptr;
 
 	FbxModel* fbxModel2 = nullptr;
 	FbxObject3D* fbxObject2 = nullptr;
 
 	//カメラ初期化
 	Camera* camera{};
+
+	//プレイヤー
+	std::unique_ptr<Player> player_;
 
 	//----スプライト----
 

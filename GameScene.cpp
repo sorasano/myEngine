@@ -11,8 +11,9 @@ GameScene::~GameScene()
 	delete camera;
 	delete particle1;
 	delete particle2;
-	FBX_SAFE_DELETE(fbxModel1);
-	FBX_SAFE_DELETE(fbxObject1);
+	FBX_SAFE_DELETE(playerModel);
+	FBX_SAFE_DELETE(fbxModel2);
+	FBX_SAFE_DELETE(fbxObject2);
 }
 
 void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
@@ -39,14 +40,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 	FbxObject3D::CreateGraphicsPipeline();
 
 	//モデル名を指定してファイル読み込み
-	fbxModel1 = FbxLoader::GetInstance()->LoadModelFromFile("cube");
-
-	//3dオブジェクト生成とモデルのセット
-	fbxObject1 = new FbxObject3D;
-	fbxObject1->Initialize();
-	fbxObject1->SetModel(fbxModel1);
-
-	//モデル名を指定してファイル読み込み
+	playerModel = FbxLoader::GetInstance()->LoadModelFromFile("cube");
 	fbxModel2 = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
 
 	//3dオブジェクト生成とモデルのセット
@@ -55,68 +49,12 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 	fbxObject2->SetModel(fbxModel2);
 	fbxObject2->PlayAnimation();
 
-	//3dモデル
-	//----------球----------
-	//球オブジェクトのモデル初期化
-	Model* newSphereModel = new Model();
-	newSphereModel->Initialize(dxCommon, "sphere", "Resources/sphere/white1×1.png");
-	sphereModel_.reset(newSphereModel);
-
-	//球オブジェクト初期化
-	Sphere* newSphere = new Sphere();
-	newSphere->Initialize(dxCommon, sphereModel_.get());
-	sphere_.reset(newSphere);
-
-	//球オブジェクトのモデル初期化
-	Model* newSphereRedModel = new Model();
-	newSphereRedModel->Initialize(dxCommon, "sphere", "Resources/sphere/red1x1.png");
-	sphereRedModel_.reset(newSphereRedModel);
-
-	//球オブジェクト初期化
-	Sphere* newRedSphere = new Sphere();
-	newRedSphere->Initialize(dxCommon, sphereRedModel_.get());
-	sphereRed_.reset(newRedSphere);
-
-	//---------地面-----------
-
-	////地面オブジェクト
-	//std::unique_ptr<Model> planeModel_;
-	//std::unique_ptr<Plane> plane_;
-
-	////地面オブジェクトのモデル初期化
-	//Model* newPlaneModel = new Model();
-	//newPlaneModel->Initialize(dxCommon, "plane", "Resources/plane/white1×1.png");
-	//planeModel_.reset(newPlaneModel);
-
-	////地面オブジェクト初期化
-	//Plane* newPlane = new Plane();
-	//newPlane->Initialize(dxCommon,planeModel_.get());
-	//plane_.reset(newPlane);
-
-
 	//------------プレイヤー----------
 
-	//プレイヤーのモデル
-	//std::unique_ptr<Model> playerModel_;
-
-	////プレイヤー
-	//std::unique_ptr<Player> player_;
-
-	////プレイヤーのモデル初期化
-	//Model* newModel = new Model();
-	//newModel->Initialize(dxCommon, "Player", "Resources/Player/blue.png");
-	//playerModel_.reset(newModel);
-
-	////プレイヤー初期化
-	//Player* newPlayer = new Player();
-	//newPlayer->Initialize(dxCommon, playerModel_.get());
-	//player_.reset(newPlayer);
-
-	//当たり判定
-
-	////球
-	sphere_->sphereCol.radius = 1;
-	sphere_->sphereCol.center = XMVECTOR{ sphere_->GetPosition().x, sphere_->GetPosition().y, sphere_->GetPosition().z,1 };
+	//プレイヤー初期化
+	Player* newPlayer = new Player();
+	newPlayer->Initialize(playerModel);
+	player_.reset(newPlayer);
 
 	//スプライト生成
 	//---test1---
@@ -143,7 +81,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 
 	// パーティクル静的初期化
 	ParticleManager::StaticInitialize(dxCommon, WinApp::winW, WinApp::winH);
-
 
 	particle1 = new ParticleManager();
 	//パーティクル生成
@@ -175,7 +112,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 	}
 
 	particle1->Update();
-
 
 	particle2 = new ParticleManager();
 	//パーティクル生成
@@ -230,24 +166,8 @@ void GameScene::Update()
 
 	}
 
-	sphere_->setPosition(position_);
-	sphere_->setRotation(XMFLOAT3(0, 0, 0));
-	/*	sphere_->setScale(XMFLOAT3(1, 100, 100));*/
-
-	sphere_->Update(camera->matView, camera->matProjection);
-
-	sphereRed_->setPosition(XMFLOAT3(position_.x + 3, position_.y, position_.z));
-	sphereRed_->Update(camera->matView, camera->matProjection);
-
-	//plane_->Update(matView, matProjection);
-
-	sphere_->sphereCol.center = XMVECTOR{ sphere_->GetPosition().x, sphere_->GetPosition().y, sphere_->GetPosition().z,1 };
-
-	//hit = Collision::CheckSphere2Plane(sphere_->sphereCol,plane_->planeCol);
-
-
 	//fbx
-	fbxObject1->Update();
+	player_->Update();
 	fbxObject2->Update();
 
 	//----パーティクル----
@@ -262,11 +182,8 @@ void GameScene::Draw()
 	////-------背景スプライト描画処理-------//
 	SpriteManager::GetInstance()->beginDraw();
 
-	//sphere_->Draw();
-	//sphereRed_->Draw();
-
-	//fbxObject1->Draw(dxCommon_->GetCommandList());
-	fbxObject2->Draw(dxCommon_->GetCommandList());
+	player_->Draw(dxCommon_->GetCommandList());
+	////fbxObject2->Draw(dxCommon_->GetCommandList());
 
 
 	////-------前景スプライト描画処理-------//

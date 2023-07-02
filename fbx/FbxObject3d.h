@@ -69,6 +69,11 @@ public://メンバ関数
 	//アニメーション開始
 	void PlayAnimation();
 
+	//セッター
+	void SetPosition(XMFLOAT3 position) { this->position = position; }
+	void SetRotate(XMFLOAT3 rotate) { this->rotation = rotate; }
+	void SetScale(XMFLOAT3 scale) { this->scale = scale; }
+
 protected://メンバ変数
 	//定数バッファ
 	ComPtr<ID3D12Resource>constBuffTransform;
