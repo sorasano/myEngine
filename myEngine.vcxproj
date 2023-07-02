@@ -156,8 +156,8 @@
     <ClCompile Include="Base\Input.cpp" />
     <ClCompile Include="Base\WinApp.cpp" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Collision.cpp" />
-    <ClCompile Include="CollisionPrimitive.cpp" />
+    <ClCompile Include="CSVLoader.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="fbx\FbxLoader.cpp" />
     <ClCompile Include="fbx\FbxModel.cpp" />
     <ClCompile Include="fbx\FbxObject3d.cpp" />
@@ -169,9 +169,8 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="object3D.cpp" />
     <ClCompile Include="ParticleManager.cpp" />
-    <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Sphere.cpp" />
+    <ClCompile Include="PlayerBullet.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="SpriteManager.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -262,8 +261,8 @@
     <ClInclude Include="Base\Input.h" />
     <ClInclude Include="Base\WinApp.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="Collision.h" />
-    <ClInclude Include="CollisionPrimitive.h" />
+    <ClInclude Include="CSVLoader.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="fbx\FbxLoader.h" />
     <ClInclude Include="fbx\FbxModel.h" />
     <ClInclude Include="fbx\FbxObject3d.h" />
@@ -274,9 +273,8 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="object3D.h" />
     <ClInclude Include="ParticleManager.h" />
-    <ClInclude Include="Plane.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="Sphere.h" />
+    <ClInclude Include="PlayerBullet.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="SpriteManager.h" />
     <ClInclude Include="Texture.h" />

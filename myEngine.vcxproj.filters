@@ -40,6 +40,12 @@
     <Filter Include="ヘッダー ファイル\fbx">
       <UniqueIdentifier>{f259b1f2-65b0-491e-b818-6954f67d42c0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\obj">
+      <UniqueIdentifier>{83e14821-ef0b-49ff-afa5-68785be903dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\obj">
+      <UniqueIdentifier>{e66c6849-2fe8-4926-926f-12a2dae90b20}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -54,19 +60,7 @@
     <ClCompile Include="Base\WinApp.cpp">
       <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
-    <ClCompile Include="object3D.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Model.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Player.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="CollisionPrimitive.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Collision.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="ParticleManager.cpp">
@@ -108,11 +102,20 @@
     <ClCompile Include="fbx\FbxObject3d.cpp">
       <Filter>ソース ファイル\fbx</Filter>
     </ClCompile>
-    <ClCompile Include="Plane.cpp">
+    <ClCompile Include="PlayerBullet.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Sphere.cpp">
+    <ClCompile Include="Enemy.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CSVLoader.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="object3D.cpp">
+      <Filter>ソース ファイル\obj</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>ソース ファイル\obj</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -177,19 +180,7 @@
     <ClInclude Include="Base\WinApp.h">
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
-    <ClInclude Include="object3D.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Model.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="CollisionPrimitive.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Collision.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="ParticleManager.h">
@@ -231,11 +222,20 @@
     <ClInclude Include="fbx\FbxObject3d.h">
       <Filter>ヘッダー ファイル\fbx</Filter>
     </ClInclude>
-    <ClInclude Include="Plane.h">
+    <ClInclude Include="PlayerBullet.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Sphere.h">
+    <ClInclude Include="Enemy.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CSVLoader.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>ヘッダー ファイル\obj</Filter>
+    </ClInclude>
+    <ClInclude Include="object3D.h">
+      <Filter>ヘッダー ファイル\obj</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

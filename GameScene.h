@@ -8,13 +8,12 @@
 #include "Model.h"
 #include "Sprite.h"
 #include "ParticleManager.h"
-#include "Collision.h"
 #include "FbxLoader.h"
 #include "FbxObject3d.h"
+#include "CSVLoader.h"
 
 #include "Player.h"
-#include "Sphere.h"
-#include "Plane.h"
+#include "Enemy.h"
 
 class GameScene
 {
@@ -28,26 +27,35 @@ public:
 
 	void Draw();
 
+	//更新範囲
+	bool UpadateRange(XMFLOAT3 cameraPos,XMFLOAT3 pos);
+
+	void Collition();
+
 private:
 	//デバイスとinput
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
-	//カメラ
-	std::unique_ptr<Camera> camera_;
-
 	ID3D12GraphicsCommandList* commandList = nullptr;
+
+	//カメラ
+	Camera* camera_{};
+
+	//csv
+	CSVLoader* enemyCsv = nullptr;
 
 	//Fbx
 	FbxModel* playerModel = nullptr;
-
-	FbxModel* fbxModel2 = nullptr;
-	FbxObject3D* fbxObject2 = nullptr;
-
-	//カメラ初期化
-	Camera* camera{};
+	FbxModel* playerBulletModel = nullptr;
+	FbxModel* enemyModel = nullptr;
 
 	//プレイヤー
 	std::unique_ptr<Player> player_;
+
+	//敵
+	std::list<std::unique_ptr<Enemy>> enemys_;
+	size_t enemySize = 1000;
+
 
 	//----スプライト----
 
@@ -62,19 +70,10 @@ private:
 	ParticleManager* particle1 = nullptr;
 	ParticleManager* particle2 = nullptr;
 
-	//アフィン変換情報
-	XMFLOAT3 scale_ = { 1,1,1 };
-	XMFLOAT3 rotation_ = { 0,0,0 };
-	XMFLOAT3 position_ = { 0,1,0 };
-
 	//ビュー変換行列
-
-	XMFLOAT3 eye = { -10, 1, 50 };
+	XMFLOAT3 eye = { 0, 1, 30 };
 	XMFLOAT3 target = { 0, 0, 0 };
 	XMFLOAT3 up = { 0, 1, 0 };
-
-	//当たり判定
-	bool hit = false;
 
 };
 

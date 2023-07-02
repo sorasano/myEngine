@@ -3,8 +3,8 @@
 #include<DirectXMath.h>
 #include<d3d12.h>
 #include<wrl.h>
-//#include "Vector3.h"
-#include"Base/Input.h"
+
+#include"Input.h"
 
 using namespace DirectX;
 
@@ -36,7 +36,7 @@ public:
 
 	void UpdateMatrix();
 
-	void Update();
+	void Update(XMFLOAT3 playerPos);
 
 	//eye‚ÌXV
 	void UpdateEye();
@@ -55,5 +55,7 @@ private:
 	Input* input = nullptr;
 
 	float angle = 0.1f; // ƒJƒƒ‰‚Ì‰ñ“]Šp
+
+	XMFLOAT3 playerPos_ = {};
 
 };

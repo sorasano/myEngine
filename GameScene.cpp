@@ -6,14 +6,17 @@ GameScene::GameScene()
 
 GameScene::~GameScene()
 {
+	delete camera_;
 	delete test1Sprite;
 	delete test2Sprite;
-	delete camera;
 	delete particle1;
 	delete particle2;
 	FBX_SAFE_DELETE(playerModel);
-	FBX_SAFE_DELETE(fbxModel2);
-	FBX_SAFE_DELETE(fbxObject2);
+	FBX_SAFE_DELETE(playerBulletModel);
+	for (int i = 0; i < enemySize; i++)
+	{
+		FBX_SAFE_DELETE(enemyModel);
+	}
 }
 
 void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
@@ -26,35 +29,66 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 
 	//カメラ
 	//カメラ初期化
-	camera = new Camera;
-	camera->StaticInitialize(dxCommon->GetDevice());
-	camera->Initialize(eye, target, up, input_);
-
-	camera->SetTarget({0,0,0});
-	camera->SetEye({ 0,0,30 });
+	camera_ = new Camera;
+	camera_->StaticInitialize(dxCommon->GetDevice());
+	camera_->Initialize(eye, target, up, input_);
 
 	//デバイスをセット
 	FbxObject3D::SetDevice(dxCommon->GetDevice());
-	FbxObject3D::SetCamera(camera);
+	FbxObject3D::SetCamera(camera_);
 	//グラフィックスパイプライン生成
 	FbxObject3D::CreateGraphicsPipeline();
 
+	//----------FBX----------
 	//モデル名を指定してファイル読み込み
-	playerModel = FbxLoader::GetInstance()->LoadModelFromFile("cube");
-	fbxModel2 = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
-
-	//3dオブジェクト生成とモデルのセット
-	fbxObject2 = new FbxObject3D;
-	fbxObject2->Initialize();
-	fbxObject2->SetModel(fbxModel2);
-	fbxObject2->PlayAnimation();
+	playerModel = FbxLoader::GetInstance()->LoadModelFromFile("player");
+	playerBulletModel = FbxLoader::GetInstance()->LoadModelFromFile("playerBullet");
+	enemyModel = FbxLoader::GetInstance()->LoadModelFromFile("enemy");
 
 	//------------プレイヤー----------
 
 	//プレイヤー初期化
 	Player* newPlayer = new Player();
-	newPlayer->Initialize(playerModel);
+	newPlayer->Initialize(input_, playerModel, playerBulletModel);
 	player_.reset(newPlayer);
+
+	//------------敵----------
+	enemyCsv = new CSVLoader;
+	enemyCsv->LoadCSV("Resources/csv/enemy.csv");
+
+	float lowInterval = 50.0f;
+	float oldPos = 0.0f;
+
+	for (int i = 0; i < enemySize; i++)
+	{
+		//CSV
+		//std::unique_ptr<Enemy>newObject = std::make_unique<Enemy>();
+		//newObject->Initialize(enemyModel);
+
+		//newObject->SetPosition(enemyCsv->GetPosition(i));
+		//newObject->SetScale(enemyCsv->GetScale(i));
+		//newObject->SetRotation(enemyCsv->GetRotation(i));
+
+		//enemys_.push_back(std::move(newObject));
+
+		//RAND
+		std::unique_ptr<Enemy>newObject = std::make_unique<Enemy>();
+		newObject->Initialize(enemyModel);
+
+		//ランダムに分布
+		XMFLOAT3 md_pos = { 20.0f,10.0f,3.0f };
+		XMFLOAT3 pos{};
+		pos.x = (float)rand() / RAND_MAX * md_pos.x - md_pos.x / 2.0f;
+		pos.y = (float)rand() / RAND_MAX * md_pos.y - md_pos.y / 2.0f;
+		pos.z = (float)rand() / RAND_MAX * md_pos.z - md_pos.z / 2.0f;
+
+		pos.z = (oldPos + lowInterval);
+		oldPos = pos.z;
+
+		newObject->SetPosition(pos);
+		enemys_.push_back(std::move(newObject));
+
+	}
 
 	//スプライト生成
 	//---test1---
@@ -147,32 +181,24 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 
 void GameScene::Update()
 {
-	//射影変換
+	//自機
+	player_->Update();
 
-	//カメラ更新
-	camera->Update();
-
-	//----球----
-
-	//平行移動更新
-
-	if (input_->PushKey(DIK_UP) || input_->PushKey(DIK_DOWN) || input_->PushKey(DIK_RIGHT) || input_->PushKey(DIK_LEFT)) {
-
-		//座標を移動する処理(Z座標)
-		if (input_->PushKey(DIK_UP)) { position_.y += 0.1f; }
-		else if (input_->PushKey(DIK_DOWN)) { position_.y -= 0.1f; }
-		if (input_->PushKey(DIK_RIGHT)) { position_.x -= 0.1f; }
-		else if (input_->PushKey(DIK_LEFT)) { position_.x += 0.1f; }
-
+	//敵
+	for (std::unique_ptr<Enemy>& enemy : enemys_)
+	{
+		enemy->Update();
 	}
 
-	//fbx
-	player_->Update();
-	fbxObject2->Update();
+	//当たり判定
+	Collition();
 
 	//----パーティクル----
 	particle1->Update();
 	particle2->Update();
+
+	//カメラ更新
+	camera_->Update(player_->GetPosition());
 
 }
 
@@ -182,8 +208,15 @@ void GameScene::Draw()
 	////-------背景スプライト描画処理-------//
 	SpriteManager::GetInstance()->beginDraw();
 
+	//自機
 	player_->Draw(dxCommon_->GetCommandList());
-	////fbxObject2->Draw(dxCommon_->GetCommandList());
+	//敵
+	for (std::unique_ptr<Enemy>& enemy : enemys_)
+	{
+		if (UpadateRange(camera_->GetEye(), enemy->GetPosition())) {
+			enemy->Draw(dxCommon_->GetCommandList());
+		}
+	}
 
 
 	////-------前景スプライト描画処理-------//
@@ -196,5 +229,54 @@ void GameScene::Draw()
 	//スプライト
 	//test1Sprite->Draw();
 	//test2Sprite->Draw();
+
+}
+
+bool GameScene::UpadateRange(XMFLOAT3 cameraPos, XMFLOAT3 pos)
+{
+
+	if (cameraPos.x - pos.x < 20.0f && cameraPos.x - pos.x > -20.0f) { return true; }
+	if (cameraPos.y - pos.y < 10.0f && cameraPos.y - pos.y > -10.0f) { return true; }
+	if (cameraPos.z - pos.z < -10.0f && cameraPos.z - pos.z > -500.0f) { return true; }
+
+	return false;
+}
+
+void GameScene::Collition()
+{
+	//敵と自機の弾の当たり判定
+	if (player_->GetBulletSize() != 0) {
+
+		for (int i = 0; i < player_->GetBulletSize(); i++) {
+
+			for (std::unique_ptr<Enemy>& enemy : enemys_)
+			{
+				if (!enemy->GetIsDead()) {
+					//当たったか
+					if (enemy->Collition(player_->GetBulletPosition(i), player_->GetBulletColSize(i))) {
+
+						//当たったら自機の弾を消し、自機のスピードを上げスコアを加算
+						player_->SetBulletIsDead(true, i);
+						player_->SpeedUpByEnemy();
+
+					}
+				}
+			}
+		}
+	}
+
+	//敵と自機の当たり判定
+	for (std::unique_ptr<Enemy>& enemy : enemys_)
+	{
+		if (!enemy->GetIsDead()) {
+			//当たったか
+			if (enemy->Collition(player_->GetPosition(), player_->GetColSize())) {
+
+				//当たったら自機のスピードを下げ,少し無敵時間に
+				player_->SpeedDownByEnemy();
+				player_->SetIsInvincible(true);
+			}
+		}
+	}
 
 }
