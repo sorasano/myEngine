@@ -2,6 +2,7 @@
 #include <sstream>
 #include <iomanip>
 #include "GameScene.h"
+#include "FPS.h"
 
 // ウィンドウプロシージャ
 LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
@@ -58,6 +59,12 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	gameScene = new GameScene();
 	gameScene->Initialize(dxCommon, input);
 
+	//FPSを固定
+	FPS* fps = nullptr;
+	fps = new FPS;
+	fps->SetFrameRate(60.0f);
+	fps->FpsControlBegin();
+
 	//描画初期化処理　ここまで
 
 	// ゲームループ
@@ -68,6 +75,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 			//ゲームループを抜ける
 			break;
 		}
+
+		fps->FpsControlBegin();
 
 		//キー
 		input->Update();
@@ -83,6 +92,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 		//描画後処理
 		dxCommon->PostDraw();
+
+		fps->FpsControlEnd();
 
 	}
 

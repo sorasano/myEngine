@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Base\DirectXCommon.cpp" />
+    <ClCompile Include="Base\FPS.cpp" />
     <ClCompile Include="Base\GpPipeline.cpp" />
     <ClCompile Include="Base\Input.cpp" />
     <ClCompile Include="Base\WinApp.cpp" />
@@ -257,6 +258,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base\DirectXCommon.h" />
+    <ClInclude Include="Base\FPS.h" />
     <ClInclude Include="Base\GpPipeline.h" />
     <ClInclude Include="Base\Input.h" />
     <ClInclude Include="Base\WinApp.h" />

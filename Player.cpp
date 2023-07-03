@@ -70,7 +70,12 @@ void Player::Draw(ID3D12GraphicsCommandList* cmdList)
 
 void Player::SpeedUpByEnemy()
 {
-	addSpeed += addSpeedByEnemy;
+	if (addSpeed + addSpeedByEnemy >= MaxSpeed) {
+		addSpeed = MaxSpeed;
+	}
+	else {
+		addSpeed += addSpeedByEnemy;
+	}
 }
 
 void Player::SpeedDownByEnemy()

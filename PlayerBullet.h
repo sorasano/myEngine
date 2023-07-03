@@ -46,7 +46,7 @@ private:
 	FbxObject3D* playerBulletObject = nullptr;
 
 	//移動スピード
-	const float speed = 0.5f;
+	const float speed = 1.0f;
 	//自機のスピード
 	float playerSpeed = 0.0f;
 

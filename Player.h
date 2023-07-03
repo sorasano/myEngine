@@ -66,20 +66,23 @@ private:
 	//移動範囲
 	const XMFLOAT2 MoveMax = { 20.0f,10.0f };
 	//移動スピード(xy)
-	float speedXY = 0.1f;
+	float speedXY = 0.5f;
 	//移動スピード(z)
-	float speedZ = 0.5f;
+	float speedZ = 1.0f;
 
 	//基礎スピード以外の加速スピード
 	float addSpeed = 0.0f;
 	//敵を倒した時の加速量
-	float addSpeedByEnemy = 0.8f;
+	float addSpeedByEnemy = 1.5f;
 	//敵に被弾した時の減速
-	float subSpeedByEnemy = 0.8f;
+	float subSpeedByEnemy = 1.5f;
+
+	//最大加速量
+	const float MaxSpeed = 15.0f;
 
 	//無敵時間
 	bool isInvincible = false;
-	const int InvincibleTime = 30;
+	const int InvincibleTime = 10;
 	int invincibleTimer = 0;
 
 public:
@@ -89,7 +92,7 @@ public:
 	std::list<std::unique_ptr<PlayerBullet>> playerBullet_;
 
 	//弾の発射クールタイム
-	const int BulletCoolTime = 30;
+	const int BulletCoolTime = 10;
 	int bulletCoolTimer = 0;
 
 };
