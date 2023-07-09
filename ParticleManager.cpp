@@ -78,6 +78,12 @@ void ParticleManager::StaticInitialize(DirectXCommon* dx, int window_width, int 
 
 }
 
+void ParticleManager::StaticUpdate(XMFLOAT3 eye, XMFLOAT3 target)
+{
+	ParticleManager::eye = eye;
+	ParticleManager::target = target;
+}
+
 void ParticleManager::PreDraw(ID3D12GraphicsCommandList* cmdList)
 {
 	// PreDrawとPostDrawがペアで呼ばれていなければエラー
@@ -648,6 +654,8 @@ bool ParticleManager::Initialize(const std::string& resourcename)
 void ParticleManager::Update()
 {
 	HRESULT result;
+	UpdateViewMatrix();
+
 
 	//寿命が尽きたパーティクルを全削除
 	particles.remove_if([](Particle& x) {return x.frame >= x.num_flame; });

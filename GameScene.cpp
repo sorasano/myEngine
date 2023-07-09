@@ -1,4 +1,5 @@
 #include "GameScene.h"
+#include "Random.h"
 
 GameScene::GameScene()
 {
@@ -9,8 +10,6 @@ GameScene::~GameScene()
 	delete camera_;
 	delete test1Sprite;
 	delete test2Sprite;
-	delete particle1;
-	delete particle2;
 	FBX_SAFE_DELETE(playerModel);
 	FBX_SAFE_DELETE(playerBulletModel);
 	for (int i = 0; i < enemySize; i++)
@@ -21,6 +20,9 @@ GameScene::~GameScene()
 
 void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 {
+
+	// パーティクル静的初期化
+	ParticleManager::StaticInitialize(dxCommon, WinApp::winW, WinApp::winH);
 
 	this->dxCommon_ = dxCommon;
 	this->input_ = input_;
@@ -76,11 +78,11 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 		newObject->Initialize(enemyModel);
 
 		//ランダムに分布
-		XMFLOAT3 md_pos = { 20.0f,10.0f,3.0f };
+		XMFLOAT3 md_pos = { 10.0f,5.0f,1.5f };
 		XMFLOAT3 pos{};
-		pos.x = (float)rand() / RAND_MAX * md_pos.x - md_pos.x / 2.0f;
-		pos.y = (float)rand() / RAND_MAX * md_pos.y - md_pos.y / 2.0f;
-		pos.z = (float)rand() / RAND_MAX * md_pos.z - md_pos.z / 2.0f;
+		pos.x = Random(-md_pos.x, md_pos.x);
+		pos.y = Random(-md_pos.y, md_pos.y);
+		pos.z = Random(-md_pos.z, md_pos.z);
 
 		pos.z = (oldPos + lowInterval);
 		oldPos = pos.z;
@@ -111,72 +113,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 	test2Sprite->SetPos(XMFLOAT2(WinApp::winW / 2, WinApp::winH / 2 - 200));
 	test2Sprite->Update();
 
-	//パーティクル1
-
-	// パーティクル静的初期化
-	ParticleManager::StaticInitialize(dxCommon, WinApp::winW, WinApp::winH);
-
-	particle1 = new ParticleManager();
-	//パーティクル生成
-	particle1->Initialize("Resources/effect1.png");
-
-	for (int i = 0; i < 100; i++) {
-		//X,Y,Zすべて[-5.0f,+5.0f]でランダムに分布
-		const float md_pos = 10.0f;
-		XMFLOAT3 pos{};
-		pos.x = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
-		pos.y = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
-		pos.z = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
-
-		//X,Y,Zすべて[-0.05f,+0.05f]でランダムに分布
-		const float md_vel = 0.1f;
-		XMFLOAT3 vel{};
-		vel.x = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
-		vel.y = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
-		vel.z = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
-
-		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		XMFLOAT3 acc{};
-		const float md_acc = 0.001f;
-		acc.y = -(float)rand() / RAND_MAX * md_acc;
-
-		//追加
-		particle1->Add(600, pos, vel, acc);
-
-	}
-
-	particle1->Update();
-
-	particle2 = new ParticleManager();
-	//パーティクル生成
-	particle2->Initialize("Resources/effect2.png");
-
-	for (int i = 0; i < 100; i++) {
-		//X,Y,Zすべて[-5.0f,+5.0f]でランダムに分布
-		const float md_pos = 10.0f;
-		XMFLOAT3 pos{};
-		pos.x = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
-		pos.y = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
-		pos.z = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
-
-		//X,Y,Zすべて[-0.05f,+0.05f]でランダムに分布
-		const float md_vel = 0.1f;
-		XMFLOAT3 vel{};
-		vel.x = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
-		vel.y = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
-		vel.z = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
-
-		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		XMFLOAT3 acc{};
-		const float md_acc = 0.001f;
-		acc.y = -(float)rand() / RAND_MAX * md_acc;
-
-		//追加
-		particle2->Add(600, pos, vel, acc);
-
-	}
-
-	particle2->Update();
 }
 
 void GameScene::Update()
@@ -193,12 +129,10 @@ void GameScene::Update()
 	//当たり判定
 	Collition();
 
-	//----パーティクル----
-	particle1->Update();
-	particle2->Update();
-
 	//カメラ更新
 	camera_->Update(player_->GetPosition());
+	//パーティクルマネージャー静的更新
+	ParticleManager::StaticUpdate(camera_->GetEye(),camera_->GetTarget());
 
 }
 
@@ -221,10 +155,6 @@ void GameScene::Draw()
 
 	////-------前景スプライト描画処理-------//
 	SpriteManager::GetInstance()->beginDraw();
-
-	//----パーティクル----
-	//particle1->Draw();
-	//particle2->Draw();
 
 	//スプライト
 	//test1Sprite->Draw();

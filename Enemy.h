@@ -2,6 +2,8 @@
 #include "FbxObject3D.h"
 #include "DirectXCommon.h"
 
+#include "ParticleManager.h"
+
 #pragma once
 class Enemy
 {
@@ -17,6 +19,9 @@ public:
 	void Move();
 
 	bool Collition(XMFLOAT3 pos, XMFLOAT3 size);
+
+	void InitializeParticle();
+	void UpdateParticle();
 
 	//ゲッター　セッター　
 	XMFLOAT3 GetPosition() { return position_; };
@@ -41,5 +46,14 @@ private:
 	FbxObject3D* enemyObject = nullptr;
 
 	bool isDead = false;
+
+	//パーティクル
+	ParticleManager* particle = nullptr;
+	bool isParticle = false;
+
+	//パーティクル時間
+	const int ParticleTime = 30;
+	int particleTimer = 0;
+
 };
 

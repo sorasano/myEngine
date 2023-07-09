@@ -77,6 +77,13 @@ public: // 静的メンバ関数
 	static void StaticInitialize(DirectXCommon* dx, int window_width, int window_height);
 
 	/// <summary>
+	/// 静的更新
+	/// </summary>
+	/// <param name="eye">視点座標</param>
+	/// <param name="target">視点方向座標</param>
+	static void StaticUpdate(XMFLOAT3 eye, XMFLOAT3 target);
+
+	/// <summary>
 	/// 描画前処理
 	/// </summary>
 	/// <param name="cmdList">描画コマンドリスト</param>

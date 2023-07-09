@@ -46,6 +46,7 @@ public:
 
 	XMMATRIX GetViewProjection()const { return matView * matProjection; }
 	XMFLOAT3 GetEye() { return eye; }
+	XMFLOAT3 GetTarget() { return target; }
 
 	void SetEye(XMFLOAT3 eye) { this->eye = eye; }
 	void SetTarget(XMFLOAT3 target) { this->target = target; }

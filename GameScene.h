@@ -66,10 +66,6 @@ private:
 	uint32_t test2Texture = 0;	
 	Sprite* test2Sprite = nullptr;
 
-	//パーティクル
-	ParticleManager* particle1 = nullptr;
-	ParticleManager* particle2 = nullptr;
-
 	//ビュー変換行列
 	XMFLOAT3 eye = { 0, 1, 30 };
 	XMFLOAT3 target = { 0, 0, 0 };
