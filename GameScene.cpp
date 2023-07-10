@@ -8,8 +8,7 @@ GameScene::GameScene()
 GameScene::~GameScene()
 {
 	delete camera_;
-	delete test1Sprite;
-	delete test2Sprite;
+	delete testSprite;
 	FBX_SAFE_DELETE(playerModel);
 	FBX_SAFE_DELETE(playerBulletModel);
 	for (int i = 0; i < enemySize; i++)
@@ -21,13 +20,9 @@ GameScene::~GameScene()
 void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 {
 
-	// パーティクル静的初期化
-	ParticleManager::StaticInitialize(dxCommon, WinApp::winW, WinApp::winH);
-
 	this->dxCommon_ = dxCommon;
 	this->input_ = input_;
 
-	//描画初期化処理　ここから
 
 	//カメラ
 	//カメラ初期化
@@ -35,13 +30,23 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 	camera_->StaticInitialize(dxCommon->GetDevice());
 	camera_->Initialize(eye, target, up, input_);
 
+	//描画初期化処理　ここから
+
+	// パーティクル静的初期化
+	ParticleManager::StaticInitialize(dxCommon, WinApp::winW, WinApp::winH);
+
+
+	//----------FBX----------
+	
+	//fbxLoadr汎用初期化
+	FbxLoader::GetInstance()->Initialize(dxCommon->GetDevice());
+
 	//デバイスをセット
 	FbxObject3D::SetDevice(dxCommon->GetDevice());
 	FbxObject3D::SetCamera(camera_);
 	//グラフィックスパイプライン生成
 	FbxObject3D::CreateGraphicsPipeline();
 
-	//----------FBX----------
 	//モデル名を指定してファイル読み込み
 	playerModel = FbxLoader::GetInstance()->LoadModelFromFile("player");
 	playerBulletModel = FbxLoader::GetInstance()->LoadModelFromFile("playerBullet");
@@ -91,28 +96,28 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 		enemys_.push_back(std::move(newObject));
 
 	}
+	
+	//スプライトマネージャー
+	SpriteManager::SetDevice(dxCommon->GetDevice());
+	spriteManager = new SpriteManager;
+	spriteManager->Initialize();
 
-	//スプライト生成
-	//---test1---
-	test1Texture = Texture::LoadTexture(L"Resources/reimu.png");
+	//------テクスチャ------
+	spriteManager->LoadFile(0, L"Resources/reimu.png");
 
-	test1Sprite = new Sprite();
-	test1Sprite->Initialize(test1Texture);
+	//-----スプライト------
+	Sprite::SetDevice(dxCommon->GetDevice());
+	Sprite::SetSpriteManager(spriteManager);
+	Sprite::CreateGraphicsPipeLine();
+
+	testSprite = new Sprite();
+	testSprite->SetTextureNum(0);
+	testSprite->Initialize();
 	//アンカーポイントをスプライトの中心に
-	test1Sprite->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
-	test1Sprite->SetPos(XMFLOAT2(WinApp::winW / 2, WinApp::winH / 2));
-	test1Sprite->Update();
-
-	//---test2---
-	test2Texture = Texture::LoadTexture(L"Resources/texture.jpg");
-
-	test2Sprite = new Sprite();
-	test2Sprite->Initialize(test2Texture);
-	//アンカーポイントをスプライトの中心に
-	test2Sprite->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
-	test2Sprite->SetPos(XMFLOAT2(WinApp::winW / 2, WinApp::winH / 2 - 200));
-	test2Sprite->Update();
-
+	testSprite->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
+	testSprite->SetScale(XMFLOAT2(600, 300));
+	testSprite->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
+	testSprite->Update();
 }
 
 void GameScene::Update()
@@ -139,9 +144,6 @@ void GameScene::Update()
 void GameScene::Draw()
 {
 
-	////-------背景スプライト描画処理-------//
-	SpriteManager::GetInstance()->beginDraw();
-
 	//自機
 	player_->Draw(dxCommon_->GetCommandList());
 	//敵
@@ -152,13 +154,8 @@ void GameScene::Draw()
 		}
 	}
 
-
-	////-------前景スプライト描画処理-------//
-	SpriteManager::GetInstance()->beginDraw();
-
 	//スプライト
-	//test1Sprite->Draw();
-	//test2Sprite->Draw();
+	testSprite->Draw(dxCommon_->GetCommandList());
 
 }
 

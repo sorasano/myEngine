@@ -3,6 +3,7 @@
 #include <iomanip>
 #include "GameScene.h"
 #include "FPS.h"
+#include "PostEffect.h"
 
 // ウィンドウプロシージャ
 LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
@@ -44,15 +45,12 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	input = new Input();
 	input->Initialize(winApp);
 
-	//テクスチャマネージャーの初期化
-	Texture::Initialize(dxCommon->GetDevice());
-	//スプライト共通部の初期化
-	SpriteManager* spriteManager = nullptr;
-	spriteManager = SpriteManager::GetInstance();
-	spriteManager->Initialize(dxCommon, WinApp::winW, WinApp::winH);
-
-	//fbxLoadr汎用初期化
-	FbxLoader::GetInstance()->Initialize(dxCommon->GetDevice());
+	//ポストエフェクト
+	PostEffect* postEffect = nullptr;
+	PostEffect::SetDevice(dxCommon->GetDevice());
+	postEffect = new PostEffect;
+	postEffect->Initialize();
+	postEffect->CreateGraphicsPipeLine();
 
 	//ゲームシーン
 	GameScene* gameScene = nullptr;
@@ -83,13 +81,17 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 		//更新
 		gameScene->Update();
+		postEffect->Update();
+
+		//レンダーテクスチャへの描画
+		postEffect->PreDrawScene(dxCommon->GetCommandList());
+		gameScene->Draw();
+		postEffect->PostDrawScene(dxCommon->GetCommandList());
 
 		//描画前処理
 		dxCommon->PreDraw();
-
-		//描画
-		gameScene->Draw();
-
+		//ポストエフェクト
+		postEffect->Draw(dxCommon->GetCommandList());
 		//描画後処理
 		dxCommon->PostDraw();
 

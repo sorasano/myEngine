@@ -59,12 +59,11 @@ private:
 
 	//----スプライト----
 
-	//テクスチャ
-	uint32_t test1Texture = 0;		
-	Sprite* test1Sprite = nullptr;
+	//スプライトマネージャー
+	SpriteManager* spriteManager = nullptr;
 
-	uint32_t test2Texture = 0;	
-	Sprite* test2Sprite = nullptr;
+	//テクスチャ
+	Sprite* testSprite = nullptr;
 
 	//ビュー変換行列
 	XMFLOAT3 eye = { 0, 1, 30 };
