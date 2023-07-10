@@ -138,7 +138,7 @@ private: // 静的メンバ変数
 	// デスクリプタサイズ
 	static UINT descriptorHandleIncrementSize;
 	// コマンドリスト
-	ID3D12GraphicsCommandList* cmdList;
+	ID3D12GraphicsCommandList* cmdList = nullptr;
 	// ルートシグネチャ
 	static ComPtr<ID3D12RootSignature> rootsignature;
 	// パイプラインステートオブジェクト
@@ -166,9 +166,9 @@ private: // 静的メンバ変数
 	// 上方向ベクトル
 	static XMFLOAT3 up;
 	// 頂点バッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vbView;
+	D3D12_VERTEX_BUFFER_VIEW vbView = {};
 	// インデックスバッファビュー
-	D3D12_INDEX_BUFFER_VIEW ibView;
+	D3D12_INDEX_BUFFER_VIEW ibView = {};
 	// 頂点データ配列
 	static VertexPos vertices[vertexCount];
 	//// 頂点インデックス配列

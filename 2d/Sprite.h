@@ -82,9 +82,9 @@ private:	//メンバ変数
 	//使用するテクスチャの番号
 	int textureNum = 0;
 	//頂点バッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vbView;
+	D3D12_VERTEX_BUFFER_VIEW vbView = {};
 	//頂点データ
-	Vertex vertices[6];
+	Vertex vertices[6] = {};
 	Vertex* vertMap = nullptr;
 	//定数バッファ マテリアル
 	ComPtr<ID3D12Resource>constBuffMaterial;
@@ -103,13 +103,13 @@ public:
 
 	//---演出用---
 	//画面外にでる演出用
-	Easing flipOutEase;
+	Easing flipOutEase = {};
 	//フリップ初期化
 	bool initFlip = false;
 	//演出中か
 	bool isflipEase = false;
 	//演出の段階
-	int flipInFase;
+	int flipInFase = false;
 	//揺れ幅
 	float flipInRangeUp = 50;
 	float flipInRangeDown = 100;
@@ -117,7 +117,7 @@ public:
 	bool endFlip = false;
 
 	//揺れ用
-	Easing swayEase;
+	Easing swayEase = {};
 	//揺れ初期化
 	bool initSway = false;
 	//揺れ幅
@@ -127,9 +127,9 @@ public:
 	//上昇中か下降中か
 	bool isSwayUp = true;
 	//演出開始位置
-	DirectX::XMFLOAT2 startEasePos;
+	DirectX::XMFLOAT2 startEasePos = {};
 	//中心点
-	DirectX::XMFLOAT2 swayCenterPos;
+	DirectX::XMFLOAT2 swayCenterPos = {};
 
 public:
 
