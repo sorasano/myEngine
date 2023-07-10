@@ -77,6 +77,13 @@ public: // 静的メンバ関数
 	static void StaticInitialize(DirectXCommon* dx, int window_width, int window_height);
 
 	/// <summary>
+	/// 静的更新
+	/// </summary>
+	/// <param name="eye">視点座標</param>
+	/// <param name="target">視点方向座標</param>
+	static void StaticUpdate(XMFLOAT3 eye, XMFLOAT3 target);
+
+	/// <summary>
 	/// 描画前処理
 	/// </summary>
 	/// <param name="cmdList">描画コマンドリスト</param>
@@ -131,7 +138,7 @@ private: // 静的メンバ変数
 	// デスクリプタサイズ
 	static UINT descriptorHandleIncrementSize;
 	// コマンドリスト
-	ID3D12GraphicsCommandList* cmdList;
+	ID3D12GraphicsCommandList* cmdList = nullptr;
 	// ルートシグネチャ
 	static ComPtr<ID3D12RootSignature> rootsignature;
 	// パイプラインステートオブジェクト
@@ -159,9 +166,9 @@ private: // 静的メンバ変数
 	// 上方向ベクトル
 	static XMFLOAT3 up;
 	// 頂点バッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vbView;
+	D3D12_VERTEX_BUFFER_VIEW vbView = {};
 	// インデックスバッファビュー
-	D3D12_INDEX_BUFFER_VIEW ibView;
+	D3D12_INDEX_BUFFER_VIEW ibView = {};
 	// 頂点データ配列
 	static VertexPos vertices[vertexCount];
 	//// 頂点インデックス配列

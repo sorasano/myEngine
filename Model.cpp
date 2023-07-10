@@ -25,7 +25,7 @@ void Model::Initialize(DirectXCommon* dx_, const std::string& filename, const st
 	InitializeDesc();
 
 	//シェーダ読み込み
-	CompileShader(L"shaders/ObjVertex.hlsl", L"shaders/ObjPixel.hlsl");
+	CompileShader(L"Resources/shaders/ObjVertex.hlsl", L"Resources/shaders/ObjPixel.hlsl");
 
 	//頂点初期化
 	InitializeVertex(filename);
