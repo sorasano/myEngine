@@ -156,7 +156,6 @@
     <ClCompile Include="2d\SpriteManager.cpp" />
     <ClCompile Include="Base\DirectXCommon.cpp" />
     <ClCompile Include="Base\FPS.cpp" />
-    <ClCompile Include="Base\GpPipeline.cpp" />
     <ClCompile Include="Base\Input.cpp" />
     <ClCompile Include="Base\WinApp.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -275,7 +274,6 @@
     <ClInclude Include="2d\SpriteManager.h" />
     <ClInclude Include="Base\DirectXCommon.h" />
     <ClInclude Include="Base\FPS.h" />
-    <ClInclude Include="Base\GpPipeline.h" />
     <ClInclude Include="Base\Input.h" />
     <ClInclude Include="Base\WinApp.h" />
     <ClInclude Include="Camera.h" />
