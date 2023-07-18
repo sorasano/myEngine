@@ -32,6 +32,9 @@ public:
 
 	void Collition();
 
+	//敵生存確認
+	void CheckEnemy();
+
 private:
 	//デバイスとinput
 	DirectXCommon* dxCommon_ = nullptr;
@@ -48,13 +51,16 @@ private:
 	FbxModel* playerModel = nullptr;
 	FbxModel* playerBulletModel = nullptr;
 	FbxModel* enemyModel = nullptr;
+	FbxModel* fReticleModel = nullptr;
+	FbxModel* bReticleModel = nullptr;
+
 
 	//プレイヤー
 	std::unique_ptr<Player> player_;
 
 	//敵
 	std::list<std::unique_ptr<Enemy>> enemys_;
-	size_t enemySize = 1000;
+	size_t enemySize = 100;
 
 
 	//----スプライト----

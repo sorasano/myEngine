@@ -11,7 +11,7 @@ public:
 	Player* GetInstance();
 	Player();
 	~Player();
-	void Initialize(Input* input, FbxModel* playerModel, FbxModel* playerBulletModel);
+	void Initialize(Input* input, FbxModel* playerModel, FbxModel* playerBulletModel,FbxModel* fRModel, FbxModel* bRModel);
 	void Update();
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
@@ -25,6 +25,9 @@ public:
 	void Shot();
 	void BulletUpdate();
 	void MakeBullet();
+
+	//レティクル
+	void UpdateRaticle();
 
 	//ゲッター　セッター　
 	XMFLOAT3 GetPosition() { return position_; }
@@ -84,6 +87,22 @@ private:
 	bool isInvincible = false;
 	const int InvincibleTime = 10;
 	int invincibleTimer = 0;
+
+	//レティクル
+	FbxObject3D* frontReticleObject = nullptr;
+	FbxObject3D* backReticleObject = nullptr;
+
+	//自機からの距離
+	const float kDistancePlayerTo3DFrontReticle = 50.0f;
+	const float kDistancePlayerTo3DBackReticle = 25.0f;
+
+	XMFLOAT3 fRPosition_ = { 0,0,0 };
+	XMFLOAT3 fRRotation_ = { 0,0,0 };
+	XMFLOAT3 fRScale_ = { 1,1,1 };
+
+	XMFLOAT3 bRPosition_ = { 0,0,0 };
+	XMFLOAT3 bRRotation_ = { 0,0,0 };
+	XMFLOAT3 bRScale_ = { 1,1,1 };
 
 public:
 

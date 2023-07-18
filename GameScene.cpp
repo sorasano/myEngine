@@ -51,12 +51,15 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 	playerModel = FbxLoader::GetInstance()->LoadModelFromFile("player");
 	playerBulletModel = FbxLoader::GetInstance()->LoadModelFromFile("playerBullet");
 	enemyModel = FbxLoader::GetInstance()->LoadModelFromFile("enemy");
+	bReticleModel = FbxLoader::GetInstance()->LoadModelFromFile("backReticle");
+	fReticleModel = FbxLoader::GetInstance()->LoadModelFromFile("frontReticle");
+
 
 	//------------プレイヤー----------
 
 	//プレイヤー初期化
 	Player* newPlayer = new Player();
-	newPlayer->Initialize(input_, playerModel, playerBulletModel);
+	newPlayer->Initialize(input_, playerModel, playerBulletModel, fReticleModel, bReticleModel);
 	player_.reset(newPlayer);
 
 	//------------敵----------
@@ -128,7 +131,9 @@ void GameScene::Update()
 	//敵
 	for (std::unique_ptr<Enemy>& enemy : enemys_)
 	{
-		enemy->Update();
+		if (UpadateRange(camera_->GetEye(), enemy->GetPosition())) {
+			enemy->Update();
+		}
 	}
 
 	//当たり判定
@@ -185,7 +190,6 @@ void GameScene::Collition()
 						//当たったら自機の弾を消し、自機のスピードを上げスコアを加算
 						player_->SetBulletIsDead(true, i);
 						player_->SpeedUpByEnemy();
-
 					}
 				}
 			}
@@ -206,4 +210,15 @@ void GameScene::Collition()
 		}
 	}
 
+}
+
+void GameScene::CheckEnemy()
+{
+	for (std::unique_ptr<Enemy>& enemy : enemys_) {
+
+		//デスフラグ
+		if (enemy->GetIsDead()) {
+			enemys_.remove_if([](std::unique_ptr<Enemy>& enemy) {return enemy->GetIsDead(); });
+		}
+	}
 }

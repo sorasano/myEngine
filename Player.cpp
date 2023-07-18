@@ -1,4 +1,5 @@
 #include "Player.h"
+#define PI 3.1415
 
 Player* Player::GetInstance()
 {
@@ -15,7 +16,7 @@ Player::~Player()
 	FBX_SAFE_DELETE(playerObject);
 }
 
-void Player::Initialize(Input* input, FbxModel* playerModel, FbxModel* playerBulletModel)
+void Player::Initialize(Input* input, FbxModel* playerModel, FbxModel* playerBulletModel, FbxModel* fRModel, FbxModel* bRModel)
 {
 	//入力のセット
 	this->input_ = input;
@@ -27,6 +28,20 @@ void Player::Initialize(Input* input, FbxModel* playerModel, FbxModel* playerBul
 
 	//弾モデルセット
 	this->playerBulletModel_ = playerBulletModel;
+
+	//レティクルモデルセット
+	frontReticleObject = new FbxObject3D;
+	frontReticleObject->Initialize();
+	frontReticleObject->SetModel(fRModel);
+
+	backReticleObject = new FbxObject3D;
+	backReticleObject->Initialize();
+	backReticleObject->SetModel(bRModel);
+
+	//ラジアン変換
+	fRRotation_.y = static_cast<float>(90 * (PI / 180));
+	bRRotation_.y = static_cast<float>(90 * (PI / 180));
+
 }
 
 void Player::Update()
@@ -44,6 +59,9 @@ void Player::Update()
 			invincibleTimer = 0;
 		}
 	}
+
+	//レティクルの更新
+	UpdateRaticle();
 
 	playerObject->SetPosition(position_);
 	playerObject->SetScale(scale_);
@@ -66,6 +84,11 @@ void Player::Draw(ID3D12GraphicsCommandList* cmdList)
 	{
 		bullet->Draw(cmdList);
 	}
+
+	//レティクル
+	frontReticleObject->Draw(cmdList);
+	backReticleObject->Draw(cmdList);
+
 }
 
 void Player::SpeedUpByEnemy()
@@ -149,6 +172,28 @@ void Player::MakeBullet()
 	std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
 	newBullet->Initialize(playerBulletModel_, position_, speedZ+addSpeed);
 	playerBullet_.push_back(std::move(newBullet));
+}
+
+void Player::UpdateRaticle()
+{
+	//自機のワールド座標から3Dレティクルのワールド座標を計算
+	{
+		fRPosition_ = position_;
+		fRPosition_.z = fRPosition_.z + kDistancePlayerTo3DFrontReticle;
+
+		bRPosition_ = position_;
+		bRPosition_.z = bRPosition_.z + kDistancePlayerTo3DBackReticle;
+	}
+
+	frontReticleObject->SetPosition(fRPosition_);
+	frontReticleObject->SetRotate(fRRotation_);
+	frontReticleObject->SetScale(fRScale_);
+	frontReticleObject->Update();
+
+	backReticleObject->SetPosition(bRPosition_);
+	backReticleObject->SetRotate(bRRotation_);
+	backReticleObject->SetScale(bRScale_);
+	backReticleObject->Update();
 }
 
 XMFLOAT3 Player::GetBulletPosition(int i)
