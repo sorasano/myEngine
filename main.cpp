@@ -91,7 +91,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		//描画前処理
 		dxCommon->PreDraw();
 		//ポストエフェクト
-		postEffect->Draw(dxCommon->GetCommandList());
+		//postEffect->Draw(dxCommon->GetCommandList());
+		gameScene->Draw();
 		//描画後処理
 		dxCommon->PostDraw();
 

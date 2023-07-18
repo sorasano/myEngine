@@ -32,7 +32,7 @@ float4 main(VSOutput input) : SV_TARGET
 
 	//‰~î•ñ
 	float2 spherePos = float2(windowWidth / 2,windowHeight / 2);
-	float sphereRad = 180;
+	float sphereRad = 90;
 
 	//----”ÍˆÍƒuƒ‰[----
 
