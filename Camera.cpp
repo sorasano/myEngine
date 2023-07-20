@@ -11,15 +11,10 @@ void Camera::StaticInitialize(ID3D12Device* dev)
 	device = dev;
 }
 
-void Camera::Initialize(const XMFLOAT3& eye, const XMFLOAT3& target, const XMFLOAT3& up, Input* input)
+void Camera::Initialize(Input* input)
 {
 	//引数をメンバに移して行列更新
-	this->eye = eye;
-	this->target = target;
-	this->up = up;
-	this->input = input;
-
-
+	this->input_ = input;
 
 	HRESULT result;
 	//ヒープ設定
@@ -75,6 +70,8 @@ void Camera::Update(XMFLOAT3 playerPos)
 
 	UpdateEye();
 
+	//DebugMode();
+
 	UpdateMatrix();
 
 }
@@ -87,4 +84,48 @@ void Camera::UpdateEye()
 void Camera::UpdateTarget()
 {
 	target.z = playerPos_.z;
+}
+
+void Camera::DebugMode()
+{
+
+	float speed = 1.0f;
+
+	if (input_->PushKey(DIK_W) || input_->PushKey(DIK_S) || input_->PushKey(DIK_D) || input_->PushKey(DIK_A)) {
+
+		//座標を移動する処理
+		if (input_->PushKey(DIK_W)) {
+			 eye.z += speed;
+		}
+		else if (input_->PushKey(DIK_S)) {
+			eye.z -= speed;
+		}
+
+		if (input_->PushKey(DIK_A)) {
+			eye.x -= speed;
+		}
+		else if (input_->PushKey(DIK_D)) {
+			eye.x += speed;
+		}
+
+	}
+
+	if (input_->PushKey(DIK_UP) || input_->PushKey(DIK_DOWN) || input_->PushKey(DIK_RIGHT) || input_->PushKey(DIK_LEFT)) {
+
+		//座標を移動する処理
+		if (input_->PushKey(DIK_UP)) {
+			target.y += speed;
+		}
+		else if (input_->PushKey(DIK_DOWN)) {
+			target.y -= speed;
+		}
+
+		if (input_->PushKey(DIK_RIGHT)) {
+			target.x -= speed;
+		}
+		else if (input_->PushKey(DIK_LEFT)) {
+			target.x += speed;
+		}
+
+	}
 }

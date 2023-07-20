@@ -78,12 +78,12 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)fbx;$(SolutionDir)Math;$(SolutionDir)DirectXTex;$(SolutionDir)Base;$(ProjectDir)lib\fbx_sdk\include;$(SolutionDir)2d;$(SolutionDir)</IncludePath>
+    <IncludePath>$(SolutionDir)fbx;$(SolutionDir)Math;$(SolutionDir)DirectXTex;$(SolutionDir)Base;$(ProjectDir)lib\fbx_sdk\include;$(SolutionDir)2d;$(SolutionDir);$(SolutionDir)Loader</IncludePath>
     <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)fbx;$(SolutionDir)Math;$(SolutionDir)DirectXTex;$(SolutionDir)Base;$(ProjectDir)lib\fbx_sdk\include;$(SolutionDir)2d;$(SolutionDir)</IncludePath>
+    <IncludePath>$(SolutionDir)fbx;$(SolutionDir)Math;$(SolutionDir)DirectXTex;$(SolutionDir)Base;$(ProjectDir)lib\fbx_sdk\include;$(SolutionDir)2d;$(SolutionDir);$(SolutionDir)Loader</IncludePath>
     <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -154,17 +154,19 @@
     <ClCompile Include="2d\PostEffect.cpp" />
     <ClCompile Include="2d\Sprite.cpp" />
     <ClCompile Include="2d\SpriteManager.cpp" />
+    <ClCompile Include="BackGround.cpp" />
     <ClCompile Include="Base\DirectXCommon.cpp" />
     <ClCompile Include="Base\FPS.cpp" />
     <ClCompile Include="Base\Input.cpp" />
     <ClCompile Include="Base\WinApp.cpp" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="CSVLoader.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="fbx\FbxLoader.cpp" />
     <ClCompile Include="fbx\FbxModel.cpp" />
     <ClCompile Include="fbx\FbxObject3d.cpp" />
     <ClCompile Include="GameScene.cpp" />
+    <ClCompile Include="Loader\CSVLoader.cpp" />
+    <ClCompile Include="Loader\JsonLoader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Math\Easing.cpp" />
     <ClCompile Include="Math\Random.cpp" />
@@ -272,17 +274,20 @@
     <ClInclude Include="2d\PostEffect.h" />
     <ClInclude Include="2d\Sprite.h" />
     <ClInclude Include="2d\SpriteManager.h" />
+    <ClInclude Include="BackGround.h" />
     <ClInclude Include="Base\DirectXCommon.h" />
     <ClInclude Include="Base\FPS.h" />
     <ClInclude Include="Base\Input.h" />
     <ClInclude Include="Base\WinApp.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="CSVLoader.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="fbx\FbxLoader.h" />
     <ClInclude Include="fbx\FbxModel.h" />
     <ClInclude Include="fbx\FbxObject3d.h" />
     <ClInclude Include="GameScene.h" />
+    <ClInclude Include="Loader\CSVLoader.h" />
+    <ClInclude Include="Loader\json.hpp" />
+    <ClInclude Include="Loader\JsonLoader.h" />
     <ClInclude Include="Math\Easing.h" />
     <ClInclude Include="Math\Random.h" />
     <ClInclude Include="Math\Vector3.h" />

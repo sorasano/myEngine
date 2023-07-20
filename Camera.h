@@ -25,14 +25,14 @@ public:
 
 	XMMATRIX matView = {};
 	XMMATRIX matProjection = {};
-	XMFLOAT3 eye = {};
-	XMFLOAT3 target = {};
-	XMFLOAT3 up = {} ;
+	XMFLOAT3 eye = { 0, 1, 30 };
+	XMFLOAT3 target = { 0, 0, 0 };
+	XMFLOAT3 up = { 0, 1, 0 };;
 
 public:
 
 
-	void Initialize(const XMFLOAT3& eye, const XMFLOAT3& target, const XMFLOAT3& up, Input* input);
+	void Initialize(Input* input);
 
 	void UpdateMatrix();
 
@@ -44,6 +44,8 @@ public:
 	//targetÇÃçXêV
 	void UpdateTarget();
 
+	void DebugMode();
+
 	XMMATRIX GetViewProjection()const { return matView * matProjection; }
 	XMFLOAT3 GetEye() { return eye; }
 	XMFLOAT3 GetTarget() { return target; }
@@ -53,7 +55,7 @@ public:
 
 private:
 
-	Input* input = nullptr;
+	Input* input_ = nullptr;
 
 	float angle = 0.1f; // ÉJÉÅÉâÇÃâÒì]äp
 

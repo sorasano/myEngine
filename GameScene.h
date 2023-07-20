@@ -4,16 +4,18 @@
 #include "Input.h"
 
 #include "Camera.h"
-#include "object3D.h"
-#include "Model.h"
 #include "Sprite.h"
 #include "ParticleManager.h"
 #include "FbxLoader.h"
 #include "FbxObject3d.h"
 #include "CSVLoader.h"
+#include "JsonLoader.h"
 
+#include "BackGround.h"
 #include "Player.h"
 #include "Enemy.h"
+
+#include <map>
 
 class GameScene
 {
@@ -54,6 +56,12 @@ private:
 	FbxModel* fReticleModel = nullptr;
 	FbxModel* bReticleModel = nullptr;
 
+	//背景
+	std::list<std::unique_ptr<BackGround>> backGrounds_;
+	size_t backGroundSize = 4;
+	//今何個目の背景か
+	int backGroundNum = 1;
+	float adjustPos = 0;
 
 	//プレイヤー
 	std::unique_ptr<Player> player_;
@@ -70,11 +78,6 @@ private:
 
 	//テクスチャ
 	Sprite* testSprite = nullptr;
-
-	//ビュー変換行列
-	XMFLOAT3 eye = { 0, 1, 30 };
-	XMFLOAT3 target = { 0, 0, 0 };
-	XMFLOAT3 up = { 0, 1, 0 };
 
 };
 
