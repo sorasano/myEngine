@@ -1,0 +1,729 @@
+{
+    "name": "scene",
+    "objects": [
+        {
+            "type": "LIGHT",
+            "name": "Light",
+            "transform": {
+                "translation": [
+                    4.076245307922363,
+                    1.0054539442062378,
+                    5.903861999511719
+                ],
+                "rotation": [
+                    37.26104736328125,
+                    3.1637091636657715,
+                    106.93632507324219
+                ],
+                "scaling": [
+                    1.0,
+                    0.9999999403953552,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "CAMERA",
+            "name": "Camera",
+            "transform": {
+                "translation": [
+                    7.358891487121582,
+                    -6.925790786743164,
+                    4.958309173583984
+                ],
+                "rotation": [
+                    63.559295654296875,
+                    2.2983238068263745e-07,
+                    46.69194412231445
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "ground",
+            "transform": {
+                "translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "ground"
+        },
+        {
+            "type": "MESH",
+            "name": "pillar",
+            "transform": {
+                "translation": [
+                    39.617774963378906,
+                    0.0,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "pillar"
+        },
+        {
+            "type": "MESH",
+            "name": "pillar.001",
+            "transform": {
+                "translation": [
+                    39.617774963378906,
+                    -33.00679016113281,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "pillar"
+        },
+        {
+            "type": "MESH",
+            "name": "pillar.002",
+            "transform": {
+                "translation": [
+                    39.617774963378906,
+                    -100.92707061767578,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "pillar"
+        },
+        {
+            "type": "MESH",
+            "name": "pillar.003",
+            "transform": {
+                "translation": [
+                    39.617774963378906,
+                    -67.92028045654297,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "pillar"
+        },
+        {
+            "type": "MESH",
+            "name": "pillar.004",
+            "transform": {
+                "translation": [
+                    39.617774963378906,
+                    -202.94044494628906,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "pillar"
+        },
+        {
+            "type": "MESH",
+            "name": "pillar.005",
+            "transform": {
+                "translation": [
+                    39.617774963378906,
+                    -235.94725036621094,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "pillar"
+        },
+        {
+            "type": "MESH",
+            "name": "pillar.006",
+            "transform": {
+                "translation": [
+                    39.617774963378906,
+                    -168.02696228027344,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "pillar"
+        },
+        {
+            "type": "MESH",
+            "name": "pillar.007",
+            "transform": {
+                "translation": [
+                    39.617774963378906,
+                    -135.02017211914062,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "pillar"
+        },
+        {
+            "type": "MESH",
+            "name": "pillar.008",
+            "transform": {
+                "translation": [
+                    39.617774963378906,
+                    135.31170654296875,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "pillar"
+        },
+        {
+            "type": "MESH",
+            "name": "pillar.009",
+            "transform": {
+                "translation": [
+                    39.617774963378906,
+                    102.30490112304688,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "pillar"
+        },
+        {
+            "type": "MESH",
+            "name": "pillar.010",
+            "transform": {
+                "translation": [
+                    39.617774963378906,
+                    34.38461685180664,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "pillar"
+        },
+        {
+            "type": "MESH",
+            "name": "pillar.011",
+            "transform": {
+                "translation": [
+                    39.617774963378906,
+                    67.39142608642578,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "pillar"
+        },
+        {
+            "type": "MESH",
+            "name": "pillar.012",
+            "transform": {
+                "translation": [
+                    39.617774963378906,
+                    202.41159057617188,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "pillar"
+        },
+        {
+            "type": "MESH",
+            "name": "pillar.013",
+            "transform": {
+                "translation": [
+                    39.617774963378906,
+                    169.40480041503906,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "pillar"
+        },
+        {
+            "type": "MESH",
+            "name": "pillar.014",
+            "transform": {
+                "translation": [
+                    39.617774963378906,
+                    237.3250732421875,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "pillar"
+        },
+        {
+            "type": "MESH",
+            "name": "pillar.015",
+            "transform": {
+                "translation": [
+                    -44.55543518066406,
+                    237.3250732421875,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "pillar"
+        },
+        {
+            "type": "MESH",
+            "name": "pillar.016",
+            "transform": {
+                "translation": [
+                    -44.55543518066406,
+                    169.40480041503906,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "pillar"
+        },
+        {
+            "type": "MESH",
+            "name": "pillar.017",
+            "transform": {
+                "translation": [
+                    -44.55543518066406,
+                    202.41159057617188,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "pillar"
+        },
+        {
+            "type": "MESH",
+            "name": "pillar.018",
+            "transform": {
+                "translation": [
+                    -44.55543518066406,
+                    67.39142608642578,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "pillar"
+        },
+        {
+            "type": "MESH",
+            "name": "pillar.019",
+            "transform": {
+                "translation": [
+                    -44.55543518066406,
+                    34.38461685180664,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "pillar"
+        },
+        {
+            "type": "MESH",
+            "name": "pillar.020",
+            "transform": {
+                "translation": [
+                    -44.55543518066406,
+                    102.30490112304688,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "pillar"
+        },
+        {
+            "type": "MESH",
+            "name": "pillar.021",
+            "transform": {
+                "translation": [
+                    -44.55543518066406,
+                    135.31170654296875,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "pillar"
+        },
+        {
+            "type": "MESH",
+            "name": "pillar.022",
+            "transform": {
+                "translation": [
+                    -44.55543518066406,
+                    -135.02017211914062,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "pillar"
+        },
+        {
+            "type": "MESH",
+            "name": "pillar.023",
+            "transform": {
+                "translation": [
+                    -44.55543518066406,
+                    -168.02696228027344,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "pillar"
+        },
+        {
+            "type": "MESH",
+            "name": "pillar.024",
+            "transform": {
+                "translation": [
+                    -44.55543518066406,
+                    -235.94725036621094,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "pillar"
+        },
+        {
+            "type": "MESH",
+            "name": "pillar.025",
+            "transform": {
+                "translation": [
+                    -44.55543518066406,
+                    -202.94044494628906,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "pillar"
+        },
+        {
+            "type": "MESH",
+            "name": "pillar.026",
+            "transform": {
+                "translation": [
+                    -44.55543518066406,
+                    -67.92028045654297,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "pillar"
+        },
+        {
+            "type": "MESH",
+            "name": "pillar.027",
+            "transform": {
+                "translation": [
+                    -44.55543518066406,
+                    -100.92707061767578,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "pillar"
+        },
+        {
+            "type": "MESH",
+            "name": "pillar.028",
+            "transform": {
+                "translation": [
+                    -44.55543518066406,
+                    -33.00679016113281,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "pillar"
+        },
+        {
+            "type": "MESH",
+            "name": "pillar.029",
+            "transform": {
+                "translation": [
+                    -44.55543518066406,
+                    0.0,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "pillar"
+        }
+    ]
+}

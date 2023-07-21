@@ -28,7 +28,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 	//カメラ初期化
 	camera_ = new Camera;
 	camera_->StaticInitialize(dxCommon->GetDevice());
-	camera_->Initialize(eye, target, up, input_);
+	camera_->Initialize(input_);
 
 	//描画初期化処理　ここから
 
@@ -37,7 +37,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 
 
 	//----------FBX----------
-	
+
 	//fbxLoadr汎用初期化
 	FbxLoader::GetInstance()->Initialize(dxCommon->GetDevice());
 
@@ -54,6 +54,16 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 	bReticleModel = FbxLoader::GetInstance()->LoadModelFromFile("backReticle");
 	fReticleModel = FbxLoader::GetInstance()->LoadModelFromFile("frontReticle");
 
+	//----------背景----------
+	for (int i = 0; i < backGroundSize; i++) {
+		std::unique_ptr<BackGround>newBackGround = std::make_unique<BackGround>();
+		newBackGround->Initialize(adjustPos);
+
+		//現在の位置+1つ分のサイズで次のマップの位置にセット
+		adjustPos = newBackGround->GetPosition().z + newBackGround->GetSize();
+
+		backGrounds_.push_back(std::move(newBackGround));
+	}
 
 	//------------プレイヤー----------
 
@@ -99,7 +109,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 		enemys_.push_back(std::move(newObject));
 
 	}
-	
+
 	//スプライトマネージャー
 	SpriteManager::SetDevice(dxCommon->GetDevice());
 	spriteManager = new SpriteManager;
@@ -136,13 +146,17 @@ void GameScene::Update()
 		}
 	}
 
+	//背景
+	UpdateBackGround();
+
 	//当たり判定
 	Collition();
 
 	//カメラ更新
 	camera_->Update(player_->GetPosition());
+
 	//パーティクルマネージャー静的更新
-	ParticleManager::StaticUpdate(camera_->GetEye(),camera_->GetTarget());
+	ParticleManager::StaticUpdate(camera_->GetEye(), camera_->GetTarget());
 
 }
 
@@ -151,6 +165,17 @@ void GameScene::Draw()
 
 	//自機
 	player_->Draw(dxCommon_->GetCommandList());
+
+	//背景
+	for (std::unique_ptr<BackGround>& backGround : backGrounds_) {
+		if (UpadateRange(camera_->GetEye(), backGround->GetPosition())) {
+			backGround->Draw(dxCommon_->GetCommandList());
+		}
+	}
+
+	//スプライト
+	testSprite->Draw(dxCommon_->GetCommandList());
+
 	//敵
 	for (std::unique_ptr<Enemy>& enemy : enemys_)
 	{
@@ -158,9 +183,6 @@ void GameScene::Draw()
 			enemy->Draw(dxCommon_->GetCommandList());
 		}
 	}
-
-	//スプライト
-	testSprite->Draw(dxCommon_->GetCommandList());
 
 }
 
@@ -221,4 +243,27 @@ void GameScene::CheckEnemy()
 			enemys_.remove_if([](std::unique_ptr<Enemy>& enemy) {return enemy->GetIsDead(); });
 		}
 	}
+}
+
+void GameScene::UpdateBackGround()
+{
+
+	//背景
+	for (std::unique_ptr<BackGround>& backGround : backGrounds_)
+	{
+		backGround->Update();
+
+		//背景の位置をカメラが通り過ぎたら
+		if (backGround->GetPosition().z + backGround->GetSize() < camera_->GetEye().z) {
+
+			//オブジェクトを配置しなおす
+			backGround->SetObject(adjustPos);
+
+			//現在の位置+1つ分のサイズで次のマップの位置にセット
+			adjustPos = backGround->GetPosition().z + backGround->GetSize();
+
+		}
+
+	}
+
 }

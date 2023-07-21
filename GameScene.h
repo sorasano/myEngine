@@ -4,16 +4,18 @@
 #include "Input.h"
 
 #include "Camera.h"
-#include "object3D.h"
-#include "Model.h"
 #include "Sprite.h"
 #include "ParticleManager.h"
 #include "FbxLoader.h"
 #include "FbxObject3d.h"
 #include "CSVLoader.h"
+#include "JsonLoader.h"
 
+#include "BackGround.h"
 #include "Player.h"
 #include "Enemy.h"
+
+#include <map>
 
 class GameScene
 {
@@ -30,10 +32,14 @@ public:
 	//更新範囲
 	bool UpadateRange(XMFLOAT3 cameraPos,XMFLOAT3 pos);
 
+	//当たり判定
 	void Collition();
 
 	//敵生存確認
 	void CheckEnemy();
+
+	//背景更新
+	void UpdateBackGround();
 
 private:
 	//デバイスとinput
@@ -54,6 +60,11 @@ private:
 	FbxModel* fReticleModel = nullptr;
 	FbxModel* bReticleModel = nullptr;
 
+	//背景
+	std::list<std::unique_ptr<BackGround>> backGrounds_;
+	size_t backGroundSize = 4;
+	//調整用の座標
+	float adjustPos = 0;
 
 	//プレイヤー
 	std::unique_ptr<Player> player_;
@@ -70,11 +81,6 @@ private:
 
 	//テクスチャ
 	Sprite* testSprite = nullptr;
-
-	//ビュー変換行列
-	XMFLOAT3 eye = { 0, 1, 30 };
-	XMFLOAT3 target = { 0, 0, 0 };
-	XMFLOAT3 up = { 0, 1, 0 };
 
 };
 
