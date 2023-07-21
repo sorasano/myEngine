@@ -10,12 +10,14 @@ class BackGround
 {
 public:
 	//num = 何番の配置データを読み込みこむか,adjustPos = どのくらいずらすか
-	void Initialize(int num,float adjustPos);
+	void Initialize(float adjustPos);
 
 	void Update();
 
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
+	//オブジェクトの配置
+	void SetObject(float adjustPos);
 	//配置データをロード num = 何番の配置データを読み込みこむか
 	void LoadJson(int num);
 	//オブジェクトの配置 adjustPos = どのくらいずらすか
@@ -23,6 +25,7 @@ public:
 
 	//ゲッター
 	float GetSize() { return size; }
+	XMFLOAT3 GetPosition() { return position; }
 
 private:
 
@@ -41,6 +44,8 @@ private:
 	LevelData* levelData = nullptr;
 
 	//全体のサイズ
-	float size = 180.0f;
+	float size = 520.0f;
+	//背景の中心の位置(groundの位置)
+	XMFLOAT3 position = {};
 };
 

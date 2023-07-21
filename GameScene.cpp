@@ -54,16 +54,15 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 	bReticleModel = FbxLoader::GetInstance()->LoadModelFromFile("backReticle");
 	fReticleModel = FbxLoader::GetInstance()->LoadModelFromFile("frontReticle");
 
-	//背景
+	//----------背景----------
 	for (int i = 0; i < backGroundSize; i++) {
 		std::unique_ptr<BackGround>newBackGround = std::make_unique<BackGround>();
-		newBackGround->Initialize(backGroundNum,adjustPos);
+		newBackGround->Initialize(adjustPos);
 
-		backGroundNum++;
-		adjustPos += (backGroundNum * newBackGround->GetSize());
+		//現在の位置+1つ分のサイズで次のマップの位置にセット
+		adjustPos = newBackGround->GetPosition().z + newBackGround->GetSize();
 
 		backGrounds_.push_back(std::move(newBackGround));
-
 	}
 
 	//------------プレイヤー----------
@@ -148,10 +147,7 @@ void GameScene::Update()
 	}
 
 	//背景
-	for (std::unique_ptr<BackGround>& backGround : backGrounds_)
-	{
-		backGround->Update();
-	}
+	UpdateBackGround();
 
 	//当たり判定
 	Collition();
@@ -172,7 +168,9 @@ void GameScene::Draw()
 
 	//背景
 	for (std::unique_ptr<BackGround>& backGround : backGrounds_) {
-		backGround->Draw(dxCommon_->GetCommandList());
+		if (UpadateRange(camera_->GetEye(), backGround->GetPosition())) {
+			backGround->Draw(dxCommon_->GetCommandList());
+		}
 	}
 
 	//スプライト
@@ -245,4 +243,27 @@ void GameScene::CheckEnemy()
 			enemys_.remove_if([](std::unique_ptr<Enemy>& enemy) {return enemy->GetIsDead(); });
 		}
 	}
+}
+
+void GameScene::UpdateBackGround()
+{
+
+	//背景
+	for (std::unique_ptr<BackGround>& backGround : backGrounds_)
+	{
+		backGround->Update();
+
+		//背景の位置をカメラが通り過ぎたら
+		if (backGround->GetPosition().z + backGround->GetSize() < camera_->GetEye().z) {
+
+			//オブジェクトを配置しなおす
+			backGround->SetObject(adjustPos);
+
+			//現在の位置+1つ分のサイズで次のマップの位置にセット
+			adjustPos = backGround->GetPosition().z + backGround->GetSize();
+
+		}
+
+	}
+
 }

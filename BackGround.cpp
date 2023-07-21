@@ -1,7 +1,9 @@
 #include "BackGround.h"
+
+#include "Random.h"
 #define PI 3.1415
 
-void BackGround::Initialize(int num, float adjustPos)
+void BackGround::Initialize(float adjustPos)
 {
 	//モデル読み込み
 	groundModel = FbxLoader::GetInstance()->LoadModelFromFile("ground");
@@ -16,12 +18,8 @@ void BackGround::Initialize(int num, float adjustPos)
 	backGroundModels.insert(std::make_pair("wall", wallModel));
 	backGroundModels.insert(std::make_pair("pillar", pillarModel));
 
-	//-------背景配置-------
-	LoadJson(num);
-
-	//オブジェクトの配置
-	ArrangementObject(adjustPos);
-
+	//-------背景配置------
+	SetObject(adjustPos);
 }
 
 void BackGround::Update()
@@ -36,6 +34,17 @@ void BackGround::Draw(ID3D12GraphicsCommandList* cmdList)
 	for (auto& object : backGroundObjects) {
 		object->Draw(cmdList);
 	}
+}
+
+void BackGround::SetObject(float adjustPos)
+{
+	//ランダムで配置するマップを選択
+	int num = static_cast<int>(Random(1.0f,4.99f));
+
+	//jsonファイル読み込み
+	LoadJson(num);
+	//オブジェクトの配置
+	ArrangementObject(adjustPos);
 }
 
 void BackGround::LoadJson(int num)
@@ -60,6 +69,7 @@ void BackGround::LoadJson(int num)
 
 void BackGround::ArrangementObject(float adjustPos)
 {
+
 	// レベルデータからオブジェクトを生成、配置
 	for (auto& objectData : levelData->objects) {
 		// ファイル名から登録済みモデルを検索
@@ -99,5 +109,10 @@ void BackGround::ArrangementObject(float adjustPos)
 
 		// 配列に登録
 		backGroundObjects.push_back(newObject);
+
+		//オブジェクトがgroundの時そのポジションを中心とする
+		if (it->first == "ground") {
+			this->position = pos;
+		}
 	}
 }

@@ -32,10 +32,14 @@ public:
 	//更新範囲
 	bool UpadateRange(XMFLOAT3 cameraPos,XMFLOAT3 pos);
 
+	//当たり判定
 	void Collition();
 
 	//敵生存確認
 	void CheckEnemy();
+
+	//背景更新
+	void UpdateBackGround();
 
 private:
 	//デバイスとinput
@@ -59,8 +63,7 @@ private:
 	//背景
 	std::list<std::unique_ptr<BackGround>> backGrounds_;
 	size_t backGroundSize = 4;
-	//今何個目の背景か
-	int backGroundNum = 1;
+	//調整用の座標
 	float adjustPos = 0;
 
 	//プレイヤー
