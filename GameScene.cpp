@@ -256,6 +256,9 @@ void GameScene::UpdateBackGround()
 		//背景の位置をカメラが通り過ぎたら
 		if (backGround->GetPosition().z + backGround->GetSize() < camera_->GetEye().z) {
 
+			//過ぎたオブジェクトを削除
+			backGround->DeleteObject();
+
 			//オブジェクトを配置しなおす
 			backGround->SetObject(adjustPos);
 

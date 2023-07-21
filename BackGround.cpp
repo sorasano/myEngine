@@ -88,7 +88,7 @@ void BackGround::ArrangementObject(float adjustPos)
 		DirectX::XMFLOAT3 pos;
 		DirectX::XMStoreFloat3(&pos, objectData.translation);
 		//下に配置
-		pos.y -= 11.0f;
+		pos.y -= 12.0f;
 		//調整
 		pos.z += adjustPos;
 		newObject->SetPosition(pos);
@@ -115,4 +115,14 @@ void BackGround::ArrangementObject(float adjustPos)
 			this->position = pos;
 		}
 	}
+}
+
+void BackGround::DeleteObject()
+{
+	for (auto& object : backGroundObjects) {
+		//要素の解放
+		delete object;
+	}
+	//すべての要素をコンテナから取り除く
+	backGroundObjects.clear();
 }

@@ -23,6 +23,9 @@ public:
 	//オブジェクトの配置 adjustPos = どのくらいずらすか
 	void ArrangementObject(float adjustPos);
 
+	//オブジェクトの削除
+	void DeleteObject();
+
 	//ゲッター
 	float GetSize() { return size; }
 	XMFLOAT3 GetPosition() { return position; }
