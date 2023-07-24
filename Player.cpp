@@ -1,5 +1,8 @@
 #include "Player.h"
+
+#include "Vector3.h"
 #define PI 3.1415
+
 
 Player* Player::GetInstance()
 {
@@ -14,12 +17,22 @@ Player::Player()
 Player::~Player()
 {
 	FBX_SAFE_DELETE(playerObject);
+	FBX_SAFE_DELETE(playerModel);
+	FBX_SAFE_DELETE(playerBulletModel);
+	FBX_SAFE_DELETE(bReticleModel);
+	FBX_SAFE_DELETE(fReticleModel);
 }
 
-void Player::Initialize(Input* input, FbxModel* playerModel, FbxModel* playerBulletModel, FbxModel* fRModel, FbxModel* bRModel)
+void Player::Initialize(Input* input)
 {
 	//入力のセット
 	this->input_ = input;
+
+	//モデル名を指定してファイル読み込み
+	playerModel = FbxLoader::GetInstance()->LoadModelFromFile("player");
+	playerBulletModel = FbxLoader::GetInstance()->LoadModelFromFile("playerBullet");
+	bReticleModel = FbxLoader::GetInstance()->LoadModelFromFile("backReticle");
+	fReticleModel = FbxLoader::GetInstance()->LoadModelFromFile("frontReticle");
 
 	//3dオブジェクト生成とモデルのセット
 	playerObject = new FbxObject3D;
@@ -32,11 +45,11 @@ void Player::Initialize(Input* input, FbxModel* playerModel, FbxModel* playerBul
 	//レティクルモデルセット
 	frontReticleObject = new FbxObject3D;
 	frontReticleObject->Initialize();
-	frontReticleObject->SetModel(fRModel);
+	frontReticleObject->SetModel(fReticleModel);
 
 	backReticleObject = new FbxObject3D;
 	backReticleObject->Initialize();
-	backReticleObject->SetModel(bRModel);
+	backReticleObject->SetModel(bReticleModel);
 
 	//ラジアン変換
 	fRRotation_.y = static_cast<float>(90 * (PI / 180));
@@ -176,15 +189,22 @@ void Player::MakeBullet()
 
 void Player::UpdateRaticle()
 {
+	MoveRaticle();
+
 	//自機のワールド座標から3Dレティクルのワールド座標を計算
 	{
-		fRPosition_ = position_;
-		fRPosition_.z = fRPosition_.z + kDistancePlayerTo3DFrontReticle;
+		//奥のレティクルはレティクル座標をそのまま入れる
+		fRPosition_ = reticlePosition_;
 
-		bRPosition_ = position_;
-		bRPosition_.z = bRPosition_.z + kDistancePlayerTo3DBackReticle;
+		//中央のレティクルは自機と,レティクル座標のベクトルから座標を算出
+		Vector3 player = {};
+		Vector3 reticle = {};
+
+		bRPosition_ = reticlePosition_;
+		bRPosition_.z = position_.z + kDistancePlayerTo3DBackReticle;
 	}
 
+	//オブジェクトの更新
 	frontReticleObject->SetPosition(fRPosition_);
 	frontReticleObject->SetRotate(fRRotation_);
 	frontReticleObject->SetScale(fRScale_);
@@ -194,6 +214,34 @@ void Player::UpdateRaticle()
 	backReticleObject->SetRotate(bRRotation_);
 	backReticleObject->SetScale(bRScale_);
 	backReticleObject->Update();
+}
+
+void Player::MoveRaticle()
+{
+	//レティクルの移動
+
+	//自機から設定した距離進んだところに座標を設定
+	reticlePosition_.z = position_.z + kDistancePlayerTo3DReticle;
+
+	//入力で移動
+	if (input_->PushKey(DIK_UP) || input_->PushKey(DIK_DOWN) || input_->PushKey(DIK_RIGHT) || input_->PushKey(DIK_LEFT)) {
+
+		//座標を移動する処理
+		if (input_->PushKey(DIK_UP)) {
+			if (ReticleMoveMax.y > reticlePosition_.y) { reticlePosition_.y += reticleSpeedXY; }
+		}
+		else if (input_->PushKey(DIK_DOWN)) {
+			if (-ReticleMoveMax.y < reticlePosition_.y) { reticlePosition_.y -= reticleSpeedXY; }
+		}
+
+		if (input_->PushKey(DIK_LEFT)) {
+			if (-ReticleMoveMax.x < reticlePosition_.x) { reticlePosition_.x -= reticleSpeedXY; }
+		}
+		else if (input_->PushKey(DIK_RIGHT)) {
+			if (ReticleMoveMax.x > reticlePosition_.x) { reticlePosition_.x += reticleSpeedXY; }
+		}
+
+	}
 }
 
 XMFLOAT3 Player::GetBulletPosition(int i)

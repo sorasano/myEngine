@@ -1,10 +1,19 @@
+#pragma once
+
 #include "FbxLoader.h"
 #include "FbxObject3D.h"
 #include "DirectXCommon.h"
 
 #include "ParticleManager.h"
+#include "EnemyBullet.h"
 
-#pragma once
+enum EnemyType {
+	NOTHING,
+	NORMAL,
+	HOMING,
+	MOVING,
+};
+
 class Enemy
 {
 public:
@@ -16,7 +25,10 @@ public:
 	void Update();
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
-	void Move();
+	void UpdateNothing();
+	void UpdateNormal();
+	void UpdateHoming();
+	void UpdateMoving();
 
 	bool Collition(XMFLOAT3 pos, XMFLOAT3 size);
 
@@ -45,9 +57,23 @@ private:
 	//FBX
 	FbxObject3D* enemyObject = nullptr;
 
+	//死亡フラグ
 	bool isDead = false;
 
-	//パーティクル
+	//0 = Nothing　何もしない,1 = normal 正面にたまを打つだけ 2 = homing　ホーミング弾を打つ, 3 = 動きながら正面に弾を打つ
+	int type = 0;
+	//画面内で停滞するか
+	bool stopInScreen = false;
+
+	//----------弾----------
+	FbxModel* enemyBulletModel_ = nullptr;
+	std::list<std::unique_ptr<EnemyBullet>> enemyBullet_;
+
+	//弾の発射クールタイム
+	const int BulletCoolTime = 10;
+	int bulletCoolTimer = 0;
+
+	//-----パーティクル-----
 	ParticleManager* particle = nullptr;
 	bool isParticle = false;
 
