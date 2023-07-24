@@ -11,7 +11,7 @@ public:
 	Player* GetInstance();
 	Player();
 	~Player();
-	void Initialize(Input* input, FbxModel* playerModel, FbxModel* playerBulletModel,FbxModel* fRModel, FbxModel* bRModel);
+	void Initialize(Input* input);
 	void Update();
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
@@ -28,6 +28,7 @@ public:
 
 	//レティクル
 	void UpdateRaticle();
+	void MoveRaticle();
 
 	//ゲッター　セッター　
 	XMFLOAT3 GetPosition() { return position_; }
@@ -63,6 +64,12 @@ private:
 private:
 	//FBX
 	FbxObject3D* playerObject = nullptr;
+	//モデル
+	FbxModel* playerModel = nullptr;
+	FbxModel* playerBulletModel = nullptr;
+	FbxModel* fReticleModel = nullptr;
+	FbxModel* bReticleModel = nullptr;
+
 	//入力
 	Input* input_ = nullptr;
 
@@ -88,13 +95,25 @@ private:
 	const int InvincibleTime = 10;
 	int invincibleTimer = 0;
 
-	//レティクル
+	//--------レティクル--------
+
+	//レティクル座標
+	XMFLOAT3 reticlePosition_ = { 0,0,0 };
+	//移動範囲
+	const XMFLOAT2 ReticleMoveMax = { 20.0f,10.0f };
+	//移動スピード(xy)
+	float reticleSpeedXY = 1.0f;
+	//自機とレティクルの距離
+	const float kDistancePlayerTo3DReticle = 50.0f;
+
+	//前(奥)のレティクル
 	FbxObject3D* frontReticleObject = nullptr;
+	//後ろ(手前)のレティクル
 	FbxObject3D* backReticleObject = nullptr;
 
 	//自機からの距離
-	const float kDistancePlayerTo3DFrontReticle = 50.0f;
-	const float kDistancePlayerTo3DBackReticle = 25.0f;
+	const float kDistancePlayerTo3DFrontReticle = kDistancePlayerTo3DReticle;
+	const float kDistancePlayerTo3DBackReticle = kDistancePlayerTo3DReticle / 2;
 
 	XMFLOAT3 fRPosition_ = { 0,0,0 };
 	XMFLOAT3 fRRotation_ = { 0,0,0 };

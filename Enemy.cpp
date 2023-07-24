@@ -28,8 +28,24 @@ void Enemy::Initialize(FbxModel* EnemyModel)
 
 void Enemy::Update()
 {
-	//移動
-	Move();
+	switch (type)
+	{
+	case NOTHING:
+		UpdateNothing();
+		break;
+
+	case NORMAL:
+		UpdateNormal();
+		break;
+
+	case HOMING:
+		UpdateHoming();
+		break;
+
+	case MOVING:
+		UpdateMoving();
+		break;
+	}
 
 	//パーティクル
 	if (isParticle) {
@@ -55,7 +71,19 @@ void Enemy::Draw(ID3D12GraphicsCommandList* cmdList)
 
 }
 
-void Enemy::Move()
+void Enemy::UpdateNothing()
+{
+}
+
+void Enemy::UpdateNormal()
+{
+}
+
+void Enemy::UpdateHoming()
+{
+}
+
+void Enemy::UpdateMoving()
 {
 }
 

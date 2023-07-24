@@ -54,11 +54,7 @@ private:
 	CSVLoader* enemyCsv = nullptr;
 
 	//Fbx
-	FbxModel* playerModel = nullptr;
-	FbxModel* playerBulletModel = nullptr;
 	FbxModel* enemyModel = nullptr;
-	FbxModel* fReticleModel = nullptr;
-	FbxModel* bReticleModel = nullptr;
 
 	//îwåi
 	std::list<std::unique_ptr<BackGround>> backGrounds_;

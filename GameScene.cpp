@@ -9,8 +9,6 @@ GameScene::~GameScene()
 {
 	delete camera_;
 	delete testSprite;
-	FBX_SAFE_DELETE(playerModel);
-	FBX_SAFE_DELETE(playerBulletModel);
 	for (int i = 0; i < enemySize; i++)
 	{
 		FBX_SAFE_DELETE(enemyModel);
@@ -48,11 +46,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 	FbxObject3D::CreateGraphicsPipeline();
 
 	//モデル名を指定してファイル読み込み
-	playerModel = FbxLoader::GetInstance()->LoadModelFromFile("player");
-	playerBulletModel = FbxLoader::GetInstance()->LoadModelFromFile("playerBullet");
+
 	enemyModel = FbxLoader::GetInstance()->LoadModelFromFile("enemy");
-	bReticleModel = FbxLoader::GetInstance()->LoadModelFromFile("backReticle");
-	fReticleModel = FbxLoader::GetInstance()->LoadModelFromFile("frontReticle");
 
 	//----------背景----------
 	for (int i = 0; i < backGroundSize; i++) {
@@ -69,7 +64,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 
 	//プレイヤー初期化
 	Player* newPlayer = new Player();
-	newPlayer->Initialize(input_, playerModel, playerBulletModel, fReticleModel, bReticleModel);
+	newPlayer->Initialize(input_);
 	player_.reset(newPlayer);
 
 	//------------敵----------
