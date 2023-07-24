@@ -32,7 +32,7 @@ float4 main(VSOutput input) : SV_TARGET
 
 	//円情報
 	float2 spherePos = float2(windowWidth / 2,windowHeight / 2);
-	float sphereRad = 90;
+	float sphereRad = 180;
 
 	//----範囲ブラー----
 
@@ -59,33 +59,4 @@ float4 main(VSOutput input) : SV_TARGET
 
 	return texcolor;
 
-	//----円範囲----
-
-	//判定
-	//float4 c = (1,1,1,1);
-	//if(InSphere(spherePos,sphereRad,uv)){
-	//	c = tex.Sample(smp,input.uv);
-	//}
-	//return c;
-
-	//----ブラー----
-
-	//ガウシアンブラー
-	//float4 texcolor = tex.Sample(smp,input.uv);
-
-	//float totalWeight = 0,_Sigma = 0.005,_StepWidth = 0.001;
-
-	//for(float py = -_Sigma * 2;py <= _Sigma * 2;py += _StepWidth){
-	//	for(float px = -_Sigma * 2;px <= _Sigma * 2;px += _StepWidth){
-	
-	//		float2 pickUV = input.uv + float2(px,py);
-	//		float weight = Gaussian(input.uv,pickUV,_Sigma);
-	//		texcolor += tex.Sample(smp,pickUV) * weight;
-	//		totalWeight += weight;
-
-	//	}
-	//}
-
-	//texcolor = texcolor / totalWeight;
-	//return texcolor;
 }

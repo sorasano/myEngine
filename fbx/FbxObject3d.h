@@ -74,6 +74,11 @@ public://メンバ関数
 	void SetRotate(XMFLOAT3 rotate) { this->rotation = rotate; }
 	void SetScale(XMFLOAT3 scale) { this->scale = scale; }
 
+	//ゲッター
+	XMFLOAT3 GetPosition() { return this->position; }
+	XMFLOAT3 GetRotate() { return this->rotation ; }
+	XMFLOAT3 GetScale() { return this->scale ; }
+
 protected://メンバ変数
 	//定数バッファ
 	ComPtr<ID3D12Resource>constBuffTransform;
