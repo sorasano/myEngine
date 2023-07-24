@@ -5,22 +5,8 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="ヘッダー ファイル">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="リソース ファイル">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="ソース ファイル\Base">
       <UniqueIdentifier>{7802e0b0-5b07-468f-aed6-9faa120bbcb7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Base">
-      <UniqueIdentifier>{8847c83d-5ff9-4a0b-a6ee-88c03a0c73a4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Sprite">
-      <UniqueIdentifier>{4ea81369-3371-41d5-ac64-3148e9d54741}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\Sprite">
       <UniqueIdentifier>{a3f49882-a971-4c82-9e6f-5aec8d602b21}</UniqueIdentifier>
@@ -31,17 +17,8 @@
     <Filter Include="ソース ファイル\Math">
       <UniqueIdentifier>{765633d4-473a-471c-a7f7-a7a24698f94e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Math">
-      <UniqueIdentifier>{82a63c4f-7e23-4592-8a31-de0e8fa3c8ce}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\fbx">
       <UniqueIdentifier>{645db548-1da1-404c-8f8f-69d74ba81a64}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\fbx">
-      <UniqueIdentifier>{f259b1f2-65b0-491e-b818-6954f67d42c0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\obj">
-      <UniqueIdentifier>{83e14821-ef0b-49ff-afa5-68785be903dd}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\obj">
       <UniqueIdentifier>{e66c6849-2fe8-4926-926f-12a2dae90b20}</UniqueIdentifier>
@@ -49,14 +26,36 @@
     <Filter Include="ソース ファイル\PostEffect">
       <UniqueIdentifier>{4a393d87-12a9-4f1b-b009-06b2e5a8ec89}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Loader">
+      <UniqueIdentifier>{bb320f46-7456-4969-a460-f84465deb75e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Base">
+      <UniqueIdentifier>{8847c83d-5ff9-4a0b-a6ee-88c03a0c73a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Sprite">
+      <UniqueIdentifier>{4ea81369-3371-41d5-ac64-3148e9d54741}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Math">
+      <UniqueIdentifier>{82a63c4f-7e23-4592-8a31-de0e8fa3c8ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\fbx">
+      <UniqueIdentifier>{f259b1f2-65b0-491e-b818-6954f67d42c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\obj">
+      <UniqueIdentifier>{83e14821-ef0b-49ff-afa5-68785be903dd}</UniqueIdentifier>
+    </Filter>
     <Filter Include="ヘッダー ファイル\PostEffect">
       <UniqueIdentifier>{f4ead1e0-e45c-468d-b46e-bbfac21c7e3d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Loader">
+      <UniqueIdentifier>{a2634bc4-f62e-4d96-ba38-6e184fd672f8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Base\DirectXCommon.cpp">
       <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
@@ -65,18 +64,6 @@
     </ClCompile>
     <ClCompile Include="Base\WinApp.cpp">
       <Filter>ソース ファイル\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="ParticleManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="GameScene.cpp">
-      <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Math\Easing.cpp">
       <Filter>ソース ファイル\Math</Filter>
@@ -96,15 +83,6 @@
     <ClCompile Include="fbx\FbxObject3d.cpp">
       <Filter>ソース ファイル\fbx</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerBullet.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Enemy.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="CSVLoader.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="object3D.cpp">
       <Filter>ソース ファイル\obj</Filter>
     </ClCompile>
@@ -122,6 +100,39 @@
     </ClCompile>
     <ClCompile Include="2d\PostEffect.cpp">
       <Filter>ソース ファイル\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerBullet.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Loader\JsonLoader.cpp">
+      <Filter>ソース ファイル\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="Loader\CSVLoader.cpp">
+      <Filter>ソース ファイル\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="BackGround.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyBullet.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -231,9 +242,6 @@
     <ClInclude Include="Enemy.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="CSVLoader.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Model.h">
       <Filter>ヘッダー ファイル\obj</Filter>
     </ClInclude>
@@ -251,6 +259,21 @@
     </ClInclude>
     <ClInclude Include="2d\PostEffect.h">
       <Filter>ヘッダー ファイル\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Loader\CSVLoader.h">
+      <Filter>ヘッダー ファイル\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="Loader\json.hpp">
+      <Filter>ヘッダー ファイル\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="Loader\JsonLoader.h">
+      <Filter>ヘッダー ファイル\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="BackGround.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyBullet.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
