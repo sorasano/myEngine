@@ -1,4 +1,6 @@
 #include "PlayerBullet.h"
+#include <cmath>
+#define PI 3.1415
 
 PlayerBullet* PlayerBullet::GetInstance()
 {
@@ -15,7 +17,7 @@ PlayerBullet::~PlayerBullet()
 	FBX_SAFE_DELETE(playerBulletObject);
 }
 
-void PlayerBullet::Initialize(FbxModel* model, XMFLOAT3 position, float speed)
+void PlayerBullet::Initialize(FbxModel* model, XMFLOAT3 position, Vector3 velocity)
 {
 
 	//3dオブジェクト生成とモデルのセット
@@ -25,7 +27,21 @@ void PlayerBullet::Initialize(FbxModel* model, XMFLOAT3 position, float speed)
 
 	//座標、スピードをセット
 	this->position_ = position;
-	this->playerSpeed = speed;
+	this->velocity_ = velocity;
+
+	//scale_.z = 5.0f;
+
+	//角度をベクトルから求めてモデルに反映
+	//Y軸周り角度
+	this->rotation_.y = std::atan2(velocity_.x, velocity_.z) * velocity.z;
+
+	//横軸方向の長さを求める
+	Vector3 velocityXZ = { velocity_.x,0.0f,velocity_.z };
+	float length = velocityXZ.length();
+
+	//X軸周り角度
+	this->rotation_.x = std::atan2(-velocity_.y, length) * velocity.z;
+
 }
 
 void PlayerBullet::Update()
@@ -50,7 +66,9 @@ void PlayerBullet::Draw(ID3D12GraphicsCommandList* cmdList)
 
 void PlayerBullet::Move()
 {
-	position_.z += (speed + playerSpeed);
+	position_.x += velocity_.x;
+	position_.y += velocity_.y;
+	position_.z += velocity_.z;
 }
 
 void PlayerBullet::OnCollision()

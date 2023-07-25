@@ -103,8 +103,6 @@ private:
 	const XMFLOAT2 ReticleMoveMax = { 20.0f,10.0f };
 	//移動スピード(xy)
 	float reticleSpeedXY = 1.0f;
-	//自機とレティクルの距離
-	const float kDistancePlayerTo3DReticle = 50.0f;
 
 	//前(奥)のレティクル
 	FbxObject3D* frontReticleObject = nullptr;
@@ -112,8 +110,8 @@ private:
 	FbxObject3D* backReticleObject = nullptr;
 
 	//自機からの距離
-	const float kDistancePlayerTo3DFrontReticle = kDistancePlayerTo3DReticle;
-	const float kDistancePlayerTo3DBackReticle = kDistancePlayerTo3DReticle / 2;
+	const float kDistancePlayerTo3DFrontReticle = 50.0f;
+	const float kDistancePlayerTo3DBackReticle = kDistancePlayerTo3DFrontReticle / 2;
 
 	XMFLOAT3 fRPosition_ = { 0,0,0 };
 	XMFLOAT3 fRRotation_ = { 0,0,0 };
@@ -122,6 +120,11 @@ private:
 	XMFLOAT3 bRPosition_ = { 0,0,0 };
 	XMFLOAT3 bRRotation_ = { 0,0,0 };
 	XMFLOAT3 bRScale_ = { 1,1,1 };
+
+	//ベクトル
+	Vector3 playerVec = {};
+	Vector3 reticleVec = {};
+	Vector3 playerToReticleVec = {};
 
 public:
 
@@ -133,5 +136,7 @@ public:
 	const int BulletCoolTime = 10;
 	int bulletCoolTimer = 0;
 
+	//弾の速度
+	float bulletSpeed = 0;
 };
 

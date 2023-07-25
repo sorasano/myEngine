@@ -62,6 +62,9 @@ void Player::Update()
 	//移動
 	Move();
 
+	//レティクルの更新
+	UpdateRaticle();
+
 	//弾の更新
 	BulletUpdate();
 
@@ -72,9 +75,6 @@ void Player::Update()
 			invincibleTimer = 0;
 		}
 	}
-
-	//レティクルの更新
-	UpdateRaticle();
 
 	playerObject->SetPosition(position_);
 	playerObject->SetScale(scale_);
@@ -181,9 +181,21 @@ void Player::BulletUpdate()
 
 void Player::MakeBullet()
 {
+	//自機とレティクルのベクトルを取る
+	Vector3 velocity = playerToReticleVec;
+
+	//正規化をして速度をかける
+	velocity.normalize();
+
+	bulletSpeed = (speedZ + addSpeed);
+	velocity * bulletSpeed;
+
+	//z軸は自機も動いているためそのスピードも足す
+	velocity.z += (speedZ + addSpeed);
+
 	//弾の生成
 	std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
-	newBullet->Initialize(playerBulletModel_, position_, speedZ+addSpeed);
+	newBullet->Initialize(playerBulletModel_, position_, velocity);
 	playerBullet_.push_back(std::move(newBullet));
 }
 
@@ -197,11 +209,18 @@ void Player::UpdateRaticle()
 		fRPosition_ = reticlePosition_;
 
 		//中央のレティクルは自機と,レティクル座標のベクトルから座標を算出
-		Vector3 player = {};
-		Vector3 reticle = {};
+		playerVec = { position_.x,position_.y,position_.z };
+		reticleVec = { reticlePosition_.x, reticlePosition_.y, reticlePosition_.z };
+		playerToReticleVec = reticleVec - playerVec;
 
-		bRPosition_ = reticlePosition_;
-		bRPosition_.z = position_.z + kDistancePlayerTo3DBackReticle;
+		//自機からのベクトルを求める
+		playerToReticleVec = playerToReticleVec / (kDistancePlayerTo3DFrontReticle / kDistancePlayerTo3DBackReticle);
+
+		//自機からのベクトルと自機の座標を足す
+		bRPosition_ = position_;
+		bRPosition_.x += playerToReticleVec.x;
+		bRPosition_.y += playerToReticleVec.y;
+		bRPosition_.z += playerToReticleVec.z;
 	}
 
 	//オブジェクトの更新
@@ -221,7 +240,7 @@ void Player::MoveRaticle()
 	//レティクルの移動
 
 	//自機から設定した距離進んだところに座標を設定
-	reticlePosition_.z = position_.z + kDistancePlayerTo3DReticle;
+	reticlePosition_.z = position_.z + kDistancePlayerTo3DFrontReticle;
 
 	//入力で移動
 	if (input_->PushKey(DIK_UP) || input_->PushKey(DIK_DOWN) || input_->PushKey(DIK_RIGHT) || input_->PushKey(DIK_LEFT)) {
@@ -247,7 +266,7 @@ void Player::MoveRaticle()
 XMFLOAT3 Player::GetBulletPosition(int i)
 {
 	auto it = playerBullet_.begin();
-	std::advance(it,i);
+	std::advance(it, i);
 
 	return it->get()->GetPosition();
 }

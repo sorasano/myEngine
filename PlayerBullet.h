@@ -2,6 +2,8 @@
 #include "FbxObject3D.h"
 #include "DirectXCommon.h"
 
+#include "Vector3.h"
+
 #pragma once
 class PlayerBullet
 {
@@ -10,7 +12,7 @@ public:
 	PlayerBullet* GetInstance();
 	PlayerBullet();
 	~PlayerBullet();
-	void Initialize(FbxModel* model, XMFLOAT3 position, float speed);
+	void Initialize(FbxModel* model, XMFLOAT3 position, Vector3 velocity);
 	void Update();
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
@@ -45,10 +47,8 @@ private:
 	//FBX
 	FbxObject3D* playerBulletObject = nullptr;
 
-	//移動スピード
-	const float speed = 1.0f;
-	//自機のスピード
-	float playerSpeed = 0.0f;
+	//移動ベクトル
+	Vector3 velocity_ = {};
 
 	//寿命
 	static const int32_t lifeTime = 60 * 5;

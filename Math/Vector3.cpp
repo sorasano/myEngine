@@ -11,7 +11,7 @@ Vector3::Vector3(float x, float y, float z) :x(x), y(y), z(z)
 
 float Vector3::length() const
 {
-	return sqrt(x * x + y * y + z * z);
+	return sqrt((x * x) + (y * y) + (z * z));
 }
 
 Vector3& Vector3::normalize()
