@@ -48,6 +48,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 	//モデル名を指定してファイル読み込み
 
 	enemyModel = FbxLoader::GetInstance()->LoadModelFromFile("enemy");
+	enemyBulletModel = FbxLoader::GetInstance()->LoadModelFromFile("enemyBullet");
 
 	//----------背景----------
 	for (int i = 0; i < backGroundSize; i++) {
@@ -88,7 +89,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 
 		//RAND
 		std::unique_ptr<Enemy>newObject = std::make_unique<Enemy>();
-		newObject->Initialize(enemyModel);
+		newObject->Initialize(enemyModel, enemyBulletModel);
 
 		//ランダムに分布
 		XMFLOAT3 md_pos = { 10.0f,5.0f,1.5f };
@@ -137,9 +138,11 @@ void GameScene::Update()
 	for (std::unique_ptr<Enemy>& enemy : enemys_)
 	{
 		if (UpadateRange(camera_->GetEye(), enemy->GetPosition())) {
-			enemy->Update();
+			enemy->Update(player_->GetPosition(), player_->GetSpeed());
 		}
 	}
+	//敵のリストから削除要件確認
+	CheckEnemy();
 
 	//背景
 	UpdateBackGround();
@@ -233,11 +236,16 @@ void GameScene::CheckEnemy()
 {
 	for (std::unique_ptr<Enemy>& enemy : enemys_) {
 
-		//デスフラグ
-		if (enemy->GetIsDead()) {
-			enemys_.remove_if([](std::unique_ptr<Enemy>& enemy) {return enemy->GetIsDead(); });
+		//カメラより後ろに行ったら死亡
+		if (enemy->GetPosition().z < camera_->GetEye().z) {
+			enemy->SetISDesd(true);
 		}
+
 	}
+
+	//デスフラグがtrueでパーティクル演出もなければリストから削除
+	enemys_.remove_if([](std::unique_ptr<Enemy>& enemy) {return enemy->GetIsDead() && !enemy->GetIsParticle(); });
+
 }
 
 void GameScene::UpdateBackGround()

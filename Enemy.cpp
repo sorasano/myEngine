@@ -16,7 +16,7 @@ Enemy::~Enemy()
 	FBX_SAFE_DELETE(enemyObject);
 }
 
-void Enemy::Initialize(FbxModel* EnemyModel)
+void Enemy::Initialize(FbxModel* EnemyModel, FbxModel* enemyBulletModel)
 {
 
 	//3dオブジェクト生成とモデルのセット
@@ -24,31 +24,70 @@ void Enemy::Initialize(FbxModel* EnemyModel)
 	enemyObject->Initialize();
 	enemyObject->SetModel(EnemyModel);
 
-}
+	this->enemyBulletModel_ = enemyBulletModel;
 
-void Enemy::Update()
-{
+	type = HOMING;
+
 	switch (type)
 	{
 	case NOTHING:
-		UpdateNothing();
+		shotType = NOTSHOT;
+		moveType = NOTMOVE;
 		break;
 
 	case NORMAL:
-		UpdateNormal();
+		shotType = STRAIGHTSHOT;
+		moveType = NOTMOVE;
 		break;
 
 	case HOMING:
-		UpdateHoming();
+		shotType = HOMINGSHOT;
+		moveType = NOTMOVE;
 		break;
 
-	case MOVING:
-		UpdateMoving();
+	case MOVINGX:
+		shotType = STRAIGHTSHOT;
+		moveType = MOVEX;
+		break;
+
+	case MOVINGY:
+		shotType = STRAIGHTSHOT;
+		moveType = MOVEY;
+		break;
+
+	case MOVINGREF:
+		shotType = STRAIGHTSHOT;
+		moveType = MOVEREF;
 		break;
 	}
+}
 
+void Enemy::Update(XMFLOAT3 pPos, float pSpeed)
+{
+	//プレイヤー情報更新
+	this->playerPosition_ = pPos;
+	this->playerSpeed_ = pSpeed;
+
+	if (!isDead) {
+
+		//射撃
+		if (shotType != NOTSHOT) {
+			//プレイヤーのスピードで発射し始める座標を変更
+			shotStartPos = ShotStart * playerSpeed_;
+
+			if (position_.z < playerPosition_.z + shotStartPos) {
+				BulletUpdate();
+			}
+		}
+
+		//移動
+		if (moveType != NOTMOVE) {
+			Move();
+		}
+
+	}
 	//パーティクル
-	if (isParticle) {
+	else if (isParticle) {
 		UpdateParticle();
 	}
 
@@ -62,29 +101,23 @@ void Enemy::Draw(ID3D12GraphicsCommandList* cmdList)
 {
 	if (!isDead) {
 		enemyObject->Draw(cmdList);
-	}
 
+		//弾
+		for (std::unique_ptr<EnemyBullet>& bullet : enemyBullet_)
+		{
+			bullet->Draw(cmdList);
+		}
+	}
 	//----パーティクル----
-	if (isParticle) {
+	else if (isParticle) {
 		particle->Draw();
 	}
 
 }
 
-void Enemy::UpdateNothing()
+void Enemy::Move()
 {
-}
 
-void Enemy::UpdateNormal()
-{
-}
-
-void Enemy::UpdateHoming()
-{
-}
-
-void Enemy::UpdateMoving()
-{
 }
 
 void Enemy::InitializeParticle()
@@ -110,7 +143,7 @@ void Enemy::InitializeParticle()
 		//X,Y,Zすべて[-0.05f,+0.05f]でランダムに分布
 		const float md_vel = 0.05f;
 		XMFLOAT3 vel{};
-		vel.x = Random(-md_vel,md_vel);
+		vel.x = Random(-md_vel, md_vel);
 		vel.y = Random(-md_vel, md_vel);
 		vel.z = Random(-md_vel, md_vel);
 
@@ -141,6 +174,72 @@ void Enemy::UpdateParticle()
 	if (isParticle) {
 		particle->Update();
 	}
+}
+
+void Enemy::Shot()
+{
+	bulletCoolTimer++;
+
+	if (BulletCoolTime < bulletCoolTimer) {
+		MakeBullet();
+
+		bulletCoolTimer = 0;
+	}
+
+}
+
+void Enemy::BulletUpdate()
+{
+	//プレイヤーより前にいる敵の弾のみ発射
+	if (position_.z > playerPosition_.z) {
+		Shot();
+	}
+
+	//敵の弾更新
+	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullet_)
+	{
+		bullet->Update();
+	}
+
+	//デスフラグの立った弾を削除
+	enemyBullet_.remove_if([](std::unique_ptr<EnemyBullet>& bullet) {return bullet->GetIsDead(); });
+}
+
+void Enemy::MakeBullet()
+{
+	Vector3 velocity = {};
+
+	switch (shotType)
+	{
+	case NOTSHOT:
+
+		break;
+
+	case STRAIGHTSHOT:
+		//z軸の-方向の単位ベクトルに速度をかける
+		velocity = { 0.0f,0.0f,-1.0f };
+		velocity *= bulletSpeed;
+		break;
+
+	case HOMINGSHOT:
+
+		//自機と敵のベクトルを取る
+		Vector3 playerVec = { playerPosition_.x,playerPosition_.y,playerPosition_.z };
+		Vector3 enemyVec = { position_.x,position_.y,position_.z };
+
+		velocity = playerVec - enemyVec;
+
+		//正規化をして速度をかける
+		velocity.normalize();
+		velocity *= bulletSpeed;
+
+		break;
+	}
+
+	//弾の生成
+	std::unique_ptr<EnemyBullet> newBullet = std::make_unique<EnemyBullet>();
+	newBullet->Initialize(enemyBulletModel_, position_, velocity);
+	enemyBullet_.push_back(std::move(newBullet));
 }
 
 bool Enemy::Collition(XMFLOAT3 pos, XMFLOAT3 size)

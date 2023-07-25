@@ -20,8 +20,10 @@ public:
 	//スピードダウン
 	void SpeedDownByEnemy();
 
-	//弾
+	//移動操作
 	void Move();
+
+	//弾
 	void Shot();
 	void BulletUpdate();
 	void MakeBullet();
@@ -39,6 +41,7 @@ public:
 	void SetScale(XMFLOAT3 sca) { this->scale_ = sca; }
 
 	XMFLOAT3 GetColSize(){ return colSize; }
+	float GetSpeed() { return speedZ + addSpeed; }
 	//弾
 	int GetBulletSize() { return static_cast<int>(playerBullet_.size()); }
 	XMFLOAT3 GetBulletPosition(int i);
@@ -78,17 +81,17 @@ private:
 	//移動スピード(xy)
 	float speedXY = 0.5f;
 	//移動スピード(z)
-	float speedZ = 1.0f;
+	float speedZ = 0.5f;
 
 	//基礎スピード以外の加速スピード
 	float addSpeed = 0.0f;
 	//敵を倒した時の加速量
-	float addSpeedByEnemy = 1.5f;
+	float addSpeedByEnemy = 0.5f;
 	//敵に被弾した時の減速
 	float subSpeedByEnemy = 1.5f;
 
 	//最大加速量
-	const float MaxSpeed = 15.0f;
+	const float MaxSpeed = 10.0f;
 
 	//無敵時間
 	bool isInvincible = false;
@@ -110,7 +113,7 @@ private:
 	FbxObject3D* backReticleObject = nullptr;
 
 	//自機からの距離
-	const float kDistancePlayerTo3DFrontReticle = 50.0f;
+	const float kDistancePlayerTo3DFrontReticle = 25.0f;
 	const float kDistancePlayerTo3DBackReticle = kDistancePlayerTo3DFrontReticle / 2;
 
 	XMFLOAT3 fRPosition_ = { 0,0,0 };

@@ -55,7 +55,7 @@ private:
 
 	//Fbx
 	FbxModel* enemyModel = nullptr;
-
+	FbxModel* enemyBulletModel = nullptr;
 	//îwåi
 	std::list<std::unique_ptr<BackGround>> backGrounds_;
 	size_t backGroundSize = 4;
