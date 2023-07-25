@@ -13,7 +13,7 @@ enum EnemyType {
 	HOMING,
 	MOVINGX,
 	MOVINGY,
-	MOVINGREF,
+	MOVINGDIA,
 };
 
 enum ShotType {
@@ -26,7 +26,7 @@ enum MoveType {
 	NOTMOVE,
 	MOVEX,
 	MOVEY,
-	MOVEREF
+	MOVEDIA
 };
 
 class Enemy
@@ -42,6 +42,8 @@ public:
 
 	//移動
 	void Move();
+	void MoveX();
+	void MoveY();
 
 	//当たり判定
 	bool Collition(XMFLOAT3 pos, XMFLOAT3 size);
@@ -83,15 +85,24 @@ private:
 	int type = 0;
 	//射撃タイプ 0 何もしない 1 直線 2 プレイヤーに向かって
 	int shotType = 0;
-	//移動タイプ 0 移動しない 1 X軸 2 Y軸 3反射移動
+	//移動タイプ 0 移動しない 1 X軸 2 Y軸 3斜め
 	int moveType = 0;
 
 	//画面内で停滞するか
 	bool stopInScreen = false;
-
 	//死亡フラグ
 	bool isDead = false;
 
+
+	//-------移動-------
+	//移動 trueが+に移動中でfalseが-に移動中
+	bool moveX = true;
+	bool moveY = true;
+	//移動制限
+	float moveMaxX = 10;
+	float moveMaxY = 10;
+	//移動スピード
+	float moveSpeed = 0.1f;
 
 	//----------弾----------
 	FbxModel* enemyBulletModel_ = nullptr;

@@ -26,7 +26,7 @@ void Enemy::Initialize(FbxModel* EnemyModel, FbxModel* enemyBulletModel)
 
 	this->enemyBulletModel_ = enemyBulletModel;
 
-	type = HOMING;
+	type = MOVINGDIA;
 
 	switch (type)
 	{
@@ -55,9 +55,9 @@ void Enemy::Initialize(FbxModel* EnemyModel, FbxModel* enemyBulletModel)
 		moveType = MOVEY;
 		break;
 
-	case MOVINGREF:
+	case MOVINGDIA:
 		shotType = STRAIGHTSHOT;
-		moveType = MOVEREF;
+		moveType = MOVEDIA;
 		break;
 	}
 }
@@ -118,6 +118,71 @@ void Enemy::Draw(ID3D12GraphicsCommandList* cmdList)
 void Enemy::Move()
 {
 
+	switch (moveType)
+	{
+	case NOTMOVE:
+		break;
+
+	case MOVEX:
+		MoveX();
+		break;
+
+	case MOVEY:
+		MoveY();
+		break;
+
+	case MOVEDIA:
+		MoveX();
+		MoveY();
+		break;
+	}
+
+}
+
+void Enemy::MoveX()
+{
+	if (moveX) {
+
+		if (position_.x < moveMaxX) {
+			position_.x += moveSpeed;
+		}
+		else {
+			moveX = false;
+		}
+
+	}
+	else {
+
+		if (position_.x > -moveMaxX) {
+			position_.x -= moveSpeed;
+		}
+		else {
+			moveX = true;
+		}
+	}
+}
+
+void Enemy::MoveY()
+{
+	if (moveY) {
+
+		if (position_.y < moveMaxY) {
+			position_.y += moveSpeed;
+		}
+		else {
+			moveY = false;
+		}
+
+	}
+	else {
+
+		if (position_.y > -moveMaxY) {
+			position_.y -= moveSpeed;
+		}
+		else {
+			moveY = true;
+		}
+	}
 }
 
 void Enemy::InitializeParticle()
