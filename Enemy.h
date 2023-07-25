@@ -45,8 +45,10 @@ public:
 	void MoveX();
 	void MoveY();
 
-	//当たり判定
-	bool Collition(XMFLOAT3 pos, XMFLOAT3 size);
+	void Reflection();
+
+	//当たり判定 dead(当たったら死亡するか) 0 = 敵同士 1 = 自機,自機の弾
+	bool Collition(XMFLOAT3 pos, XMFLOAT3 size, bool dead);
 
 	//パーティクル
 	void InitializeParticle();

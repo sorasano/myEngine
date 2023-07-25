@@ -78,31 +78,31 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 	for (int i = 0; i < enemySize; i++)
 	{
 		//CSV
-		//std::unique_ptr<Enemy>newObject = std::make_unique<Enemy>();
-		//newObject->Initialize(enemyModel);
-
-		//newObject->SetPosition(enemyCsv->GetPosition(i));
-		//newObject->SetScale(enemyCsv->GetScale(i));
-		//newObject->SetRotation(enemyCsv->GetRotation(i));
-
-		//enemys_.push_back(std::move(newObject));
-
-		//RAND
 		std::unique_ptr<Enemy>newObject = std::make_unique<Enemy>();
 		newObject->Initialize(enemyModel, enemyBulletModel);
 
-		//ランダムに分布
-		XMFLOAT3 md_pos = { 10.0f,5.0f,1.5f };
-		XMFLOAT3 pos{};
-		pos.x = Random(-md_pos.x, md_pos.x);
-		pos.y = Random(-md_pos.y, md_pos.y);
-		pos.z = Random(-md_pos.z, md_pos.z);
+		newObject->SetPosition(enemyCsv->GetPosition(i));
+		newObject->SetScale(enemyCsv->GetScale(i));
+		newObject->SetRotation(enemyCsv->GetRotation(i));
 
-		pos.z = (oldPos + lowInterval);
-		oldPos = pos.z;
-
-		newObject->SetPosition(pos);
 		enemys_.push_back(std::move(newObject));
+
+		//RAND
+		//std::unique_ptr<Enemy>newObject = std::make_unique<Enemy>();
+		//newObject->Initialize(enemyModel, enemyBulletModel);
+
+		////ランダムに分布
+		//XMFLOAT3 md_pos = { 10.0f,5.0f,1.5f };
+		//XMFLOAT3 pos{};
+		//pos.x = Random(-md_pos.x, md_pos.x);
+		//pos.y = Random(-md_pos.y, md_pos.y);
+		//pos.z = Random(-md_pos.z, md_pos.z);
+
+		//pos.z = (oldPos + lowInterval);
+		//oldPos = pos.z;
+
+		//newObject->SetPosition(pos);
+		//enemys_.push_back(std::move(newObject));
 
 	}
 
@@ -205,7 +205,7 @@ void GameScene::Collition()
 			{
 				if (!enemy->GetIsDead()) {
 					//当たったか
-					if (enemy->Collition(player_->GetBulletPosition(i), player_->GetBulletColSize(i))) {
+					if (enemy->Collition(player_->GetBulletPosition(i), player_->GetBulletColSize(i), true)) {
 
 						//当たったら自機の弾を消し、自機のスピードを上げスコアを加算
 						player_->SetBulletIsDead(true, i);
@@ -221,7 +221,7 @@ void GameScene::Collition()
 	{
 		if (!enemy->GetIsDead()) {
 			//当たったか
-			if (enemy->Collition(player_->GetPosition(), player_->GetColSize())) {
+			if (enemy->Collition(player_->GetPosition(), player_->GetColSize(), true)) {
 
 				//当たったら自機のスピードを下げ,少し無敵時間に
 				player_->SpeedDownByEnemy();
@@ -230,6 +230,19 @@ void GameScene::Collition()
 		}
 	}
 
+	//敵と敵
+	//for (std::unique_ptr<Enemy>& enemy : enemys_)
+	//{
+	//	if (!enemy->GetIsDead()) {
+	//		//当たったか
+	//		if (enemy->Collition(player_->GetPosition(), player_->GetColSize(), true)) {
+
+	//			//当たったら自機のスピードを下げ,少し無敵時間に
+	//			player_->SpeedDownByEnemy();
+	//			player_->SetIsInvincible(true);
+	//		}
+	//	}
+	//}
 }
 
 void GameScene::CheckEnemy()

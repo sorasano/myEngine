@@ -185,6 +185,26 @@ void Enemy::MoveY()
 	}
 }
 
+void Enemy::Reflection()
+{
+	//ˆÚ“®‚ð”½‘ÎŒü‚«‚É‚³‚¹‚é
+	if (moveType != NOTMOVE) {
+		if (moveX) {
+			moveX = false;
+		}
+		else {
+			moveX = true;
+		}
+
+		if (moveY) {
+			moveY = false;
+		}
+		else {
+			moveY = true;
+		}
+	}
+}
+
 void Enemy::InitializeParticle()
 {
 	//ƒtƒ‰ƒO‚ðtrue‚É
@@ -307,7 +327,7 @@ void Enemy::MakeBullet()
 	enemyBullet_.push_back(std::move(newBullet));
 }
 
-bool Enemy::Collition(XMFLOAT3 pos, XMFLOAT3 size)
+bool Enemy::Collition(XMFLOAT3 pos, XMFLOAT3 size,bool dead)
 {
 	XMFLOAT3 ePos = position_;
 	XMFLOAT3 eSize = scale_;
@@ -338,11 +358,19 @@ bool Enemy::Collition(XMFLOAT3 pos, XMFLOAT3 size)
 		if (ePosY1 < bPosY2 && bPosY1 < ePosY2) {
 			if (ePosZ1 < bPosZ2 && bPosZ1 < ePosZ2) {
 
-				//Ž©‹@‚Ì’e‚É“–‚½‚Á‚½‚çŽ€–S
-				isDead = true;
+				//Ž€–S‚·‚éê‡
+				if (dead) {
+					//Ž©‹@‚Ì’e‚É“–‚½‚Á‚½‚çŽ€–S
+					isDead = true;
+					//ƒp[ƒeƒBƒNƒ‹¶¬
+					InitializeParticle();
+				}
+				else {
+					//“–‚½‚Á‚½‚Ì‚ª“G“¯Žm‚Ìê‡
 
-				//ƒp[ƒeƒBƒNƒ‹¶¬
-				InitializeParticle();
+					//”½ŽË‚³‚¹‚é
+					Reflection();
+				}
 			}
 		}
 	}
