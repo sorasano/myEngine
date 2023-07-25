@@ -1,5 +1,6 @@
 #include "PlayerBullet.h"
 #include <cmath>
+#define PI 3.1415
 
 PlayerBullet* PlayerBullet::GetInstance()
 {
@@ -28,15 +29,18 @@ void PlayerBullet::Initialize(FbxModel* model, XMFLOAT3 position, Vector3 veloci
 	this->position_ = position;
 	this->velocity_ = velocity;
 
-	//Šp“x‚ðƒxƒNƒgƒ‹‚©‚ç‹‚ß‚Äƒ‚ƒfƒ‹‚É”½‰f
-	this->rotation_.y = atan2(velocity_.z, velocity_.x);
+	//scale_.z = 5.0f;
 
+	//Šp“x‚ðƒxƒNƒgƒ‹‚©‚ç‹‚ß‚Äƒ‚ƒfƒ‹‚É”½‰f
+	//YŽ²Žü‚èŠp“x
+	this->rotation_.y = std::atan2(velocity_.x, velocity_.z) * velocity.z;
+
+	//‰¡Ž²•ûŒü‚Ì’·‚³‚ð‹‚ß‚é
 	Vector3 velocityXZ = { velocity_.x,0.0f,velocity_.z };
 	float length = velocityXZ.length();
 
-	this->rotation_.x = atan2(-velocity_.y, length);
-
-	scale_.z = 20.0f;
+	//XŽ²Žü‚èŠp“x
+	this->rotation_.x = std::atan2(-velocity_.y, length) * velocity.z;
 
 }
 
