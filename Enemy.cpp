@@ -24,9 +24,9 @@ void Enemy::Initialize(FbxModel* EnemyModel, FbxModel* enemyBulletModel)
 	enemyObject->Initialize();
 	enemyObject->SetModel(EnemyModel);
 
-	this->enemyBulletModel_ = enemyBulletModel;
+	this->bulletModel_ = enemyBulletModel;
 
-	type = MOVINGDIA;
+	type = HOMING;
 
 	switch (type)
 	{
@@ -103,7 +103,7 @@ void Enemy::Draw(ID3D12GraphicsCommandList* cmdList)
 		enemyObject->Draw(cmdList);
 
 		//íe
-		for (std::unique_ptr<EnemyBullet>& bullet : enemyBullet_)
+		for (std::unique_ptr<EnemyBullet>& bullet : bullets_)
 		{
 			bullet->Draw(cmdList);
 		}
@@ -281,13 +281,13 @@ void Enemy::BulletUpdate()
 	}
 
 	//ìGÇÃíeçXêV
-	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullet_)
+	for (std::unique_ptr<EnemyBullet>& bullet : bullets_)
 	{
 		bullet->Update();
 	}
 
 	//ÉfÉXÉtÉâÉOÇÃóßÇ¡ÇΩíeÇçÌèú
-	enemyBullet_.remove_if([](std::unique_ptr<EnemyBullet>& bullet) {return bullet->GetIsDead(); });
+	bullets_.remove_if([](std::unique_ptr<EnemyBullet>& bullet) {return bullet->GetIsDead(); });
 }
 
 void Enemy::MakeBullet()
@@ -323,57 +323,35 @@ void Enemy::MakeBullet()
 
 	//íeÇÃê∂ê¨
 	std::unique_ptr<EnemyBullet> newBullet = std::make_unique<EnemyBullet>();
-	newBullet->Initialize(enemyBulletModel_, position_, velocity);
-	enemyBullet_.push_back(std::move(newBullet));
+	newBullet->Initialize(bulletModel_, position_, velocity);
+	bullets_.push_back(std::move(newBullet));
 }
 
-bool Enemy::Collition(XMFLOAT3 pos, XMFLOAT3 size,bool dead)
+
+CollisionData Enemy::GetColData()
 {
-	XMFLOAT3 ePos = position_;
-	XMFLOAT3 eSize = scale_;
 
-	float ePosX1 = ePos.x - eSize.x;
-	float ePosX2 = ePos.x + eSize.x;
+	CollisionData colData;
 
-	float ePosY1 = ePos.y - eSize.y;
-	float ePosY2 = ePos.y + eSize.y;
+	colData.position = this->position_;
+	colData.size = this->colSize_;
 
-	float ePosZ1 = ePos.z - eSize.z;
-	float ePosZ2 = ePos.z + eSize.z;
-
-	XMFLOAT3 bPos = pos;
-	XMFLOAT3 bSize = size;
-
-	float bPosX1 = bPos.x - bSize.x;
-	float bPosX2 = bPos.x + bSize.x;
-
-	float bPosY1 = bPos.y - bSize.y;
-	float bPosY2 = bPos.y + bSize.y;
-
-	float bPosZ1 = bPos.z - bSize.z;
-	float bPosZ2 = bPos.z + bSize.z;
-
-
-	if (ePosX1 < bPosX2 && bPosX1 < ePosX2) {
-		if (ePosY1 < bPosY2 && bPosY1 < ePosY2) {
-			if (ePosZ1 < bPosZ2 && bPosZ1 < ePosZ2) {
-
-				//éÄñSÇ∑ÇÈèÍçá
-				if (dead) {
-					//é©ã@ÇÃíeÇ…ìñÇΩÇ¡ÇΩÇÁéÄñS
-					isDead = true;
-					//ÉpÅ[ÉeÉBÉNÉãê∂ê¨
-					InitializeParticle();
-				}
-				else {
-					//ìñÇΩÇ¡ÇΩÇÃÇ™ìGìØémÇÃèÍçá
-
-					//îΩéÀÇ≥ÇπÇÈ
-					Reflection();
-				}
-			}
-		}
-	}
-
-	return isDead;
+	return colData;
 }
+
+CollisionData Enemy::GetBulletColData(int i)
+{
+	auto it = bullets_.begin();
+	std::advance(it, i);
+
+	return it->get()->GetColData();
+}
+
+void Enemy::SetBulletIsDead(bool isDead, int i)
+{
+	auto it = bullets_.begin();
+	std::advance(it, i);
+
+	it->get()->SetIsDead(isDead);
+}
+

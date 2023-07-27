@@ -28,6 +28,9 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 	camera_->StaticInitialize(dxCommon->GetDevice());
 	camera_->Initialize(input_);
 
+	//当たり判定
+	collisionManager_ = new Collision();
+
 	//描画初期化処理　ここから
 
 	// パーティクル静的初期化
@@ -141,6 +144,7 @@ void GameScene::Update()
 			enemy->Update(player_->GetPosition(), player_->GetSpeed());
 		}
 	}
+
 	//敵のリストから削除要件確認
 	CheckEnemy();
 
@@ -196,7 +200,8 @@ bool GameScene::UpadateRange(XMFLOAT3 cameraPos, XMFLOAT3 pos)
 
 void GameScene::Collition()
 {
-	//敵と自機の弾の当たり判定
+#pragma region 敵と自機の弾の当たり判定
+
 	if (player_->GetBulletSize() != 0) {
 
 		for (int i = 0; i < player_->GetBulletSize(); i++) {
@@ -205,9 +210,13 @@ void GameScene::Collition()
 			{
 				if (!enemy->GetIsDead()) {
 					//当たったか
-					if (enemy->Collition(player_->GetBulletPosition(i), player_->GetBulletColSize(i), true)) {
+					if (collisionManager_->CheckCollisionSquare(enemy->GetColData(), player_->GetBulletColData(i))) {
 
-						//当たったら自機の弾を消し、自機のスピードを上げスコアを加算
+						//当たったら敵は消してパーティクル生成
+						enemy->SetISDesd(true);
+						enemy->InitializeParticle();
+
+						//自機の弾を消し、自機のスピードを上げスコアを加算
 						player_->SetBulletIsDead(true, i);
 						player_->SpeedUpByEnemy();
 					}
@@ -216,34 +225,91 @@ void GameScene::Collition()
 		}
 	}
 
-	//敵と自機の当たり判定
+#pragma endregion 
+
+#pragma region	敵と自機の当たり判定
+
 	for (std::unique_ptr<Enemy>& enemy : enemys_)
 	{
 		if (!enemy->GetIsDead()) {
 			//当たったか
-			if (enemy->Collition(player_->GetPosition(), player_->GetColSize(), true)) {
+			if (collisionManager_->CheckCollisionSquare(enemy->GetColData(),player_->GetColData())) {
 
-				//当たったら自機のスピードを下げ,少し無敵時間に
+				//当たったら敵は消してパーティクル生成
+				enemy->SetISDesd(true);
+				enemy->InitializeParticle();
+
+				//自機のスピードを下げ,少し無敵時間に
 				player_->SpeedDownByEnemy();
 				player_->SetIsInvincible(true);
+
 			}
 		}
 	}
 
-	//敵と敵
-	//for (std::unique_ptr<Enemy>& enemy : enemys_)
-	//{
-	//	if (!enemy->GetIsDead()) {
-	//		//当たったか
-	//		if (enemy->Collition(player_->GetPosition(), player_->GetColSize(), true)) {
+#pragma endregion 
 
-	//			//当たったら自機のスピードを下げ,少し無敵時間に
-	//			player_->SpeedDownByEnemy();
-	//			player_->SetIsInvincible(true);
-	//		}
-	//	}
-	//}
+#pragma region	敵と敵
+
+	const int enemySize = static_cast<const int>(enemys_.size());
+
+	for (int i = 0; i < enemySize; i++) {
+		for (int j = 0; j < enemySize; j++) {
+
+			if (i < j) {
+				break;
+			}
+
+			auto it1 = enemys_.begin();
+			std::advance(it1, i);
+
+			auto it2 = enemys_.begin();
+			std::advance(it2, j);
+
+			if (!it1->get()->GetIsDead() && !it2->get()->GetIsDead()) {
+
+				//当たったか
+				if (collisionManager_->CheckCollisionSquare(it1->get()->GetColData(), it2->get()->GetColData())) {
+
+					//当たったら反射させる
+					it1->get()->Reflection();
+					it2->get()->Reflection();
+
+				}
+
+			}
+
+		}
+	}
+
+#pragma endregion 
+
+#pragma region 自機と敵の弾
+
+	for (std::unique_ptr<Enemy>& enemy : enemys_)
+	{
+		if (enemy->GetBulletSize() != 0) {
+
+			for (int i = 0; i < enemy->GetBulletSize(); i++) {
+
+				if (!enemy->GetIsDead()) {
+					//当たったか
+					if (collisionManager_->CheckCollisionSquare(player_->GetColData(), enemy->GetBulletColData(i))) {
+
+						//当たったら敵の弾を消し、自機のスピードを下げげスコアを減算
+						enemy->SetBulletIsDead(true, i);
+						player_->SpeedDownByEnemy();
+
+					}
+				}
+			}
+		}
+	}
+
+#pragma endregion 
+
 }
+
 
 void GameScene::CheckEnemy()
 {

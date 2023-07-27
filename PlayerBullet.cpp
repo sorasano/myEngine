@@ -75,3 +75,13 @@ void PlayerBullet::OnCollision()
 {
 	isDead_ = true;
 }
+
+CollisionData PlayerBullet::GetColData()
+{
+	CollisionData colData;
+
+	colData.position = this->position_;
+	colData.size = this->colSize_;
+
+	return colData;
+}

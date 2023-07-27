@@ -3,6 +3,8 @@
 #include "DirectXCommon.h"
 #include "PlayerBullet.h"
 
+
+
 #pragma once
 class Player
 {
@@ -40,17 +42,15 @@ public:
 	void SetRotation(XMFLOAT3 rot) { this->rotation_ = rot; }
 	void SetScale(XMFLOAT3 sca) { this->scale_ = sca; }
 
-	XMFLOAT3 GetColSize(){ return colSize; }
 	float GetSpeed() { return speedZ + addSpeed; }
-	//弾
-	int GetBulletSize() { return static_cast<int>(playerBullet_.size()); }
-	XMFLOAT3 GetBulletPosition(int i);
-	XMFLOAT3 GetBulletRotation(int i);
-	XMFLOAT3 GetBulletScale(int i);
-	XMFLOAT3 GetBulletColSize(int i);
+	CollisionData GetColData();
 
+	void SetIsInvincible(bool isInvincible) { this->isInvincible = isInvincible; }
+
+	//弾
+	int GetBulletSize() { return static_cast<int>(bullets_.size()); }
+	CollisionData GetBulletColData(int i);
 	void SetBulletIsDead(bool isDead,int i);
-	void SetIsInvincible(bool isInvincible){ this->isInvincible = isInvincible; }
 
 private:
 	//アフィン変換情報
@@ -62,7 +62,7 @@ private:
 	XMMATRIX matWorld = {};
 
 	//当たり判定用
-	XMFLOAT3 colSize = {1.0f,1.0f,1.0f};
+	XMFLOAT3 colSize_ = {1.0f,1.0f,1.0f};
 
 private:
 	//FBX
@@ -103,7 +103,7 @@ private:
 	//レティクル座標
 	XMFLOAT3 reticlePosition_ = { 0,0,0 };
 	//移動範囲
-	const XMFLOAT2 ReticleMoveMax = { 20.0f,10.0f };
+	const XMFLOAT2 ReticleMoveMax = { 40.0f,20.0f };
 	//移動スピード(xy)
 	float reticleSpeedXY = 1.0f;
 
@@ -132,11 +132,11 @@ private:
 public:
 
 	//弾
-	FbxModel* playerBulletModel_ = nullptr;
-	std::list<std::unique_ptr<PlayerBullet>> playerBullet_;
+	FbxModel* bulletModel_ = nullptr;
+	std::list<std::unique_ptr<PlayerBullet>> bullets_;
 
 	//弾の発射クールタイム
-	const int BulletCoolTime = 10;
+	const int BulletCoolTime = 5;
 	int bulletCoolTimer = 0;
 
 	//弾の速度

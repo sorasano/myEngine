@@ -75,3 +75,13 @@ void EnemyBullet::OnCollision()
 {
 	isDead_ = true;
 }
+
+CollisionData EnemyBullet::GetColData()
+{
+	CollisionData colData;
+
+	colData.position = this->position_;
+	colData.size = this->colSize_;
+
+	return colData;
+}

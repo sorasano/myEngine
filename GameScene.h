@@ -10,6 +10,7 @@
 #include "FbxObject3d.h"
 #include "CSVLoader.h"
 #include "JsonLoader.h"
+#include "Collision.h"
 
 #include "BackGround.h"
 #include "Player.h"
@@ -77,6 +78,9 @@ private:
 
 	//テクスチャ
 	Sprite* testSprite = nullptr;
+
+	//当たり判定
+	Collision* collisionManager_ = nullptr;
 
 };
 

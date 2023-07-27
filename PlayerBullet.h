@@ -2,6 +2,7 @@
 #include "FbxObject3D.h"
 #include "DirectXCommon.h"
 
+#include "Collision.h"
 #include "Vector3.h"
 
 #pragma once
@@ -29,7 +30,7 @@ public:
 	void SetRotation(XMFLOAT3 rot) { this->rotation_ = rot; }
 	void SetScale(XMFLOAT3 sca) { this->scale_ = sca; }
 
-	XMFLOAT3 GetColSize() { return colSize_; };
+	CollisionData GetColData();
 
 private:
 	//アフィン変換情報
@@ -41,7 +42,7 @@ private:
 	XMMATRIX matWorld = {};
 
 	//当たり判定用
-	XMFLOAT3 colSize_ = { 0.2f,0.2f,1.0f };
+	XMFLOAT3 colSize_ = { 0.5f,0.5f,2.0f };
 
 private:
 	//FBX

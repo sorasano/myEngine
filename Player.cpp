@@ -40,7 +40,7 @@ void Player::Initialize(Input* input)
 	playerObject->SetModel(playerModel);
 
 	//弾モデルセット
-	this->playerBulletModel_ = playerBulletModel;
+	this->bulletModel_ = playerBulletModel;
 
 	//レティクルモデルセット
 	frontReticleObject = new FbxObject3D;
@@ -93,7 +93,7 @@ void Player::Draw(ID3D12GraphicsCommandList* cmdList)
 	}
 
 	//弾
-	for (std::unique_ptr<PlayerBullet>& bullet : playerBullet_)
+	for (std::unique_ptr<PlayerBullet>& bullet : bullets_)
 	{
 		bullet->Draw(cmdList);
 	}
@@ -171,12 +171,12 @@ void Player::BulletUpdate()
 	//---弾---
 	Shot();
 	//プレイヤーの弾更新
-	for (std::unique_ptr<PlayerBullet>& bullet : playerBullet_)
+	for (std::unique_ptr<PlayerBullet>& bullet : bullets_)
 	{
 		bullet->Update();
 	}
 	//デスフラグの立った弾を削除
-	playerBullet_.remove_if([](std::unique_ptr<PlayerBullet>& bullet) {return bullet->GetIsDead(); });
+	bullets_.remove_if([](std::unique_ptr<PlayerBullet>& bullet) {return bullet->GetIsDead(); });
 }
 
 void Player::MakeBullet()
@@ -195,8 +195,8 @@ void Player::MakeBullet()
 
 	//弾の生成
 	std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
-	newBullet->Initialize(playerBulletModel_, position_, velocity);
-	playerBullet_.push_back(std::move(newBullet));
+	newBullet->Initialize(bulletModel_, position_, velocity);
+	bullets_.push_back(std::move(newBullet));
 }
 
 void Player::UpdateRaticle()
@@ -263,41 +263,28 @@ void Player::MoveRaticle()
 	}
 }
 
-XMFLOAT3 Player::GetBulletPosition(int i)
+CollisionData Player::GetColData()
 {
-	auto it = playerBullet_.begin();
-	std::advance(it, i);
 
-	return it->get()->GetPosition();
+	CollisionData colData;
+
+	colData.position = this->position_;
+	colData.size = this->colSize_;
+
+	return colData;
 }
 
-XMFLOAT3 Player::GetBulletRotation(int i)
+CollisionData Player::GetBulletColData(int i)
 {
-	auto it = playerBullet_.begin();
+	auto it = bullets_.begin();
 	std::advance(it, i);
 
-	return it->get()->GetRotation();
-}
-
-XMFLOAT3 Player::GetBulletScale(int i)
-{
-	auto it = playerBullet_.begin();
-	std::advance(it, i);
-
-	return it->get()->GetScale();
-}
-
-XMFLOAT3 Player::GetBulletColSize(int i)
-{
-	auto it = playerBullet_.begin();
-	std::advance(it, i);
-
-	return it->get()->GetColSize();
+	return it->get()->GetColData();
 }
 
 void Player::SetBulletIsDead(bool isDead, int i)
 {
-	auto it = playerBullet_.begin();
+	auto it = bullets_.begin();
 	std::advance(it, i);
 
 	it->get()->SetIsDead(isDead);

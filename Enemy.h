@@ -7,6 +7,8 @@
 #include "ParticleManager.h"
 #include "EnemyBullet.h"
 
+#include "Collision.h"
+
 enum EnemyType {
 	NOTHING,
 	NORMAL,
@@ -47,9 +49,6 @@ public:
 
 	void Reflection();
 
-	//当たり判定 dead(当たったら死亡するか) 0 = 敵同士 1 = 自機,自機の弾
-	bool Collition(XMFLOAT3 pos, XMFLOAT3 size, bool dead);
-
 	//パーティクル
 	void InitializeParticle();
 	void UpdateParticle();
@@ -70,6 +69,14 @@ public:
 	void SetISDesd(bool isDead) { this->isDead = isDead; }
 	bool GetIsDead() { return isDead; }
 	bool GetIsParticle() { return isParticle; }
+
+	CollisionData GetColData();
+
+	//弾
+	int GetBulletSize() { return static_cast<int>(bullets_.size()); }
+	CollisionData GetBulletColData(int i);
+	void SetBulletIsDead(bool isDead, int i);
+
 private:
 	//アフィン変換情報;
 	XMFLOAT3 position_ = { 0,0,0 };
@@ -79,6 +86,8 @@ private:
 	//ワールド変換行列
 	XMMATRIX matWorld = {};
 
+	//当たり判定用
+	XMFLOAT3 colSize_ = { 1.0f,1.0f,1.0f };
 private:
 	//FBX
 	FbxObject3D* enemyObject = nullptr;
@@ -107,8 +116,8 @@ private:
 	float moveSpeed = 0.1f;
 
 	//----------弾----------
-	FbxModel* enemyBulletModel_ = nullptr;
-	std::list<std::unique_ptr<EnemyBullet>> enemyBullet_;
+	FbxModel* bulletModel_ = nullptr;
+	std::list<std::unique_ptr<EnemyBullet>> bullets_;
 
 	//弾の発射クールタイム
 	const int BulletCoolTime = 50;
