@@ -13,7 +13,7 @@ public:
 	EnemyBullet* GetInstance();
 	EnemyBullet();
 	~EnemyBullet();
-	void Initialize(FbxModel* model, XMFLOAT3 position, Vector3 velocity);
+	void Initialize(FbxModel* model, XMFLOAT3 position, Vector3 velocity, float playerSpeed);
 	void Update();
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 

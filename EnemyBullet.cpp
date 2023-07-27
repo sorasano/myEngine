@@ -17,7 +17,7 @@ EnemyBullet::~EnemyBullet()
 	FBX_SAFE_DELETE(EnemyBulletObject);
 }
 
-void EnemyBullet::Initialize(FbxModel* model, XMFLOAT3 position, Vector3 velocity)
+void EnemyBullet::Initialize(FbxModel* model, XMFLOAT3 position, Vector3 velocity,float playerSpeed)
 {
 
 	//3dオブジェクト生成とモデルのセット
@@ -33,10 +33,10 @@ void EnemyBullet::Initialize(FbxModel* model, XMFLOAT3 position, Vector3 velocit
 
 	//角度をベクトルから求めてモデルに反映
 	//Y軸周り角度
-	this->rotation_.y = std::atan2(velocity_.x, velocity_.z);
+	this->rotation_.y = std::atan2(velocity_.x, velocity_.z - playerSpeed);
 
 	//横軸方向の長さを求める
-	Vector3 velocityXZ = { velocity_.x,0.0f,velocity_.z };
+	Vector3 velocityXZ = { velocity_.x,0.0f,velocity_.z - playerSpeed};
 	float length = velocityXZ.length();
 
 	//X軸周り角度

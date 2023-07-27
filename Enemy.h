@@ -49,6 +49,9 @@ public:
 
 	void Reflection();
 
+	//画面内に停滞させる
+	void StopInScreen();
+
 	//パーティクル
 	void InitializeParticle();
 	void UpdateParticle();
@@ -87,7 +90,7 @@ private:
 	XMMATRIX matWorld = {};
 
 	//当たり判定用
-	XMFLOAT3 colSize_ = { 1.0f,1.0f,1.0f };
+	XMFLOAT3 colSize_ = { 2.0f,2.0f,1.0f };
 private:
 	//FBX
 	FbxObject3D* enemyObject = nullptr;
@@ -99,11 +102,16 @@ private:
 	//移動タイプ 0 移動しない 1 X軸 2 Y軸 3斜め
 	int moveType = 0;
 
-	//画面内で停滞するか
-	bool stopInScreen = false;
 	//死亡フラグ
 	bool isDead = false;
 
+	//画面内で停滞するか
+	bool stopInScreen = true;
+	//何秒停滞するか
+	const int StopInScreenTime = 600;
+	int stopInScreenTimer = 0;
+	//プレイヤーからどの位置に停止するか
+	float stopInScreenPosition = 26.0f;
 
 	//-------移動-------
 	//移動 trueが+に移動中でfalseが-に移動中

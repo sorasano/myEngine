@@ -86,9 +86,9 @@ private:
 	//基礎スピード以外の加速スピード
 	float addSpeed = 0.0f;
 	//敵を倒した時の加速量
-	float addSpeedByEnemy = 0.5f;
+	float addSpeedByEnemy = 0.1f;
 	//敵に被弾した時の減速
-	float subSpeedByEnemy = 1.5f;
+	float subSpeedByEnemy = 0.5f;
 
 	//最大加速量
 	const float MaxSpeed = 10.0f;

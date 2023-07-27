@@ -26,7 +26,7 @@ void Enemy::Initialize(FbxModel* EnemyModel, FbxModel* enemyBulletModel)
 
 	this->bulletModel_ = enemyBulletModel;
 
-	type = HOMING;
+	type = MOVINGDIA;
 
 	switch (type)
 	{
@@ -70,6 +70,14 @@ void Enemy::Update(XMFLOAT3 pPos, float pSpeed)
 
 	if (!isDead) {
 
+		//画面内に停滞させる
+		StopInScreen();
+
+		//移動
+		if (moveType != NOTMOVE) {
+			Move();
+		}
+
 		//射撃
 		if (shotType != NOTSHOT) {
 			//プレイヤーのスピードで発射し始める座標を変更
@@ -79,12 +87,6 @@ void Enemy::Update(XMFLOAT3 pPos, float pSpeed)
 				BulletUpdate();
 			}
 		}
-
-		//移動
-		if (moveType != NOTMOVE) {
-			Move();
-		}
-
 	}
 	//パーティクル
 	else if (isParticle) {
@@ -205,6 +207,29 @@ void Enemy::Reflection()
 	}
 }
 
+void Enemy::StopInScreen()
+{
+
+	if (stopInScreen) {
+
+		//プレイヤーからstopInScreenPosition進んだ距離に到達したら
+		if (position_.z < playerPosition_.z + stopInScreenPosition) {
+
+			//自機についていく
+			position_.z += playerSpeed_;
+
+			//タイマーを進める
+			stopInScreenTimer++;
+			if (stopInScreenTimer > StopInScreenTime) {
+				stopInScreen = false;
+			}
+
+		}
+
+	}
+
+}
+
 void Enemy::InitializeParticle()
 {
 	//フラグをtrueに
@@ -309,7 +334,7 @@ void Enemy::MakeBullet()
 	case HOMINGSHOT:
 
 		//自機と敵のベクトルを取る
-		Vector3 playerVec = { playerPosition_.x,playerPosition_.y,playerPosition_.z };
+		Vector3 playerVec = { playerPosition_.x ,playerPosition_.y,playerPosition_.z};
 		Vector3 enemyVec = { position_.x,position_.y,position_.z };
 
 		velocity = playerVec - enemyVec;
@@ -318,12 +343,14 @@ void Enemy::MakeBullet()
 		velocity.normalize();
 		velocity *= bulletSpeed;
 
+		velocity.z += playerSpeed_;
+
 		break;
 	}
 
 	//弾の生成
 	std::unique_ptr<EnemyBullet> newBullet = std::make_unique<EnemyBullet>();
-	newBullet->Initialize(bulletModel_, position_, velocity);
+	newBullet->Initialize(bulletModel_, position_, velocity,playerSpeed_);
 	bullets_.push_back(std::move(newBullet));
 }
 
