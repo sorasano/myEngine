@@ -9,10 +9,10 @@ GameScene::~GameScene()
 {
 	delete camera_;
 	delete testSprite;
-	for (int i = 0; i < enemySize; i++)
-	{
-		FBX_SAFE_DELETE(enemyModel);
-	}
+	//for (int i = 0; i < enemySize; i++)
+	//{
+	//	FBX_SAFE_DELETE(enemyModel);
+	//}
 }
 
 void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
@@ -71,44 +71,32 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 	newPlayer->Initialize(input_);
 	player_.reset(newPlayer);
 
-	//------------敵----------
-	enemyCsv = new CSVLoader;
-	enemyCsv->LoadCSV("Resources/csv/enemy.csv");
+	//----------------敵--------------
 
-	float lowInterval = 50.0f;
-	float oldPos = 0.0f;
+	//csvファイル名前
+	enemyCsvsName_ = {
+	"enemy1",
+	"enemy2",
+	"enemy3"
+	};
 
-	for (int i = 0; i < enemySize; i++)
-	{
-		//CSV
-		std::unique_ptr<Enemy>newObject = std::make_unique<Enemy>();
-		newObject->Initialize(enemyModel, enemyBulletModel);
+	enemyCSVSize = static_cast<int>(enemyCsvsName_.size());
 
-		newObject->SetPosition(enemyCsv->GetPosition(i));
-		newObject->SetScale(enemyCsv->GetScale(i));
-		newObject->SetRotation(enemyCsv->GetRotation(i));
+	//csvデータをファイル数分,配列に入力
+	for (int i = 0; i < enemyCSVSize; i++) {
 
-		enemys_.push_back(std::move(newObject));
+		//ファイルの名前を取得
+		std::string fileName = enemyCsvsName_[i];
 
-		//RAND
-		//std::unique_ptr<Enemy>newObject = std::make_unique<Enemy>();
-		//newObject->Initialize(enemyModel, enemyBulletModel);
-
-		////ランダムに分布
-		//XMFLOAT3 md_pos = { 10.0f,5.0f,1.5f };
-		//XMFLOAT3 pos{};
-		//pos.x = Random(-md_pos.x, md_pos.x);
-		//pos.y = Random(-md_pos.y, md_pos.y);
-		//pos.z = Random(-md_pos.z, md_pos.z);
-
-		//pos.z = (oldPos + lowInterval);
-		//oldPos = pos.z;
-
-		//newObject->SetPosition(pos);
-		//enemys_.push_back(std::move(newObject));
+		std::unique_ptr<CSVLoader>newEnemyCsv = std::make_unique<CSVLoader>();
+		newEnemyCsv->LoadCSV(fileName);
+		enemyCsvs_.push_back(std::move(newEnemyCsv));
 
 	}
 
+	//csvデータをもとにに敵にデータをセット
+	SetEnemy();
+	
 	//スプライトマネージャー
 	SpriteManager::SetDevice(dxCommon->GetDevice());
 	spriteManager = new SpriteManager;
@@ -193,7 +181,7 @@ bool GameScene::UpadateRange(XMFLOAT3 cameraPos, XMFLOAT3 pos)
 
 	if (cameraPos.x - pos.x < 20.0f && cameraPos.x - pos.x > -20.0f) { return true; }
 	if (cameraPos.y - pos.y < 10.0f && cameraPos.y - pos.y > -10.0f) { return true; }
-	if (cameraPos.z - pos.z < -10.0f && cameraPos.z - pos.z > -500.0f) { return true; }
+	if (cameraPos.z - pos.z < -10.0f && cameraPos.z - pos.z > -rangeMaxZ) { return true; }
 
 	return false;
 }
@@ -233,7 +221,7 @@ void GameScene::Collition()
 	{
 		if (!enemy->GetIsDead()) {
 			//当たったか
-			if (collisionManager_->CheckCollisionSquare(enemy->GetColData(),player_->GetColData())) {
+			if (collisionManager_->CheckCollisionSquare(enemy->GetColData(), player_->GetColData())) {
 
 				//当たったら敵は消してパーティクル生成
 				enemy->SetISDesd(true);
@@ -325,6 +313,13 @@ void GameScene::CheckEnemy()
 	//デスフラグがtrueでパーティクル演出もなければリストから削除
 	enemys_.remove_if([](std::unique_ptr<Enemy>& enemy) {return enemy->GetIsDead() && !enemy->GetIsParticle(); });
 
+	//敵が0になったら
+	if (enemys_.size() == 0) {
+
+		SetEnemy();
+
+	}
+
 }
 
 void GameScene::UpdateBackGround()
@@ -351,4 +346,28 @@ void GameScene::UpdateBackGround()
 
 	}
 
+}
+
+void GameScene::SetEnemy()
+{
+
+	//発生させる位置は最大描画距離から
+	float makePos = player_->GetPosition().z + rangeMaxZ;
+
+	//何番目のCSVをセットするか(ランダム)
+	int setNum = static_cast<int>(Random(0,enemyCSVSize - 0.001f));
+	auto it = enemyCsvs_.begin();
+	std::advance(it, setNum);
+
+	for (int i = 0; i < it->get()->GetSize(); i++)
+	{
+		std::unique_ptr<Enemy>newObject = std::make_unique<Enemy>();
+		newObject->Initialize(enemyModel, enemyBulletModel);
+
+		newObject->SetPosition(XMFLOAT3(it->get()->GetPosition(i).x, it->get()->GetPosition(i).y, it->get()->GetPosition(i).z + makePos));
+		newObject->SetType(it->get()->GetType(i));
+		newObject->SetStopInScreen(it->get()->GetStopInScreen(i));
+
+		enemys_.push_back(std::move(newObject));
+	}
 }

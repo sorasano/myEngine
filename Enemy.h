@@ -75,6 +75,9 @@ public:
 
 	CollisionData GetColData();
 
+	void SetType(int type);
+	void SetStopInScreen(bool stopInScreen) { this->stopInScreen = stopInScreen; }
+
 	//’e
 	int GetBulletSize() { return static_cast<int>(bullets_.size()); }
 	CollisionData GetBulletColData(int i);
@@ -106,7 +109,7 @@ private:
 	bool isDead = false;
 
 	//‰æ–Ê“à‚Å’â‘Ø‚·‚é‚©
-	bool stopInScreen = true;
+	bool stopInScreen = false;
 	//‰½•b’â‘Ø‚·‚é‚©
 	const int StopInScreenTime = 600;
 	int stopInScreenTimer = 0;

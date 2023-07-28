@@ -25,41 +25,7 @@ void Enemy::Initialize(FbxModel* EnemyModel, FbxModel* enemyBulletModel)
 	enemyObject->SetModel(EnemyModel);
 
 	this->bulletModel_ = enemyBulletModel;
-
-	type = MOVINGDIA;
-
-	switch (type)
-	{
-	case NOTHING:
-		shotType = NOTSHOT;
-		moveType = NOTMOVE;
-		break;
-
-	case NORMAL:
-		shotType = STRAIGHTSHOT;
-		moveType = NOTMOVE;
-		break;
-
-	case HOMING:
-		shotType = HOMINGSHOT;
-		moveType = NOTMOVE;
-		break;
-
-	case MOVINGX:
-		shotType = STRAIGHTSHOT;
-		moveType = MOVEX;
-		break;
-
-	case MOVINGY:
-		shotType = STRAIGHTSHOT;
-		moveType = MOVEY;
-		break;
-
-	case MOVINGDIA:
-		shotType = STRAIGHTSHOT;
-		moveType = MOVEDIA;
-		break;
-	}
+	
 }
 
 void Enemy::Update(XMFLOAT3 pPos, float pSpeed)
@@ -364,6 +330,45 @@ CollisionData Enemy::GetColData()
 	colData.size = this->colSize_;
 
 	return colData;
+}
+
+void Enemy::SetType(int type)
+{
+
+	this->type = type;
+
+	switch (type)
+	{
+	case NOTHING:
+		shotType = NOTSHOT;
+		moveType = NOTMOVE;
+		break;
+
+	case NORMAL:
+		shotType = STRAIGHTSHOT;
+		moveType = NOTMOVE;
+		break;
+
+	case HOMING:
+		shotType = HOMINGSHOT;
+		moveType = NOTMOVE;
+		break;
+
+	case MOVINGX:
+		shotType = STRAIGHTSHOT;
+		moveType = MOVEX;
+		break;
+
+	case MOVINGY:
+		shotType = STRAIGHTSHOT;
+		moveType = MOVEY;
+		break;
+
+	case MOVINGDIA:
+		shotType = STRAIGHTSHOT;
+		moveType = MOVEDIA;
+		break;
+	}
 }
 
 CollisionData Enemy::GetBulletColData(int i)
