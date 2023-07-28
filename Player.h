@@ -3,6 +3,8 @@
 #include "DirectXCommon.h"
 #include "PlayerBullet.h"
 
+
+
 #pragma once
 class Player
 {
@@ -20,8 +22,10 @@ public:
 	//スピードダウン
 	void SpeedDownByEnemy();
 
-	//弾
+	//移動操作
 	void Move();
+
+	//弾
 	void Shot();
 	void BulletUpdate();
 	void MakeBullet();
@@ -38,16 +42,15 @@ public:
 	void SetRotation(XMFLOAT3 rot) { this->rotation_ = rot; }
 	void SetScale(XMFLOAT3 sca) { this->scale_ = sca; }
 
-	XMFLOAT3 GetColSize(){ return colSize; }
-	//弾
-	int GetBulletSize() { return static_cast<int>(playerBullet_.size()); }
-	XMFLOAT3 GetBulletPosition(int i);
-	XMFLOAT3 GetBulletRotation(int i);
-	XMFLOAT3 GetBulletScale(int i);
-	XMFLOAT3 GetBulletColSize(int i);
+	float GetSpeed() { return speedZ + addSpeed; }
+	CollisionData GetColData();
 
+	void SetIsInvincible(bool isInvincible) { this->isInvincible = isInvincible; }
+
+	//弾
+	int GetBulletSize() { return static_cast<int>(bullets_.size()); }
+	CollisionData GetBulletColData(int i);
 	void SetBulletIsDead(bool isDead,int i);
-	void SetIsInvincible(bool isInvincible){ this->isInvincible = isInvincible; }
 
 private:
 	//アフィン変換情報
@@ -59,7 +62,7 @@ private:
 	XMMATRIX matWorld = {};
 
 	//当たり判定用
-	XMFLOAT3 colSize = {1.0f,1.0f,1.0f};
+	XMFLOAT3 colSize_ = {1.0f,1.0f,1.0f};
 
 private:
 	//FBX
@@ -78,17 +81,17 @@ private:
 	//移動スピード(xy)
 	float speedXY = 0.5f;
 	//移動スピード(z)
-	float speedZ = 1.0f;
+	float speedZ = 0.5f;
 
 	//基礎スピード以外の加速スピード
 	float addSpeed = 0.0f;
 	//敵を倒した時の加速量
-	float addSpeedByEnemy = 1.5f;
+	float addSpeedByEnemy = 0.1f;
 	//敵に被弾した時の減速
-	float subSpeedByEnemy = 1.5f;
+	float subSpeedByEnemy = 0.5f;
 
 	//最大加速量
-	const float MaxSpeed = 15.0f;
+	const float MaxSpeed = 10.0f;
 
 	//無敵時間
 	bool isInvincible = false;
@@ -100,7 +103,7 @@ private:
 	//レティクル座標
 	XMFLOAT3 reticlePosition_ = { 0,0,0 };
 	//移動範囲
-	const XMFLOAT2 ReticleMoveMax = { 20.0f,10.0f };
+	const XMFLOAT2 ReticleMoveMax = { 40.0f,20.0f };
 	//移動スピード(xy)
 	float reticleSpeedXY = 1.0f;
 
@@ -110,7 +113,7 @@ private:
 	FbxObject3D* backReticleObject = nullptr;
 
 	//自機からの距離
-	const float kDistancePlayerTo3DFrontReticle = 50.0f;
+	const float kDistancePlayerTo3DFrontReticle = 25.0f;
 	const float kDistancePlayerTo3DBackReticle = kDistancePlayerTo3DFrontReticle / 2;
 
 	XMFLOAT3 fRPosition_ = { 0,0,0 };
@@ -129,11 +132,11 @@ private:
 public:
 
 	//弾
-	FbxModel* playerBulletModel_ = nullptr;
-	std::list<std::unique_ptr<PlayerBullet>> playerBullet_;
+	FbxModel* bulletModel_ = nullptr;
+	std::list<std::unique_ptr<PlayerBullet>> bullets_;
 
 	//弾の発射クールタイム
-	const int BulletCoolTime = 10;
+	const int BulletCoolTime = 5;
 	int bulletCoolTimer = 0;
 
 	//弾の速度

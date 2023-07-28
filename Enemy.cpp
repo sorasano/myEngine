@@ -16,7 +16,7 @@ Enemy::~Enemy()
 	FBX_SAFE_DELETE(enemyObject);
 }
 
-void Enemy::Initialize(FbxModel* EnemyModel)
+void Enemy::Initialize(FbxModel* EnemyModel, FbxModel* enemyBulletModel)
 {
 
 	//3dオブジェクト生成とモデルのセット
@@ -24,31 +24,38 @@ void Enemy::Initialize(FbxModel* EnemyModel)
 	enemyObject->Initialize();
 	enemyObject->SetModel(EnemyModel);
 
+	this->bulletModel_ = enemyBulletModel;
+	
 }
 
-void Enemy::Update()
+void Enemy::Update(XMFLOAT3 pPos, float pSpeed)
 {
-	switch (type)
-	{
-	case NOTHING:
-		UpdateNothing();
-		break;
+	//プレイヤー情報更新
+	this->playerPosition_ = pPos;
+	this->playerSpeed_ = pSpeed;
 
-	case NORMAL:
-		UpdateNormal();
-		break;
+	if (!isDead) {
 
-	case HOMING:
-		UpdateHoming();
-		break;
+		//画面内に停滞させる
+		StopInScreen();
 
-	case MOVING:
-		UpdateMoving();
-		break;
+		//移動
+		if (moveType != NOTMOVE) {
+			Move();
+		}
+
+		//射撃
+		if (shotType != NOTSHOT) {
+			//プレイヤーのスピードで発射し始める座標を変更
+			shotStartPos = ShotStart * playerSpeed_;
+
+			if (position_.z < playerPosition_.z + shotStartPos) {
+				BulletUpdate();
+			}
+		}
 	}
-
 	//パーティクル
-	if (isParticle) {
+	else if (isParticle) {
 		UpdateParticle();
 	}
 
@@ -62,29 +69,131 @@ void Enemy::Draw(ID3D12GraphicsCommandList* cmdList)
 {
 	if (!isDead) {
 		enemyObject->Draw(cmdList);
-	}
 
+		//弾
+		for (std::unique_ptr<EnemyBullet>& bullet : bullets_)
+		{
+			bullet->Draw(cmdList);
+		}
+	}
 	//----パーティクル----
-	if (isParticle) {
+	else if (isParticle) {
 		particle->Draw();
 	}
 
 }
 
-void Enemy::UpdateNothing()
+void Enemy::Move()
 {
+
+	switch (moveType)
+	{
+	case NOTMOVE:
+		break;
+
+	case MOVEX:
+		MoveX();
+		break;
+
+	case MOVEY:
+		MoveY();
+		break;
+
+	case MOVEDIA:
+		MoveX();
+		MoveY();
+		break;
+	}
+
 }
 
-void Enemy::UpdateNormal()
+void Enemy::MoveX()
 {
+	if (moveX) {
+
+		if (position_.x < moveMaxX) {
+			position_.x += moveSpeed;
+		}
+		else {
+			moveX = false;
+		}
+
+	}
+	else {
+
+		if (position_.x > -moveMaxX) {
+			position_.x -= moveSpeed;
+		}
+		else {
+			moveX = true;
+		}
+	}
 }
 
-void Enemy::UpdateHoming()
+void Enemy::MoveY()
 {
+	if (moveY) {
+
+		if (position_.y < moveMaxY) {
+			position_.y += moveSpeed;
+		}
+		else {
+			moveY = false;
+		}
+
+	}
+	else {
+
+		if (position_.y > -moveMaxY) {
+			position_.y -= moveSpeed;
+		}
+		else {
+			moveY = true;
+		}
+	}
 }
 
-void Enemy::UpdateMoving()
+void Enemy::Reflection()
 {
+	//移動を反対向きにさせる
+	if (moveType != NOTMOVE) {
+		if (moveX) {
+			moveX = false;
+		}
+		else {
+			moveX = true;
+		}
+
+		if (moveY) {
+			moveY = false;
+		}
+		else {
+			moveY = true;
+		}
+	}
+}
+
+void Enemy::StopInScreen()
+{
+
+	if (stopInScreen) {
+
+		//プレイヤーからstopInScreenPosition進んだ距離に到達したら
+		if (position_.z < playerPosition_.z + stopInScreenPosition) {
+
+			//自機についていく
+			position_.z += playerSpeed_;
+
+			//タイマーを進める
+			stopInScreenTimer++;
+			if (stopInScreenTimer > StopInScreenTime) {
+				stopInScreen = false;
+			}
+
+		}
+
+	}
+
 }
 
 void Enemy::InitializeParticle()
@@ -110,7 +219,7 @@ void Enemy::InitializeParticle()
 		//X,Y,Zすべて[-0.05f,+0.05f]でランダムに分布
 		const float md_vel = 0.05f;
 		XMFLOAT3 vel{};
-		vel.x = Random(-md_vel,md_vel);
+		vel.x = Random(-md_vel, md_vel);
 		vel.y = Random(-md_vel, md_vel);
 		vel.z = Random(-md_vel, md_vel);
 
@@ -143,45 +252,138 @@ void Enemy::UpdateParticle()
 	}
 }
 
-bool Enemy::Collition(XMFLOAT3 pos, XMFLOAT3 size)
+void Enemy::Shot()
 {
-	XMFLOAT3 ePos = position_;
-	XMFLOAT3 eSize = scale_;
+	bulletCoolTimer++;
 
-	float ePosX1 = ePos.x - eSize.x;
-	float ePosX2 = ePos.x + eSize.x;
+	if (BulletCoolTime < bulletCoolTimer) {
+		MakeBullet();
 
-	float ePosY1 = ePos.y - eSize.y;
-	float ePosY2 = ePos.y + eSize.y;
-
-	float ePosZ1 = ePos.z - eSize.z;
-	float ePosZ2 = ePos.z + eSize.z;
-
-	XMFLOAT3 bPos = pos;
-	XMFLOAT3 bSize = size;
-
-	float bPosX1 = bPos.x - bSize.x;
-	float bPosX2 = bPos.x + bSize.x;
-
-	float bPosY1 = bPos.y - bSize.y;
-	float bPosY2 = bPos.y + bSize.y;
-
-	float bPosZ1 = bPos.z - bSize.z;
-	float bPosZ2 = bPos.z + bSize.z;
-
-
-	if (ePosX1 < bPosX2 && bPosX1 < ePosX2) {
-		if (ePosY1 < bPosY2 && bPosY1 < ePosY2) {
-			if (ePosZ1 < bPosZ2 && bPosZ1 < ePosZ2) {
-
-				//自機の弾に当たったら死亡
-				isDead = true;
-
-				//パーティクル生成
-				InitializeParticle();
-			}
-		}
+		bulletCoolTimer = 0;
 	}
 
-	return isDead;
 }
+
+void Enemy::BulletUpdate()
+{
+	//プレイヤーより前にいる敵の弾のみ発射
+	if (position_.z > playerPosition_.z) {
+		Shot();
+	}
+
+	//敵の弾更新
+	for (std::unique_ptr<EnemyBullet>& bullet : bullets_)
+	{
+		bullet->Update();
+	}
+
+	//デスフラグの立った弾を削除
+	bullets_.remove_if([](std::unique_ptr<EnemyBullet>& bullet) {return bullet->GetIsDead(); });
+}
+
+void Enemy::MakeBullet()
+{
+	Vector3 velocity = {};
+
+	switch (shotType)
+	{
+	case NOTSHOT:
+
+		break;
+
+	case STRAIGHTSHOT:
+		//z軸の-方向の単位ベクトルに速度をかける
+		velocity = { 0.0f,0.0f,-1.0f };
+		velocity *= bulletSpeed;
+		break;
+
+	case HOMINGSHOT:
+
+		//自機と敵のベクトルを取る
+		Vector3 playerVec = { playerPosition_.x ,playerPosition_.y,playerPosition_.z};
+		Vector3 enemyVec = { position_.x,position_.y,position_.z };
+
+		velocity = playerVec - enemyVec;
+
+		//正規化をして速度をかける
+		velocity.normalize();
+		velocity *= bulletSpeed;
+
+		velocity.z += playerSpeed_;
+
+		break;
+	}
+
+	//弾の生成
+	std::unique_ptr<EnemyBullet> newBullet = std::make_unique<EnemyBullet>();
+	newBullet->Initialize(bulletModel_, position_, velocity,playerSpeed_);
+	bullets_.push_back(std::move(newBullet));
+}
+
+
+CollisionData Enemy::GetColData()
+{
+
+	CollisionData colData;
+
+	colData.position = this->position_;
+	colData.size = this->colSize_;
+
+	return colData;
+}
+
+void Enemy::SetType(int type)
+{
+
+	this->type = type;
+
+	switch (type)
+	{
+	case NOTHING:
+		shotType = NOTSHOT;
+		moveType = NOTMOVE;
+		break;
+
+	case NORMAL:
+		shotType = STRAIGHTSHOT;
+		moveType = NOTMOVE;
+		break;
+
+	case HOMING:
+		shotType = HOMINGSHOT;
+		moveType = NOTMOVE;
+		break;
+
+	case MOVINGX:
+		shotType = STRAIGHTSHOT;
+		moveType = MOVEX;
+		break;
+
+	case MOVINGY:
+		shotType = STRAIGHTSHOT;
+		moveType = MOVEY;
+		break;
+
+	case MOVINGDIA:
+		shotType = STRAIGHTSHOT;
+		moveType = MOVEDIA;
+		break;
+	}
+}
+
+CollisionData Enemy::GetBulletColData(int i)
+{
+	auto it = bullets_.begin();
+	std::advance(it, i);
+
+	return it->get()->GetColData();
+}
+
+void Enemy::SetBulletIsDead(bool isDead, int i)
+{
+	auto it = bullets_.begin();
+	std::advance(it, i);
+
+	it->get()->SetIsDead(isDead);
+}
+

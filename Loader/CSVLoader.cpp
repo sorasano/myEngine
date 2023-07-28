@@ -1,17 +1,26 @@
 #include "CSVLoader.h"
+
 #include<fstream>
 #include "sstream"
 #include "stdio.h"
+#include <string>
+
+const std::string CSVLoader::kDefaultbaseDirectory = "Resources/csv/";
+const std::string CSVLoader::kExtension = ".csv";
 
 void CSVLoader::LoadCSV(const std::string fileName)
 {
-	position.clear();
-	scale.clear();
-	rotation.clear();
+	position_.clear();
+	scale_.clear();
+	rotation_.clear();
+	type_.clear();
+
+	//連結してフルパスを得る
+	const std::string fullpath = kDefaultbaseDirectory + fileName + kExtension;
 
 	//ファイルを開く
 	std::ifstream file;
-	file.open(fileName);
+	file.open(fullpath);
 	assert(!file.fail());
 
 	std::string line;
@@ -28,29 +37,23 @@ void CSVLoader::LoadCSV(const std::string fileName)
 
 		if (key == "position")
 		{
-			DirectX::XMFLOAT3 pos1;
-			line_stream >> pos1.x;
-			line_stream >> pos1.y;
-			line_stream >> pos1.z;
-			position.emplace_back(pos1);
+			DirectX::XMFLOAT3 pos;
+			line_stream >> pos.x;
+			line_stream >> pos.y;
+			line_stream >> pos.z;
+			this->position_.emplace_back(pos);
+		}
+		
+		if (key == "type") {
+			int type;
+			line_stream >> type;
+			this->type_.emplace_back(type);
 		}
 
-		if (key == "rotation")
-		{
-			DirectX::XMFLOAT3 rot1;
-			line_stream >> rot1.x;
-			line_stream >> rot1.y;
-			line_stream >> rot1.z;
-			rotation.emplace_back(rot1);
-		}
-
-		if (key == "scale")
-		{
-			DirectX::XMFLOAT3 scale1;
-			line_stream >> scale1.x;
-			line_stream >> scale1.y;
-			line_stream >> scale1.z;
-			scale.emplace_back(scale1);
+		if (key == "stopInScreen") {
+			bool stopInScreen;
+			line_stream >> stopInScreen;
+			this->stopInScreen_.emplace_back(stopInScreen);
 		}
 	}
 	//ファイルを閉じる

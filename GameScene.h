@@ -10,6 +10,7 @@
 #include "FbxObject3d.h"
 #include "CSVLoader.h"
 #include "JsonLoader.h"
+#include "Collision.h"
 
 #include "BackGround.h"
 #include "Player.h"
@@ -30,7 +31,7 @@ public:
 	void Draw();
 
 	//更新範囲
-	bool UpadateRange(XMFLOAT3 cameraPos,XMFLOAT3 pos);
+	bool UpadateRange(XMFLOAT3 cameraPos, XMFLOAT3 pos);
 
 	//当たり判定
 	void Collition();
@@ -41,6 +42,9 @@ public:
 	//背景更新
 	void UpdateBackGround();
 
+	//敵配置
+	void SetEnemy();
+
 private:
 	//デバイスとinput
 	DirectXCommon* dxCommon_ = nullptr;
@@ -50,11 +54,9 @@ private:
 	//カメラ
 	Camera* camera_{};
 
-	//csv
-	CSVLoader* enemyCsv = nullptr;
-
 	//Fbx
 	FbxModel* enemyModel = nullptr;
+	FbxModel* enemyBulletModel = nullptr;
 
 	//背景
 	std::list<std::unique_ptr<BackGround>> backGrounds_;
@@ -67,16 +69,21 @@ private:
 
 	//敵
 	std::list<std::unique_ptr<Enemy>> enemys_;
-	size_t enemySize = 100;
 
-
-	//----スプライト----
+	//csv
+	std::list<std::unique_ptr<CSVLoader>> enemyCsvs_;
+	std::vector<std::string> enemyCsvsName_;
+	int enemyCSVSize = 0;
 
 	//スプライトマネージャー
 	SpriteManager* spriteManager = nullptr;
-
 	//テクスチャ
 	Sprite* testSprite = nullptr;
 
+	//当たり判定
+	Collision* collisionManager_ = nullptr;
+
+	//描画最大距離
+	float rangeMaxZ = 500.0f;
 };
 

@@ -33,14 +33,14 @@ void PlayerBullet::Initialize(FbxModel* model, XMFLOAT3 position, Vector3 veloci
 
 	//Šp“x‚ðƒxƒNƒgƒ‹‚©‚ç‹‚ß‚Äƒ‚ƒfƒ‹‚É”½‰f
 	//YŽ²Žü‚èŠp“x
-	this->rotation_.y = std::atan2(velocity_.x, velocity_.z) * velocity.z;
+	this->rotation_.y = std::atan2(velocity_.x, velocity_.z);
 
 	//‰¡Ž²•ûŒü‚Ì’·‚³‚ð‹‚ß‚é
 	Vector3 velocityXZ = { velocity_.x,0.0f,velocity_.z };
 	float length = velocityXZ.length();
 
 	//XŽ²Žü‚èŠp“x
-	this->rotation_.x = std::atan2(-velocity_.y, length) * velocity.z;
+	this->rotation_.x = std::atan2(-velocity_.y, length);
 
 }
 
@@ -74,4 +74,14 @@ void PlayerBullet::Move()
 void PlayerBullet::OnCollision()
 {
 	isDead_ = true;
+}
+
+CollisionData PlayerBullet::GetColData()
+{
+	CollisionData colData;
+
+	colData.position = this->position_;
+	colData.size = this->colSize_;
+
+	return colData;
 }

@@ -1,0 +1,40 @@
+(1)
+position 0 1 100
+type 0
+stopInScreen 0
+(2)
+position -10 6 100
+type 0
+stopInScreen 0
+(3)
+position 6 -12 300
+type 0
+stopInScreen 0
+(4)
+position -14 -4 400
+type 0
+stopInScreen 0
+(5)
+position 17 16 500
+type 0
+stopInScreen 0
+(6)
+position -12 8 600
+type 0
+stopInScreen 0
+(7)
+position 10 -19 700
+type 0
+stopInScreen 0
+(8)
+position -6 15 800
+type 0
+stopInScreen 0
+(9)
+position 14 3 900
+type 0
+stopInScreen 0
+(10)
+position -17 -6 1000
+type 0
+stopInScreen 0
