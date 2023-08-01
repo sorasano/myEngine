@@ -50,6 +50,9 @@ public:
 	ID3D12DescriptorHeap* GetRtvHeap() { return rtvHeap.Get(); }
 	ID3D12Fence* GetFence() { return fence.Get(); }
 	ComPtr<ID3D12DescriptorHeap>GetHeapForImgui() { return _heapForImgui; };
+
+	//バックバッファの数を取得
+	size_t GetBackBufferCount() const { return backBuffers.size(); }
 public:
 	//メンバ変数
 	//ウィンドウ

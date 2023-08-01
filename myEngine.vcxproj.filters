@@ -137,6 +137,9 @@
     <ClCompile Include="Collision.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Base\ImGuiManager.cpp">
+      <Filter>ソース ファイル\Base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\FBX.hlsli">
@@ -280,6 +283,9 @@
     </ClInclude>
     <ClInclude Include="Collision.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\ImGuiManager.h">
+      <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
