@@ -205,7 +205,7 @@ void Enemy::InitializeParticle()
 
 	//パーティクル生成
 	particle = new ParticleManager();
-	particle->Initialize("Resources/effect1.png");
+	particle->Initialize("Resources/effect/effect1.png");
 
 	for (int i = 0; i < 100; i++) {
 		//X,Y,Zすべてpositionから[+1.0f,-1.0f]でランダムに分布

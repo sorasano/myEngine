@@ -12,6 +12,7 @@
 #include "JsonLoader.h"
 #include "Collision.h"
 
+#include "Skydome.h"
 #include "BackGround.h"
 #include "Player.h"
 #include "Enemy.h"
@@ -29,6 +30,8 @@ public:
 	void Update();
 
 	void Draw();
+
+	void DrawSprite();
 
 	//更新範囲
 	bool UpadateRange(XMFLOAT3 cameraPos, XMFLOAT3 pos);
@@ -57,6 +60,9 @@ private:
 	//Fbx
 	FbxModel* enemyModel = nullptr;
 	FbxModel* enemyBulletModel = nullptr;
+
+	//スカイドーム
+	std::unique_ptr<Skydome> skydome_;
 
 	//背景
 	std::list<std::unique_ptr<BackGround>> backGrounds_;

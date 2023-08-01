@@ -3,8 +3,6 @@
 #include "DirectXCommon.h"
 #include "PlayerBullet.h"
 
-
-
 #pragma once
 class Player
 {
@@ -16,6 +14,7 @@ public:
 	void Initialize(Input* input);
 	void Update();
 	void Draw(ID3D12GraphicsCommandList* cmdList);
+	void DrawRaticle(ID3D12GraphicsCommandList* cmdList);
 
 	//スピードアップ
 	void SpeedUpByEnemy();

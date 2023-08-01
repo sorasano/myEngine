@@ -48,12 +48,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 	//グラフィックスパイプライン生成
 	FbxObject3D::CreateGraphicsPipeline();
 
-	//モデル名を指定してファイル読み込み
-
-	enemyModel = FbxLoader::GetInstance()->LoadModelFromFile("enemy");
-	enemyBulletModel = FbxLoader::GetInstance()->LoadModelFromFile("enemyBullet");
-
 	//----------背景----------
+
 	for (int i = 0; i < backGroundSize; i++) {
 		std::unique_ptr<BackGround>newBackGround = std::make_unique<BackGround>();
 		newBackGround->Initialize(adjustPos);
@@ -64,6 +60,11 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 		backGrounds_.push_back(std::move(newBackGround));
 	}
 
+	//スカイドーム初期化
+	Skydome* newSkydome = new Skydome();
+	newSkydome->Initialize();
+	skydome_.reset(newSkydome);
+
 	//------------プレイヤー----------
 
 	//プレイヤー初期化
@@ -72,6 +73,10 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 	player_.reset(newPlayer);
 
 	//----------------敵--------------
+
+	//モデル名を指定してファイル読み込み
+	enemyModel = FbxLoader::GetInstance()->LoadModelFromFile("enemy");
+	enemyBulletModel = FbxLoader::GetInstance()->LoadModelFromFile("enemyBullet");
 
 	//csvファイル名前
 	enemyCsvsName_ = {
@@ -153,8 +158,8 @@ void GameScene::Update()
 void GameScene::Draw()
 {
 
-	//自機
-	player_->Draw(dxCommon_->GetCommandList());
+	//スカイドーム
+	skydome_->Draw(dxCommon_->GetCommandList());
 
 	//背景
 	for (std::unique_ptr<BackGround>& backGround : backGrounds_) {
@@ -162,9 +167,6 @@ void GameScene::Draw()
 			backGround->Draw(dxCommon_->GetCommandList());
 		}
 	}
-
-	//スプライト
-	testSprite->Draw(dxCommon_->GetCommandList());
 
 	//敵
 	for (std::unique_ptr<Enemy>& enemy : enemys_)
@@ -174,6 +176,18 @@ void GameScene::Draw()
 		}
 	}
 
+	//自機
+	player_->Draw(dxCommon_->GetCommandList());
+
+}
+
+void GameScene::DrawSprite()
+{
+	//スプライト
+	testSprite->Draw(dxCommon_->GetCommandList());
+
+	//レティクル
+	player_->DrawRaticle(dxCommon_->GetCommandList());
 }
 
 bool GameScene::UpadateRange(XMFLOAT3 cameraPos, XMFLOAT3 pos)
@@ -345,6 +359,9 @@ void GameScene::UpdateBackGround()
 		}
 
 	}
+
+	//スカイドーム
+	skydome_->Update(camera_->GetEye().z);
 
 }
 

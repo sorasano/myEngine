@@ -103,7 +103,10 @@ void Player::Draw(ID3D12GraphicsCommandList* cmdList)
 	{
 		bullet->Draw(cmdList);
 	}
+}
 
+void Player::DrawRaticle(ID3D12GraphicsCommandList* cmdList)
+{
 	//ƒŒƒeƒBƒNƒ‹
 	frontReticleObject->Draw(cmdList);
 	backReticleObject->Draw(cmdList);
