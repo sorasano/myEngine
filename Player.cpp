@@ -3,6 +3,7 @@
 #include "Vector3.h"
 #define PI 3.1415
 
+#include "Imgui.h"
 
 Player* Player::GetInstance()
 {
@@ -80,6 +81,11 @@ void Player::Update()
 	playerObject->SetScale(scale_);
 	playerObject->SetRotate(rotation_);
 	playerObject->Update();
+
+	//ImGui::Begin("position");
+	//ImGui::Text("%f,%f,%f",position_.x,position_.y,position_.z);
+	//ImGui::End();
+
 }
 
 

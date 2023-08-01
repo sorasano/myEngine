@@ -4,6 +4,7 @@
 #include "GameScene.h"
 #include "FPS.h"
 #include "PostEffect.h"
+#include "ImguiManager.h"
 
 // ウィンドウプロシージャ
 LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
@@ -45,6 +46,11 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	input = new Input();
 	input->Initialize(winApp);
 
+	//ImGuiManager
+	ImGuiManager* imGuiManager = nullptr;
+	imGuiManager = new ImGuiManager();
+	imGuiManager->Initialize(winApp, dxCommon);
+
 	//ポストエフェクト
 	PostEffect* postEffect = nullptr;
 	PostEffect::SetDevice(dxCommon->GetDevice());
@@ -79,9 +85,13 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		//キー
 		input->Update();
 
+		imGuiManager->Begin();
+
 		//更新
 		gameScene->Update();
 		postEffect->Update();
+
+		imGuiManager->End();
 
 		//レンダーテクスチャへの描画
 		postEffect->PreDrawScene(dxCommon->GetCommandList());
@@ -93,6 +103,9 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		//ポストエフェクト
 		//postEffect->Draw(dxCommon->GetCommandList());
 		gameScene->Draw();
+
+		//imgui描画
+		imGuiManager->Draw();
 		//描画後処理
 		dxCommon->PostDraw();
 
@@ -109,6 +122,9 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 	//入力開放
 	delete input;
+
+	//imgui解放
+	imGuiManager->Finalize();
 
 	//gamescene解放
 	delete gameScene;
