@@ -94,15 +94,19 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		imGuiManager->End();
 
 		//レンダーテクスチャへの描画
-		postEffect->PreDrawScene(dxCommon->GetCommandList());
-		gameScene->Draw();
-		postEffect->PostDrawScene(dxCommon->GetCommandList());
+		//postEffect->PreDrawScene(dxCommon->GetCommandList());
+		//gameScene->Draw();
+		//postEffect->PostDrawScene(dxCommon->GetCommandList());
+		//ポストエフェクト
+		//postEffect->Draw(dxCommon->GetCommandList());
 
 		//描画前処理
 		dxCommon->PreDraw();
-		//ポストエフェクト
-		//postEffect->Draw(dxCommon->GetCommandList());
+
+		//fbx描画
 		gameScene->Draw();
+		//スプライト描画
+		gameScene->DrawSprite();
 
 		//imgui描画
 		imGuiManager->Draw();

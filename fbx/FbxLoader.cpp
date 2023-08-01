@@ -4,7 +4,7 @@
 using namespace DirectX;
 
 /// 静的メンバ変数の実態
-const std::string FbxLoader::baseDirectory = "Resources/";
+const std::string FbxLoader::baseDirectory = "Resources/fbx/";
 //テクスチャがない場合の標準テクスチャファイル名
 const std::string FbxLoader::defaultTextureFileName = "white1x1.png";
 

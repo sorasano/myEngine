@@ -196,13 +196,11 @@ void Sprite::Draw(ID3D12GraphicsCommandList* cmdList)
 	//パイプライン、ルートシグネチャをセット
 	cmdList->SetPipelineState(pipelinestate.Get());
 	cmdList->SetGraphicsRootSignature(rootsignature.Get());
-
 	//プリミティブ形状の設定コマンド
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	//頂点バッファビューの設定コマンド
 	cmdList->IASetVertexBuffers(0, 1, &vbView);
-
 	//定数バッファビューの設定コマンド
 	cmdList->SetGraphicsRootConstantBufferView(0, constBuffMaterial->GetGPUVirtualAddress());
 	//デスクリプタヒープの配列をセットするコマンド
@@ -212,14 +210,13 @@ void Sprite::Draw(ID3D12GraphicsCommandList* cmdList)
 	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = spriteManager->GetSrvHeap()->GetGPUDescriptorHandleForHeapStart();
 	//ハンドル1分のサイズ
 	UINT incrementSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-
 	//テクスチャの番号に合わせてハンドルを進める
 	if (textureNum > 0)
 	{
 		srvGpuHandle.ptr += incrementSize * textureNum;
 	}
 
-	//SRVヒープの先頭にあるSRVをルートパラメータ1晩に設定
+	//SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
 	cmdList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
 	//定数バッファビューの設定コマンド
 	cmdList->SetGraphicsRootConstantBufferView(2, constBuffTransform->GetGPUVirtualAddress());
