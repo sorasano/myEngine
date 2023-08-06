@@ -43,14 +43,20 @@ void Player::Initialize(Input* input)
 	//弾モデルセット
 	this->bulletModel_ = playerBulletModel;
 
-	//レティクルモデルセット
-	frontReticleObject = new FbxObject3D;
-	frontReticleObject->Initialize();
-	frontReticleObject->SetModel(fReticleModel);
+	//レティクル画像セット
+	frontReticleSprite = new Sprite();
+	frontReticleSprite->SetTextureNum(0);
+	frontReticleSprite->Initialize();
+	frontReticleSprite->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
+	frontReticleSprite->SetScale(XMFLOAT2(fRScale_.x, fRScale_.y));
+	frontReticleSprite->SetPosition({ fRPosition_.x, fRPosition_.y });
 
-	backReticleObject = new FbxObject3D;
-	backReticleObject->Initialize();
-	backReticleObject->SetModel(bReticleModel);
+	backReticleSprite = new Sprite();
+	backReticleSprite->SetTextureNum(0);
+	backReticleSprite->Initialize();
+	backReticleSprite->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
+	backReticleSprite->SetScale(XMFLOAT2(bRScale_.x, bRScale_.y));
+	backReticleSprite->SetPosition({ bRPosition_.x, bRPosition_.y });
 
 	//ラジアン変換
 	fRRotation_.y = static_cast<float>(90 * (PI / 180));
@@ -82,10 +88,6 @@ void Player::Update()
 	playerObject->SetRotate(rotation_);
 	playerObject->Update();
 
-	//ImGui::Begin("position");
-	//ImGui::Text("%f,%f,%f",position_.x,position_.y,position_.z);
-	//ImGui::End();
-
 }
 
 
@@ -108,8 +110,8 @@ void Player::Draw(ID3D12GraphicsCommandList* cmdList)
 void Player::DrawRaticle(ID3D12GraphicsCommandList* cmdList)
 {
 	//レティクル
-	frontReticleObject->Draw(cmdList);
-	backReticleObject->Draw(cmdList);
+	frontReticleSprite->Draw(cmdList);
+	backReticleSprite->Draw(cmdList);
 
 }
 
@@ -197,7 +199,7 @@ void Player::MakeBullet()
 	velocity.normalize();
 
 	bulletSpeed = (speedZ + addSpeed);
-	velocity * bulletSpeed;
+	velocity* bulletSpeed;
 
 	//z軸は自機も動いているためそのスピードも足す
 	velocity.z += (speedZ + addSpeed);
@@ -212,36 +214,60 @@ void Player::UpdateRaticle()
 {
 	MoveRaticle();
 
-	//自機のワールド座標から3Dレティクルのワールド座標を計算
+	//レティクルのワールド座標から2Dレティクルのスクリーン座標を計算
 	{
-		//奥のレティクルはレティクル座標をそのまま入れる
-		fRPosition_ = reticlePosition_;
 
-		//中央のレティクルは自機と,レティクル座標のベクトルから座標を算出
+		//-----レティクルのワールド座標を取得-----
+
+		//奥のレティクルはそのままレティクルの座標を入れる
+		fRPosition_.x = reticlePosition_.x;
+		fRPosition_.y = reticlePosition_.y;
+		fRPosition_.z = reticlePosition_.z;
+
+		//手前のレティクルは自機と,レティクルのベクトルから座標を算出
 		playerVec = { position_.x,position_.y,position_.z };
-		reticleVec = { reticlePosition_.x, reticlePosition_.y, reticlePosition_.z };
+		reticleVec = { reticlePosition_.x,-reticlePosition_.y, reticlePosition_.z };
 		playerToReticleVec = reticleVec - playerVec;
 
 		//自機からのベクトルを求める
 		playerToReticleVec = playerToReticleVec / (kDistancePlayerTo3DFrontReticle / kDistancePlayerTo3DBackReticle);
 
 		//自機からのベクトルと自機の座標を足す
-		bRPosition_ = position_;
+		bRPosition_ = { position_.x, position_.y,position_.z };
 		bRPosition_.x += playerToReticleVec.x;
 		bRPosition_.y += playerToReticleVec.y;
 		bRPosition_.z += playerToReticleVec.z;
+
+		//-----レティクルのワールド座標から2dレティクルのスクリーン座標を計算-----
+
+		//奥のレティクル
+		fRPosition_ = Tra
+
+		//3dレティクルのワールド座標から2dレティクルのスクリーン座標を計算
+
+		float screenX = window_width / ReticleMoveMax.x;
+		float screenY = window_height / ReticleMoveMax.y;
+
+		//レティクルをスクリーン座標に変更
+		fRPosition_.x = fRPosition_.x * screenX + (window_width / 2);
+		fRPosition_.y = fRPosition_.y * screenY + (window_height / 2);
+
+		bRPosition_.x = bRPosition_.x * screenX + (window_width / 2);
+		bRPosition_.y = bRPosition_.y * screenY + (window_height / 2);
 	}
 
 	//オブジェクトの更新
-	frontReticleObject->SetPosition(fRPosition_);
-	frontReticleObject->SetRotate(fRRotation_);
-	frontReticleObject->SetScale(fRScale_);
-	frontReticleObject->Update();
+	frontReticleSprite->SetPosition(XMFLOAT2(fRPosition_.x, fRPosition_.y));
+	frontReticleSprite->SetScale(fRScale_);
+	frontReticleSprite->Update();
 
-	backReticleObject->SetPosition(bRPosition_);
-	backReticleObject->SetRotate(bRRotation_);
-	backReticleObject->SetScale(bRScale_);
-	backReticleObject->Update();
+	backReticleSprite->SetPosition(XMFLOAT2(bRPosition_.x, bRPosition_.y));
+	backReticleSprite->SetScale(bRScale_);
+	backReticleSprite->Update();
+
+	ImGui::Begin("bRPosition_");
+	ImGui::Text("%f,%f", bRPosition_.x, bRPosition_.y);
+	ImGui::End();
 }
 
 void Player::MoveRaticle()

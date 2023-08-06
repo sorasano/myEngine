@@ -22,7 +22,7 @@ public:	 //定数
 
 public:	//メンバ関数
 	void Initialize();
-	void LoadFile(int number, const wchar_t* fileName);
+	void LoadFile(int number, const std::string fileName);
 	void SetTextureCommand(int number);
 
 public:	//ゲッター
@@ -43,5 +43,8 @@ private:	//メンバ変数
 	ComPtr<ID3D12DescriptorHeap> srvHeap;
 	std::vector<DirectX::TexMetadata> metadata;
 	std::vector<DirectX::ScratchImage> scratchImg;
+
+	//ファイル格納ルートパス
+	static const std::string kDefaultbaseDirectory;
 };
 

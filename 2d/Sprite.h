@@ -52,7 +52,7 @@ public:	//セッター
 	//テクスチャの番号をセット
 	void SetTextureNum(int num) { textureNum = num; }
 	//座標
-	void SetPosition(XMFLOAT2 pos) { position = pos, InitPosition = pos; }
+	void SetPosition(XMFLOAT2 pos) { position = pos; }
 	//角度
 	void SetRotation(float rot) { rotation = rot; }
 	//スケール
@@ -93,65 +93,18 @@ private:	//メンバ変数
 	ComPtr<ID3D12Resource>constBuffTransform;
 	ConstBuffTransform* constMapTransform = nullptr;
 
-	//アンカーポイント(座標変換の基準点)
-	DirectX::XMFLOAT2 anchorPoint = { 0.0f,0.0f };
-
 public:
 
 	//テクスチャの色
 	XMFLOAT4 color = { 1,1,1,1 };
 
-	//---演出用---
-	//画面外にでる演出用
-	Easing flipOutEase = {};
-	//フリップ初期化
-	bool initFlip = false;
-	//演出中か
-	bool isflipEase = false;
-	//演出の段階
-	int flipInFase = false;
-	//揺れ幅
-	float flipInRangeUp = 50;
-	float flipInRangeDown = 100;
-	//演出が終わったか
-	bool endFlip = false;
-
-	//揺れ用
-	Easing swayEase = {};
-	//揺れ初期化
-	bool initSway = false;
-	//揺れ幅
-	float swayRange = 100;
-	//揺れてるか
-	bool isSway = false;
-	//上昇中か下降中か
-	bool isSwayUp = true;
-	//演出開始位置
-	DirectX::XMFLOAT2 startEasePos = {};
-	//中心点
-	DirectX::XMFLOAT2 swayCenterPos = {};
-
-public:
-
-	//演出
-
-	//画面外へアウト
-	void StartFlipOut() { isflipEase = true; };
-	void FlipOut();
-
-	//揺れる	center=中心点
-	void StartSway(DirectX::XMFLOAT2 center) { isSway = true, swayCenterPos = center; }
-	void Sway();
-
-	//リセット
-	void Reset();
-
 private:
+
 	float rotation = 0;
 	XMFLOAT2 position = { 0,0 };
 	XMFLOAT2 scale = { 100.0f,100.0f };
 
-	XMFLOAT2 InitPosition = { 0,0 };
-
+	//アンカーポイント(座標変換の基準点)
+	DirectX::XMFLOAT2 anchorPoint = { 0.0f,0.0f };
 };
 

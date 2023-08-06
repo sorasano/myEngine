@@ -21,8 +21,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 	this->dxCommon_ = dxCommon;
 	this->input_ = input_;
 
-
-	//カメラ
 	//カメラ初期化
 	camera_ = new Camera;
 	camera_->StaticInitialize(dxCommon->GetDevice());
@@ -31,11 +29,29 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 	//当たり判定
 	collisionManager_ = new Collision();
 
-	//描画初期化処理　ここから
-
 	// パーティクル静的初期化
 	ParticleManager::StaticInitialize(dxCommon, WinApp::winW, WinApp::winH);
 
+	//スプライトマネージャー
+	SpriteManager::SetDevice(dxCommon->GetDevice());
+	spriteManager = new SpriteManager;
+	spriteManager->Initialize();
+
+	//------テクスチャ------
+	spriteManager->LoadFile(0, "reticle.png");
+
+	//-----スプライト------
+	Sprite::SetDevice(dxCommon->GetDevice());
+	Sprite::SetSpriteManager(spriteManager);
+	Sprite::CreateGraphicsPipeLine();
+
+	testSprite = new Sprite();
+	testSprite->SetTextureNum(0);
+	testSprite->Initialize();
+	//アンカーポイントをスプライトの中心に
+	testSprite->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
+	testSprite->SetScale(XMFLOAT2(600, 300));
+	testSprite->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
 
 	//----------FBX----------
 
@@ -102,27 +118,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 	//csvデータをもとにに敵にデータをセット
 	SetEnemy();
 	
-	//スプライトマネージャー
-	SpriteManager::SetDevice(dxCommon->GetDevice());
-	spriteManager = new SpriteManager;
-	spriteManager->Initialize();
-
-	//------テクスチャ------
-	spriteManager->LoadFile(0, L"Resources/reimu.png");
-
-	//-----スプライト------
-	Sprite::SetDevice(dxCommon->GetDevice());
-	Sprite::SetSpriteManager(spriteManager);
-	Sprite::CreateGraphicsPipeLine();
-
-	testSprite = new Sprite();
-	testSprite->SetTextureNum(0);
-	testSprite->Initialize();
-	//アンカーポイントをスプライトの中心に
-	testSprite->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
-	testSprite->SetScale(XMFLOAT2(600, 300));
-	testSprite->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
-	testSprite->Update();
 }
 
 void GameScene::Update()
@@ -146,6 +141,8 @@ void GameScene::Update()
 
 	//当たり判定
 	Collition();
+
+	testSprite->Update();
 
 	//カメラ更新
 	camera_->Update(player_->GetPosition());
@@ -184,7 +181,7 @@ void GameScene::Draw()
 void GameScene::DrawSprite()
 {
 	//スプライト
-	testSprite->Draw(dxCommon_->GetCommandList());
+	//testSprite->Draw(dxCommon_->GetCommandList());
 
 	//レティクル
 	player_->DrawRaticle(dxCommon_->GetCommandList());

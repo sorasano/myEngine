@@ -83,7 +83,7 @@ private:
 
 	//スプライトマネージャー
 	SpriteManager* spriteManager = nullptr;
-	//テクスチャ
+	//スプライト
 	Sprite* testSprite = nullptr;
 
 	//当たり判定

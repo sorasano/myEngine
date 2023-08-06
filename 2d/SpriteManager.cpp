@@ -1,5 +1,5 @@
 #include "SpriteManager.h"
-
+const std::string SpriteManager::kDefaultbaseDirectory = "Resources/texture/";
 
 //静的メンバ変数
 ID3D12Device* SpriteManager::device = nullptr;
@@ -23,20 +23,28 @@ void SpriteManager::Initialize()
 	assert(SUCCEEDED(result));
 }
 
-void SpriteManager::LoadFile(int number, const wchar_t* fileName)
+void SpriteManager::LoadFile(int number, const std::string fileName)
 {
 	HRESULT result;
 
-	/*DirectX::TexMetadata metadata{};
-	DirectX::ScratchImage scratchImg{};*/
+	//連結してフルパスを得る
+	std::string fullpath = kDefaultbaseDirectory + fileName;
+
+	//string->wchar変換
+	const size_t newsizew = fullpath.size() + 1;
+	size_t convertedChars = 0;
+	wchar_t* wcstring = new wchar_t[newsizew];
+	mbstowcs_s(&convertedChars, wcstring, newsizew, fullpath.c_str(), _TRUNCATE);
 
 	//WICテクスチャのロード
 	result = DirectX::LoadFromWICFile(
-		fileName,
+		wcstring,
 		DirectX::WIC_FLAGS_NONE,
 		&metadata[number],
 		scratchImg[number]
 	);
+
+	delete[]wcstring;
 
 	DirectX::ScratchImage mipChain{};
 
