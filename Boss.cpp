@@ -1,34 +1,37 @@
-#include "Enemy.h"
+#include "Boss.h"
 #include "Random.h"
 
-Enemy* Enemy::GetInstance()
+Boss* Boss::GetInstance()
 {
-	static Enemy instance;
+	static Boss instance;
 	return &instance;
 }
 
-Enemy::Enemy()
+Boss::Boss()
 {
 }
 
-Enemy::~Enemy()
+Boss::~Boss()
 {
-	FBX_SAFE_DELETE(enemyObject);
+	FBX_SAFE_DELETE(BossObject);
 }
 
-void Enemy::Initialize(FbxModel* EnemyModel, FbxModel* enemyBulletModel)
+void Boss::Initialize()
 {
+	//モデル名を指定してファイル読み込み
+	bossModel = FbxLoader::GetInstance()->LoadModelFromFile("boss");
+	bossBulletModel = FbxLoader::GetInstance()->LoadModelFromFile("bossBullet");
 
 	//3dオブジェクト生成とモデルのセット
-	enemyObject = new FbxObject3D;
-	enemyObject->Initialize();
-	enemyObject->SetModel(EnemyModel);
+	BossObject = new FbxObject3D;
+	BossObject->Initialize();
+	BossObject->SetModel(bossModel);
 
-	this->bulletModel_ = enemyBulletModel;
-	
+	this->bulletModel_ = bossBulletModel;
+
 }
 
-void Enemy::Update(XMFLOAT3 pPos, float pSpeed)
+void Boss::Update(XMFLOAT3 pPos, float pSpeed)
 {
 	//プレイヤー情報更新
 	this->playerPosition_ = pPos;
@@ -36,19 +39,20 @@ void Enemy::Update(XMFLOAT3 pPos, float pSpeed)
 
 	if (!isDead) {
 
-		//画面内に停滞させる
-		StopInScreen();
-
-		//移動
-		if (moveType != NOTMOVE) {
-			Move();
+		//行動変化
+		actionCollTimer++;
+		if (actionCollTimer > ActionCoolTime) {
+			actionCollTimer = 0;
+			ChangeAction();
 		}
 
+		//移動
+		Move();
+		
 		//射撃
-		if (shotType != NOTSHOT) {
+		if (shotType != BOSSNOTSHOT) {
 			//プレイヤーのスピードで発射し始める座標を変更
 			shotStartPos = ShotStart * playerSpeed_;
-
 			if (position_.z < playerPosition_.z + shotStartPos) {
 				BulletUpdate();
 			}
@@ -59,19 +63,19 @@ void Enemy::Update(XMFLOAT3 pPos, float pSpeed)
 		UpdateParticle();
 	}
 
-	enemyObject->SetPosition(position_);
-	enemyObject->SetScale(scale_);
-	enemyObject->SetRotate(rotation_);
-	enemyObject->Update();
+	BossObject->SetPosition(position_);
+	BossObject->SetScale(scale_);
+	BossObject->SetRotate(rotation_);
+	BossObject->Update();
 }
 
-void Enemy::Draw(ID3D12GraphicsCommandList* cmdList)
+void Boss::Draw(ID3D12GraphicsCommandList* cmdList)
 {
 	if (!isDead) {
-		enemyObject->Draw(cmdList);
+		BossObject->Draw(cmdList);
 
 		//弾
-		for (std::unique_ptr<EnemyBullet>& bullet : bullets_)
+		for (std::unique_ptr<BossBullet>& bullet : bullets_)
 		{
 			bullet->Draw(cmdList);
 		}
@@ -83,23 +87,25 @@ void Enemy::Draw(ID3D12GraphicsCommandList* cmdList)
 
 }
 
-void Enemy::Move()
+void Boss::Move()
 {
+	//自機に追従
+	position_.z += playerSpeed_;
 
 	switch (moveType)
 	{
-	case NOTMOVE:
+	case BOSSNOTMOVE:
 		break;
 
-	case MOVEX:
+	case BOSSMOVEX:
 		MoveX();
 		break;
 
-	case MOVEY:
+	case BOSSMOVEY:
 		MoveY();
 		break;
 
-	case MOVEDIA:
+	case BOSSMOVEDIA:
 		MoveX();
 		MoveY();
 		break;
@@ -107,7 +113,7 @@ void Enemy::Move()
 
 }
 
-void Enemy::MoveX()
+void Boss::MoveX()
 {
 	if (moveX) {
 
@@ -130,7 +136,7 @@ void Enemy::MoveX()
 	}
 }
 
-void Enemy::MoveY()
+void Boss::MoveY()
 {
 	if (moveY) {
 
@@ -153,50 +159,8 @@ void Enemy::MoveY()
 	}
 }
 
-void Enemy::Reflection()
-{
-	//移動を反対向きにさせる
-	if (moveType != NOTMOVE) {
-		if (moveX) {
-			moveX = false;
-		}
-		else {
-			moveX = true;
-		}
 
-		if (moveY) {
-			moveY = false;
-		}
-		else {
-			moveY = true;
-		}
-	}
-}
-
-void Enemy::StopInScreen()
-{
-
-	if (stopInScreen) {
-
-		//プレイヤーからstopInScreenPosition進んだ距離に到達したら
-		if (position_.z < playerPosition_.z + stopInScreenPosition) {
-
-			//自機についていく
-			position_.z += playerSpeed_;
-
-			//タイマーを進める
-			stopInScreenTimer++;
-			if (stopInScreenTimer > StopInScreenTime) {
-				stopInScreen = false;
-			}
-
-		}
-
-	}
-
-}
-
-void Enemy::InitializeParticle()
+void Boss::InitializeParticle()
 {
 	//フラグをtrueに
 	isParticle = true;
@@ -236,7 +200,7 @@ void Enemy::InitializeParticle()
 	particle->Update();
 }
 
-void Enemy::UpdateParticle()
+void Boss::UpdateParticle()
 {
 
 	//particle有効時間が過ぎたらフラグをfalseに
@@ -252,7 +216,7 @@ void Enemy::UpdateParticle()
 	}
 }
 
-void Enemy::Shot()
+void Boss::Shot()
 {
 	bulletCoolTimer++;
 
@@ -264,7 +228,7 @@ void Enemy::Shot()
 
 }
 
-void Enemy::BulletUpdate()
+void Boss::BulletUpdate()
 {
 	//プレイヤーより前にいる敵の弾のみ発射
 	if (position_.z > playerPosition_.z) {
@@ -272,38 +236,38 @@ void Enemy::BulletUpdate()
 	}
 
 	//敵の弾更新
-	for (std::unique_ptr<EnemyBullet>& bullet : bullets_)
+	for (std::unique_ptr<BossBullet>& bullet : bullets_)
 	{
 		bullet->Update();
 	}
 
 	//デスフラグの立った弾を削除
-	bullets_.remove_if([](std::unique_ptr<EnemyBullet>& bullet) {return bullet->GetIsDead(); });
+	bullets_.remove_if([](std::unique_ptr<BossBullet>& bullet) {return bullet->GetIsDead(); });
 }
 
-void Enemy::MakeBullet()
+void Boss::MakeBullet()
 {
 	Vector3 velocity = {};
 
 	switch (shotType)
 	{
-	case NOTSHOT:
+	case BOSSNOTSHOT:
 
 		break;
 
-	case STRAIGHTSHOT:
+	case BOSSSTRAIGHTSHOT:
 		//z軸の-方向の単位ベクトルに速度をかける
 		velocity = { 0.0f,0.0f,-1.0f };
 		velocity *= bulletSpeed;
 		break;
 
-	case HOMINGSHOT:
+	case BOSSHOMINGSHOT:
 
 		//自機と敵のベクトルを取る
-		Vector3 playerVec = { playerPosition_.x ,playerPosition_.y,playerPosition_.z};
-		Vector3 enemyVec = { position_.x,position_.y,position_.z };
+		Vector3 playerVec = { playerPosition_.x ,playerPosition_.y,playerPosition_.z };
+		Vector3 BossVec = { position_.x,position_.y,position_.z };
 
-		velocity = playerVec - enemyVec;
+		velocity = playerVec - BossVec;
 
 		//正規化をして速度をかける
 		velocity.normalize();
@@ -315,12 +279,25 @@ void Enemy::MakeBullet()
 	}
 
 	//弾の生成
-	std::unique_ptr<EnemyBullet> newBullet = std::make_unique<EnemyBullet>();
-	newBullet->Initialize(bulletModel_, position_, velocity,playerSpeed_);
+	std::unique_ptr<BossBullet> newBullet = std::make_unique<BossBullet>();
+	newBullet->Initialize(bulletModel_, position_, velocity, playerSpeed_);
 	bullets_.push_back(std::move(newBullet));
 }
 
-CollisionData Enemy::GetColData()
+void Boss::Reset()
+{
+	position_ = { 0,0,0 };
+
+	//弾
+	bullets_.clear();
+
+	//死亡フラグ
+	isDead = false;
+
+	particleTimer = 0;
+}
+
+CollisionData Boss::GetColData()
 {
 
 	CollisionData colData;
@@ -331,46 +308,53 @@ CollisionData Enemy::GetColData()
 	return colData;
 }
 
-void Enemy::SetType(int type)
+void Boss::SetAction(int action)
 {
 
-	this->type = type;
+	this->action = action;
 
-	switch (type)
+	switch (action)
 	{
-	case NOTHING:
-		shotType = NOTSHOT;
-		moveType = NOTMOVE;
+	case BOSSNOTHING:
+		shotType = BOSSNOTSHOT;
+		moveType = BOSSNOTMOVE;
 		break;
 
-	case NORMAL:
-		shotType = STRAIGHTSHOT;
-		moveType = NOTMOVE;
+	case BOSSNORMAL:
+		shotType = BOSSSTRAIGHTSHOT;
+		moveType = BOSSNOTMOVE;
 		break;
 
-	case HOMING:
-		shotType = HOMINGSHOT;
-		moveType = NOTMOVE;
+	case BOSSHOMING:
+		shotType = BOSSHOMINGSHOT;
+		moveType = BOSSNOTMOVE;
 		break;
 
-	case MOVINGX:
-		shotType = STRAIGHTSHOT;
-		moveType = MOVEX;
+	case BOSSMOVINGX:
+		shotType = BOSSSTRAIGHTSHOT;
+		moveType = BOSSMOVEX;
 		break;
 
-	case MOVINGY:
-		shotType = STRAIGHTSHOT;
-		moveType = MOVEY;
+	case BOSSMOVINGY:
+		shotType = BOSSSTRAIGHTSHOT;
+		moveType = BOSSMOVEY;
 		break;
 
-	case MOVINGDIA:
-		shotType = STRAIGHTSHOT;
-		moveType = MOVEDIA;
+	case BOSSMOVINGDIA:
+		shotType = BOSSSTRAIGHTSHOT;
+		moveType = BOSSMOVEDIA;
 		break;
 	}
 }
 
-CollisionData Enemy::GetBulletColData(int i)
+void Boss::ChangeAction()
+{
+	int randNum = static_cast<int>(Random(0, actionSize - 0.001f));
+
+	SetAction(randNum);
+}
+
+CollisionData Boss::GetBulletColData(int i)
 {
 	auto it = bullets_.begin();
 	std::advance(it, i);
@@ -378,7 +362,7 @@ CollisionData Enemy::GetBulletColData(int i)
 	return it->get()->GetColData();
 }
 
-void Enemy::SetBulletIsDead(bool isDead, int i)
+void Boss::SetBulletIsDead(bool isDead, int i)
 {
 	auto it = bullets_.begin();
 	std::advance(it, i);

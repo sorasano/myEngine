@@ -16,8 +16,16 @@
 #include "BackGround.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "Boss.h"
 
 #include <map>
+
+enum Scene {
+	TITLE,
+	NORMALPLAY,
+	BOSSPLAY,
+	CLEAR
+};
 
 class GameScene
 {
@@ -48,6 +56,18 @@ public:
 	//敵配置
 	void SetEnemy();
 
+	//リセット
+	void Reset();
+
+	//ボス戦
+	//導入演出,初期化
+	void BossSceneInitialize();
+	//撃破演出
+	void BossSceneFinalize();
+
+	void BossSceneCollition();
+
+
 private:
 	//デバイスとinput
 	DirectXCommon* dxCommon_ = nullptr;
@@ -56,6 +76,13 @@ private:
 
 	//カメラ
 	Camera* camera_{};
+
+	//シーン
+	int scene = TITLE;
+
+	//フェーズ
+	int phase = 0;
+	const int MaxPhase = 1;
 
 	//Fbx
 	FbxModel* enemyModel = nullptr;
@@ -81,10 +108,15 @@ private:
 	std::vector<std::string> enemyCsvsName_;
 	int enemyCSVSize = 0;
 
+	//ボス
+	std::unique_ptr<Boss> boss_;
+
 	//スプライトマネージャー
 	SpriteManager* spriteManager = nullptr;
 	//スプライト
-	Sprite* testSprite = nullptr;
+	Sprite* titleSprite = nullptr;
+	Sprite* clearSprite = nullptr;
+
 
 	//当たり判定
 	Collision* collisionManager_ = nullptr;

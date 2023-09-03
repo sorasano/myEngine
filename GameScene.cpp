@@ -8,7 +8,8 @@ GameScene::GameScene()
 GameScene::~GameScene()
 {
 	delete camera_;
-	delete testSprite;
+	delete titleSprite;
+	delete clearSprite;
 	//for (int i = 0; i < enemySize; i++)
 	//{
 	//	FBX_SAFE_DELETE(enemyModel);
@@ -38,20 +39,27 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 	spriteManager->Initialize();
 
 	//------テクスチャ------
-	spriteManager->LoadFile(0, "reticle.png");
+	spriteManager->LoadFile(0, "title.png");
+	spriteManager->LoadFile(1, "clear.png");
 
 	//-----スプライト------
 	Sprite::SetDevice(dxCommon->GetDevice());
 	Sprite::SetSpriteManager(spriteManager);
 	Sprite::CreateGraphicsPipeLine();
 
-	testSprite = new Sprite();
-	testSprite->SetTextureNum(0);
-	testSprite->Initialize();
-	//アンカーポイントをスプライトの中心に
-	testSprite->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
-	testSprite->SetScale(XMFLOAT2(600, 300));
-	testSprite->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
+	titleSprite = new Sprite();
+	titleSprite->SetTextureNum(0);
+	titleSprite->Initialize();
+	titleSprite->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
+	titleSprite->SetScale(XMFLOAT2(1280, 720));
+	titleSprite->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
+
+	clearSprite = new Sprite();
+	clearSprite->SetTextureNum(1);
+	clearSprite->Initialize();
+	clearSprite->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
+	clearSprite->SetScale(XMFLOAT2(1280, 720));
+	clearSprite->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
 
 	//----------FBX----------
 
@@ -117,32 +125,85 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 
 	//csvデータをもとにに敵にデータをセット
 	SetEnemy();
-	
+	phase = 1;
+
+
+	//ボス
+	Boss* newBoss = new Boss();
+	newBoss->Initialize();
+	boss_.reset(newBoss);
 }
 
 void GameScene::Update()
 {
-	//自機
-	player_->Update();
 
-	//敵
-	for (std::unique_ptr<Enemy>& enemy : enemys_)
+	//シーン更新
+	switch (scene)
 	{
-		if (UpadateRange(camera_->GetEye(), enemy->GetPosition())) {
-			enemy->Update(player_->GetPosition(), player_->GetSpeed());
-		}
-	}
+	case TITLE:
 
-	//敵のリストから削除要件確認
-	CheckEnemy();
+		if (input_->TriggerKey(DIK_SPACE)) {
+			scene = NORMALPLAY;
+		}
+
+		titleSprite->Update();
+
+		break;
+
+	case NORMALPLAY:
+
+		if (input_->TriggerKey(DIK_RETURN)) {
+			BossSceneInitialize();
+		}
+
+		//自機
+		player_->Update();
+
+		//敵
+		for (std::unique_ptr<Enemy>& enemy : enemys_)
+		{
+			if (UpadateRange(camera_->GetEye(), enemy->GetPosition())) {
+				enemy->Update(player_->GetPosition(), player_->GetSpeed());
+			}
+		}
+
+		//敵のリストから削除要件確認
+		CheckEnemy();
+
+		//当たり判定
+		Collition();
+
+		break;
+	case BOSSPLAY:
+
+		//自機
+		player_->Update();
+
+		//ボス
+		boss_->Update(player_->GetPosition(),player_->GetSpeed());
+
+		//当たり判定
+		BossSceneCollition();
+
+		if (boss_->GetIsDead()) {
+			BossSceneFinalize();
+		}
+
+		break;
+	case CLEAR:
+
+		if (input_->TriggerKey(DIK_SPACE)) {
+			scene = TITLE;
+			Reset();
+		}
+
+		clearSprite->Update();
+
+		break;
+	}
 
 	//背景
 	UpdateBackGround();
-
-	//当たり判定
-	Collition();
-
-	testSprite->Update();
 
 	//カメラ更新
 	camera_->Update(player_->GetPosition());
@@ -165,26 +226,64 @@ void GameScene::Draw()
 		}
 	}
 
-	//敵
-	for (std::unique_ptr<Enemy>& enemy : enemys_)
-	{
-		if (UpadateRange(camera_->GetEye(), enemy->GetPosition())) {
-			enemy->Draw(dxCommon_->GetCommandList());
+	switch (scene) {
+
+	case TITLE:
+
+		break;
+
+	case NORMALPLAY:
+
+		//敵
+		for (std::unique_ptr<Enemy>& enemy : enemys_)
+		{
+			if (UpadateRange(camera_->GetEye(), enemy->GetPosition())) {
+				enemy->Draw(dxCommon_->GetCommandList());
+			}
 		}
+
+		//自機
+		player_->Draw(dxCommon_->GetCommandList());
+
+		break;
+
+	case BOSSPLAY:
+
+		//自機
+		player_->Draw(dxCommon_->GetCommandList());
+
+		//ボス
+		boss_->Draw(dxCommon_->GetCommandList());
+
+		break;
+
+	case CLEAR:
+		break;
 	}
-
-	//自機
-	player_->Draw(dxCommon_->GetCommandList());
-
 }
 
 void GameScene::DrawSprite()
 {
-	//スプライト
-	//testSprite->Draw(dxCommon_->GetCommandList());
+	switch (scene) {
 
-	//レティクル
-	player_->DrawRaticle(dxCommon_->GetCommandList());
+	case TITLE:
+		titleSprite->Draw(dxCommon_->GetCommandList());
+		break;
+
+	case NORMALPLAY:
+		//レティクル
+		player_->DrawRaticle(dxCommon_->GetCommandList());
+		break;
+	case BOSSPLAY:
+		//レティクル
+		player_->DrawRaticle(dxCommon_->GetCommandList());
+		break;
+
+	case CLEAR:
+		clearSprite->Draw(dxCommon_->GetCommandList());
+		break;
+
+	}
 }
 
 bool GameScene::UpadateRange(XMFLOAT3 cameraPos, XMFLOAT3 pos)
@@ -327,8 +426,15 @@ void GameScene::CheckEnemy()
 	//敵が0になったら
 	if (enemys_.size() == 0) {
 
-		SetEnemy();
-
+		//フェーズが最大以下だったらまたフェーズ移行する
+		if (phase < MaxPhase) {
+			SetEnemy();
+			phase++;
+		}
+		else {
+			//フェーズが最終だったらシーン移行
+			BossSceneInitialize();
+		}
 	}
 
 }
@@ -369,7 +475,7 @@ void GameScene::SetEnemy()
 	float makePos = player_->GetPosition().z + rangeMaxZ;
 
 	//何番目のCSVをセットするか(ランダム)
-	int setNum = static_cast<int>(Random(0,enemyCSVSize - 0.001f));
+	int setNum = static_cast<int>(Random(0, enemyCSVSize - 0.001f));
 	auto it = enemyCsvs_.begin();
 	std::advance(it, setNum);
 
@@ -384,4 +490,94 @@ void GameScene::SetEnemy()
 
 		enemys_.push_back(std::move(newObject));
 	}
+}
+
+void GameScene::Reset()
+{
+	//プレイヤー
+	player_->Reset();
+	//カメラ
+	camera_->Update(player_->GetPosition());
+
+	//敵
+	enemys_.clear();
+	SetEnemy();
+	phase = 1;
+
+	//ボス
+	boss_->Reset();
+
+	//背景
+	adjustPos = 0;
+	for (std::unique_ptr<BackGround>& backGround : backGrounds_) {
+		//オブジェクトを配置しなおす
+		backGround->SetObject(adjustPos);
+		//現在の位置+1つ分のサイズで次のマップの位置にセット
+		adjustPos = backGround->GetPosition().z + backGround->GetSize();
+	}
+
+}
+
+void GameScene::BossSceneInitialize()
+{
+	scene = BOSSPLAY;
+
+	boss_->SetPosition(XMFLOAT3{ 0,0,player_->GetPosition().z + 26.0f });
+}
+
+void GameScene::BossSceneFinalize()
+{
+	scene = CLEAR;
+}
+
+void GameScene::BossSceneCollition()
+{
+#pragma region ボスと自機の弾の当たり判定
+
+	if (player_->GetBulletSize() != 0) {
+
+		for (int i = 0; i < player_->GetBulletSize(); i++) {
+
+
+			if (!boss_->GetIsDead()) {
+				//当たったか
+				if (collisionManager_->CheckCollisionSquare(boss_->GetColData(), player_->GetBulletColData(i))) {
+
+					//当たったら敵は消してパーティクル生成
+					boss_->SetISDesd(true);
+					boss_->InitializeParticle();
+
+					//自機の弾を消し、自機のスピードを上げスコアを加算
+					player_->SetBulletIsDead(true, i);
+					player_->SpeedUpByEnemy();
+				}
+			}
+
+		}
+	}
+
+#pragma endregion 
+
+#pragma region 自機とボスの弾
+
+
+	if (boss_->GetBulletSize() != 0) {
+
+		for (int i = 0; i < boss_->GetBulletSize(); i++) {
+
+			if (!boss_->GetIsDead()) {
+				//当たったか
+				if (collisionManager_->CheckCollisionSquare(player_->GetColData(), boss_->GetBulletColData(i))) {
+
+					//当たったら敵の弾を消し、自機のスピードを下げげスコアを減算
+					boss_->SetBulletIsDead(true, i);
+					player_->SpeedDownByEnemy();
+
+				}
+			}
+		}
+	}
+
+
+#pragma endregion 
 }

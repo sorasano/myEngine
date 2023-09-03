@@ -34,6 +34,9 @@ public:
 	void UpdateRaticle();
 	void MoveRaticle();
 
+	//リセット
+	void Reset();
+
 	//ゲッター　セッター　
 	XMFLOAT3 GetPosition() { return position_; }
 	XMFLOAT3 GetRotation() { return rotation_; }
@@ -103,26 +106,28 @@ private:
 	//レティクル座標
 	XMFLOAT3 reticlePosition_ = { 0,0,0 };
 	//移動範囲
-	const XMFLOAT2 ReticleMoveMax = { 20.0f,15.0f };
+	const XMFLOAT2 ReticleMoveMax = { 40.0f,15.0f };
 	//移動スピード(xy)
 	float reticleSpeedXY = 1.0f;
 
 	//前(奥)のレティクル
-	Sprite* frontReticleSprite = nullptr;
+	FbxObject3D* frontReticleObject = nullptr;
+
 	//後ろ(手前)のレティクル
-	Sprite* backReticleSprite = nullptr;
+	FbxObject3D* backReticleObject = nullptr;
 
 	//自機からの距離
 	const float kDistancePlayerTo3DFrontReticle = 25.0f;
 	const float kDistancePlayerTo3DBackReticle = kDistancePlayerTo3DFrontReticle / 2;
 
 	XMFLOAT3 fRPosition_ = { 0,0,0 };
-	XMFLOAT2 fRRotation_ = { 0,0};
-	XMFLOAT2 fRScale_ = { 25,25 };
+	XMFLOAT3 fRRotation_ = { 0,0,0 };
+	XMFLOAT3 fRScale_ = { 1,1,1 };
+
 
 	XMFLOAT3 bRPosition_ = { 0,0,0 };
-	XMFLOAT2 bRRotation_ = { 0,0 };
-	XMFLOAT2 bRScale_ = { 50,50 };
+	XMFLOAT3 bRRotation_ = { 0,0,0 };
+	XMFLOAT3 bRScale_ = { 1,1,1 };
 
 	//ベクトル
 	Vector3 playerVec = {};
