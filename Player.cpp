@@ -278,6 +278,7 @@ void Player::Reset()
 	position_ = { 0,0,0 };
 	//速度
 	speedZ = 0.5f;
+	addSpeed = 0.0f;
 
 	//レティクル
 	reticlePosition_ = { 0,0,0 };

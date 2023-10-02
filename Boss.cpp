@@ -19,13 +19,15 @@ Boss::~Boss()
 void Boss::Initialize()
 {
 	//モデル名を指定してファイル読み込み
-	bossModel = FbxLoader::GetInstance()->LoadModelFromFile("boss");
+	normalBossModel = FbxLoader::GetInstance()->LoadModelFromFile("normalBoss");
+	hardBossModel = FbxLoader::GetInstance()->LoadModelFromFile("hardBoss");
+
 	bossBulletModel = FbxLoader::GetInstance()->LoadModelFromFile("bossBullet");
 
 	//3dオブジェクト生成とモデルのセット
 	BossObject = new FbxObject3D;
 	BossObject->Initialize();
-	BossObject->SetModel(bossModel);
+	BossObject->SetModel(normalBossModel);
 
 	this->bulletModel_ = bossBulletModel;
 
@@ -48,7 +50,7 @@ void Boss::Update(XMFLOAT3 pPos, float pSpeed)
 
 		//移動
 		Move();
-		
+
 		//射撃
 		if (shotType != BOSSNOTSHOT) {
 			//プレイヤーのスピードで発射し始める座標を変更
@@ -57,9 +59,11 @@ void Boss::Update(XMFLOAT3 pPos, float pSpeed)
 				BulletUpdate();
 			}
 		}
+
 	}
+
 	//パーティクル
-	else if (isParticle) {
+	if (isParticle) {
 		UpdateParticle();
 	}
 
@@ -81,7 +85,7 @@ void Boss::Draw(ID3D12GraphicsCommandList* cmdList)
 		}
 	}
 	//----パーティクル----
-	else if (isParticle) {
+	if (isParticle) {
 		particle->Draw();
 	}
 
@@ -218,10 +222,84 @@ void Boss::UpdateParticle()
 
 void Boss::Shot()
 {
+
+	//クールタイムで弾の発射間隔を調整
 	bulletCoolTimer++;
 
 	if (BulletCoolTime < bulletCoolTimer) {
-		MakeBullet();
+
+		//射出角度を計算し弾の発射
+		Vector3 velocity = {};
+		Vector3 playerVec = {};
+		Vector3 BossVec = {};
+
+		switch (shotType)
+		{
+		case BOSSNOTSHOT:
+
+			break;
+
+		case BOSSSTRAIGHTSHOT:
+			//z軸の-方向の単位ベクトルに速度をかける
+			velocity = { 0.0f,0.0f,-1.0f };
+			velocity *= bulletSpeed;
+
+			//弾の生成
+			MakeBullet(velocity);
+			break;
+
+		case BOSSHOMINGSHOT:
+
+			//自機と敵のベクトルを取る
+			playerVec = { playerPosition_.x ,playerPosition_.y,playerPosition_.z };
+			BossVec = { position_.x,position_.y,position_.z };
+
+			velocity = playerVec - BossVec;
+
+			//正規化をして速度をかける
+			velocity.normalize();
+			velocity *= bulletSpeed;
+
+			velocity.z += playerSpeed_;
+
+			//弾の生成
+			MakeBullet(velocity);
+			break;
+
+		case BOSSMULTISHOT:
+
+			//正面
+			velocity = { 0.0f,0.1f,-1.0f };
+			velocity *= bulletSpeed;
+			//弾の生成
+			MakeBullet(velocity);
+
+			//上
+			velocity = { 0.0f,0.1f,-1.0f };
+			velocity *= bulletSpeed;
+			//弾の生成
+			MakeBullet(velocity);
+
+			//下
+			velocity = { 0.0f,-0.1f,-1.0f };
+			velocity *= bulletSpeed;
+			//弾の生成
+			MakeBullet(velocity);
+
+			//右
+			velocity = { 0.1f,0.0f,-1.0f };
+			velocity *= bulletSpeed;
+			//弾の生成
+			MakeBullet(velocity);
+
+			//左
+			velocity = { -0.1f,0.0f,-1.0f };
+			velocity *= bulletSpeed;
+			//弾の生成
+			MakeBullet(velocity);
+
+			break;
+		}
 
 		bulletCoolTimer = 0;
 	}
@@ -245,43 +323,13 @@ void Boss::BulletUpdate()
 	bullets_.remove_if([](std::unique_ptr<BossBullet>& bullet) {return bullet->GetIsDead(); });
 }
 
-void Boss::MakeBullet()
+void Boss::MakeBullet(Vector3 velocity)
 {
-	Vector3 velocity = {};
-
-	switch (shotType)
-	{
-	case BOSSNOTSHOT:
-
-		break;
-
-	case BOSSSTRAIGHTSHOT:
-		//z軸の-方向の単位ベクトルに速度をかける
-		velocity = { 0.0f,0.0f,-1.0f };
-		velocity *= bulletSpeed;
-		break;
-
-	case BOSSHOMINGSHOT:
-
-		//自機と敵のベクトルを取る
-		Vector3 playerVec = { playerPosition_.x ,playerPosition_.y,playerPosition_.z };
-		Vector3 BossVec = { position_.x,position_.y,position_.z };
-
-		velocity = playerVec - BossVec;
-
-		//正規化をして速度をかける
-		velocity.normalize();
-		velocity *= bulletSpeed;
-
-		velocity.z += playerSpeed_;
-
-		break;
-	}
-
 	//弾の生成
 	std::unique_ptr<BossBullet> newBullet = std::make_unique<BossBullet>();
 	newBullet->Initialize(bulletModel_, position_, velocity, playerSpeed_);
 	bullets_.push_back(std::move(newBullet));
+
 }
 
 void Boss::Reset()
@@ -293,6 +341,12 @@ void Boss::Reset()
 
 	//死亡フラグ
 	isDead = false;
+
+	//2段階目移行フラグ
+	isBossHardMode = false;
+
+	//hp
+	hp = 10;
 
 	particleTimer = 0;
 }
@@ -308,10 +362,29 @@ CollisionData Boss::GetColData()
 	return colData;
 }
 
-void Boss::SetAction(int action)
+void Boss::HitBullet()
+{
+	//hpがあるなら減らす、ないなら死亡
+	if (hp) {
+		hp--;
+	}
+	else {
+		isDead = true;
+	}
+
+	//hpが2段階目移行タイミングになったら2段階目へ
+	if (hp <= changeHardHp) {
+		isBossHardMode = true;
+		BossObject->SetModel(hardBossModel);
+	}
+	 
+	 
+}
+
+void Boss::SetNormalAction(int action)
 {
 
-	this->action = action;
+	this->normalAction = action;
 
 	switch (action)
 	{
@@ -341,17 +414,65 @@ void Boss::SetAction(int action)
 		break;
 
 	case BOSSMOVINGDIA:
-		shotType = BOSSSTRAIGHTSHOT;
+		shotType = BOSSHOMINGSHOT;
 		moveType = BOSSMOVEDIA;
 		break;
+
+	}
+}
+
+void Boss::SetHardAction(int action)
+{
+	this->normalAction = action;
+
+	switch (action)
+	{
+	case BOSSHARDNOTHING:
+		shotType = BOSSMULTISHOT;
+		moveType = BOSSNOTMOVE;
+		break;
+
+	case BOSSHARDNORMAL:
+		shotType = BOSSMULTISHOT;
+		moveType = BOSSNOTMOVE;
+		break;
+
+	case BOSSHARDHOMING:
+		shotType = BOSSMULTISHOT;
+		moveType = BOSSNOTMOVE;
+		break;
+
+	case BOSSHARDMOVINGX:
+		shotType = BOSSMULTISHOT;
+		moveType = BOSSMOVEX;
+		break;
+
+	case BOSSHARDMOVINGY:
+		shotType = BOSSMULTISHOT;
+		moveType = BOSSMOVEY;
+		break;
+
+	case BOSSHARDMOVINGDIA:
+		shotType = BOSSMULTISHOT;
+		moveType = BOSSMOVEDIA;
+		break;
+
 	}
 }
 
 void Boss::ChangeAction()
 {
-	int randNum = static_cast<int>(Random(0, actionSize - 0.001f));
 
-	SetAction(randNum);
+	//通常モード
+	if (!isBossHardMode) {
+		int randNum = static_cast<int>(Random(0, normalActionSize - 0.001f));
+		SetNormalAction(randNum);
+	}
+	else {
+	//2段階目モード
+		int randNum = static_cast<int>(Random(0, hardActionSize - 0.001f));
+		SetHardAction(randNum);
+	}
 }
 
 CollisionData Boss::GetBulletColData(int i)

@@ -9,7 +9,7 @@
 
 #include "Collision.h"
 
-enum BossAction {
+enum BossNormalAction {
 	BOSSNOTHING,
 	BOSSNORMAL,
 	BOSSHOMING,
@@ -18,10 +18,20 @@ enum BossAction {
 	BOSSMOVINGDIA,
 };
 
+enum BossHardAction {
+	BOSSHARDNOTHING,
+	BOSSHARDNORMAL,
+	BOSSHARDHOMING,
+	BOSSHARDMOVINGX,
+	BOSSHARDMOVINGY,
+	BOSSHARDMOVINGDIA,
+};
+
 enum BossShotType {
 	BOSSNOTSHOT,
 	BOSSSTRAIGHTSHOT,
-	BOSSHOMINGSHOT
+	BOSSHOMINGSHOT,
+	BOSSMULTISHOT
 };
 
 enum BossMoveType {
@@ -54,7 +64,7 @@ public:
 	//弾
 	void Shot();
 	void BulletUpdate();
-	void MakeBullet();
+	void MakeBullet(Vector3 velocity);
 
 	//リセット
 	void Reset();
@@ -69,12 +79,19 @@ public:
 
 	void SetISDesd(bool isDead) { this->isDead = isDead; }
 	bool GetIsDead() { return isDead; }
+	void SetIsParticle(bool isParticle) { this->isParticle = isParticle; }
 	bool GetIsParticle() { return isParticle; }
 
+	void SetNormalAction(int action);
+	void SetHardAction(int action);
+
+	void ChangeAction();
+
+	//当たり判定
 	CollisionData GetColData();
 
-	void SetAction(int action);
-	void ChangeAction();
+	//自機の弾との当たり判定
+	void HitBullet();
 
 	//弾
 	int GetBulletSize() { return static_cast<int>(bullets_.size()); }
@@ -96,14 +113,18 @@ private:
 	//FBX
 	FbxObject3D* BossObject = nullptr;
 	//モデル
-	FbxModel* bossModel = nullptr;
+	FbxModel* normalBossModel = nullptr;
+	FbxModel* hardBossModel = nullptr;
+
 	FbxModel* bossBulletModel = nullptr;
 
 	//死亡フラグ
 	bool isDead = false;
 
-	//行動	 0 Nothing　何もしない,1 normal 正面にたまを打つだけ 2 homing　ホーミング弾を打つ, 3～5 動きながら正面に弾を打つ
-	int action = 0;
+	//通常行動	 0 Nothing　何もしない,1 normal 正面にたまを打つだけ 2 homing　ホーミング弾を打つ, 3～5 動きながら正面に弾を打つ
+	int normalAction = 0;
+	//2段階目行動	 0 Nothing　何もしない,1 normal 正面にたまを打つだけ 2 homing　ホーミング弾を打つ, 3～5 動きながら正面に弾を打つ
+	int hardAction = 0;
 	//射撃タイプ 0 何もしない 1 直線 2 プレイヤーに向かって
 	int shotType = 0;
 	//移動タイプ 0 移動しない 1 X軸 2 Y軸 3斜め
@@ -112,8 +133,17 @@ private:
 	//アクション変化
 	const int ActionCoolTime = 100;
 	int actionCollTimer = 0;
-	//アクション数
-	int actionSize = 6;
+	//アクション数(通常)
+	int normalActionSize = 6;
+	//アクション数(2段階目)
+	int hardActionSize = 6;
+
+	//ボス2段階目フラグ
+	bool isBossHardMode = 0;
+	//hp
+	int hp = 50;
+	//2段階目になるhp
+	int changeHardHp = 25;
 
 	//-------移動-------
 	//移動 trueが+に移動中でfalseが-に移動中

@@ -89,7 +89,7 @@ private:
 	//基礎スピード以外の加速スピード
 	float addSpeed = 0.0f;
 	//敵を倒した時の加速量
-	float addSpeedByEnemy = 0.1f;
+	float addSpeedByEnemy = 0.25f;
 	//敵に被弾した時の減速
 	float subSpeedByEnemy = 0.5f;
 

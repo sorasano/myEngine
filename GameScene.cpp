@@ -185,6 +185,7 @@ void GameScene::Update()
 		//当たり判定
 		BossSceneCollition();
 
+		//ボスが死んだら次のシーンへ
 		if (boss_->GetIsDead()) {
 			BossSceneFinalize();
 		}
@@ -244,6 +245,11 @@ void GameScene::Draw()
 
 		//自機
 		player_->Draw(dxCommon_->GetCommandList());
+		
+		//ボス戦ショートカット
+		//if (input_->PushKey(DIK_RETURN)) {
+		//	BossSceneInitialize();
+		//}
 
 		break;
 
@@ -543,9 +549,10 @@ void GameScene::BossSceneCollition()
 				//当たったか
 				if (collisionManager_->CheckCollisionSquare(boss_->GetColData(), player_->GetBulletColData(i))) {
 
-					//当たったら敵は消してパーティクル生成
-					boss_->SetISDesd(true);
+					//当たったらhpをへらしてパーティクル生成
+					boss_->HitBullet();
 					boss_->InitializeParticle();
+					boss_->SetIsParticle(true);
 
 					//自機の弾を消し、自機のスピードを上げスコアを加算
 					player_->SetBulletIsDead(true, i);
