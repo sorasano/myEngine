@@ -61,29 +61,109 @@ void Camera::UpdateMatrix()
 	constMap->projection = matProjection;
 }
 
-void Camera::Update(XMFLOAT3 playerPos)
+void Camera::Update(XMFLOAT3 playerPos, XMFLOAT3 bossPos)
 {
-
+	//データ更新
 	this->playerPos_ = playerPos;
+	this->bossPos_ = bossPos;
 
-	UpdateTarget();
+	//モード切り替えが起こったか
+	if (oldMode != mode) {
+		//モード切り替えが起こったら変更時に演出があるかチェック
+		CheckChangeMode();
+	}
+	else {
+		this->oldMode = mode;
+	}
 
-	UpdateEye();
+	switch (mode) {
+	case STRAIGHTMODE:
+		UpdateStraightMode();
+		break;
 
-	//DebugMode();
+	case PLAYERFOLLOWMODE:
+		UpdatePlayerFollowMode();
+		break;
+
+	case CHANGEMODE:
+		UpdateChangeMode();
+		break;
+
+	case DEBUGMODE:
+		DebugMode();
+		break;
+	}
 
 	UpdateMatrix();
-
 }
 
-void Camera::UpdateEye()
+void Camera::UpdateStraightMode()
 {
+	//一定スピードで進み続ける
+	eye.z += straightModeSpeed;
+	target.z = eye.z + 30;
+}
+
+void Camera::UpdatePlayerFollowMode()
+{
+	//プレイヤーの後ろからプレイヤーを追従する視点
 	eye.z = playerPos_.z - 30;
+	target.z = playerPos_.z;
 }
 
-void Camera::UpdateTarget()
+void Camera::UpdateChangeMode()
 {
-	target.z = playerPos_.z;
+	//取得したイージング用の開始位置と終了位置でイージングを行う
+	eye = EaseIn3D(nowEye, nextEye, easeing.timeRate);
+	target = EaseIn3D(nowTarget, nextTarget, easeing.timeRate);
+
+	easeing.Update();
+
+	if (!easeing.GetActive()) {
+		//演出が終わったら次のモードへ
+		mode = holdMode;
+		oldMode = holdMode;
+	}
+}
+
+void Camera::CheckChangeMode()
+{
+	//現在のモードを保持
+	holdMode = mode;
+
+	//切り替え時に演出がある場合はイージング用の開始位置と終了位置を取得
+
+	//直線移動モードから、プレイヤー追従モードの切り替え
+	if (oldMode == STRAIGHTMODE && holdMode == PLAYERFOLLOWMODE) {
+
+		//現在の座標を開始位置に
+		nowEye = eye;
+		nowTarget = target;
+
+		//次のモードの開始位置を計算、データの保持
+		holdEye = eye;
+		holdTarget = target;
+		UpdatePlayerFollowMode();
+
+		//次のモードの開始位置を終了位置に
+		nextEye = eye;
+		nextTarget = target;
+
+		//データを戻す
+		eye = holdEye;
+		target = holdTarget;
+
+		//切り替え時に演出がある場合CHANGEMODEにして、イージングデータセット
+		//数値のリセット
+		easeing.Start(easeingTime);
+
+		mode = CHANGEMODE;
+		oldMode = CHANGEMODE;
+	}
+	else {
+		//条件にない切り替えの場合そのまま切り替え
+		this->oldMode = mode;
+	}
 }
 
 void Camera::DebugMode()
@@ -95,7 +175,7 @@ void Camera::DebugMode()
 
 		//座標を移動する処理
 		if (input_->PushKey(DIK_W)) {
-			 eye.z += speed;
+			eye.z += speed;
 		}
 		else if (input_->PushKey(DIK_S)) {
 			eye.z -= speed;

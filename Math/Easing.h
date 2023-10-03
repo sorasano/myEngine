@@ -4,8 +4,10 @@
 
 float Random(float num1, float num2);
 
-DirectX::XMFLOAT2 EaseIn(DirectX::XMFLOAT2 start, DirectX::XMFLOAT2 end, float timer);
-DirectX::XMFLOAT2 EaseOut(DirectX::XMFLOAT2 start, DirectX::XMFLOAT2 end, float timer);
+DirectX::XMFLOAT2 EaseIn2D(DirectX::XMFLOAT2 start, DirectX::XMFLOAT2 end, float timer);
+DirectX::XMFLOAT2 EaseOut2D(DirectX::XMFLOAT2 start, DirectX::XMFLOAT2 end, float timer);
+DirectX::XMFLOAT3 EaseIn3D(DirectX::XMFLOAT3 start, DirectX::XMFLOAT3 end, float timer);
+DirectX::XMFLOAT3 EaseOut3D(DirectX::XMFLOAT3 start, DirectX::XMFLOAT3 end, float timer);
 
 class Easing
 {

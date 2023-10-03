@@ -59,6 +59,9 @@ public:
 	//リセット
 	void Reset();
 
+	//シーン切り替え
+	void ChangeScene();
+
 	//ボス戦
 	//導入演出,初期化
 	void BossSceneInitialize();

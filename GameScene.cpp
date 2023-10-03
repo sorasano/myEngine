@@ -142,19 +142,11 @@ void GameScene::Update()
 	{
 	case TITLE:
 
-		if (input_->TriggerKey(DIK_SPACE)) {
-			scene = NORMALPLAY;
-		}
-
 		titleSprite->Update();
 
 		break;
 
 	case NORMALPLAY:
-
-		if (input_->TriggerKey(DIK_RETURN)) {
-			BossSceneInitialize();
-		}
 
 		//自機
 		player_->Update();
@@ -167,9 +159,6 @@ void GameScene::Update()
 			}
 		}
 
-		//敵のリストから削除要件確認
-		CheckEnemy();
-
 		//当たり判定
 		Collition();
 
@@ -180,34 +169,27 @@ void GameScene::Update()
 		player_->Update();
 
 		//ボス
-		boss_->Update(player_->GetPosition(),player_->GetSpeed());
+		boss_->Update(player_->GetPosition(), player_->GetSpeed());
 
 		//当たり判定
 		BossSceneCollition();
 
-		//ボスが死んだら次のシーンへ
-		if (boss_->GetIsDead()) {
-			BossSceneFinalize();
-		}
-
 		break;
 	case CLEAR:
-
-		if (input_->TriggerKey(DIK_SPACE)) {
-			scene = TITLE;
-			Reset();
-		}
 
 		clearSprite->Update();
 
 		break;
 	}
 
+	//カメラ更新
+	camera_->Update(player_->GetPosition(), boss_->GetPosition());
+
 	//背景
 	UpdateBackGround();
 
-	//カメラ更新
-	camera_->Update(player_->GetPosition());
+	//シーンの切り替わり
+	ChangeScene();
 
 	//パーティクルマネージャー静的更新
 	ParticleManager::StaticUpdate(camera_->GetEye(), camera_->GetTarget());
@@ -245,11 +227,6 @@ void GameScene::Draw()
 
 		//自機
 		player_->Draw(dxCommon_->GetCommandList());
-		
-		//ボス戦ショートカット
-		//if (input_->PushKey(DIK_RETURN)) {
-		//	BossSceneInitialize();
-		//}
 
 		break;
 
@@ -454,7 +431,7 @@ void GameScene::UpdateBackGround()
 		backGround->Update();
 
 		//背景の位置をカメラが通り過ぎたら
-		if (backGround->GetPosition().z + backGround->GetSize() < camera_->GetEye().z) {
+		if (backGround->GetPosition().z + (backGround->GetSize() * 2) < camera_->GetEye().z) {
 
 			//過ぎたオブジェクトを削除
 			backGround->DeleteObject();
@@ -468,6 +445,8 @@ void GameScene::UpdateBackGround()
 		}
 
 	}
+
+
 
 	//スカイドーム
 	skydome_->Update(camera_->GetEye().z);
@@ -502,8 +481,6 @@ void GameScene::Reset()
 {
 	//プレイヤー
 	player_->Reset();
-	//カメラ
-	camera_->Update(player_->GetPosition());
 
 	//敵
 	enemys_.clear();
@@ -512,6 +489,9 @@ void GameScene::Reset()
 
 	//ボス
 	boss_->Reset();
+
+	//カメラ
+	camera_->Update(player_->GetPosition(),boss_->GetPosition());
 
 	//背景
 	adjustPos = 0;
@@ -522,6 +502,55 @@ void GameScene::Reset()
 		adjustPos = backGround->GetPosition().z + backGround->GetSize();
 	}
 
+}
+
+void GameScene::ChangeScene()
+{
+	//シーンの切り替え、そのタイミングでの情報の更新
+	switch (scene)
+	{
+	case TITLE:
+
+		if (input_->TriggerKey(DIK_SPACE)) {
+			scene = NORMALPLAY;
+
+			camera_->SetMode(PLAYERFOLLOWMODE);
+		}
+
+		break;
+
+	case NORMALPLAY:
+
+		//ボス戦ショートカット
+		if (input_->TriggerKey(DIK_RETURN)) {
+			BossSceneInitialize();
+
+
+		}
+
+		//敵のリストから削除要件確認
+		CheckEnemy();
+
+		break;
+	case BOSSPLAY:
+
+		//ボスが死んだら次のシーンへ
+		if (boss_->GetIsDead()) {
+			BossSceneFinalize();
+		}
+
+		break;
+	case CLEAR:
+
+		if (input_->TriggerKey(DIK_SPACE)) {
+			scene = TITLE;
+			Reset();
+
+			camera_->SetMode(STRAIGHTMODE);
+		}
+
+		break;
+	}
 }
 
 void GameScene::BossSceneInitialize()
