@@ -12,9 +12,10 @@ using namespace DirectX;
 enum CameraMode {
 	STRAIGHTMODE,//直線移動
 	PLAYERFOLLOWMODE,//自機に追従
-	BOSSAPPEAREARANCEMODE,//ボス出現演出
-	BOSSDESTROYMODE,//ボス撃破演出
-	CHANGEMODE,//モードの切り替え
+	TITLETOPLAYMODE,//タイトルからプレイ遷移
+	BOSSINMODE,//ボス出現演出
+	BOSSCLERAMODE,//ボス撃破演出
+	BOSSGAMEOVERAMODE,//ボス逃亡演出
 	DEBUGMODE,//デバックモード
 };
 
@@ -53,10 +54,10 @@ public:
 	//プレイヤー追従モード
 	void UpdatePlayerFollowMode();
 
-	//モード変更モード
-	void UpdateChangeMode();
-	//モード変更モードチェック
-	void CheckChangeMode();
+	//タイトルからプレイ遷移更新
+	void UpdateTitleToPlayMode();
+	//タイトルからプレイ遷移初期化
+	void InitializeTitleToPlayMode();
 
 	//デバックモード
 	void DebugMode();
@@ -65,10 +66,12 @@ public:
 	XMFLOAT3 GetEye() { return eye; }
 	XMFLOAT3 GetTarget() { return target; }
 	int GetMode() { return mode; }
+	float GetRangeMaxZ() { return rangeMaxZ; }
+	bool GetIsPerformance() { return isPerformance; }
 
 	void SetEye(XMFLOAT3 eye) { this->eye = eye; }
 	void SetTarget(XMFLOAT3 target) { this->target = target; }
-	void SetMode(int mode) { this->mode = mode; }
+	void SetMode(int mode);
 
 private:
 
@@ -82,25 +85,25 @@ private:
 	//ボス座標
 	XMFLOAT3 bossPos_ = {};
 
+	//描画最大距離
+	float rangeMaxZ = 500.0f;
+	//プレイヤーとカメラの距離
+	float playerRange = 30.0f;
+
 	//-----カメラモード-----
 	int mode = STRAIGHTMODE;
-	//前フレームのモード
-	int oldMode = STRAIGHTMODE;
-	//現在のモード保持用
-	int holdMode = STRAIGHTMODE;
-
 
 	//カメラ直線移動モードスピード
 	float straightModeSpeed = 1.0f;
 
-	//-----カメラモード変更時演出用-----
+	//-----演出用-----
 	//現在座標
-	XMFLOAT3 nowEye = {};
-	XMFLOAT3 nowTarget = {};
+	XMFLOAT3 startEye = {};
+	XMFLOAT3 startTarget = {};
 
-	//次のモード開始位置
-	XMFLOAT3 nextEye = {};
-	XMFLOAT3 nextTarget = {};
+	//イージング終了位置
+	XMFLOAT3 endEye = {};
+	XMFLOAT3 endTarget = {};
 
 	//現在のデータ保存用
 	XMFLOAT3 holdEye = {};
@@ -109,5 +112,9 @@ private:
 	//イージング演出用データ
 	Easing easeing;
 	//演出時間
-	float easeingTime = 1.0f;
+	float easeingTime = 3.0f;
+	//演出中か
+	bool isPerformance = false;
+	//フェーズ
+	int phase = 0;
 };

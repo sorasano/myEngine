@@ -67,15 +67,6 @@ void Camera::Update(XMFLOAT3 playerPos, XMFLOAT3 bossPos)
 	this->playerPos_ = playerPos;
 	this->bossPos_ = bossPos;
 
-	//モード切り替えが起こったか
-	if (oldMode != mode) {
-		//モード切り替えが起こったら変更時に演出があるかチェック
-		CheckChangeMode();
-	}
-	else {
-		this->oldMode = mode;
-	}
-
 	switch (mode) {
 	case STRAIGHTMODE:
 		UpdateStraightMode();
@@ -85,8 +76,8 @@ void Camera::Update(XMFLOAT3 playerPos, XMFLOAT3 bossPos)
 		UpdatePlayerFollowMode();
 		break;
 
-	case CHANGEMODE:
-		UpdateChangeMode();
+	case TITLETOPLAYMODE:
+		UpdateTitleToPlayMode();
 		break;
 
 	case DEBUGMODE:
@@ -101,69 +92,80 @@ void Camera::UpdateStraightMode()
 {
 	//一定スピードで進み続ける
 	eye.z += straightModeSpeed;
-	target.z = eye.z + 30;
+	target.z = eye.z + playerRange;
 }
 
 void Camera::UpdatePlayerFollowMode()
 {
 	//プレイヤーの後ろからプレイヤーを追従する視点
-	eye.z = playerPos_.z - 30;
+	eye.z = playerPos_.z - playerRange;
 	target.z = playerPos_.z;
 }
 
-void Camera::UpdateChangeMode()
+void Camera::UpdateTitleToPlayMode()
 {
-	//取得したイージング用の開始位置と終了位置でイージングを行う
-	eye = EaseIn3D(nowEye, nextEye, easeing.timeRate);
-	target = EaseIn3D(nowTarget, nextTarget, easeing.timeRate);
+	if (phase == 0) {
+
+		//取得したイージング用の開始位置と終了位置でイージングを行う
+		eye = EaseIn3D(startEye, endEye, easeing.timeRate);
+		target = EaseIn3D(startTarget, endTarget, easeing.timeRate);
+
+		if (!easeing.GetActive()) {
+			//演出が終わったら次のフェーズへ
+			phase++;
+
+			//イージング用のデータを設定しなおす
+			easeing.Start(easeingTime);
+
+			startEye = eye;
+			startTarget = target;
+
+			endEye = holdEye;
+			endTarget = holdTarget;
+		}
+	}
+	else if (phase == 1) {
+
+		//取得したイージング用の開始位置と終了位置でイージングを行う
+		eye = EaseIn3D(startEye, endEye, easeing.timeRate);
+		target = EaseIn3D(startTarget, endTarget, easeing.timeRate);
+
+		if (!easeing.GetActive()) {
+			//演出が終わったらモードの切り替え
+			mode = PLAYERFOLLOWMODE;
+			isPerformance = false;
+		}
+	}
 
 	easeing.Update();
-
-	if (!easeing.GetActive()) {
-		//演出が終わったら次のモードへ
-		mode = holdMode;
-		oldMode = holdMode;
-	}
 }
 
-void Camera::CheckChangeMode()
+void Camera::InitializeTitleToPlayMode()
 {
-	//現在のモードを保持
-	holdMode = mode;
 
-	//切り替え時に演出がある場合はイージング用の開始位置と終了位置を取得
+	//イージング用の開始位置と終了位置を取得
 
-	//直線移動モードから、プレイヤー追従モードの切り替え
-	if (oldMode == STRAIGHTMODE && holdMode == PLAYERFOLLOWMODE) {
+	//現在の座標を開始位置に
+	startEye = eye;
+	startTarget = target;
 
-		//現在の座標を開始位置に
-		nowEye = eye;
-		nowTarget = target;
+	//初期座標を保持
+	holdEye = startEye;
+	holdTarget = startTarget;
 
-		//次のモードの開始位置を計算、データの保持
-		holdEye = eye;
-		holdTarget = target;
-		UpdatePlayerFollowMode();
+	//現在の描画最大距離を終了位置に
+	endEye = eye;
+	endTarget = target;
 
-		//次のモードの開始位置を終了位置に
-		nextEye = eye;
-		nextTarget = target;
+	endEye.z = eye.z + (rangeMaxZ  * 2);
+	endTarget.z = eye.z + (rangeMaxZ * 2) + playerRange;
 
-		//データを戻す
-		eye = holdEye;
-		target = holdTarget;
+	//イージング用数値の初期化
+	easeing.Start(easeingTime);
+	phase = 0;
 
-		//切り替え時に演出がある場合CHANGEMODEにして、イージングデータセット
-		//数値のリセット
-		easeing.Start(easeingTime);
-
-		mode = CHANGEMODE;
-		oldMode = CHANGEMODE;
-	}
-	else {
-		//条件にない切り替えの場合そのまま切り替え
-		this->oldMode = mode;
-	}
+	//パフォーマンスフラグ
+	isPerformance = true;
 }
 
 void Camera::DebugMode()
@@ -207,5 +209,25 @@ void Camera::DebugMode()
 			target.x += speed;
 		}
 
+	}
+}
+
+void Camera::SetMode(int mode)
+{
+	this->mode = mode;
+
+	//モードごとに初期化が必要な場合は初期化
+	switch (mode) {
+	case TITLETOPLAYMODE:
+		InitializeTitleToPlayMode();
+		break;
+	case STRAIGHTMODE:
+		break;
+	case BOSSINMODE:
+		break;
+	case BOSSCLERAMODE:
+		break;
+	case BOSSGAMEOVERAMODE:
+		break;
 	}
 }

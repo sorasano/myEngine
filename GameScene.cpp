@@ -123,11 +123,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 
 	}
 
-	//csvデータをもとにに敵にデータをセット
-	SetEnemy();
-	phase = 1;
-
-
 	//ボス
 	Boss* newBoss = new Boss();
 	newBoss->Initialize();
@@ -143,6 +138,14 @@ void GameScene::Update()
 	case TITLE:
 
 		titleSprite->Update();
+
+		//敵
+		for (std::unique_ptr<Enemy>& enemy : enemys_)
+		{
+			if (UpadateRange(camera_->GetEye(), enemy->GetPosition())) {
+				enemy->Update(player_->GetPosition(), player_->GetSpeed());
+			}
+		}
 
 		break;
 
@@ -182,6 +185,11 @@ void GameScene::Update()
 		break;
 	}
 
+	//演出
+	if (isPerformance) {
+		UpdatePerformance();
+	}
+
 	//カメラ更新
 	camera_->Update(player_->GetPosition(), boss_->GetPosition());
 
@@ -212,6 +220,17 @@ void GameScene::Draw()
 	switch (scene) {
 
 	case TITLE:
+
+		//敵
+		for (std::unique_ptr<Enemy>& enemy : enemys_)
+		{
+			if (UpadateRange(camera_->GetEye(), enemy->GetPosition())) {
+				enemy->Draw(dxCommon_->GetCommandList());
+			}
+		}
+
+		//自機
+		//player_->Draw(dxCommon_->GetCommandList());
 
 		break;
 
@@ -250,7 +269,9 @@ void GameScene::DrawSprite()
 	switch (scene) {
 
 	case TITLE:
-		titleSprite->Draw(dxCommon_->GetCommandList());
+		if (!isPerformance) {
+			titleSprite->Draw(dxCommon_->GetCommandList());
+		}
 		break;
 
 	case NORMALPLAY:
@@ -274,7 +295,7 @@ bool GameScene::UpadateRange(XMFLOAT3 cameraPos, XMFLOAT3 pos)
 
 	if (cameraPos.x - pos.x < 20.0f && cameraPos.x - pos.x > -20.0f) { return true; }
 	if (cameraPos.y - pos.y < 10.0f && cameraPos.y - pos.y > -10.0f) { return true; }
-	if (cameraPos.z - pos.z < -10.0f && cameraPos.z - pos.z > -rangeMaxZ) { return true; }
+	if (cameraPos.z - pos.z < -10.0f && cameraPos.z - pos.z > -camera_->GetRangeMaxZ()) { return true; }
 
 	return false;
 }
@@ -431,7 +452,7 @@ void GameScene::UpdateBackGround()
 		backGround->Update();
 
 		//背景の位置をカメラが通り過ぎたら
-		if (backGround->GetPosition().z + (backGround->GetSize() * 2) < camera_->GetEye().z) {
+		if (backGround->GetPosition().z + backGround->GetSize() * 2.5 < camera_->GetEye().z) {
 
 			//過ぎたオブジェクトを削除
 			backGround->DeleteObject();
@@ -446,8 +467,6 @@ void GameScene::UpdateBackGround()
 
 	}
 
-
-
 	//スカイドーム
 	skydome_->Update(camera_->GetEye().z);
 
@@ -457,7 +476,7 @@ void GameScene::SetEnemy()
 {
 
 	//発生させる位置は最大描画距離から
-	float makePos = player_->GetPosition().z + rangeMaxZ;
+	float makePos = player_->GetPosition().z + camera_->GetRangeMaxZ();
 
 	//何番目のCSVをセットするか(ランダム)
 	int setNum = static_cast<int>(Random(0, enemyCSVSize - 0.001f));
@@ -491,7 +510,7 @@ void GameScene::Reset()
 	boss_->Reset();
 
 	//カメラ
-	camera_->Update(player_->GetPosition(),boss_->GetPosition());
+	camera_->Update(player_->GetPosition(), boss_->GetPosition());
 
 	//背景
 	adjustPos = 0;
@@ -511,10 +530,10 @@ void GameScene::ChangeScene()
 	{
 	case TITLE:
 
-		if (input_->TriggerKey(DIK_SPACE)) {
-			scene = NORMALPLAY;
-
-			camera_->SetMode(PLAYERFOLLOWMODE);
+		if (input_->TriggerKey(DIK_SPACE) && !isPerformance) {
+			isPerformance = true;
+			performanceNum = TITLETOPLAY;
+			PlaySceneInitialize();
 		}
 
 		break;
@@ -524,8 +543,6 @@ void GameScene::ChangeScene()
 		//ボス戦ショートカット
 		if (input_->TriggerKey(DIK_RETURN)) {
 			BossSceneInitialize();
-
-
 		}
 
 		//敵のリストから削除要件確認
@@ -536,7 +553,7 @@ void GameScene::ChangeScene()
 
 		//ボスが死んだら次のシーンへ
 		if (boss_->GetIsDead()) {
-			BossSceneFinalize();
+			scene = CLEAR;
 		}
 
 		break;
@@ -553,16 +570,68 @@ void GameScene::ChangeScene()
 	}
 }
 
+void GameScene::PlaySceneInitialize()
+{
+
+	//プレイヤー
+	player_->SetPosition(camera_->GetEye());
+	player_->Update();
+
+	//敵
+	SetEnemy();
+	phase = 1;
+
+	//カメラ
+	camera_->Update(player_->GetPosition(), boss_->GetPosition());
+	camera_->SetMode(TITLETOPLAYMODE);
+
+}
+
+void GameScene::UpdatePerformance()
+{
+	switch (performanceNum) {
+
+	case TITLETOPLAY:
+		TitleToPlayPerformance();
+		break;
+	case INBOSS:
+		BossInPerformance();
+		break;
+	case CLEARBOSS:
+		BossClearPerformance();
+		break;
+	case GAMEOVERBOSS:
+		BossGameoverPerformance();
+		break;
+	}
+}
+
+void GameScene::TitleToPlayPerformance()
+{
+	//カメラ演出が終わったらシーン移行
+	if (!camera_->GetIsPerformance()) {
+		scene = NORMALPLAY;
+		isPerformance = false;
+	}
+}
+
+void GameScene::BossInPerformance()
+{
+}
+
+void GameScene::BossClearPerformance()
+{
+}
+
+void GameScene::BossGameoverPerformance()
+{
+}
+
 void GameScene::BossSceneInitialize()
 {
 	scene = BOSSPLAY;
 
 	boss_->SetPosition(XMFLOAT3{ 0,0,player_->GetPosition().z + 26.0f });
-}
-
-void GameScene::BossSceneFinalize()
-{
-	scene = CLEAR;
 }
 
 void GameScene::BossSceneCollition()

@@ -24,7 +24,15 @@ enum Scene {
 	TITLE,
 	NORMALPLAY,
 	BOSSPLAY,
-	CLEAR
+	CLEAR,
+	GAMEOVER
+};
+
+enum Performance {
+	TITLETOPLAY,//タイトル→プレイシーン遷移
+	INBOSS,//ボス戦導入
+	CLEARBOSS,//ボス戦クリア
+	GAMEOVERBOSS//ボス戦ゲームオーバー
 };
 
 class GameScene
@@ -62,14 +70,25 @@ public:
 	//シーン切り替え
 	void ChangeScene();
 
-	//ボス戦
-	//導入演出,初期化
-	void BossSceneInitialize();
-	//撃破演出
-	void BossSceneFinalize();
+	//プレイシーン初期化
+	void PlaySceneInitialize();
 
+	//ボス戦
+	//初期化
+	void BossSceneInitialize();
+	//当たり判定
 	void BossSceneCollition();
 
+	//演出
+	void UpdatePerformance();
+	//タイトル→プレイシーン遷移演出
+	void TitleToPlayPerformance();
+	//ボス戦導入演出
+	void BossInPerformance();
+	//ボス撃破演出
+	void BossClearPerformance();
+	//ボス逃亡演出
+	void BossGameoverPerformance();
 
 private:
 	//デバイスとinput
@@ -96,7 +115,7 @@ private:
 
 	//背景
 	std::list<std::unique_ptr<BackGround>> backGrounds_;
-	size_t backGroundSize = 4;
+	size_t backGroundSize = 5;
 	//調整用の座標
 	float adjustPos = 0;
 
@@ -120,11 +139,12 @@ private:
 	Sprite* titleSprite = nullptr;
 	Sprite* clearSprite = nullptr;
 
-
 	//当たり判定
 	Collision* collisionManager_ = nullptr;
 
-	//描画最大距離
-	float rangeMaxZ = 500.0f;
+	//演出フラグ
+	bool isPerformance = false;
+	//なんの演出か
+	int performanceNum = TITLETOPLAY;
 };
 
