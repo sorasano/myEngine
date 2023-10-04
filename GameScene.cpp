@@ -574,7 +574,7 @@ void GameScene::PlaySceneInitialize()
 {
 
 	//ƒvƒŒƒCƒ„[
-	player_->SetPosition(camera_->GetEye());
+	player_->SetPosition(XMFLOAT3{ camera_->GetEye().x,camera_->GetEye().y  - 10,camera_->GetEye().z });
 	player_->Update();
 
 	//“G
