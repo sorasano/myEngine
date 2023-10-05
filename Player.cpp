@@ -56,6 +56,11 @@ void Player::Initialize(Input* input)
 	fRRotation_.y = static_cast<float>(90 * (PI / 180));
 	bRRotation_.y = static_cast<float>(90 * (PI / 180));
 
+	//スプライト
+	speedSprite = new Sprite();
+	speedSprite->SetTextureNum(2);
+	speedSprite->Initialize();
+	speedSprite->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
 }
 
 void Player::Update()
@@ -65,6 +70,9 @@ void Player::Update()
 
 	//レティクルの更新
 	UpdateRaticle();
+
+	//スプライトの更新
+	UpdateSprite();
 
 	//弾の更新
 	BulletUpdate();
@@ -105,12 +113,14 @@ void Player::Draw(ID3D12GraphicsCommandList* cmdList)
 	}
 }
 
-void Player::DrawRaticle(ID3D12GraphicsCommandList* cmdList)
+void Player::DrawSprite(ID3D12GraphicsCommandList* cmdList)
 {
 	//レティクル
 	frontReticleObject->Draw(cmdList);
 	backReticleObject->Draw(cmdList);
 
+	//スピードUI
+	speedSprite->Draw(cmdList);
 }
 
 void Player::SpeedUpByEnemy()
@@ -270,6 +280,24 @@ void Player::MoveRaticle()
 		}
 
 	}
+}
+
+void Player::UpdateSprite()
+{
+	//今のスピードが最大スピードの何割か計算しスケールをそれに合わせる
+
+	//今のスピード(基礎スピードはのぞく)が何割か
+	float speedRate = addSpeed / MaxSpeed;
+	//スプライトの最大サイズ
+	float speedSpriteMaxSize = window_width - (speedSpriteXSpace * 2);
+
+	//最大サイズと今のスピードの割合をかける
+	speedSpriteScale.x = speedSpriteMaxSize * speedRate;
+
+	//更新
+	speedSprite->SetScale(speedSpriteScale);
+	speedSprite->SetPosition(speedSpritePosition);
+	speedSprite->Update();
 }
 
 void Player::Reset()

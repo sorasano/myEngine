@@ -41,6 +41,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 	//------テクスチャ------
 	spriteManager->LoadFile(0, "title.png");
 	spriteManager->LoadFile(1, "clear.png");
+	spriteManager->LoadFile(2, "blue1x1.png");
 
 	//-----スプライト------
 	Sprite::SetDevice(dxCommon->GetDevice());
@@ -132,6 +133,18 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 void GameScene::Update()
 {
 
+	//カメラ更新
+	camera_->Update(player_->GetPosition(), boss_->GetPosition());
+
+	//背景
+	UpdateBackGround();
+
+	//シーンの切り替わり
+	ChangeScene();
+
+	//パーティクルマネージャー静的更新
+	ParticleManager::StaticUpdate(camera_->GetEye(), camera_->GetTarget());
+
 	//シーン更新
 	switch (scene)
 	{
@@ -189,18 +202,6 @@ void GameScene::Update()
 	if (isPerformance) {
 		UpdatePerformance();
 	}
-
-	//カメラ更新
-	camera_->Update(player_->GetPosition(), boss_->GetPosition());
-
-	//背景
-	UpdateBackGround();
-
-	//シーンの切り替わり
-	ChangeScene();
-
-	//パーティクルマネージャー静的更新
-	ParticleManager::StaticUpdate(camera_->GetEye(), camera_->GetTarget());
 
 }
 
@@ -275,12 +276,10 @@ void GameScene::DrawSprite()
 		break;
 
 	case NORMALPLAY:
-		//レティクル
-		player_->DrawRaticle(dxCommon_->GetCommandList());
+		player_->DrawSprite(dxCommon_->GetCommandList());
 		break;
 	case BOSSPLAY:
-		//レティクル
-		player_->DrawRaticle(dxCommon_->GetCommandList());
+		player_->DrawSprite(dxCommon_->GetCommandList());
 		break;
 
 	case CLEAR:
@@ -312,7 +311,7 @@ void GameScene::Collition()
 			{
 				if (!enemy->GetIsDead()) {
 					//当たったか
-					if (collisionManager_->CheckCollisionSquare(enemy->GetColData(), player_->GetBulletColData(i))) {
+					if (collisionManager_->CheckSquareToSquare(enemy->GetColData(), player_->GetBulletColData(i))) {
 
 						//当たったら敵は消してパーティクル生成
 						enemy->SetISDesd(true);
@@ -335,7 +334,7 @@ void GameScene::Collition()
 	{
 		if (!enemy->GetIsDead()) {
 			//当たったか
-			if (collisionManager_->CheckCollisionSquare(enemy->GetColData(), player_->GetColData())) {
+			if (collisionManager_->CheckSquareToSquare(enemy->GetColData(), player_->GetColData())) {
 
 				//当たったら敵は消してパーティクル生成
 				enemy->SetISDesd(true);
@@ -371,7 +370,7 @@ void GameScene::Collition()
 			if (!it1->get()->GetIsDead() && !it2->get()->GetIsDead()) {
 
 				//当たったか
-				if (collisionManager_->CheckCollisionSquare(it1->get()->GetColData(), it2->get()->GetColData())) {
+				if (collisionManager_->CheckSquareToSquare(it1->get()->GetColData(), it2->get()->GetColData())) {
 
 					//当たったら反射させる
 					it1->get()->Reflection();
@@ -396,7 +395,7 @@ void GameScene::Collition()
 
 				if (!enemy->GetIsDead()) {
 					//当たったか
-					if (collisionManager_->CheckCollisionSquare(player_->GetColData(), enemy->GetBulletColData(i))) {
+					if (collisionManager_->CheckSquareToSquare(player_->GetColData(), enemy->GetBulletColData(i))) {
 
 						//当たったら敵の弾を消し、自機のスピードを下げげスコアを減算
 						enemy->SetBulletIsDead(true, i);
@@ -645,16 +644,16 @@ void GameScene::BossSceneCollition()
 
 			if (!boss_->GetIsDead()) {
 				//当たったか
-				if (collisionManager_->CheckCollisionSquare(boss_->GetColData(), player_->GetBulletColData(i))) {
+				if (collisionManager_->CheckSquareToSquare(boss_->GetColData(), player_->GetBulletColData(i))) {
 
 					//当たったらhpをへらしてパーティクル生成
 					boss_->HitBullet();
 					boss_->InitializeParticle();
 					boss_->SetIsParticle(true);
 
-					//自機の弾を消し、自機のスピードを上げスコアを加算
+					//自機の弾を消し、スコアを加算
 					player_->SetBulletIsDead(true, i);
-					player_->SpeedUpByEnemy();
+
 				}
 			}
 
@@ -672,9 +671,9 @@ void GameScene::BossSceneCollition()
 
 			if (!boss_->GetIsDead()) {
 				//当たったか
-				if (collisionManager_->CheckCollisionSquare(player_->GetColData(), boss_->GetBulletColData(i))) {
+				if (collisionManager_->CheckSquareToSquare(player_->GetColData(), boss_->GetBulletColData(i))) {
 
-					//当たったら敵の弾を消し、自機のスピードを下げげスコアを減算
+					//当たったら敵の弾を消し、自機のスピードを下げスコアを減算
 					boss_->SetBulletIsDead(true, i);
 					player_->SpeedDownByEnemy();
 

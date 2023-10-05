@@ -15,7 +15,7 @@ public:
 	void Initialize(Input* input);
 	void Update();
 	void Draw(ID3D12GraphicsCommandList* cmdList);
-	void DrawRaticle(ID3D12GraphicsCommandList* cmdList);
+	void DrawSprite(ID3D12GraphicsCommandList* cmdList);
 
 	//スピードアップ
 	void SpeedUpByEnemy();
@@ -33,6 +33,9 @@ public:
 	//レティクル
 	void UpdateRaticle();
 	void MoveRaticle();
+
+	//スピードUI
+	void UpdateSprite();
 
 	//リセット
 	void Reset();
@@ -87,14 +90,14 @@ private:
 	float speedZ = 0.5f;
 
 	//基礎スピード以外の加速スピード
-	float addSpeed = 0.0f;
+	float addSpeed = 2.0f;
 	//敵を倒した時の加速量
-	float addSpeedByEnemy = 0.25f;
+	float addSpeedByEnemy = 0.5f;
 	//敵に被弾した時の減速
 	float subSpeedByEnemy = 0.5f;
 
 	//最大加速量
-	const float MaxSpeed = 10.0f;
+	const float MaxSpeed = 5.0f;
 
 	//無敵時間
 	bool isInvincible = false;
@@ -133,6 +136,16 @@ private:
 	Vector3 playerVec = {};
 	Vector3 reticleVec = {};
 	Vector3 playerToReticleVec = {};
+
+	//-----スプライト------
+	Sprite* speedSprite = nullptr;
+
+	//スケールはxが変動、yが固定
+	XMFLOAT2 speedSpriteScale = {0,32};
+	XMFLOAT2 speedSpritePosition = { window_width / 2,window_height - 64};
+
+	//スプライトの左右両端をどのくらい開けるか
+	float speedSpriteXSpace = 64;
 
 public:
 

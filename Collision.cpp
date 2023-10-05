@@ -1,8 +1,7 @@
 #include "Collision.h"
 
-bool Collision::CheckCollisionSquare(CollisionData A, CollisionData B)
+bool Collision::CheckSquareToSquare(CollisionData A, CollisionData B)
 {
-
 	float positionAX1 = A.position.x - A.size.x / 2;
 	float positionAX2 = A.position.x + A.size.x / 2;
 
@@ -31,6 +30,21 @@ bool Collision::CheckCollisionSquare(CollisionData A, CollisionData B)
 
 			}
 		}
+	}
+
+	return false;
+}
+
+bool Collision::CheckSphereToSphere(CollisionData A, CollisionData B)
+{
+	float xDis = A.position.x - B.position.x;
+	float yDis = A.position.y - B.position.y;
+	float zDis = A.position.z - B.position.z;
+
+	double distance = sqrt((xDis * xDis) + (yDis * yDis) + (zDis * zDis));
+
+	if (distance <= A.radius + B.radius) {
+		return true;
 	}
 
 	return false;

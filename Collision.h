@@ -2,9 +2,15 @@
 #include <DirectXMath.h>
 #include "wrl.h"
 
+enum CollType {
+	SQUARE,//矩形
+	SPHERE//球
+};
+
 struct CollisionData {
 	DirectX::XMFLOAT3 position = {};
 	DirectX::XMFLOAT3 size = {};
+	float radius = 0.0f;
 };
 
 class Collision
@@ -19,6 +25,9 @@ private:	//エイリアス
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public:
-	bool CheckCollisionSquare(CollisionData A, CollisionData B);
+	//矩形同士の当たり判定
+	bool CheckSquareToSquare(CollisionData A, CollisionData B);
+	//球同士の当たり判定
+	bool CheckSphereToSphere(CollisionData A, CollisionData B);
 };
 

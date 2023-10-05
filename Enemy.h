@@ -110,6 +110,8 @@ private:
 
 	//‰æ–Ê“à‚Å’â‘Ø‚·‚é‚©
 	bool stopInScreen = false;
+	//‰æ–Ê“à‚Å’â‘Ø‚µ‚Ä‚¢‚é‚©
+	bool isStopInScreen = false;
 	//‰½•b’â‘Ø‚·‚é‚©
 	const int StopInScreenTime = 600;
 	int stopInScreenTimer = 0;

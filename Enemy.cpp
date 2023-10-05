@@ -25,7 +25,7 @@ void Enemy::Initialize(FbxModel* EnemyModel, FbxModel* enemyBulletModel)
 	enemyObject->SetModel(EnemyModel);
 
 	this->bulletModel_ = enemyBulletModel;
-	
+
 }
 
 void Enemy::Update(XMFLOAT3 pPos, float pSpeed)
@@ -176,22 +176,23 @@ void Enemy::Reflection()
 void Enemy::StopInScreen()
 {
 
-	if (stopInScreen) {
+	//stopInScreenがtrueの場合、プレイヤーからstopInScreenPosition進んだ距離に到達したら停滞フラグをオンに
+	if (stopInScreen && position_.z < playerPosition_.z + stopInScreenPosition) {
+		isStopInScreen = true;
+		stopInScreen = false;
+	}
 
-		//プレイヤーからstopInScreenPosition進んだ距離に到達したら
-		if (position_.z < playerPosition_.z + stopInScreenPosition) {
+	//停滞フラグがオンの場合
+	if(isStopInScreen){
 
-			//自機についていく
-			position_.z += playerSpeed_;
+		//自機についていく
+		position_.z += playerSpeed_;
 
-			//タイマーを進める
-			stopInScreenTimer++;
-			if (stopInScreenTimer > StopInScreenTime) {
-				stopInScreen = false;
-			}
-
+		//タイマーを進める
+		stopInScreenTimer++;
+		if (stopInScreenTimer > StopInScreenTime) {
+			isStopInScreen = false;
 		}
-
 	}
 
 }
@@ -300,7 +301,7 @@ void Enemy::MakeBullet()
 	case HOMINGSHOT:
 
 		//自機と敵のベクトルを取る
-		Vector3 playerVec = { playerPosition_.x ,playerPosition_.y,playerPosition_.z};
+		Vector3 playerVec = { playerPosition_.x ,playerPosition_.y,playerPosition_.z };
 		Vector3 enemyVec = { position_.x,position_.y,position_.z };
 
 		velocity = playerVec - enemyVec;
@@ -316,7 +317,7 @@ void Enemy::MakeBullet()
 
 	//弾の生成
 	std::unique_ptr<EnemyBullet> newBullet = std::make_unique<EnemyBullet>();
-	newBullet->Initialize(bulletModel_, position_, velocity,playerSpeed_);
+	newBullet->Initialize(bulletModel_, position_, velocity, playerSpeed_);
 	bullets_.push_back(std::move(newBullet));
 }
 
