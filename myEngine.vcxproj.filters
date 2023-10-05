@@ -56,97 +56,97 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Base\DirectXCommon.cpp">
+    <ClCompile Include="Engine\Base\DirectXCommon.cpp">
       <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
-    <ClCompile Include="Base\Input.cpp">
+    <ClCompile Include="Engine\Base\Input.cpp">
       <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
-    <ClCompile Include="Base\WinApp.cpp">
+    <ClCompile Include="Engine\Base\WinApp.cpp">
       <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
-    <ClCompile Include="Math\Easing.cpp">
+    <ClCompile Include="Engine\Math\Easing.cpp">
       <Filter>ソース ファイル\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Math\Random.cpp">
+    <ClCompile Include="Engine\Math\Random.cpp">
       <Filter>ソース ファイル\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Math\Vector3.cpp">
+    <ClCompile Include="Engine\Math\Vector3.cpp">
       <Filter>ソース ファイル\Math</Filter>
     </ClCompile>
-    <ClCompile Include="fbx\FbxLoader.cpp">
+    <ClCompile Include="Engine\fbx\FbxLoader.cpp">
       <Filter>ソース ファイル\fbx</Filter>
     </ClCompile>
-    <ClCompile Include="fbx\FbxModel.cpp">
+    <ClCompile Include="Engine\fbx\FbxModel.cpp">
       <Filter>ソース ファイル\fbx</Filter>
     </ClCompile>
-    <ClCompile Include="fbx\FbxObject3d.cpp">
+    <ClCompile Include="Engine\fbx\FbxObject3d.cpp">
       <Filter>ソース ファイル\fbx</Filter>
     </ClCompile>
-    <ClCompile Include="object3D.cpp">
+    <ClCompile Include="Engine\object3D.cpp">
       <Filter>ソース ファイル\obj</Filter>
     </ClCompile>
-    <ClCompile Include="Model.cpp">
+    <ClCompile Include="Engine\Model.cpp">
       <Filter>ソース ファイル\obj</Filter>
     </ClCompile>
-    <ClCompile Include="Base\FPS.cpp">
+    <ClCompile Include="Engine\Base\FPS.cpp">
       <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
-    <ClCompile Include="2d\Sprite.cpp">
+    <ClCompile Include="Engine\2d\Sprite.cpp">
       <Filter>ソース ファイル\Sprite</Filter>
     </ClCompile>
-    <ClCompile Include="2d\SpriteManager.cpp">
+    <ClCompile Include="Engine\2d\SpriteManager.cpp">
       <Filter>ソース ファイル\Sprite</Filter>
     </ClCompile>
-    <ClCompile Include="2d\PostEffect.cpp">
+    <ClCompile Include="Engine\2d\PostEffect.cpp">
       <Filter>ソース ファイル\PostEffect</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
+    <ClCompile Include="Engine\Camera.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy.cpp">
+    <ClCompile Include="App\Enemy.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="GameScene.cpp">
+    <ClCompile Include="App\GameScene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="Engine\main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="ParticleManager.cpp">
+    <ClCompile Include="Engine\ParticleManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
+    <ClCompile Include="App\Player.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerBullet.cpp">
+    <ClCompile Include="App\PlayerBullet.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Loader\JsonLoader.cpp">
+    <ClCompile Include="Engine\Loader\JsonLoader.cpp">
       <Filter>ソース ファイル\Loader</Filter>
     </ClCompile>
-    <ClCompile Include="Loader\CSVLoader.cpp">
+    <ClCompile Include="Engine\Loader\CSVLoader.cpp">
       <Filter>ソース ファイル\Loader</Filter>
     </ClCompile>
-    <ClCompile Include="BackGround.cpp">
+    <ClCompile Include="App\BackGround.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyBullet.cpp">
+    <ClCompile Include="App\EnemyBullet.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Collision.cpp">
+    <ClCompile Include="Engine\Collision.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Base\ImGuiManager.cpp">
+    <ClCompile Include="Engine\Base\ImGuiManager.cpp">
       <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
-    <ClCompile Include="Skydome.cpp">
+    <ClCompile Include="App\Skydome.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Boss.cpp">
+    <ClCompile Include="App\Boss.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="BossBullet.cpp">
+    <ClCompile Include="App\BossBullet.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -212,97 +212,97 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Base\Input.h">
+    <ClInclude Include="Engine\Base\Input.h">
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Base\DirectXCommon.h">
+    <ClInclude Include="Engine\Base\DirectXCommon.h">
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Base\WinApp.h">
+    <ClInclude Include="Engine\Base\WinApp.h">
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
+    <ClInclude Include="App\Player.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="ParticleManager.h">
+    <ClInclude Include="Engine\ParticleManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
+    <ClInclude Include="Engine\Camera.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="GameScene.h">
+    <ClInclude Include="App\GameScene.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Math\Easing.h">
+    <ClInclude Include="Engine\Math\Easing.h">
       <Filter>ヘッダー ファイル\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Math\Random.h">
+    <ClInclude Include="Engine\Math\Random.h">
       <Filter>ヘッダー ファイル\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Math\Vector3.h">
+    <ClInclude Include="Engine\Math\Vector3.h">
       <Filter>ヘッダー ファイル\Math</Filter>
     </ClInclude>
-    <ClInclude Include="fbx\FbxLoader.h">
+    <ClInclude Include="Engine\fbx\FbxLoader.h">
       <Filter>ヘッダー ファイル\fbx</Filter>
     </ClInclude>
-    <ClInclude Include="fbx\FbxModel.h">
+    <ClInclude Include="Engine\fbx\FbxModel.h">
       <Filter>ヘッダー ファイル\fbx</Filter>
     </ClInclude>
-    <ClInclude Include="fbx\FbxObject3d.h">
+    <ClInclude Include="Engine\fbx\FbxObject3d.h">
       <Filter>ヘッダー ファイル\fbx</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerBullet.h">
+    <ClInclude Include="App\PlayerBullet.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy.h">
+    <ClInclude Include="App\Enemy.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Model.h">
+    <ClInclude Include="Engine\Model.h">
       <Filter>ヘッダー ファイル\obj</Filter>
     </ClInclude>
-    <ClInclude Include="object3D.h">
+    <ClInclude Include="Engine\object3D.h">
       <Filter>ヘッダー ファイル\obj</Filter>
     </ClInclude>
-    <ClInclude Include="Base\FPS.h">
+    <ClInclude Include="Engine\Base\FPS.h">
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
-    <ClInclude Include="2d\Sprite.h">
+    <ClInclude Include="Engine\2d\Sprite.h">
       <Filter>ヘッダー ファイル\Sprite</Filter>
     </ClInclude>
-    <ClInclude Include="2d\SpriteManager.h">
+    <ClInclude Include="Engine\2d\SpriteManager.h">
       <Filter>ヘッダー ファイル\Sprite</Filter>
     </ClInclude>
-    <ClInclude Include="2d\PostEffect.h">
+    <ClInclude Include="Engine\2d\PostEffect.h">
       <Filter>ヘッダー ファイル\PostEffect</Filter>
     </ClInclude>
-    <ClInclude Include="Loader\CSVLoader.h">
+    <ClInclude Include="Engine\Loader\CSVLoader.h">
       <Filter>ヘッダー ファイル\Loader</Filter>
     </ClInclude>
-    <ClInclude Include="Loader\json.hpp">
+    <ClInclude Include="Engine\Loader\json.hpp">
       <Filter>ヘッダー ファイル\Loader</Filter>
     </ClInclude>
-    <ClInclude Include="Loader\JsonLoader.h">
+    <ClInclude Include="Engine\Loader\JsonLoader.h">
       <Filter>ヘッダー ファイル\Loader</Filter>
     </ClInclude>
-    <ClInclude Include="BackGround.h">
+    <ClInclude Include="App\BackGround.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyBullet.h">
+    <ClInclude Include="App\EnemyBullet.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Collision.h">
+    <ClInclude Include="Engine\Collision.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Base\ImGuiManager.h">
+    <ClInclude Include="Engine\Base\ImGuiManager.h">
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Skydome.h">
+    <ClInclude Include="App\Skydome.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Boss.h">
+    <ClInclude Include="App\Boss.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="BossBullet.h">
+    <ClInclude Include="App\BossBullet.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

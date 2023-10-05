@@ -78,13 +78,13 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)fbx;$(SolutionDir)Math;$(SolutionDir)DirectXTex;$(SolutionDir)Base;$(ProjectDir)lib\fbx_sdk\include;$(SolutionDir)2d;$(SolutionDir);$(SolutionDir)imgui;$(SolutionDir)Loader</IncludePath>
-    <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Engine\fbx;$(SolutionDir)Engine\Math;$(SolutionDir)External\DirectXTex;$(SolutionDir)Engine\Base;$(SolutionDir)External\fbx_sdk\include;$(SolutionDir)Engine\2d;$(SolutionDir)Engine;$(SolutionDir)External\imgui;$(SolutionDir)App;$(SolutionDir)Engine\Loader</IncludePath>
+    <LibraryPath>$(ProjectDir)External\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)fbx;$(SolutionDir)Math;$(SolutionDir)DirectXTex;$(SolutionDir)Base;$(ProjectDir)lib\fbx_sdk\include;$(SolutionDir)2d;$(SolutionDir);$(SolutionDir)imgui;$(SolutionDir)Loader</IncludePath>
-    <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Engine\fbx;$(SolutionDir)Engine\Math;$(SolutionDir)External\DirectXTex;$(SolutionDir)Engine\Base;$(SolutionDir)External\fbx_sdk\include;$(SolutionDir)Engine\2d;$(SolutionDir)Engine;$(SolutionDir)External\imgui;$(SolutionDir)App;$(SolutionDir)Engine\Loader</IncludePath>
+    <LibraryPath>$(ProjectDir)External\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -153,45 +153,37 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="2d\PostEffect.cpp" />
-    <ClCompile Include="2d\Sprite.cpp" />
-    <ClCompile Include="2d\SpriteManager.cpp" />
-    <ClCompile Include="BackGround.cpp" />
-    <ClCompile Include="Base\DirectXCommon.cpp" />
-    <ClCompile Include="Base\FPS.cpp" />
-    <ClCompile Include="Base\ImGuiManager.cpp" />
-    <ClCompile Include="Base\Input.cpp" />
-    <ClCompile Include="Base\WinApp.cpp" />
-    <ClCompile Include="Boss.cpp" />
-    <ClCompile Include="BossBullet.cpp" />
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Collision.cpp" />
-    <ClCompile Include="Enemy.cpp" />
-    <ClCompile Include="EnemyBullet.cpp" />
-    <ClCompile Include="fbx\FbxLoader.cpp" />
-    <ClCompile Include="fbx\FbxModel.cpp" />
-    <ClCompile Include="fbx\FbxObject3d.cpp" />
-    <ClCompile Include="GameScene.cpp" />
-    <ClCompile Include="Loader\CSVLoader.cpp" />
-    <ClCompile Include="Loader\JsonLoader.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Math\Easing.cpp" />
-    <ClCompile Include="Math\Random.cpp" />
-    <ClCompile Include="Math\Vector3.cpp" />
-    <ClCompile Include="Model.cpp" />
-    <ClCompile Include="object3D.cpp" />
-    <ClCompile Include="ParticleManager.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="PlayerBullet.cpp" />
-    <ClCompile Include="Skydome.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
-      <Project>{371b9fa9-4c90-4ac6-a123-aced756d6c77}</Project>
-    </ProjectReference>
-    <ProjectReference Include="imgui\imgui.vcxproj">
-      <Project>{7535a512-e689-409b-ae57-2b61550ff855}</Project>
-    </ProjectReference>
+    <ClCompile Include="Engine\2d\PostEffect.cpp" />
+    <ClCompile Include="Engine\2d\Sprite.cpp" />
+    <ClCompile Include="Engine\2d\SpriteManager.cpp" />
+    <ClCompile Include="App\BackGround.cpp" />
+    <ClCompile Include="Engine\Base\DirectXCommon.cpp" />
+    <ClCompile Include="Engine\Base\FPS.cpp" />
+    <ClCompile Include="Engine\Base\ImGuiManager.cpp" />
+    <ClCompile Include="Engine\Base\Input.cpp" />
+    <ClCompile Include="Engine\Base\WinApp.cpp" />
+    <ClCompile Include="App\Boss.cpp" />
+    <ClCompile Include="App\BossBullet.cpp" />
+    <ClCompile Include="Engine\Camera.cpp" />
+    <ClCompile Include="Engine\Collision.cpp" />
+    <ClCompile Include="App\Enemy.cpp" />
+    <ClCompile Include="App\EnemyBullet.cpp" />
+    <ClCompile Include="Engine\fbx\FbxLoader.cpp" />
+    <ClCompile Include="Engine\fbx\FbxModel.cpp" />
+    <ClCompile Include="Engine\fbx\FbxObject3d.cpp" />
+    <ClCompile Include="App\GameScene.cpp" />
+    <ClCompile Include="Engine\Loader\CSVLoader.cpp" />
+    <ClCompile Include="Engine\Loader\JsonLoader.cpp" />
+    <ClCompile Include="Engine\main.cpp" />
+    <ClCompile Include="Engine\Math\Easing.cpp" />
+    <ClCompile Include="Engine\Math\Random.cpp" />
+    <ClCompile Include="Engine\Math\Vector3.cpp" />
+    <ClCompile Include="Engine\Model.cpp" />
+    <ClCompile Include="Engine\object3D.cpp" />
+    <ClCompile Include="Engine\ParticleManager.cpp" />
+    <ClCompile Include="App\Player.cpp" />
+    <ClCompile Include="App\PlayerBullet.cpp" />
+    <ClCompile Include="App\Skydome.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\Basic.hlsli" />
@@ -282,37 +274,45 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="2d\PostEffect.h" />
-    <ClInclude Include="2d\Sprite.h" />
-    <ClInclude Include="2d\SpriteManager.h" />
-    <ClInclude Include="BackGround.h" />
-    <ClInclude Include="Base\DirectXCommon.h" />
-    <ClInclude Include="Base\FPS.h" />
-    <ClInclude Include="Base\ImGuiManager.h" />
-    <ClInclude Include="Base\Input.h" />
-    <ClInclude Include="Base\WinApp.h" />
-    <ClInclude Include="Boss.h" />
-    <ClInclude Include="BossBullet.h" />
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="Collision.h" />
-    <ClInclude Include="Enemy.h" />
-    <ClInclude Include="EnemyBullet.h" />
-    <ClInclude Include="fbx\FbxLoader.h" />
-    <ClInclude Include="fbx\FbxModel.h" />
-    <ClInclude Include="fbx\FbxObject3d.h" />
-    <ClInclude Include="GameScene.h" />
-    <ClInclude Include="Loader\CSVLoader.h" />
-    <ClInclude Include="Loader\json.hpp" />
-    <ClInclude Include="Loader\JsonLoader.h" />
-    <ClInclude Include="Math\Easing.h" />
-    <ClInclude Include="Math\Random.h" />
-    <ClInclude Include="Math\Vector3.h" />
-    <ClInclude Include="Model.h" />
-    <ClInclude Include="object3D.h" />
-    <ClInclude Include="ParticleManager.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="PlayerBullet.h" />
-    <ClInclude Include="Skydome.h" />
+    <ClInclude Include="Engine\2d\PostEffect.h" />
+    <ClInclude Include="Engine\2d\Sprite.h" />
+    <ClInclude Include="Engine\2d\SpriteManager.h" />
+    <ClInclude Include="App\BackGround.h" />
+    <ClInclude Include="Engine\Base\DirectXCommon.h" />
+    <ClInclude Include="Engine\Base\FPS.h" />
+    <ClInclude Include="Engine\Base\ImGuiManager.h" />
+    <ClInclude Include="Engine\Base\Input.h" />
+    <ClInclude Include="Engine\Base\WinApp.h" />
+    <ClInclude Include="App\Boss.h" />
+    <ClInclude Include="App\BossBullet.h" />
+    <ClInclude Include="Engine\Camera.h" />
+    <ClInclude Include="Engine\Collision.h" />
+    <ClInclude Include="App\Enemy.h" />
+    <ClInclude Include="App\EnemyBullet.h" />
+    <ClInclude Include="Engine\fbx\FbxLoader.h" />
+    <ClInclude Include="Engine\fbx\FbxModel.h" />
+    <ClInclude Include="Engine\fbx\FbxObject3d.h" />
+    <ClInclude Include="App\GameScene.h" />
+    <ClInclude Include="Engine\Loader\CSVLoader.h" />
+    <ClInclude Include="Engine\Loader\json.hpp" />
+    <ClInclude Include="Engine\Loader\JsonLoader.h" />
+    <ClInclude Include="Engine\Math\Easing.h" />
+    <ClInclude Include="Engine\Math\Random.h" />
+    <ClInclude Include="Engine\Math\Vector3.h" />
+    <ClInclude Include="Engine\Model.h" />
+    <ClInclude Include="Engine\object3D.h" />
+    <ClInclude Include="Engine\ParticleManager.h" />
+    <ClInclude Include="App\Player.h" />
+    <ClInclude Include="App\PlayerBullet.h" />
+    <ClInclude Include="App\Skydome.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="External\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
+      <Project>{371b9fa9-4c90-4ac6-a123-aced756d6c77}</Project>
+    </ProjectReference>
+    <ProjectReference Include="External\imgui\imgui.vcxproj">
+      <Project>{7535a512-e689-409b-ae57-2b61550ff855}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
