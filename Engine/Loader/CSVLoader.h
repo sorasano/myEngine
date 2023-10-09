@@ -41,7 +41,7 @@ private:
 	std::vector<bool> stopInScreen_;
 
 	//ファイル格納ルートパス
-	static const std::string kDefaultbaseDirectory;
+	static const std::string kDefaultbaseDirectory_;
 
 	static const std::string kExtension;
 };

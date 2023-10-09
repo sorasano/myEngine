@@ -100,24 +100,24 @@ private:
 	Camera* camera_{};
 
 	//シーン
-	int scene = TITLE;
+	int scene_ = TITLE;
 
 	//フェーズ
-	int phase = 0;
-	const int MaxPhase = 3;
+	int phase_ = 0;
+	const int MaxPhase_ = 3;
 
 	//Fbx
-	FbxModel* enemyModel = nullptr;
-	FbxModel* enemyBulletModel = nullptr;
+	FbxModel* enemyModel_ = nullptr;
+	FbxModel* enemyBulletModel_ = nullptr;
 
 	//スカイドーム
 	std::unique_ptr<Skydome> skydome_;
 
 	//背景
 	std::list<std::unique_ptr<BackGround>> backGrounds_;
-	size_t backGroundSize = 5;
+	size_t backGroundSize_ = 5;
 	//調整用の座標
-	float adjustPos = 0;
+	float adjustPos_ = 0;
 
 	//プレイヤー
 	std::unique_ptr<Player> player_;
@@ -128,23 +128,23 @@ private:
 	//csv
 	std::list<std::unique_ptr<CSVLoader>> enemyCsvs_;
 	std::vector<std::string> enemyCsvsName_;
-	int enemyCSVSize = 0;
+	int enemyCSVSize_ = 0;
 
 	//ボス
 	std::unique_ptr<Boss> boss_;
 
 	//スプライトマネージャー
-	SpriteManager* spriteManager = nullptr;
+	SpriteManager* spriteManager_ = nullptr;
 	//スプライト
-	Sprite* titleSprite = nullptr;
-	Sprite* clearSprite = nullptr;
+	Sprite* titleSprite_ = nullptr;
+	Sprite* clearSprite_ = nullptr;
 
 	//当たり判定
 	Collision* collisionManager_ = nullptr;
 
 	//演出フラグ
-	bool isPerformance = false;
+	bool isPerformance_ = false;
 	//なんの演出か
-	int performanceNum = TITLETOPLAY;
+	int performanceNum_ = TITLETOPLAY;
 };
 

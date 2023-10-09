@@ -4,31 +4,32 @@
 #include <d3dcompiler.h>
 #include <DirectXTex.h>
 
+
 #pragma comment(lib, "d3dcompiler.lib")
 #define PI 3.1415
 
 using namespace Microsoft::WRL;
 
 //静的メンバ変数
-ID3D12Device* Sprite::device = nullptr;
-SpriteManager* Sprite::spriteManager = nullptr;
-ComPtr<ID3D12RootSignature>Sprite::rootsignature;
-ComPtr<ID3D12PipelineState>Sprite::pipelinestate;
+ID3D12Device* Sprite::device_ = nullptr;
+SpriteManager* Sprite::spriteManager_ = nullptr;
+ComPtr<ID3D12RootSignature>Sprite::rootsignature_;
+ComPtr<ID3D12PipelineState>Sprite::pipelinestate_;
 
 void Sprite::Initialize()
 {
 	HRESULT result;
 
 	//頂点データ
-	vertices[0] = { {   0.0f,100.0f, 0.0f },{ 0.0f,1.0f } };	//左下
-	vertices[1] = { {   0.0f,  0.0f, 0.0f },{ 0.0f,0.0f } };	//左上
-	vertices[2] = { { 100.0f,100.0f, 0.0f },{ 1.0f,1.0f } };	//右下
-	vertices[3] = { { 100.0f,100.0f, 0.0f },{ 1.0f,1.0f } };	//右下
-	vertices[4] = { {   0.0f,  0.0f, 0.0f },{ 0.0f,0.0f } };	//左上
-	vertices[5] = { { 100.0f,  0.0f, 0.0f },{ 1.0f,0.0f } };	//右上
+	vertices_[0] = { {   0.0f,100.0f, 0.0f },{ 0.0f,1.0f } };	//左下
+	vertices_[1] = { {   0.0f,  0.0f, 0.0f },{ 0.0f,0.0f } };	//左上
+	vertices_[2] = { { 100.0f,100.0f, 0.0f },{ 1.0f,1.0f } };	//右下
+	vertices_[3] = { { 100.0f,100.0f, 0.0f },{ 1.0f,1.0f } };	//右下
+	vertices_[4] = { {   0.0f,  0.0f, 0.0f },{ 0.0f,0.0f } };	//左上
+	vertices_[5] = { { 100.0f,  0.0f, 0.0f },{ 1.0f,0.0f } };	//右上
 
 	//頂点データのサイズ
-	UINT sizeVB = static_cast<UINT>(sizeof(Vertex) * _countof(vertices));
+	UINT sizeVB = static_cast<UINT>(sizeof(Vertex) * _countof(vertices_));
 
 	//頂点バッファの設定
 	D3D12_HEAP_PROPERTIES heapProp{};	//ヒープ設定
@@ -44,36 +45,36 @@ void Sprite::Initialize()
 	resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
 	//頂点バッファの生成
-	ID3D12Resource* vertBuff = nullptr;
-	result = device->CreateCommittedResource(
+	ID3D12Resource* vertBuff_ = nullptr;
+	result = device_->CreateCommittedResource(
 		&heapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&resDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&vertBuff)
+		IID_PPV_ARGS(&vertBuff_)
 	);
 	assert(SUCCEEDED(result));
 
 	//GPU上のバッファに対応した仮想メモリを取得
 	/*Vertex* vertMap = nullptr;*/
-	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
+	result = vertBuff_->Map(0, nullptr, (void**)&vertMap_);
 	assert(SUCCEEDED(result));
 	//全頂点に対して
-	for (int i = 0; i < _countof(vertices); i++)
+	for (int i = 0; i < _countof(vertices_); i++)
 	{
-		vertMap[i] = vertices[i];	//座標をコピー
+		vertMap_[i] = vertices_[i];	//座標をコピー
 	}
 	//繋がりを解除
-	vertBuff->Unmap(0, nullptr);
+	vertBuff_->Unmap(0, nullptr);
 
 	//頂点バッファビューの作成
 	//GPU仮想アドレス
-	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
+	vbView_.BufferLocation = vertBuff_->GetGPUVirtualAddress();
 	//頂点バッファのサイズ
-	vbView.SizeInBytes = sizeVB;
+	vbView_.SizeInBytes = sizeVB;
 	//頂点1つ分のデータサイズ
-	vbView.StrideInBytes = sizeof(Vertex);
+	vbView_.StrideInBytes = sizeof(Vertex);
 
 	//定数バッファの設定
 	//ヒープ設定
@@ -89,18 +90,18 @@ void Sprite::Initialize()
 	v1.SampleDesc.Count = 1;
 	v1.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	//定数バッファの生成
-	result = device->CreateCommittedResource(
+	result = device_->CreateCommittedResource(
 		&v0,
 		D3D12_HEAP_FLAG_NONE,
 		&v1,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&constBuffMaterial)
+		IID_PPV_ARGS(&constBuffMaterial_)
 	);
 	assert(SUCCEEDED(result));
 
 	//定数バッファマッピング
-	result = constBuffMaterial->Map(0, nullptr, (void**)&constMapMaterial);
+	result = constBuffMaterial_->Map(0, nullptr, (void**)&constMapMaterial_);
 	assert(SUCCEEDED(result));
 
 	//行列用定数バッファ設定
@@ -116,36 +117,36 @@ void Sprite::Initialize()
 	v3.SampleDesc.Count = 1;
 	v3.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	//定数バッファの生成
-	result = device->CreateCommittedResource(
+	result = device_->CreateCommittedResource(
 		&v2,
 		D3D12_HEAP_FLAG_NONE,
 		&v3,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&constBuffTransform)
+		IID_PPV_ARGS(&constBuffTransform_)
 	);
 
 	//定数バッファマッピング
-	result = constBuffTransform->Map(0, nullptr, (void**)&constMapTransform);
+	result = constBuffTransform_->Map(0, nullptr, (void**)&constMapTransform_);
 	assert(SUCCEEDED(result));
-	constMapTransform->mat = DirectX::XMMatrixIdentity();
+	constMapTransform_->mat = DirectX::XMMatrixIdentity();
 }
 
 void Sprite::Update()
 {
 
-	float left = (0.0f - anchorPoint.x) * scale.x;
-	float right = (1.0f - anchorPoint.x) * scale.x;
-	float top = (0.0f - anchorPoint.y) * scale.y;
-	float bottom = (1.0f - anchorPoint.y) * scale.y;
+	float left = (0.0f - anchorPoint_.x) * scale_.x;
+	float right = (1.0f - anchorPoint_.x) * scale_.x;
+	float top = (0.0f - anchorPoint_.y) * scale_.y;
+	float bottom = (1.0f - anchorPoint_.y) * scale_.y;
 
 	//頂点データ
-	vertices[0] = { {   left,bottom , 0.0f },{ 0.0f,1.0f } };	//左下
-	vertices[1] = { {  left,  top, 0.0f },{ 0.0f,0.0f } };	//左上
-	vertices[2] = { { right,bottom , 0.0f },{ 1.0f,1.0f } };	//右下
-	vertices[3] = { { right,bottom , 0.0f },{ 1.0f,1.0f } };	//右下
-	vertices[4] = { {   left,  top, 0.0f },{ 0.0f,0.0f } };	//左上
-	vertices[5] = { { right,  top, 0.0f },{ 1.0f,0.0f } };	//右上
+	vertices_[0] = { {   left,bottom , 0.0f },{ 0.0f,1.0f } };	//左下
+	vertices_[1] = { {  left,  top, 0.0f },{ 0.0f,0.0f } };	//左上
+	vertices_[2] = { { right,bottom , 0.0f },{ 1.0f,1.0f } };	//右下
+	vertices_[3] = { { right,bottom , 0.0f },{ 1.0f,1.0f } };	//右下
+	vertices_[4] = { {   left,  top, 0.0f },{ 0.0f,0.0f } };	//左上
+	vertices_[5] = { { right,  top, 0.0f },{ 1.0f,0.0f } };	//右上
 
 	////頂点データ
 	//vertices[0] = { {    0.0f, scale.y, 0.0f },{ 0.0f,1.0f } };	//左下
@@ -155,66 +156,66 @@ void Sprite::Update()
 	//vertices[4] = { {    0.0f,    0.0f, 0.0f },{ 0.0f,0.0f } };	//左上
 	//vertices[5] = { { scale.x,    0.0f, 0.0f },{ 1.0f,0.0f } };	//右上
 
-	std::copy(std::begin(vertices), std::end(vertices), vertMap);
+	std::copy(std::begin(vertices_), std::end(vertices_), vertMap_);
 
 	//マテリアル
-	constMapMaterial->color = color;
+	constMapMaterial_->color = color;
 
 	//変形行列
 	//ワールド変換行列
-	XMMATRIX matWorld;
-	matWorld = DirectX::XMMatrixIdentity();
+	XMMATRIX matWorld_;
+	matWorld_ = DirectX::XMMatrixIdentity();
 	//回転
 	XMMATRIX matRot;
 	matRot = DirectX::XMMatrixIdentity();
-	matRot *= DirectX::XMMatrixRotationZ(rotation);
-	matWorld *= matRot;
+	matRot *= DirectX::XMMatrixRotationZ(rotation_);
+	matWorld_ *= matRot;
 	//平行移動
 	XMMATRIX matTrans;
-	matTrans = DirectX::XMMatrixTranslation(position.x, position.y, 0.0f);
-	matWorld *= matTrans;
+	matTrans = DirectX::XMMatrixTranslation(position_.x, position_.y, 0.0f);
+	matWorld_ *= matTrans;
 
 	//合成
-	constMapTransform->mat = matWorld;
+	constMapTransform_->mat = matWorld_;
 	//2D座標に変換
-	constMapTransform->mat.r[0].m128_f32[0] = 2.0f / window_width;
-	constMapTransform->mat.r[1].m128_f32[1] = -2.0f / window_height;
-	constMapTransform->mat.r[3].m128_f32[0] = -1.0f + (position.x / window_width) * 2;
-	constMapTransform->mat.r[3].m128_f32[1] = 1.0f - (position.y / window_height) * 2;
+	constMapTransform_->mat.r[0].m128_f32[0] = 2.0f / window_width;
+	constMapTransform_->mat.r[1].m128_f32[1] = -2.0f / window_height;
+	constMapTransform_->mat.r[3].m128_f32[0] = -1.0f + (position_.x / window_width) * 2;
+	constMapTransform_->mat.r[3].m128_f32[1] = 1.0f - (position_.y / window_height) * 2;
 }
 
-void Sprite::Draw(ID3D12GraphicsCommandList* cmdList)
+void Sprite::Draw(ID3D12GraphicsCommandList* cmdList_)
 {
 	//パイプライン、ルートシグネチャをセット
-	cmdList->SetPipelineState(pipelinestate.Get());
-	cmdList->SetGraphicsRootSignature(rootsignature.Get());
+	cmdList_->SetPipelineState(pipelinestate_.Get());
+	cmdList_->SetGraphicsRootSignature(rootsignature_.Get());
 	//プリミティブ形状の設定コマンド
-	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	cmdList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	//頂点バッファビューの設定コマンド
-	cmdList->IASetVertexBuffers(0, 1, &vbView);
+	cmdList_->IASetVertexBuffers(0, 1, &vbView_);
 	//定数バッファビューの設定コマンド
-	cmdList->SetGraphicsRootConstantBufferView(0, constBuffMaterial->GetGPUVirtualAddress());
+	cmdList_->SetGraphicsRootConstantBufferView(0, constBuffMaterial_->GetGPUVirtualAddress());
 	//デスクリプタヒープの配列をセットするコマンド
-	ID3D12DescriptorHeap* ppHeaps[] = { spriteManager->GetSrvHeap() };
-	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+	ID3D12DescriptorHeap* ppHeaps[] = { spriteManager_->GetSrvHeap() };
+	cmdList_->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 	//SRVヒープの先頭ハンドルを取得
-	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = spriteManager->GetSrvHeap()->GetGPUDescriptorHandleForHeapStart();
+	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = spriteManager_->GetSrvHeap()->GetGPUDescriptorHandleForHeapStart();
 	//ハンドル1分のサイズ
-	UINT incrementSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	UINT incrementSize = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	//テクスチャの番号に合わせてハンドルを進める
-	if (textureNum > 0)
+	if (textureNum_ > 0)
 	{
-		srvGpuHandle.ptr += incrementSize * textureNum;
+		srvGpuHandle.ptr += incrementSize * textureNum_;
 	}
 
 	//SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
-	cmdList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
+	cmdList_->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
 	//定数バッファビューの設定コマンド
-	cmdList->SetGraphicsRootConstantBufferView(2, constBuffTransform->GetGPUVirtualAddress());
+	cmdList_->SetGraphicsRootConstantBufferView(2, constBuffTransform_->GetGPUVirtualAddress());
 
 	//描画コマンド
-	cmdList->DrawInstanced(_countof(vertices), 1, 0, 0);
+	cmdList_->DrawInstanced(_countof(vertices_), 1, 0, 0);
 }
 
 void Sprite::CreateGraphicsPipeLine()
@@ -383,13 +384,13 @@ void Sprite::CreateGraphicsPipeLine()
 	result = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0,
 		&rootSigBlob, &errorBlob);
 	assert(SUCCEEDED(result));
-	result = device->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(), IID_PPV_ARGS(&rootsignature));
+	result = device_->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(), IID_PPV_ARGS(&rootsignature_));
 	assert(SUCCEEDED(result));
 	rootSigBlob->Release();
 	//パイプラインにルートシグネチャをセット
-	pipelineDesc.pRootSignature = rootsignature.Get();
+	pipelineDesc.pRootSignature = rootsignature_.Get();
 
 	//パイプラインステートの生成
-	result = device->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(pipelinestate.ReleaseAndGetAddressOf()));
+	result = device_->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(pipelinestate_.ReleaseAndGetAddressOf()));
 	assert(SUCCEEDED(result));
 }

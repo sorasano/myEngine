@@ -7,7 +7,8 @@
 #include "string"
 #include "DirectXMath.h"
 #include "assert.h"
-#include "DirectXTex.h"
+#include <DirectXTex.h>
+
 #include "wrl.h"
 #include "Model.h"
 #include "Base/DirectXCommon.h"
@@ -44,15 +45,15 @@ struct ConstBufferDataTransform
 struct Object3d2
 {
 	//定数バッファ
-	ComPtr<ID3D12Resource> constBuffTransform;
+	ComPtr<ID3D12Resource> constBuffTransform_;
 	//定数バッファマップ
-	ConstBufferDataTransform* constMapTransform;
+	ConstBufferDataTransform* constMapTransform_;
 	//アフィン変換情報
-	XMFLOAT3 scale = { 1,1,1 };
-	XMFLOAT3 rotation = { 0,0,0 };
-	XMFLOAT3 position = { 0,0,0 };
+	XMFLOAT3 scale_ = { 1,1,1 };
+	XMFLOAT3 rotation_ = { 0,0,0 };
+	XMFLOAT3 position_ = { 0,0,0 };
 	//ワールド変換行列
-	XMMATRIX matWorld;
+	XMMATRIX matWorld_;
 	//親オブジェクトのポインター
 	Object3d2* parent = nullptr;
 };
@@ -77,9 +78,9 @@ public:
 	void Update(XMMATRIX& matView, XMMATRIX& matProjection);
 	void Draw(D3D12_VERTEX_BUFFER_VIEW& vbView,D3D12_INDEX_BUFFER_VIEW& ibView);
 	//ゲッター　セッター　
-	XMFLOAT3 GetPosition() { return position; };
-	XMFLOAT3 GetRotation() { return rotation; };
-	XMFLOAT3 GetScale() { return scale; };
+	XMFLOAT3 GetPosition() { return position_; };
+	XMFLOAT3 GetRotation() { return rotation_; };
+	XMFLOAT3 GetScale() { return scale_; };
 	void setPosition(XMFLOAT3 pos);
 	void setRotation(XMFLOAT3 rot);
 	void setScale(XMFLOAT3 sca);
@@ -101,23 +102,23 @@ public:
 	};
 private:
 	//定数バッファ
-	ComPtr<ID3D12Resource> constBuffTransform;
+	ComPtr<ID3D12Resource> constBuffTransform_;
 	//定数バッファマップ
-	ConstBufferDataTransform* constMapTransform;
+	ConstBufferDataTransform* constMapTransform_;
 	//モデル
-	Model* model = nullptr;
+	Model* model_ = nullptr;
 	//デバイス
-	DirectXCommon* dx = nullptr;
+	DirectXCommon* dx_ = nullptr;
 	//定数バッファ
 	ComPtr<ID3D12Resource> constBuffB0; 
 	ComPtr<ID3D12Resource> constBuffB1;
 	// コマンドリスト
-	ID3D12GraphicsCommandList* cmdList;
+	ID3D12GraphicsCommandList* cmdList_;
 private:
 	//アフィン変換情報
-	XMFLOAT3 scale = { 1,1,1 };
-	XMFLOAT3 rotation = { 0,0,0};
-	XMFLOAT3 position = { 0,0,0 };
+	XMFLOAT3 scale_ = { 1,1,1 };
+	XMFLOAT3 rotation_ = { 0,0,0};
+	XMFLOAT3 position_ = { 0,0,0 };
 	//ワールド変換行列
-	XMMATRIX matWorld;
+	XMMATRIX matWorld_;
 };

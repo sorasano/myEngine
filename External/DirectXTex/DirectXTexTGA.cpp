@@ -138,14 +138,14 @@ namespace
         _In_reads_bytes_(size) const void* pSource,
         size_t size,
         TGA_FLAGS flags,
-        _Out_ TexMetadata& metadata,
+        _Out_ TexMetadata& metadata_,
         size_t& offset,
         _Inout_opt_ uint32_t* convFlags) noexcept
     {
         if (!pSource)
             return E_INVALIDARG;
 
-        memset(&metadata, 0, sizeof(TexMetadata));
+        memset(&metadata_, 0, sizeof(TexMetadata));
 
         if (size < sizeof(TGA_HEADER))
         {
@@ -177,18 +177,18 @@ namespace
             switch (pHeader->bBitsPerPixel)
             {
             case 16:
-                metadata.format = DXGI_FORMAT_B5G5R5A1_UNORM;
+                metadata_.format = DXGI_FORMAT_B5G5R5A1_UNORM;
                 break;
 
             case 24:
                 if (flags & TGA_FLAGS_BGR)
                 {
-                    metadata.format = DXGI_FORMAT_B8G8R8X8_UNORM;
+                    metadata_.format = DXGI_FORMAT_B8G8R8X8_UNORM;
                 }
                 else
                 {
-                    metadata.format = DXGI_FORMAT_R8G8B8A8_UNORM;
-                    metadata.SetAlphaMode(TEX_ALPHA_MODE_OPAQUE);
+                    metadata_.format = DXGI_FORMAT_R8G8B8A8_UNORM;
+                    metadata_.SetAlphaMode(TEX_ALPHA_MODE_OPAQUE);
                 }
 
                 if (convFlags)
@@ -196,7 +196,7 @@ namespace
                 break;
 
             case 32:
-                metadata.format = (flags & TGA_FLAGS_BGR) ? DXGI_FORMAT_B8G8R8A8_UNORM : DXGI_FORMAT_R8G8B8A8_UNORM;
+                metadata_.format = (flags & TGA_FLAGS_BGR) ? DXGI_FORMAT_B8G8R8A8_UNORM : DXGI_FORMAT_R8G8B8A8_UNORM;
                 break;
             }
 
@@ -211,7 +211,7 @@ namespace
             switch (pHeader->bBitsPerPixel)
             {
             case 8:
-                metadata.format = DXGI_FORMAT_R8_UNORM;
+                metadata_.format = DXGI_FORMAT_R8_UNORM;
                 break;
 
             default:
@@ -233,10 +233,10 @@ namespace
             return HRESULT_E_INVALID_DATA;
         }
 
-        metadata.width = pHeader->wWidth;
-        metadata.height = pHeader->wHeight;
-        metadata.depth = metadata.arraySize = metadata.mipLevels = 1;
-        metadata.dimension = TEX_DIMENSION_TEXTURE2D;
+        metadata_.width = pHeader->wWidth;
+        metadata_.height = pHeader->wHeight;
+        metadata_.depth = metadata_.arraySize = metadata_.mipLevels = 1;
+        metadata_.dimension = TEX_DIMENSION_TEXTURE2D;
 
         if (convFlags)
         {
@@ -1174,7 +1174,7 @@ namespace
     //-------------------------------------------------------------------------------------
     // TGA 2.0 Extension helpers
     //-------------------------------------------------------------------------------------
-    void SetExtension(_In_ TGA_EXTENSION *ext, TGA_FLAGS flags, const TexMetadata& metadata) noexcept
+    void SetExtension(_In_ TGA_EXTENSION *ext, TGA_FLAGS flags, const TexMetadata& metadata_) noexcept
     {
         memset(ext, 0, sizeof(TGA_EXTENSION));
 
@@ -1184,7 +1184,7 @@ namespace
         ext->wVersionNumber = DIRECTX_TEX_VERSION;
         ext->bVersionLetter = ' ';
 
-        const bool sRGB = ((flags & TGA_FLAGS_FORCE_LINEAR) == 0) && ((flags & TGA_FLAGS_FORCE_SRGB) != 0 || IsSRGB(metadata.format));
+        const bool sRGB = ((flags & TGA_FLAGS_FORCE_LINEAR) == 0) && ((flags & TGA_FLAGS_FORCE_SRGB) != 0 || IsSRGB(metadata_.format));
         if (sRGB)
         {
             ext->wGammaNumerator = 22;
@@ -1196,10 +1196,10 @@ namespace
             ext->wGammaDenominator = 1;
         }
 
-        switch (metadata.GetAlphaMode())
+        switch (metadata_.GetAlphaMode())
         {
         case TEX_ALPHA_MODE_UNKNOWN:
-            ext->bAttributesType = HasAlpha(metadata.format) ? TGA_ATTRIBUTE_UNDEFINED : TGA_ATTRIBUTE_NONE;
+            ext->bAttributesType = HasAlpha(metadata_.format) ? TGA_ATTRIBUTE_UNDEFINED : TGA_ATTRIBUTE_NONE;
             break;
 
         case TEX_ALPHA_MODE_STRAIGHT:
@@ -1302,13 +1302,13 @@ HRESULT DirectX::GetMetadataFromTGAMemory(
     const void* pSource,
     size_t size,
     TGA_FLAGS flags,
-    TexMetadata& metadata) noexcept
+    TexMetadata& metadata_) noexcept
 {
     if (!pSource || size == 0)
         return E_INVALIDARG;
 
     size_t offset;
-    HRESULT hr = DecodeTGAHeader(pSource, size, flags, metadata, offset, nullptr);
+    HRESULT hr = DecodeTGAHeader(pSource, size, flags, metadata_, offset, nullptr);
     if (FAILED(hr))
         return hr;
 
@@ -1324,21 +1324,21 @@ HRESULT DirectX::GetMetadataFromTGAMemory(
                 && ((footer->dwExtensionOffset + sizeof(TGA_EXTENSION)) <= size))
             {
                 ext = reinterpret_cast<const TGA_EXTENSION*>(static_cast<const uint8_t*>(pSource) + footer->dwExtensionOffset);
-                metadata.SetAlphaMode(GetAlphaModeFromExtension(ext));
+                metadata_.SetAlphaMode(GetAlphaModeFromExtension(ext));
             }
         }
     }
 
     if (!(flags & TGA_FLAGS_IGNORE_SRGB))
     {
-        metadata.format = GetSRGBFromExtension(ext, metadata.format, flags, nullptr);
+        metadata_.format = GetSRGBFromExtension(ext, metadata_.format, flags, nullptr);
     }
 
     return S_OK;
 }
 
 _Use_decl_annotations_
-HRESULT DirectX::GetMetadataFromTGAFile(const wchar_t* szFile, TGA_FLAGS flags, TexMetadata& metadata) noexcept
+HRESULT DirectX::GetMetadataFromTGAFile(const wchar_t* szFile, TGA_FLAGS flags, TexMetadata& metadata_) noexcept
 {
     if (!szFile)
         return E_INVALIDARG;
@@ -1414,7 +1414,7 @@ HRESULT DirectX::GetMetadataFromTGAFile(const wchar_t* szFile, TGA_FLAGS flags, 
 #endif
 
     size_t offset;
-    HRESULT hr = DecodeTGAHeader(header, headerLen, flags, metadata, offset, nullptr);
+    HRESULT hr = DecodeTGAHeader(header, headerLen, flags, metadata_, offset, nullptr);
     if (FAILED(hr))
         return hr;
 
@@ -1460,7 +1460,7 @@ HRESULT DirectX::GetMetadataFromTGAFile(const wchar_t* szFile, TGA_FLAGS flags, 
                         && bytesRead == sizeof(TGA_EXTENSION))
                     {
                         ext = &extData;
-                        metadata.SetAlphaMode(GetAlphaModeFromExtension(ext));
+                        metadata_.SetAlphaMode(GetAlphaModeFromExtension(ext));
                     }
                 }
 #else // !WIN32
@@ -1471,7 +1471,7 @@ HRESULT DirectX::GetMetadataFromTGAFile(const wchar_t* szFile, TGA_FLAGS flags, 
                     if (inFile)
                     {
                         ext = &extData;
-                        metadata.SetAlphaMode(GetAlphaModeFromExtension(ext));
+                        metadata_.SetAlphaMode(GetAlphaModeFromExtension(ext));
                     }
                 }
 #endif
@@ -1481,7 +1481,7 @@ HRESULT DirectX::GetMetadataFromTGAFile(const wchar_t* szFile, TGA_FLAGS flags, 
 
     if (!(flags & TGA_FLAGS_IGNORE_SRGB))
     {
-        metadata.format = GetSRGBFromExtension(ext, metadata.format, flags, nullptr);
+        metadata_.format = GetSRGBFromExtension(ext, metadata_.format, flags, nullptr);
     }
 
     return S_OK;
@@ -1496,7 +1496,7 @@ HRESULT DirectX::LoadFromTGAMemory(
     const void* pSource,
     size_t size,
     TGA_FLAGS flags,
-    TexMetadata* metadata,
+    TexMetadata* metadata_,
     ScratchImage& image) noexcept
 {
     if (!pSource || size == 0)
@@ -1560,16 +1560,16 @@ HRESULT DirectX::LoadFromTGAMemory(
         mdata.format = GetSRGBFromExtension(ext, mdata.format, flags, &image);
     }
 
-    if (metadata)
+    if (metadata_)
     {
-        memcpy(metadata, &mdata, sizeof(TexMetadata));
+        memcpy(metadata_, &mdata, sizeof(TexMetadata));
         if (hr == S_FALSE)
         {
-            metadata->SetAlphaMode(TEX_ALPHA_MODE_OPAQUE);
+            metadata_->SetAlphaMode(TEX_ALPHA_MODE_OPAQUE);
         }
         else if (ext)
         {
-            metadata->SetAlphaMode(GetAlphaModeFromExtension(ext));
+            metadata_->SetAlphaMode(GetAlphaModeFromExtension(ext));
         }
     }
 
@@ -1584,7 +1584,7 @@ _Use_decl_annotations_
 HRESULT DirectX::LoadFromTGAFile(
     const wchar_t* szFile,
     TGA_FLAGS flags,
-    TexMetadata* metadata,
+    TexMetadata* metadata_,
     ScratchImage& image) noexcept
 {
     if (!szFile)
@@ -2041,16 +2041,16 @@ HRESULT DirectX::LoadFromTGAFile(
         mdata.format = GetSRGBFromExtension(ext, mdata.format, flags, &image);
     }
 
-    if (metadata)
+    if (metadata_)
     {
-        memcpy(metadata, &mdata, sizeof(TexMetadata));
+        memcpy(metadata_, &mdata, sizeof(TexMetadata));
         if (opaquealpha)
         {
-            metadata->SetAlphaMode(TEX_ALPHA_MODE_OPAQUE);
+            metadata_->SetAlphaMode(TEX_ALPHA_MODE_OPAQUE);
         }
         else if (ext)
         {
-            metadata->SetAlphaMode(GetAlphaModeFromExtension(ext));
+            metadata_->SetAlphaMode(GetAlphaModeFromExtension(ext));
         }
     }
 
@@ -2066,9 +2066,9 @@ HRESULT DirectX::SaveToTGAMemory(
     const Image& image,
     TGA_FLAGS flags,
     Blob& blob,
-    const TexMetadata* metadata) noexcept
+    const TexMetadata* metadata_) noexcept
 {
-    if ((flags & (TGA_FLAGS_FORCE_LINEAR | TGA_FLAGS_FORCE_SRGB)) != 0 && !metadata)
+    if ((flags & (TGA_FLAGS_FORCE_LINEAR | TGA_FLAGS_FORCE_SRGB)) != 0 && !metadata_)
         return E_INVALIDARG;
 
     if (!image.pixels)
@@ -2091,7 +2091,7 @@ HRESULT DirectX::SaveToTGAMemory(
 
     hr = blob.Initialize(sizeof(TGA_HEADER)
         + slicePitch
-        + (metadata ? sizeof(TGA_EXTENSION) : 0)
+        + (metadata_ ? sizeof(TGA_EXTENSION) : 0)
         + sizeof(TGA_FOOTER));
     if (FAILED(hr))
         return hr;
@@ -2128,11 +2128,11 @@ HRESULT DirectX::SaveToTGAMemory(
     }
 
     uint32_t extOffset = 0;
-    if (metadata)
+    if (metadata_)
     {
         // metadata is only used for writing the TGA 2.0 extension header
         auto ext = reinterpret_cast<TGA_EXTENSION*>(dPtr);
-        SetExtension(ext, flags, *metadata);
+        SetExtension(ext, flags, *metadata_);
 
         extOffset = static_cast<uint32_t>(dPtr - destPtr);
         dPtr += sizeof(TGA_EXTENSION);
@@ -2156,12 +2156,12 @@ HRESULT DirectX::SaveToTGAFile(
     const Image& image,
     TGA_FLAGS flags,
     const wchar_t* szFile,
-    const TexMetadata* metadata) noexcept
+    const TexMetadata* metadata_) noexcept
 {
     if (!szFile)
         return E_INVALIDARG;
 
-    if ((flags & (TGA_FLAGS_FORCE_LINEAR | TGA_FLAGS_FORCE_SRGB)) != 0 && !metadata)
+    if ((flags & (TGA_FLAGS_FORCE_LINEAR | TGA_FLAGS_FORCE_SRGB)) != 0 && !metadata_)
         return E_INVALIDARG;
 
     if (!image.pixels)
@@ -2206,7 +2206,7 @@ HRESULT DirectX::SaveToTGAFile(
         // For small images, it is better to create an in-memory file and write it out
         Blob blob;
 
-        hr = SaveToTGAMemory(image, flags, blob, metadata);
+        hr = SaveToTGAMemory(image, flags, blob, metadata_);
         if (FAILED(hr))
             return hr;
 
@@ -2294,11 +2294,11 @@ HRESULT DirectX::SaveToTGAFile(
         }
 
         uint32_t extOffset = 0;
-        if (metadata)
+        if (metadata_)
         {
             // metadata is only used for writing the TGA 2.0 extension header
             TGA_EXTENSION ext = {};
-            SetExtension(&ext, flags, *metadata);
+            SetExtension(&ext, flags, *metadata_);
 
 #ifdef WIN32
             extOffset = SetFilePointer(hFile.get(), 0, nullptr, FILE_CURRENT);

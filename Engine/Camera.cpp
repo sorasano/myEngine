@@ -2,13 +2,13 @@
 #include"Base/WinApp.h"
 using namespace DirectX;
 
-ID3D12Device* Camera::device = nullptr;
+ID3D12Device* Camera::device_ = nullptr;
 
 void Camera::StaticInitialize(ID3D12Device* dev)
 {
 	//NULLチェック
 	assert(dev);
-	device = dev;
+	device_ = dev;
 }
 
 void Camera::Initialize(Input* input)
@@ -30,16 +30,16 @@ void Camera::Initialize(Input* input)
 	cbResourceDesc.SampleDesc.Count = 1;
 	cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	//定数バッファの生成
-	result = device->CreateCommittedResource(
+	result = device_->CreateCommittedResource(
 		&cbHeapProp,//ヒープ設定
 		D3D12_HEAP_FLAG_NONE,
 		&cbResourceDesc,//リソース設定
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&constBuff));
+		IID_PPV_ARGS(&constBuff_));
 	assert(SUCCEEDED(result));
 	//定数バッファのマッピング
-	result = constBuff->Map(0, nullptr, (void**)&constMap);//マッピング
+	result = constBuff_->Map(0, nullptr, (void**)&constMap);//マッピング
 	assert(SUCCEEDED(result));
 
 	UpdateMatrix();
@@ -48,17 +48,17 @@ void Camera::Initialize(Input* input)
 void Camera::UpdateMatrix()
 {
 	//専用の行列を宣言
-	matProjection = XMMatrixPerspectiveFovLH(
+	matProjection_ = XMMatrixPerspectiveFovLH(
 		XMConvertToRadians(45.0f),					//上下画角45度
 		(float)WinApp::winW / WinApp::winH,	//アスペクト比（画面横幅/画面縦幅）
 		0.1f, 1000.0f								//前橋、奥橋
 	);
 
 	//ビュー変換行列の計算
-	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
+	matView_ = XMMatrixLookAtLH(XMLoadFloat3(&eye_), XMLoadFloat3(&target_), XMLoadFloat3(&up_));
 
-	constMap->view = matView;
-	constMap->projection = matProjection;
+	constMap->view = matView_;
+	constMap->projection = matProjection_;
 }
 
 void Camera::Update(XMFLOAT3 playerPos, XMFLOAT3 bossPos)
@@ -67,7 +67,7 @@ void Camera::Update(XMFLOAT3 playerPos, XMFLOAT3 bossPos)
 	this->playerPos_ = playerPos;
 	this->bossPos_ = bossPos;
 
-	switch (mode) {
+	switch (mode_) {
 	case STRAIGHTMODE:
 		UpdateStraightMode();
 		break;
@@ -91,53 +91,53 @@ void Camera::Update(XMFLOAT3 playerPos, XMFLOAT3 bossPos)
 void Camera::UpdateStraightMode()
 {
 	//一定スピードで進み続ける
-	eye.z += straightModeSpeed;
-	target.z = eye.z + playerRange;
+	eye_.z += straightModeSpeed_;
+	target_.z = eye_.z + playerRange_;
 }
 
 void Camera::UpdatePlayerFollowMode()
 {
 	//プレイヤーの後ろからプレイヤーを追従する視点
-	eye.z = playerPos_.z - playerRange;
-	target.z = playerPos_.z;
+	eye_.z = playerPos_.z - playerRange_;
+	target_.z = playerPos_.z;
 }
 
 void Camera::UpdateTitleToPlayMode()
 {
-	if (phase == 0) {
+	if (phase_ == 0) {
 
 		//取得したイージング用の開始位置と終了位置でイージングを行う
-		eye = EaseIn3D(startEye, endEye, easeing.timeRate);
-		target = EaseIn3D(startTarget, endTarget, easeing.timeRate);
+		eye_ = EaseIn3D(startEye_, endEye_, easeing_.timeRate);
+		target_ = EaseIn3D(startTarget_, endTarget_, easeing_.timeRate);
 
-		if (!easeing.GetActive()) {
+		if (!easeing_.GetActive()) {
 			//演出が終わったら次のフェーズへ
-			phase++;
+			phase_++;
 
 			//イージング用のデータを設定しなおす
-			easeing.Start(easeingTime);
+			easeing_.Start(easeingTime_);
 
-			startEye = eye;
-			startTarget = target;
+			startEye_ = eye_;
+			startTarget_ = target_;
 
-			endEye = holdEye;
-			endTarget = holdTarget;
+			endEye_ = holdEye_;
+			endTarget_ = holdTarget_;
 		}
 	}
-	else if (phase == 1) {
+	else if (phase_ == 1) {
 
 		//取得したイージング用の開始位置と終了位置でイージングを行う
-		eye = EaseIn3D(startEye, endEye, easeing.timeRate);
-		target = EaseIn3D(startTarget, endTarget, easeing.timeRate);
+		eye_ = EaseIn3D(startEye_, endEye_, easeing_.timeRate);
+		target_ = EaseIn3D(startTarget_, endTarget_, easeing_.timeRate);
 
-		if (!easeing.GetActive()) {
+		if (!easeing_.GetActive()) {
 			//演出が終わったらモードの切り替え
-			mode = PLAYERFOLLOWMODE;
-			isPerformance = false;
+			mode_ = PLAYERFOLLOWMODE;
+			isPerformance_ = false;
 		}
 	}
 
-	easeing.Update();
+	easeing_.Update();
 }
 
 void Camera::InitializeTitleToPlayMode()
@@ -146,26 +146,26 @@ void Camera::InitializeTitleToPlayMode()
 	//イージング用の開始位置と終了位置を取得
 
 	//現在の座標を開始位置に
-	startEye = eye;
-	startTarget = target;
+	startEye_ = eye_;
+	startTarget_ = target_;
 
 	//初期座標を保持
-	holdEye = startEye;
-	holdTarget = startTarget;
+	holdEye_ = startEye_;
+	holdTarget_ = startTarget_;
 
 	//現在の描画最大距離を終了位置に
-	endEye = eye;
-	endTarget = target;
+	endEye_ = eye_;
+	endTarget_ = target_;
 
-	endEye.z = eye.z + (rangeMaxZ  * 2);
-	endTarget.z = eye.z + (rangeMaxZ * 2) + playerRange;
+	endEye_.z = eye_.z + (rangeMaxZ_  * 2);
+	endTarget_.z = eye_.z + (rangeMaxZ_ * 2) + playerRange_;
 
 	//イージング用数値の初期化
-	easeing.Start(easeingTime);
-	phase = 0;
+	easeing_.Start(easeingTime_);
+	phase_ = 0;
 
 	//パフォーマンスフラグ
-	isPerformance = true;
+	isPerformance_ = true;
 }
 
 void Camera::DebugMode()
@@ -177,17 +177,17 @@ void Camera::DebugMode()
 
 		//座標を移動する処理
 		if (input_->PushKey(DIK_W)) {
-			eye.z += speed;
+			eye_.z += speed;
 		}
 		else if (input_->PushKey(DIK_S)) {
-			eye.z -= speed;
+			eye_.z -= speed;
 		}
 
 		if (input_->PushKey(DIK_A)) {
-			eye.x -= speed;
+			eye_.x -= speed;
 		}
 		else if (input_->PushKey(DIK_D)) {
-			eye.x += speed;
+			eye_.x += speed;
 		}
 
 	}
@@ -196,17 +196,17 @@ void Camera::DebugMode()
 
 		//座標を移動する処理
 		if (input_->PushKey(DIK_UP)) {
-			target.y += speed;
+			target_.y += speed;
 		}
 		else if (input_->PushKey(DIK_DOWN)) {
-			target.y -= speed;
+			target_.y -= speed;
 		}
 
 		if (input_->PushKey(DIK_RIGHT)) {
-			target.x -= speed;
+			target_.x -= speed;
 		}
 		else if (input_->PushKey(DIK_LEFT)) {
-			target.x += speed;
+			target_.x += speed;
 		}
 
 	}
@@ -214,10 +214,10 @@ void Camera::DebugMode()
 
 void Camera::SetMode(int mode)
 {
-	this->mode = mode;
+	this->mode_ = mode;
 
 	//モードごとに初期化が必要な場合は初期化
-	switch (mode) {
+	switch (mode_) {
 	case TITLETOPLAYMODE:
 		InitializeTitleToPlayMode();
 		break;

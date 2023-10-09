@@ -300,12 +300,12 @@ namespace DirectX
         //---------------------------------------------------------------------------------
         // Image helper functions
         _Success_(return) bool __cdecl DetermineImageArray(
-            _In_ const TexMetadata& metadata, _In_ CP_FLAGS cpFlags,
+            _In_ const TexMetadata& metadata_, _In_ CP_FLAGS cpFlags,
             _Out_ size_t& nImages, _Out_ size_t& pixelSize) noexcept;
 
         _Success_(return) bool __cdecl SetupImageArray(
             _In_reads_bytes_(pixelSize) uint8_t* pMemory, _In_ size_t pixelSize,
-            _In_ const TexMetadata& metadata, _In_ CP_FLAGS cpFlags,
+            _In_ const TexMetadata& metadata_, _In_ CP_FLAGS cpFlags,
             _Out_writes_(nImages) Image* images, _In_ size_t nImages) noexcept;
 
         //---------------------------------------------------------------------------------
@@ -395,7 +395,7 @@ namespace DirectX
         HRESULT __cdecl ConvertFromR32G32B32A32(
             _In_ const Image& srcImage, _In_ DXGI_FORMAT format, _Inout_ ScratchImage& image) noexcept;
         HRESULT __cdecl ConvertFromR32G32B32A32(
-            _In_reads_(nimages) const Image* srcImages, _In_ size_t nimages, _In_ const TexMetadata& metadata,
+            _In_reads_(nimages) const Image* srcImages, _In_ size_t nimages, _In_ const TexMetadata& metadata_,
             _In_ DXGI_FORMAT format, _Out_ ScratchImage& result) noexcept;
 
         HRESULT __cdecl ConvertToR16G16B16A16(_In_ const Image& srcImage, _Inout_ ScratchImage& image) noexcept;

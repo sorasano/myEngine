@@ -24,7 +24,7 @@ void Skydome::Update(float eyeZ)
 	skydomeObject->Update();
 }
 
-void Skydome::Draw(ID3D12GraphicsCommandList* cmdList)
+void Skydome::Draw(ID3D12GraphicsCommandList* cmdList_)
 {
-	skydomeObject->Draw(cmdList);
+	skydomeObject->Draw(cmdList_);
 }

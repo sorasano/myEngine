@@ -259,7 +259,7 @@ HRESULT DirectX::Compress(
     ID3D11Device* pDevice,
     const Image* srcImages,
     size_t nimages,
-    const TexMetadata& metadata,
+    const TexMetadata& metadata_,
     DXGI_FORMAT format,
     TEX_COMPRESS_FLAGS compress,
     float alphaWeight,
@@ -268,11 +268,11 @@ HRESULT DirectX::Compress(
     if (!pDevice || !srcImages || !nimages)
         return E_INVALIDARG;
 
-    if (IsCompressed(metadata.format) || !IsCompressed(format))
+    if (IsCompressed(metadata_.format) || !IsCompressed(format))
         return E_INVALIDARG;
 
     if (IsTypeless(format)
-        || IsTypeless(metadata.format) || IsPlanar(metadata.format) || IsPalettized(metadata.format))
+        || IsTypeless(metadata_.format) || IsPlanar(metadata_.format) || IsPalettized(metadata_.format))
         return HRESULT_E_NOT_SUPPORTED;
 
     cImages.Release();
@@ -287,7 +287,7 @@ HRESULT DirectX::Compress(
         return hr;
 
     // Create workspace for result
-    TexMetadata mdata2 = metadata;
+    TexMetadata mdata2 = metadata_;
     mdata2.format = format;
     hr = cImages.Initialize(mdata2);
     if (FAILED(hr))
@@ -307,15 +307,15 @@ HRESULT DirectX::Compress(
     }
 
     // Process images (ordered by size)
-    switch (metadata.dimension)
+    switch (metadata_.dimension)
     {
     case TEX_DIMENSION_TEXTURE1D:
     case TEX_DIMENSION_TEXTURE2D:
     {
-        size_t w = metadata.width;
-        size_t h = metadata.height;
+        size_t w = metadata_.width;
+        size_t h = metadata_.height;
 
-        for (size_t level = 0; level < metadata.mipLevels; ++level)
+        for (size_t level = 0; level < metadata_.mipLevels; ++level)
         {
             hr = gpubc->Prepare(w, h, compress, format, alphaWeight);
             if (FAILED(hr))
@@ -324,9 +324,9 @@ HRESULT DirectX::Compress(
                 return hr;
             }
 
-            for (size_t item = 0; item < metadata.arraySize; ++item)
+            for (size_t item = 0; item < metadata_.arraySize; ++item)
             {
-                const size_t index = metadata.ComputeIndex(level, item, 0);
+                const size_t index = metadata_.ComputeIndex(level, item, 0);
                 if (index >= nimages)
                 {
                     cImages.Release();
@@ -362,11 +362,11 @@ HRESULT DirectX::Compress(
 
     case TEX_DIMENSION_TEXTURE3D:
     {
-        size_t w = metadata.width;
-        size_t h = metadata.height;
-        size_t d = metadata.depth;
+        size_t w = metadata_.width;
+        size_t h = metadata_.height;
+        size_t d = metadata_.depth;
 
-        for (size_t level = 0; level < metadata.mipLevels; ++level)
+        for (size_t level = 0; level < metadata_.mipLevels; ++level)
         {
             hr = gpubc->Prepare(w, h, compress, format, alphaWeight);
             if (FAILED(hr))
@@ -377,7 +377,7 @@ HRESULT DirectX::Compress(
 
             for (size_t slice = 0; slice < d; ++slice)
             {
-                const size_t index = metadata.ComputeIndex(level, 0, slice);
+                const size_t index = metadata_.ComputeIndex(level, 0, slice);
                 if (index >= nimages)
                 {
                     cImages.Release();

@@ -8,19 +8,19 @@ GameScene::GameScene()
 GameScene::~GameScene()
 {
 	delete camera_;
-	delete titleSprite;
-	delete clearSprite;
+	delete titleSprite_;
+	delete clearSprite_;
 	//for (int i = 0; i < enemySize; i++)
 	//{
 	//	FBX_SAFE_DELETE(enemyModel);
 	//}
 }
 
-void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
+void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 {
 
 	this->dxCommon_ = dxCommon;
-	this->input_ = input_;
+	this->input_ = input;
 
 	//カメラ初期化
 	camera_ = new Camera;
@@ -35,32 +35,32 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 
 	//スプライトマネージャー
 	SpriteManager::SetDevice(dxCommon->GetDevice());
-	spriteManager = new SpriteManager;
-	spriteManager->Initialize();
+	spriteManager_ = new SpriteManager;
+	spriteManager_->Initialize();
 
 	//------テクスチャ------
-	spriteManager->LoadFile(0, "title.png");
-	spriteManager->LoadFile(1, "clear.png");
-	spriteManager->LoadFile(2, "blue1x1.png");
+	spriteManager_->LoadFile(0, "title.png");
+	spriteManager_->LoadFile(1, "clear.png");
+	spriteManager_->LoadFile(2, "blue1x1.png");
 
 	//-----スプライト------
 	Sprite::SetDevice(dxCommon->GetDevice());
-	Sprite::SetSpriteManager(spriteManager);
+	Sprite::SetSpriteManager(spriteManager_);
 	Sprite::CreateGraphicsPipeLine();
 
-	titleSprite = new Sprite();
-	titleSprite->SetTextureNum(0);
-	titleSprite->Initialize();
-	titleSprite->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
-	titleSprite->SetScale(XMFLOAT2(1280, 720));
-	titleSprite->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
+	titleSprite_ = new Sprite();
+	titleSprite_->SetTextureNum(0);
+	titleSprite_->Initialize();
+	titleSprite_->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
+	titleSprite_->SetScale(XMFLOAT2(1280, 720));
+	titleSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
 
-	clearSprite = new Sprite();
-	clearSprite->SetTextureNum(1);
-	clearSprite->Initialize();
-	clearSprite->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
-	clearSprite->SetScale(XMFLOAT2(1280, 720));
-	clearSprite->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
+	clearSprite_ = new Sprite();
+	clearSprite_->SetTextureNum(1);
+	clearSprite_->Initialize();
+	clearSprite_->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
+	clearSprite_->SetScale(XMFLOAT2(1280, 720));
+	clearSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
 
 	//----------FBX----------
 
@@ -75,12 +75,12 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 
 	//----------背景----------
 
-	for (int i = 0; i < backGroundSize; i++) {
+	for (int i = 0; i < backGroundSize_; i++) {
 		std::unique_ptr<BackGround>newBackGround = std::make_unique<BackGround>();
-		newBackGround->Initialize(adjustPos);
+		newBackGround->Initialize(adjustPos_);
 
 		//現在の位置+1つ分のサイズで次のマップの位置にセット
-		adjustPos = newBackGround->GetPosition().z + newBackGround->GetSize();
+		adjustPos_ = newBackGround->GetPosition().z + newBackGround->GetSize();
 
 		backGrounds_.push_back(std::move(newBackGround));
 	}
@@ -100,8 +100,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 	//----------------敵--------------
 
 	//モデル名を指定してファイル読み込み
-	enemyModel = FbxLoader::GetInstance()->LoadModelFromFile("enemy");
-	enemyBulletModel = FbxLoader::GetInstance()->LoadModelFromFile("enemyBullet");
+	enemyModel_ = FbxLoader::GetInstance()->LoadModelFromFile("enemy");
+	enemyBulletModel_ = FbxLoader::GetInstance()->LoadModelFromFile("enemyBullet");
 
 	//csvファイル名前
 	enemyCsvsName_ = {
@@ -110,10 +110,10 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input_)
 	"enemy3"
 	};
 
-	enemyCSVSize = static_cast<int>(enemyCsvsName_.size());
+	enemyCSVSize_ = static_cast<int>(enemyCsvsName_.size());
 
 	//csvデータをファイル数分,配列に入力
-	for (int i = 0; i < enemyCSVSize; i++) {
+	for (int i = 0; i < enemyCSVSize_; i++) {
 
 		//ファイルの名前を取得
 		std::string fileName = enemyCsvsName_[i];
@@ -146,11 +146,11 @@ void GameScene::Update()
 	ParticleManager::StaticUpdate(camera_->GetEye(), camera_->GetTarget());
 
 	//シーン更新
-	switch (scene)
+	switch (scene_)
 	{
 	case TITLE:
 
-		titleSprite->Update();
+		titleSprite_->Update();
 
 		//敵
 		for (std::unique_ptr<Enemy>& enemy : enemys_)
@@ -193,13 +193,13 @@ void GameScene::Update()
 		break;
 	case CLEAR:
 
-		clearSprite->Update();
+		clearSprite_->Update();
 
 		break;
 	}
 
 	//演出
-	if (isPerformance) {
+	if (isPerformance_) {
 		UpdatePerformance();
 	}
 
@@ -218,7 +218,7 @@ void GameScene::Draw()
 		}
 	}
 
-	switch (scene) {
+	switch (scene_) {
 
 	case TITLE:
 
@@ -267,11 +267,11 @@ void GameScene::Draw()
 
 void GameScene::DrawSprite()
 {
-	switch (scene) {
+	switch (scene_) {
 
 	case TITLE:
-		if (!isPerformance) {
-			titleSprite->Draw(dxCommon_->GetCommandList());
+		if (!isPerformance_) {
+			titleSprite_->Draw(dxCommon_->GetCommandList());
 		}
 		break;
 
@@ -283,7 +283,7 @@ void GameScene::DrawSprite()
 		break;
 
 	case CLEAR:
-		clearSprite->Draw(dxCommon_->GetCommandList());
+		clearSprite_->Draw(dxCommon_->GetCommandList());
 		break;
 
 	}
@@ -430,9 +430,9 @@ void GameScene::CheckEnemy()
 	if (enemys_.size() == 0) {
 
 		//フェーズが最大以下だったらまたフェーズ移行する
-		if (phase < MaxPhase) {
+		if (phase_ < MaxPhase_) {
 			SetEnemy();
-			phase++;
+			phase_++;
 		}
 		else {
 			//フェーズが最終だったらシーン移行
@@ -457,10 +457,10 @@ void GameScene::UpdateBackGround()
 			backGround->DeleteObject();
 
 			//オブジェクトを配置しなおす
-			backGround->SetObject(adjustPos);
+			backGround->SetObject(adjustPos_);
 
 			//現在の位置+1つ分のサイズで次のマップの位置にセット
-			adjustPos = backGround->GetPosition().z + backGround->GetSize();
+			adjustPos_ = backGround->GetPosition().z + backGround->GetSize();
 
 		}
 
@@ -478,14 +478,14 @@ void GameScene::SetEnemy()
 	float makePos = player_->GetPosition().z + camera_->GetRangeMaxZ();
 
 	//何番目のCSVをセットするか(ランダム)
-	int setNum = static_cast<int>(Random(0, enemyCSVSize - 0.001f));
+	int setNum = static_cast<int>(Random(0, enemyCSVSize_ - 0.001f));
 	auto it = enemyCsvs_.begin();
 	std::advance(it, setNum);
 
 	for (int i = 0; i < it->get()->GetSize(); i++)
 	{
 		std::unique_ptr<Enemy>newObject = std::make_unique<Enemy>();
-		newObject->Initialize(enemyModel, enemyBulletModel);
+		newObject->Initialize(enemyModel_, enemyBulletModel_);
 
 		newObject->SetPosition(XMFLOAT3(it->get()->GetPosition(i).x, it->get()->GetPosition(i).y, it->get()->GetPosition(i).z + makePos));
 		newObject->SetType(it->get()->GetType(i));
@@ -503,7 +503,7 @@ void GameScene::Reset()
 	//敵
 	enemys_.clear();
 	SetEnemy();
-	phase = 1;
+	phase_ = 1;
 
 	//ボス
 	boss_->Reset();
@@ -512,12 +512,12 @@ void GameScene::Reset()
 	camera_->Update(player_->GetPosition(), boss_->GetPosition());
 
 	//背景
-	adjustPos = 0;
+	adjustPos_ = 0;
 	for (std::unique_ptr<BackGround>& backGround : backGrounds_) {
 		//オブジェクトを配置しなおす
-		backGround->SetObject(adjustPos);
+		backGround->SetObject(adjustPos_);
 		//現在の位置+1つ分のサイズで次のマップの位置にセット
-		adjustPos = backGround->GetPosition().z + backGround->GetSize();
+		adjustPos_ = backGround->GetPosition().z + backGround->GetSize();
 	}
 
 }
@@ -525,13 +525,13 @@ void GameScene::Reset()
 void GameScene::ChangeScene()
 {
 	//シーンの切り替え、そのタイミングでの情報の更新
-	switch (scene)
+	switch (scene_)
 	{
 	case TITLE:
 
-		if (input_->TriggerKey(DIK_SPACE) && !isPerformance) {
-			isPerformance = true;
-			performanceNum = TITLETOPLAY;
+		if (input_->TriggerKey(DIK_SPACE) && !isPerformance_) {
+			isPerformance_ = true;
+			performanceNum_ = TITLETOPLAY;
 			PlaySceneInitialize();
 		}
 
@@ -552,14 +552,14 @@ void GameScene::ChangeScene()
 
 		//ボスが死んだら次のシーンへ
 		if (boss_->GetIsDead()) {
-			scene = CLEAR;
+			scene_ = CLEAR;
 		}
 
 		break;
 	case CLEAR:
 
 		if (input_->TriggerKey(DIK_SPACE)) {
-			scene = TITLE;
+			scene_ = TITLE;
 			Reset();
 
 			camera_->SetMode(STRAIGHTMODE);
@@ -578,7 +578,7 @@ void GameScene::PlaySceneInitialize()
 
 	//敵
 	SetEnemy();
-	phase = 1;
+	phase_ = 1;
 
 	//カメラ
 	camera_->Update(player_->GetPosition(), boss_->GetPosition());
@@ -588,7 +588,7 @@ void GameScene::PlaySceneInitialize()
 
 void GameScene::UpdatePerformance()
 {
-	switch (performanceNum) {
+	switch (performanceNum_) {
 
 	case TITLETOPLAY:
 		TitleToPlayPerformance();
@@ -609,8 +609,8 @@ void GameScene::TitleToPlayPerformance()
 {
 	//カメラ演出が終わったらシーン移行
 	if (!camera_->GetIsPerformance()) {
-		scene = NORMALPLAY;
-		isPerformance = false;
+		scene_ = NORMALPLAY;
+		isPerformance_ = false;
 	}
 }
 
@@ -628,7 +628,7 @@ void GameScene::BossGameoverPerformance()
 
 void GameScene::BossSceneInitialize()
 {
-	scene = BOSSPLAY;
+	scene_ = BOSSPLAY;
 
 	boss_->SetPosition(XMFLOAT3{ 0,0,player_->GetPosition().z + 26.0f });
 }

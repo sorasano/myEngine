@@ -1458,7 +1458,7 @@ NLOHMANN_JSON_NAMESPACE_END
     JSON_HEDLEY_MCST_LCC_VERSION_CHECK(1,25,10)
     #define JSON_HEDLEY_SENTINEL(position) __attribute__((__sentinel__(position)))
 #else
-    #define JSON_HEDLEY_SENTINEL(position)
+    #define JSON_HEDLEY_SENTINEL(position_)
 #endif
 
 #if defined(JSON_HEDLEY_NO_RETURN)
@@ -5105,11 +5105,11 @@ namespace detail
 {
 
 template<typename string_type>
-void int_to_string( string_type& target, std::size_t value )
+void int_to_string( string_type& target_, std::size_t value )
 {
     // For ADL
     using std::to_string;
-    target = to_string(value);
+    target_ = to_string(value);
 }
 template<typename IteratorType> class iteration_proxy_value
 {
@@ -6698,7 +6698,7 @@ struct json_sax
     @param[in] ex          an exception object describing the error
     @return whether parsing should proceed (must return false)
     */
-    virtual bool parse_error(std::size_t position,
+    virtual bool parse_error(std::size_t position_,
                              const std::string& last_token,
                              const detail::exception& ex) = 0;
 
@@ -8637,8 +8637,8 @@ scan_number_done:
     */
     char_int_type get()
     {
-        ++position.chars_read_total;
-        ++position.chars_read_current_line;
+        ++position_.chars_read_total;
+        ++position_.chars_read_current_line;
 
         if (next_unget)
         {
@@ -8657,8 +8657,8 @@ scan_number_done:
 
         if (current == '\n')
         {
-            ++position.lines_read;
-            position.chars_read_current_line = 0;
+            ++position_.lines_read;
+            position_.chars_read_current_line = 0;
         }
 
         return current;
@@ -8676,19 +8676,19 @@ scan_number_done:
     {
         next_unget = true;
 
-        --position.chars_read_total;
+        --position_.chars_read_total;
 
         // in case we "unget" a newline, we have to also decrement the lines_read
-        if (position.chars_read_current_line == 0)
+        if (position_.chars_read_current_line == 0)
         {
-            if (position.lines_read > 0)
+            if (position_.lines_read > 0)
             {
-                --position.lines_read;
+                --position_.lines_read;
             }
         }
         else
         {
-            --position.chars_read_current_line;
+            --position_.chars_read_current_line;
         }
 
         if (JSON_HEDLEY_LIKELY(current != std::char_traits<char_type>::eof()))
@@ -8740,7 +8740,7 @@ scan_number_done:
     /// return position of last read token
     constexpr position_t get_position() const noexcept
     {
-        return position;
+        return position_;
     }
 
     /// return the last read token (for errors only).  Will never contain EOF
@@ -8810,7 +8810,7 @@ scan_number_done:
     token_type scan()
     {
         // initially, skip the BOM
-        if (position.chars_read_total == 0 && !skip_bom())
+        if (position_.chars_read_total == 0 && !skip_bom())
         {
             error_message = "invalid BOM; must be 0xEF 0xBB 0xBF if given";
             return token_type::parse_error;
@@ -8909,7 +8909,7 @@ scan_number_done:
     bool next_unget = false;
 
     /// the start position of the current token
-    position_t position {};
+    position_t position_ {};
 
     /// raw input token string (for error messages)
     std::vector<char_type> token_string {};
@@ -16832,9 +16832,9 @@ Target reinterpret_bits(const Source source)
 {
     static_assert(sizeof(Target) == sizeof(Source), "size mismatch");
 
-    Target target;
-    std::memcpy(&target, &source, sizeof(Source));
-    return target;
+    Target target_;
+    std::memcpy(&target_, &source, sizeof(Source));
+    return target_;
 }
 
 struct diyfp // f * 2^e
@@ -24124,24 +24124,24 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     /// @brief creates a diff as a JSON patch
     /// @sa https://json.nlohmann.me/api/basic_json/diff/
     JSON_HEDLEY_WARN_UNUSED_RESULT
-    static basic_json diff(const basic_json& source, const basic_json& target,
+    static basic_json diff(const basic_json& source, const basic_json& target_,
                            const std::string& path = "")
     {
         // the patch
         basic_json result(value_t::array);
 
         // if the values are the same, return empty patch
-        if (source == target)
+        if (source == target_)
         {
             return result;
         }
 
-        if (source.type() != target.type())
+        if (source.type() != target_.type())
         {
             // different types: replace value
             result.push_back(
             {
-                {"op", "replace"}, {"path", path}, {"value", target}
+                {"op", "replace"}, {"path", path}, {"value", target_}
             });
             return result;
         }
@@ -24152,10 +24152,10 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
             {
                 // first pass: traverse common elements
                 std::size_t i = 0;
-                while (i < source.size() && i < target.size())
+                while (i < source.size() && i < target_.size())
                 {
                     // recursive call to compare array values at index i
-                    auto temp_diff = diff(source[i], target[i], detail::concat(path, '/', std::to_string(i)));
+                    auto temp_diff = diff(source[i], target_[i], detail::concat(path, '/', std::to_string(i)));
                     result.insert(result.end(), temp_diff.begin(), temp_diff.end());
                     ++i;
                 }
@@ -24178,13 +24178,13 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
                 }
 
                 // add other remaining elements
-                while (i < target.size())
+                while (i < target_.size())
                 {
                     result.push_back(
                     {
                         {"op", "add"},
                         {"path", detail::concat(path, "/-")},
-                        {"value", target[i]}
+                        {"value", target_[i]}
                     });
                     ++i;
                 }
@@ -24200,10 +24200,10 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
                     // escape the key name to be used in a JSON patch
                     const auto path_key = detail::concat(path, '/', detail::escape(it.key()));
 
-                    if (target.find(it.key()) != target.end())
+                    if (target_.find(it.key()) != target_.end())
                     {
                         // recursive call to compare object values at key it
-                        auto temp_diff = diff(it.value(), target[it.key()], path_key);
+                        auto temp_diff = diff(it.value(), target_[it.key()], path_key);
                         result.insert(result.end(), temp_diff.begin(), temp_diff.end());
                     }
                     else
@@ -24217,7 +24217,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
                 }
 
                 // second pass: traverse other object's elements
-                for (auto it = target.cbegin(); it != target.cend(); ++it)
+                for (auto it = target_.cbegin(); it != target_.cend(); ++it)
                 {
                     if (source.find(it.key()) == source.end())
                     {
@@ -24247,7 +24247,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
                 // both primitive type: replace value
                 result.push_back(
                 {
-                    {"op", "replace"}, {"path", path}, {"value", target}
+                    {"op", "replace"}, {"path", path}, {"value", target_}
                 });
                 break;
             }

@@ -32,31 +32,31 @@ namespace
 //-------------------------------------------------------------------------------------
 _Use_decl_annotations_
 bool DirectX::Internal::DetermineImageArray(
-    const TexMetadata& metadata,
+    const TexMetadata& metadata_,
     CP_FLAGS cpFlags,
     size_t& nImages,
     size_t& pixelSize) noexcept
 {
-    assert(metadata.width > 0 && metadata.height > 0 && metadata.depth > 0);
-    assert(metadata.arraySize > 0);
-    assert(metadata.mipLevels > 0);
+    assert(metadata_.width > 0 && metadata_.height > 0 && metadata_.depth > 0);
+    assert(metadata_.arraySize > 0);
+    assert(metadata_.mipLevels > 0);
 
     uint64_t totalPixelSize = 0;
     size_t nimages = 0;
 
-    switch (metadata.dimension)
+    switch (metadata_.dimension)
     {
     case TEX_DIMENSION_TEXTURE1D:
     case TEX_DIMENSION_TEXTURE2D:
-        for (size_t item = 0; item < metadata.arraySize; ++item)
+        for (size_t item = 0; item < metadata_.arraySize; ++item)
         {
-            size_t w = metadata.width;
-            size_t h = metadata.height;
+            size_t w = metadata_.width;
+            size_t h = metadata_.height;
 
-            for (size_t level = 0; level < metadata.mipLevels; ++level)
+            for (size_t level = 0; level < metadata_.mipLevels; ++level)
             {
                 size_t rowPitch, slicePitch;
-                if (FAILED(ComputePitch(metadata.format, w, h, rowPitch, slicePitch, cpFlags)))
+                if (FAILED(ComputePitch(metadata_.format, w, h, rowPitch, slicePitch, cpFlags)))
                 {
                     nImages = pixelSize = 0;
                     return false;
@@ -76,14 +76,14 @@ bool DirectX::Internal::DetermineImageArray(
 
     case TEX_DIMENSION_TEXTURE3D:
     {
-        size_t w = metadata.width;
-        size_t h = metadata.height;
-        size_t d = metadata.depth;
+        size_t w = metadata_.width;
+        size_t h = metadata_.height;
+        size_t d = metadata_.depth;
 
-        for (size_t level = 0; level < metadata.mipLevels; ++level)
+        for (size_t level = 0; level < metadata_.mipLevels; ++level)
         {
             size_t rowPitch, slicePitch;
-            if (FAILED(ComputePitch(metadata.format, w, h, rowPitch, slicePitch, cpFlags)))
+            if (FAILED(ComputePitch(metadata_.format, w, h, rowPitch, slicePitch, cpFlags)))
             {
                 nImages = pixelSize = 0;
                 return false;
@@ -137,7 +137,7 @@ _Use_decl_annotations_
 bool DirectX::Internal::SetupImageArray(
     uint8_t *pMemory,
     size_t pixelSize,
-    const TexMetadata& metadata,
+    const TexMetadata& metadata_,
     CP_FLAGS cpFlags,
     Image* images,
     size_t nImages) noexcept
@@ -153,21 +153,21 @@ bool DirectX::Internal::SetupImageArray(
     uint8_t* pixels = pMemory;
     const uint8_t* pEndBits = pMemory + pixelSize;
 
-    switch (metadata.dimension)
+    switch (metadata_.dimension)
     {
     case TEX_DIMENSION_TEXTURE1D:
     case TEX_DIMENSION_TEXTURE2D:
-        if (metadata.arraySize == 0 || metadata.mipLevels == 0)
+        if (metadata_.arraySize == 0 || metadata_.mipLevels == 0)
         {
             return false;
         }
 
-        for (size_t item = 0; item < metadata.arraySize; ++item)
+        for (size_t item = 0; item < metadata_.arraySize; ++item)
         {
-            size_t w = metadata.width;
-            size_t h = metadata.height;
+            size_t w = metadata_.width;
+            size_t h = metadata_.height;
 
-            for (size_t level = 0; level < metadata.mipLevels; ++level)
+            for (size_t level = 0; level < metadata_.mipLevels; ++level)
             {
                 if (index >= nImages)
                 {
@@ -175,12 +175,12 @@ bool DirectX::Internal::SetupImageArray(
                 }
 
                 size_t rowPitch, slicePitch;
-                if (FAILED(ComputePitch(metadata.format, w, h, rowPitch, slicePitch, cpFlags)))
+                if (FAILED(ComputePitch(metadata_.format, w, h, rowPitch, slicePitch, cpFlags)))
                     return false;
 
                 images[index].width = w;
                 images[index].height = h;
-                images[index].format = metadata.format;
+                images[index].format = metadata_.format;
                 images[index].rowPitch = rowPitch;
                 images[index].slicePitch = slicePitch;
                 images[index].pixels = pixels;
@@ -203,19 +203,19 @@ bool DirectX::Internal::SetupImageArray(
 
     case TEX_DIMENSION_TEXTURE3D:
     {
-        if (metadata.mipLevels == 0 || metadata.depth == 0)
+        if (metadata_.mipLevels == 0 || metadata_.depth == 0)
         {
             return false;
         }
 
-        size_t w = metadata.width;
-        size_t h = metadata.height;
-        size_t d = metadata.depth;
+        size_t w = metadata_.width;
+        size_t h = metadata_.height;
+        size_t d = metadata_.depth;
 
-        for (size_t level = 0; level < metadata.mipLevels; ++level)
+        for (size_t level = 0; level < metadata_.mipLevels; ++level)
         {
             size_t rowPitch, slicePitch;
-            if (FAILED(ComputePitch(metadata.format, w, h, rowPitch, slicePitch, cpFlags)))
+            if (FAILED(ComputePitch(metadata_.format, w, h, rowPitch, slicePitch, cpFlags)))
                 return false;
 
             for (size_t slice = 0; slice < d; ++slice)
@@ -229,7 +229,7 @@ bool DirectX::Internal::SetupImageArray(
                 // with all slices of a given miplevel being continuous in memory
                 images[index].width = w;
                 images[index].height = h;
-                images[index].format = metadata.format;
+                images[index].format = metadata_.format;
                 images[index].rowPitch = rowPitch;
                 images[index].slicePitch = slicePitch;
                 images[index].pixels = pixels;

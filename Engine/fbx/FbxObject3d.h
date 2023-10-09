@@ -40,20 +40,20 @@ private:	//エイリアス
 
 public:	//静的メンバ関数
 	//セッター
-	static void SetDevice(ID3D12Device* device) { FbxObject3D::device = device; }
-	static void SetCamera(Camera* camera) { FbxObject3D::camera = camera; }
+	static void SetDevice(ID3D12Device* device) { FbxObject3D::device_ = device; }
+	static void SetCamera(Camera* camera) { FbxObject3D::camera_ = camera; }
 
 	//グラフィックパイプラインの生成
 	static void CreateGraphicsPipeline();
 
 private://静的メンバ変数
-	static ID3D12Device* device;
-	static Camera* camera;
+	static ID3D12Device* device_;
+	static Camera* camera_;
 
 	//ルートシグネチャ
-	static ComPtr<ID3D12RootSignature> rootsignature;
+	static ComPtr<ID3D12RootSignature> rootsignature_;
 	//パイプラインステートオブジェクト
-	static ComPtr<ID3D12PipelineState> pipelinestate;
+	static ComPtr<ID3D12PipelineState> pipelinestate_;
 
 public://メンバ関数
 	//初期化
@@ -64,49 +64,49 @@ public://メンバ関数
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
 	//モデルのセット
-	void SetModel(FbxModel* model) { this->model = model; }
+	void SetModel(FbxModel* model) { this->model_ = model; }
 
 	//アニメーション開始
 	void PlayAnimation();
 
 	//セッター
-	void SetPosition(XMFLOAT3 position) { this->position = position; }
-	void SetRotate(XMFLOAT3 rotate) { this->rotation = rotate; }
-	void SetScale(XMFLOAT3 scale) { this->scale = scale; }
+	void SetPosition(XMFLOAT3 position) { this->position_ = position; }
+	void SetRotate(XMFLOAT3 rotate) { this->rotation_ = rotate; }
+	void SetScale(XMFLOAT3 scale) { this->scale_ = scale; }
 
 	//ゲッター
-	XMFLOAT3 GetPosition() { return this->position; }
-	XMFLOAT3 GetRotate() { return this->rotation ; }
-	XMFLOAT3 GetScale() { return this->scale ; }
+	XMFLOAT3 GetPosition() { return this->position_; }
+	XMFLOAT3 GetRotate() { return this->rotation_ ; }
+	XMFLOAT3 GetScale() { return this->scale_ ; }
 
 protected://メンバ変数
 	//定数バッファ
-	ComPtr<ID3D12Resource>constBuffTransform;
+	ComPtr<ID3D12Resource>constBuffTransform_;
 	//定数バッファ(スキン)
-	ComPtr<ID3D12Resource> constBuffSkin;
+	ComPtr<ID3D12Resource> constBuffSkin_;
 
 private:
 
 	//ローカルスケール
-	XMFLOAT3 scale = { 1,1,1 };
+	XMFLOAT3 scale_ = { 1,1,1 };
 	//X,Y,Z軸回りのローカル行列
-	XMFLOAT3 rotation = { 0,0,0 };
+	XMFLOAT3 rotation_ = { 0,0,0 };
 	//ローカル座標
-	XMFLOAT3 position = { 0,0,0 };
+	XMFLOAT3 position_ = { 0,0,0 };
 	//ローカルワールド変換行列
-	XMMATRIX matWorld = {};
+	XMMATRIX matWorld_ = {};
 	//モデル
-	FbxModel* model = nullptr;
+	FbxModel* model_ = nullptr;
 
 	//1フレームの時間
-	FbxTime frameTime;
+	FbxTime frameTime_;
 	//アニメーション開始時間
-	FbxTime startTime;
+	FbxTime startTime_;
 	//アニメーション終了時間
-	FbxTime endTime;
+	FbxTime endTime_;
 	//現在時間
-	FbxTime currentTime;
+	FbxTime currentTime_;
 	//アニメーション再生中
-	bool isPlay = false;
+	bool isPlay_ = false;
 };
 

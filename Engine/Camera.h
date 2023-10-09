@@ -22,7 +22,7 @@ enum CameraMode {
 class Camera
 {
 public:
-	static ID3D12Device* device;
+	static ID3D12Device* device_;
 
 	static void StaticInitialize(ID3D12Device* dev);
 
@@ -32,13 +32,15 @@ public:
 	};
 
 	ConstBufferCamera* constMap = nullptr;
-	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff;
+	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff_;
 
-	XMMATRIX matView = {};
-	XMMATRIX matProjection = {};
-	XMFLOAT3 eye = { 0, 1, 30 };
-	XMFLOAT3 target = { 0, 0, 0 };
-	XMFLOAT3 up = { 0, 1, 0 };;
+private:
+
+	XMMATRIX matView_ = {};
+	XMMATRIX matProjection_ = {};
+	XMFLOAT3 eye_ = { 0, 1, 30 };
+	XMFLOAT3 target_ = { 0, 0, 0 };
+	XMFLOAT3 up_ = { 0, 1, 0 };;
 
 public:
 
@@ -62,15 +64,15 @@ public:
 	//デバックモード
 	void DebugMode();
 
-	XMMATRIX GetViewProjection()const { return matView * matProjection; }
-	XMFLOAT3 GetEye() { return eye; }
-	XMFLOAT3 GetTarget() { return target; }
-	int GetMode() { return mode; }
-	float GetRangeMaxZ() { return rangeMaxZ; }
-	bool GetIsPerformance() { return isPerformance; }
+	XMMATRIX GetViewProjection()const { return matView_ * matProjection_; }
+	XMFLOAT3 GetEye() { return eye_; }
+	XMFLOAT3 GetTarget() { return target_; }
+	int GetMode() { return mode_; }
+	float GetRangeMaxZ() { return rangeMaxZ_; }
+	bool GetIsPerformance() { return isPerformance_; }
 
-	void SetEye(XMFLOAT3 eye) { this->eye = eye; }
-	void SetTarget(XMFLOAT3 target) { this->target = target; }
+	void SetEye(XMFLOAT3 eye) { this->eye_ = eye; }
+	void SetTarget(XMFLOAT3 target) { this->target_ = target; }
 	void SetMode(int mode);
 
 private:
@@ -78,7 +80,7 @@ private:
 	//入力
 	Input* input_ = nullptr;
 
-	float angle = 0.1f; // カメラの回転角
+	float angle_ = 0.1f; // カメラの回転角
 
 	//プレイヤー座標
 	XMFLOAT3 playerPos_ = {};
@@ -86,35 +88,35 @@ private:
 	XMFLOAT3 bossPos_ = {};
 
 	//描画最大距離
-	float rangeMaxZ = 500.0f;
+	float rangeMaxZ_ = 500.0f;
 	//プレイヤーとカメラの距離
-	float playerRange = 30.0f;
+	float playerRange_ = 30.0f;
 
 	//-----カメラモード-----
-	int mode = STRAIGHTMODE;
+	int mode_ = STRAIGHTMODE;
 
 	//カメラ直線移動モードスピード
-	float straightModeSpeed = 1.0f;
+	float straightModeSpeed_ = 1.0f;
 
 	//-----演出用-----
 	//現在座標
-	XMFLOAT3 startEye = {};
-	XMFLOAT3 startTarget = {};
+	XMFLOAT3 startEye_ = {};
+	XMFLOAT3 startTarget_ = {};
 
 	//イージング終了位置
-	XMFLOAT3 endEye = {};
-	XMFLOAT3 endTarget = {};
+	XMFLOAT3 endEye_ = {};
+	XMFLOAT3 endTarget_ = {};
 
 	//現在のデータ保存用
-	XMFLOAT3 holdEye = {};
-	XMFLOAT3 holdTarget = {};
+	XMFLOAT3 holdEye_ = {};
+	XMFLOAT3 holdTarget_ = {};
 
 	//イージング演出用データ
-	Easing easeing;
+	Easing easeing_;
 	//演出時間
-	float easeingTime = 3.0f;
+	float easeingTime_ = 3.0f;
 	//演出中か
-	bool isPerformance = false;
+	bool isPerformance_ = false;
 	//フェーズ
-	int phase = 0;
+	int phase_ = 0;
 };

@@ -23,7 +23,7 @@ namespace
     struct WICConvert
     {
         const GUID&     source;
-        const GUID&     target;
+        const GUID&     target_;
         TEX_ALPHA_MODE  alphaMode;
     };
 
@@ -131,9 +131,9 @@ namespace
                     if (memcmp(&g_WICConvert[i].source, &pixelFormat, sizeof(WICPixelFormatGUID)) == 0)
                     {
                         if (pConvert)
-                            memcpy_s(pConvert, sizeof(WICPixelFormatGUID), &g_WICConvert[i].target, sizeof(GUID));
+                            memcpy_s(pConvert, sizeof(WICPixelFormatGUID), &g_WICConvert[i].target_, sizeof(GUID));
 
-                        format = WICToDXGI(g_WICConvert[i].target);
+                        format = WICToDXGI(g_WICConvert[i].target_);
                         assert(format != DXGI_FORMAT_UNKNOWN);
                         *alphaMode = g_WICConvert[i].alphaMode;
                         break;
@@ -523,25 +523,25 @@ namespace
         bool iswic2,
         _In_ IWICBitmapDecoder *decoder,
         _In_ IWICBitmapFrameDecode *frame,
-        _Out_ TexMetadata& metadata,
+        _Out_ TexMetadata& metadata_,
         _Out_opt_ WICPixelFormatGUID* pConvert,
         _In_opt_ std::function<void(IWICMetadataQueryReader*)> getMQR)
     {
         if (!decoder || !frame)
             return E_POINTER;
 
-        memset(&metadata, 0, sizeof(TexMetadata));
-        metadata.depth = 1;
-        metadata.mipLevels = 1;
-        metadata.dimension = TEX_DIMENSION_TEXTURE2D;
+        memset(&metadata_, 0, sizeof(TexMetadata));
+        metadata_.depth = 1;
+        metadata_.mipLevels = 1;
+        metadata_.dimension = TEX_DIMENSION_TEXTURE2D;
 
         UINT w, h;
         HRESULT hr = frame->GetSize(&w, &h);
         if (FAILED(hr))
             return hr;
 
-        metadata.width = w;
-        metadata.height = h;
+        metadata_.width = w;
+        metadata_.height = h;
 
         if (flags & WIC_FLAGS_ALL_FRAMES)
         {
@@ -550,10 +550,10 @@ namespace
             if (FAILED(hr))
                 return hr;
 
-            metadata.arraySize = fcount;
+            metadata_.arraySize = fcount;
         }
         else
-            metadata.arraySize = 1;
+            metadata_.arraySize = 1;
 
         WICPixelFormatGUID pixelFormat;
         hr = frame->GetPixelFormat(&pixelFormat);
@@ -561,11 +561,11 @@ namespace
             return hr;
 
         TEX_ALPHA_MODE alphaMode;
-        metadata.format = DetermineFormat(pixelFormat, flags, iswic2, pConvert, &alphaMode);
-        if (metadata.format == DXGI_FORMAT_UNKNOWN)
+        metadata_.format = DetermineFormat(pixelFormat, flags, iswic2, pConvert, &alphaMode);
+        if (metadata_.format == DXGI_FORMAT_UNKNOWN)
             return HRESULT_E_NOT_SUPPORTED;
 
-        metadata.SetAlphaMode(alphaMode);
+        metadata_.SetAlphaMode(alphaMode);
 
         if (!(flags & WIC_FLAGS_IGNORE_SRGB))
         {
@@ -637,7 +637,7 @@ namespace
                 std::ignore = PropVariantClear(&value);
 
                 if (sRGB)
-                    metadata.format = MakeSRGB(metadata.format);
+                    metadata_.format = MakeSRGB(metadata_.format);
             }
             else if (hr == WINCODEC_ERR_UNSUPPORTEDOPERATION)
             {
@@ -664,7 +664,7 @@ namespace
     //-------------------------------------------------------------------------------------
     HRESULT DecodeSingleFrame(
         WIC_FLAGS flags,
-        const TexMetadata& metadata,
+        const TexMetadata& metadata_,
         const WICPixelFormatGUID& convertGUID,
         _In_ IWICBitmapFrameDecode *frame,
         _Inout_ ScratchImage& image)
@@ -672,7 +672,7 @@ namespace
         if (!frame)
             return E_POINTER;
 
-        HRESULT hr = image.Initialize2D(metadata.format, metadata.width, metadata.height, 1, 1);
+        HRESULT hr = image.Initialize2D(metadata_.format, metadata_.width, metadata_.height, 1, 1);
         if (FAILED(hr))
             return hr;
 
@@ -732,14 +732,14 @@ namespace
     //-------------------------------------------------------------------------------------
     HRESULT DecodeMultiframe(
         WIC_FLAGS flags,
-        const TexMetadata& metadata,
+        const TexMetadata& metadata_,
         _In_ IWICBitmapDecoder *decoder,
         _Inout_ ScratchImage& image)
     {
         if (!decoder)
             return E_POINTER;
 
-        HRESULT hr = image.Initialize2D(metadata.format, metadata.width, metadata.height, metadata.arraySize, 1);
+        HRESULT hr = image.Initialize2D(metadata_.format, metadata_.width, metadata_.height, metadata_.arraySize, 1);
         if (FAILED(hr))
             return hr;
 
@@ -749,10 +749,10 @@ namespace
             return E_NOINTERFACE;
 
         WICPixelFormatGUID sourceGUID;
-        if (!DXGIToWIC(metadata.format, sourceGUID))
+        if (!DXGIToWIC(metadata_.format, sourceGUID))
             return E_FAIL;
 
-        for (size_t index = 0; index < metadata.arraySize; ++index)
+        for (size_t index = 0; index < metadata_.arraySize; ++index)
         {
             const Image* img = image.GetImage(0, index, 0);
             if (!img)
@@ -776,7 +776,7 @@ namespace
             if (FAILED(hr))
                 return hr;
 
-            if (w == metadata.width && h == metadata.height)
+            if (w == metadata_.width && h == metadata_.height)
             {
                 // This frame does not need resized
                 if (memcmp(&pfGuid, &sourceGUID, sizeof(WICPixelFormatGUID)) == 0)
@@ -818,7 +818,7 @@ namespace
                     return hr;
 
                 hr = scaler->Initialize(frame.Get(),
-                    static_cast<UINT>(metadata.width), static_cast<UINT>(metadata.height),
+                    static_cast<UINT>(metadata_.width), static_cast<UINT>(metadata_.height),
                     GetWICInterp(flags));
                 if (FAILED(hr))
                     return hr;
@@ -1219,7 +1219,7 @@ HRESULT DirectX::GetMetadataFromWICMemory(
     const void* pSource,
     size_t size,
     WIC_FLAGS flags,
-    TexMetadata& metadata,
+    TexMetadata& metadata_,
     std::function<void(IWICMetadataQueryReader*)> getMQR)
 {
     if (!pSource || size == 0)
@@ -1256,7 +1256,7 @@ HRESULT DirectX::GetMetadataFromWICMemory(
         return hr;
 
     // Get metadata
-    hr = DecodeMetadata(flags, iswic2, decoder.Get(), frame.Get(), metadata, nullptr, getMQR);
+    hr = DecodeMetadata(flags, iswic2, decoder.Get(), frame.Get(), metadata_, nullptr, getMQR);
     if (FAILED(hr))
         return hr;
 
@@ -1271,7 +1271,7 @@ _Use_decl_annotations_
 HRESULT DirectX::GetMetadataFromWICFile(
     const wchar_t* szFile,
     WIC_FLAGS flags,
-    TexMetadata& metadata,
+    TexMetadata& metadata_,
     std::function<void(IWICMetadataQueryReader*)> getMQR)
 {
     if (!szFile)
@@ -1294,7 +1294,7 @@ HRESULT DirectX::GetMetadataFromWICFile(
         return hr;
 
     // Get metadata
-    hr = DecodeMetadata(flags, iswic2, decoder.Get(), frame.Get(), metadata, nullptr, getMQR);
+    hr = DecodeMetadata(flags, iswic2, decoder.Get(), frame.Get(), metadata_, nullptr, getMQR);
     if (FAILED(hr))
         return hr;
 
@@ -1310,7 +1310,7 @@ HRESULT DirectX::LoadFromWICMemory(
     const void* pSource,
     size_t size,
     WIC_FLAGS flags,
-    TexMetadata* metadata,
+    TexMetadata* metadata_,
     ScratchImage& image,
     std::function<void(IWICMetadataQueryReader*)> getMQR)
 {
@@ -1370,8 +1370,8 @@ HRESULT DirectX::LoadFromWICMemory(
         return hr;
     }
 
-    if (metadata)
-        memcpy(metadata, &mdata, sizeof(TexMetadata));
+    if (metadata_)
+        memcpy(metadata_, &mdata, sizeof(TexMetadata));
 
     return S_OK;
 }
@@ -1384,7 +1384,7 @@ _Use_decl_annotations_
 HRESULT DirectX::LoadFromWICFile(
     const wchar_t* szFile,
     WIC_FLAGS flags,
-    TexMetadata* metadata,
+    TexMetadata* metadata_,
     ScratchImage& image,
     std::function<void(IWICMetadataQueryReader*)> getMQR)
 {
@@ -1431,8 +1431,8 @@ HRESULT DirectX::LoadFromWICFile(
         return hr;
     }
 
-    if (metadata)
-        memcpy(metadata, &mdata, sizeof(TexMetadata));
+    if (metadata_)
+        memcpy(metadata_, &mdata, sizeof(TexMetadata));
 
     return S_OK;
 }

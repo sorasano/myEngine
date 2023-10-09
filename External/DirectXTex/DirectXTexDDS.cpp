@@ -282,13 +282,13 @@ namespace
         _In_reads_bytes_(size) const void* pSource,
         size_t size,
         DDS_FLAGS flags,
-        _Out_ TexMetadata& metadata,
+        _Out_ TexMetadata& metadata_,
         _Inout_ uint32_t& convFlags) noexcept
     {
         if (!pSource)
             return E_INVALIDARG;
 
-        memset(&metadata, 0, sizeof(TexMetadata));
+        memset(&metadata_, 0, sizeof(TexMetadata));
 
         if (size < (sizeof(DDS_HEADER) + sizeof(uint32_t)))
         {
@@ -311,9 +311,9 @@ namespace
             return E_FAIL;
         }
 
-        metadata.mipLevels = pHeader->mipMapCount;
-        if (metadata.mipLevels == 0)
-            metadata.mipLevels = 1;
+        metadata_.mipLevels = pHeader->mipMapCount;
+        if (metadata_.mipLevels == 0)
+            metadata_.mipLevels = 1;
 
         // Check for DX10 extension
         if ((pHeader->ddspf.flags & DDS_FOURCC)
@@ -328,21 +328,21 @@ namespace
             auto d3d10ext = reinterpret_cast<const DDS_HEADER_DXT10*>(static_cast<const uint8_t*>(pSource) + sizeof(uint32_t) + sizeof(DDS_HEADER));
             convFlags |= CONV_FLAGS_DX10;
 
-            metadata.arraySize = d3d10ext->arraySize;
-            if (metadata.arraySize == 0)
+            metadata_.arraySize = d3d10ext->arraySize;
+            if (metadata_.arraySize == 0)
             {
                 return HRESULT_E_INVALID_DATA;
             }
 
-            metadata.format = d3d10ext->dxgiFormat;
-            if (!IsValid(metadata.format) || IsPalettized(metadata.format))
+            metadata_.format = d3d10ext->dxgiFormat;
+            if (!IsValid(metadata_.format) || IsPalettized(metadata_.format))
             {
                 return HRESULT_E_NOT_SUPPORTED;
             }
 
             static_assert(static_cast<int>(TEX_MISC_TEXTURECUBE) == static_cast<int>(DDS_RESOURCE_MISC_TEXTURECUBE), "DDS header mismatch");
 
-            metadata.miscFlags = d3d10ext->miscFlag & ~static_cast<uint32_t>(TEX_MISC_TEXTURECUBE);
+            metadata_.miscFlags = d3d10ext->miscFlag & ~static_cast<uint32_t>(TEX_MISC_TEXTURECUBE);
 
             switch (d3d10ext->resourceDimension)
             {
@@ -354,23 +354,23 @@ namespace
                     return HRESULT_E_INVALID_DATA;
                 }
 
-                metadata.width = pHeader->width;
-                metadata.height = 1;
-                metadata.depth = 1;
-                metadata.dimension = TEX_DIMENSION_TEXTURE1D;
+                metadata_.width = pHeader->width;
+                metadata_.height = 1;
+                metadata_.depth = 1;
+                metadata_.dimension = TEX_DIMENSION_TEXTURE1D;
                 break;
 
             case DDS_DIMENSION_TEXTURE2D:
                 if (d3d10ext->miscFlag & DDS_RESOURCE_MISC_TEXTURECUBE)
                 {
-                    metadata.miscFlags |= TEX_MISC_TEXTURECUBE;
-                    metadata.arraySize *= 6;
+                    metadata_.miscFlags |= TEX_MISC_TEXTURECUBE;
+                    metadata_.arraySize *= 6;
                 }
 
-                metadata.width = pHeader->width;
-                metadata.height = pHeader->height;
-                metadata.depth = 1;
-                metadata.dimension = TEX_DIMENSION_TEXTURE2D;
+                metadata_.width = pHeader->width;
+                metadata_.height = pHeader->height;
+                metadata_.depth = 1;
+                metadata_.dimension = TEX_DIMENSION_TEXTURE2D;
                 break;
 
             case DDS_DIMENSION_TEXTURE3D:
@@ -379,13 +379,13 @@ namespace
                     return HRESULT_E_INVALID_DATA;
                 }
 
-                if (metadata.arraySize > 1)
+                if (metadata_.arraySize > 1)
                     return HRESULT_E_NOT_SUPPORTED;
 
-                metadata.width = pHeader->width;
-                metadata.height = pHeader->height;
-                metadata.depth = pHeader->depth;
-                metadata.dimension = TEX_DIMENSION_TEXTURE3D;
+                metadata_.width = pHeader->width;
+                metadata_.height = pHeader->height;
+                metadata_.depth = pHeader->depth;
+                metadata_.dimension = TEX_DIMENSION_TEXTURE3D;
                 break;
 
             default:
@@ -400,18 +400,18 @@ namespace
             static_assert(static_cast<int>(TEX_ALPHA_MODE_OPAQUE) == static_cast<int>(DDS_ALPHA_MODE_OPAQUE), "DDS header mismatch");
             static_assert(static_cast<int>(TEX_ALPHA_MODE_CUSTOM) == static_cast<int>(DDS_ALPHA_MODE_CUSTOM), "DDS header mismatch");
 
-            metadata.miscFlags2 = d3d10ext->miscFlags2;
+            metadata_.miscFlags2 = d3d10ext->miscFlags2;
         }
         else
         {
-            metadata.arraySize = 1;
+            metadata_.arraySize = 1;
 
             if (pHeader->flags & DDS_HEADER_FLAGS_VOLUME)
             {
-                metadata.width = pHeader->width;
-                metadata.height = pHeader->height;
-                metadata.depth = pHeader->depth;
-                metadata.dimension = TEX_DIMENSION_TEXTURE3D;
+                metadata_.width = pHeader->width;
+                metadata_.height = pHeader->height;
+                metadata_.depth = pHeader->depth;
+                metadata_.dimension = TEX_DIMENSION_TEXTURE3D;
             }
             else
             {
@@ -421,40 +421,40 @@ namespace
                     if ((pHeader->caps2 & DDS_CUBEMAP_ALLFACES) != DDS_CUBEMAP_ALLFACES)
                         return HRESULT_E_NOT_SUPPORTED;
 
-                    metadata.arraySize = 6;
-                    metadata.miscFlags |= TEX_MISC_TEXTURECUBE;
+                    metadata_.arraySize = 6;
+                    metadata_.miscFlags |= TEX_MISC_TEXTURECUBE;
                 }
 
-                metadata.width = pHeader->width;
-                metadata.height = pHeader->height;
-                metadata.depth = 1;
-                metadata.dimension = TEX_DIMENSION_TEXTURE2D;
+                metadata_.width = pHeader->width;
+                metadata_.height = pHeader->height;
+                metadata_.depth = 1;
+                metadata_.dimension = TEX_DIMENSION_TEXTURE2D;
 
                 // Note there's no way for a legacy Direct3D 9 DDS to express a '1D' texture
             }
 
-            metadata.format = GetDXGIFormat(*pHeader, pHeader->ddspf, flags, convFlags);
+            metadata_.format = GetDXGIFormat(*pHeader, pHeader->ddspf, flags, convFlags);
 
-            if (metadata.format == DXGI_FORMAT_UNKNOWN)
+            if (metadata_.format == DXGI_FORMAT_UNKNOWN)
                 return HRESULT_E_NOT_SUPPORTED;
 
             // Special flag for handling LUMINANCE legacy formats
             if (flags & DDS_FLAGS_EXPAND_LUMINANCE)
             {
-                switch (metadata.format)
+                switch (metadata_.format)
                 {
                 case DXGI_FORMAT_R8_UNORM:
-                    metadata.format = DXGI_FORMAT_R8G8B8A8_UNORM;
+                    metadata_.format = DXGI_FORMAT_R8G8B8A8_UNORM;
                     convFlags |= CONV_FLAGS_L8 | CONV_FLAGS_EXPAND;
                     break;
 
                 case DXGI_FORMAT_R8G8_UNORM:
-                    metadata.format = DXGI_FORMAT_R8G8B8A8_UNORM;
+                    metadata_.format = DXGI_FORMAT_R8G8B8A8_UNORM;
                     convFlags |= CONV_FLAGS_A8L8 | CONV_FLAGS_EXPAND;
                     break;
 
                 case DXGI_FORMAT_R16_UNORM:
-                    metadata.format = DXGI_FORMAT_R16G16B16A16_UNORM;
+                    metadata_.format = DXGI_FORMAT_R16G16B16A16_UNORM;
                     convFlags |= CONV_FLAGS_L16 | CONV_FLAGS_EXPAND;
                     break;
 
@@ -467,35 +467,35 @@ namespace
         // Special flag for handling BGR DXGI 1.1 formats
         if (flags & DDS_FLAGS_FORCE_RGB)
         {
-            switch (metadata.format)
+            switch (metadata_.format)
             {
             case DXGI_FORMAT_B8G8R8A8_UNORM:
-                metadata.format = DXGI_FORMAT_R8G8B8A8_UNORM;
+                metadata_.format = DXGI_FORMAT_R8G8B8A8_UNORM;
                 convFlags |= CONV_FLAGS_SWIZZLE;
                 break;
 
             case DXGI_FORMAT_B8G8R8X8_UNORM:
-                metadata.format = DXGI_FORMAT_R8G8B8A8_UNORM;
+                metadata_.format = DXGI_FORMAT_R8G8B8A8_UNORM;
                 convFlags |= CONV_FLAGS_SWIZZLE | CONV_FLAGS_NOALPHA;
                 break;
 
             case DXGI_FORMAT_B8G8R8A8_TYPELESS:
-                metadata.format = DXGI_FORMAT_R8G8B8A8_TYPELESS;
+                metadata_.format = DXGI_FORMAT_R8G8B8A8_TYPELESS;
                 convFlags |= CONV_FLAGS_SWIZZLE;
                 break;
 
             case DXGI_FORMAT_B8G8R8A8_UNORM_SRGB:
-                metadata.format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+                metadata_.format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
                 convFlags |= CONV_FLAGS_SWIZZLE;
                 break;
 
             case DXGI_FORMAT_B8G8R8X8_TYPELESS:
-                metadata.format = DXGI_FORMAT_R8G8B8A8_TYPELESS;
+                metadata_.format = DXGI_FORMAT_R8G8B8A8_TYPELESS;
                 convFlags |= CONV_FLAGS_SWIZZLE | CONV_FLAGS_NOALPHA;
                 break;
 
             case DXGI_FORMAT_B8G8R8X8_UNORM_SRGB:
-                metadata.format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+                metadata_.format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
                 convFlags |= CONV_FLAGS_SWIZZLE | CONV_FLAGS_NOALPHA;
                 break;
 
@@ -507,14 +507,14 @@ namespace
         // Special flag for handling 16bpp formats
         if (flags & DDS_FLAGS_NO_16BPP)
         {
-            switch (metadata.format)
+            switch (metadata_.format)
             {
             case DXGI_FORMAT_B5G6R5_UNORM:
             case DXGI_FORMAT_B5G5R5A1_UNORM:
             case DXGI_FORMAT_B4G4R4A4_UNORM:
-                if (metadata.format == DXGI_FORMAT_B5G6R5_UNORM)
+                if (metadata_.format == DXGI_FORMAT_B5G6R5_UNORM)
                     convFlags |= CONV_FLAGS_NOALPHA;
-                metadata.format = DXGI_FORMAT_R8G8B8A8_UNORM;
+                metadata_.format = DXGI_FORMAT_R8G8B8A8_UNORM;
                 convFlags |= CONV_FLAGS_EXPAND;
                 break;
 
@@ -526,27 +526,27 @@ namespace
         // Implicit alpha mode
         if (convFlags & CONV_FLAGS_NOALPHA)
         {
-            metadata.SetAlphaMode(TEX_ALPHA_MODE_OPAQUE);
+            metadata_.SetAlphaMode(TEX_ALPHA_MODE_OPAQUE);
         }
         else if (convFlags & CONV_FLAGS_PMALPHA)
         {
-            metadata.SetAlphaMode(TEX_ALPHA_MODE_PREMULTIPLIED);
+            metadata_.SetAlphaMode(TEX_ALPHA_MODE_PREMULTIPLIED);
         }
 
         // Check for .dds files that exceed known hardware support
         if (!(flags & DDS_FLAGS_ALLOW_LARGE_FILES))
         {
             // 16k is the maximum required resource size supported by Direct3D
-            if (metadata.width > 16384u /* D3D12_REQ_TEXTURE1D_U_DIMENSION, D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION */
-                || metadata.height > 16384u /* D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION */
-                || metadata.mipLevels > 15u /* D3D12_REQ_MIP_LEVELS */)
+            if (metadata_.width > 16384u /* D3D12_REQ_TEXTURE1D_U_DIMENSION, D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION */
+                || metadata_.height > 16384u /* D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION */
+                || metadata_.mipLevels > 15u /* D3D12_REQ_MIP_LEVELS */)
             {
                 return HRESULT_E_NOT_SUPPORTED;
             }
 
             // 2048 is the maximum required depth/array size supported by Direct3D
-            if (metadata.arraySize > 2048u /* D3D12_REQ_TEXTURE1D_ARRAY_AXIS_DIMENSION, D3D12_REQ_TEXTURE2D_ARRAY_AXIS_DIMENSION */
-                || metadata.depth > 2048u /* D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION */)
+            if (metadata_.arraySize > 2048u /* D3D12_REQ_TEXTURE1D_ARRAY_AXIS_DIMENSION, D3D12_REQ_TEXTURE2D_ARRAY_AXIS_DIMENSION */
+                || metadata_.depth > 2048u /* D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION */)
             {
                 return HRESULT_E_NOT_SUPPORTED;
             }
@@ -562,21 +562,21 @@ namespace
 //-------------------------------------------------------------------------------------
 _Use_decl_annotations_
 HRESULT DirectX::EncodeDDSHeader(
-    const TexMetadata& metadata,
+    const TexMetadata& metadata_,
     DDS_FLAGS flags,
     void* pDestination,
     size_t maxsize,
     size_t& required) noexcept
 {
-    if (!IsValid(metadata.format))
+    if (!IsValid(metadata_.format))
         return E_INVALIDARG;
 
-    if (IsPalettized(metadata.format))
+    if (IsPalettized(metadata_.format))
         return HRESULT_E_NOT_SUPPORTED;
 
-    if (metadata.arraySize > 1)
+    if (metadata_.arraySize > 1)
     {
-        if ((metadata.arraySize != 6) || (metadata.dimension != TEX_DIMENSION_TEXTURE2D) || !(metadata.IsCubemap()))
+        if ((metadata_.arraySize != 6) || (metadata_.dimension != TEX_DIMENSION_TEXTURE2D) || !(metadata_.IsCubemap()))
         {
             // Texture1D arrays, Texture2D arrays, and Cubemap arrays must be stored using 'DX10' extended header
             if (flags & DDS_FLAGS_FORCE_DX9_LEGACY)
@@ -594,7 +594,7 @@ HRESULT DirectX::EncodeDDSHeader(
     DDS_PIXELFORMAT ddpf = {};
     if (!(flags & DDS_FLAGS_FORCE_DX10_EXT))
     {
-        switch (metadata.format)
+        switch (metadata_.format)
         {
         case DXGI_FORMAT_R8G8B8A8_UNORM:        memcpy(&ddpf, &DDSPF_A8B8G8R8, sizeof(DDS_PIXELFORMAT)); break;
         case DXGI_FORMAT_R16G16_UNORM:          memcpy(&ddpf, &DDSPF_G16R16, sizeof(DDS_PIXELFORMAT)); break;
@@ -605,8 +605,8 @@ HRESULT DirectX::EncodeDDSHeader(
         case DXGI_FORMAT_R8G8_B8G8_UNORM:       memcpy(&ddpf, &DDSPF_R8G8_B8G8, sizeof(DDS_PIXELFORMAT)); break;
         case DXGI_FORMAT_G8R8_G8B8_UNORM:       memcpy(&ddpf, &DDSPF_G8R8_G8B8, sizeof(DDS_PIXELFORMAT)); break;
         case DXGI_FORMAT_BC1_UNORM:             memcpy(&ddpf, &DDSPF_DXT1, sizeof(DDS_PIXELFORMAT)); break;
-        case DXGI_FORMAT_BC2_UNORM:             memcpy(&ddpf, metadata.IsPMAlpha() ? (&DDSPF_DXT2) : (&DDSPF_DXT3), sizeof(DDS_PIXELFORMAT)); break;
-        case DXGI_FORMAT_BC3_UNORM:             memcpy(&ddpf, metadata.IsPMAlpha() ? (&DDSPF_DXT4) : (&DDSPF_DXT5), sizeof(DDS_PIXELFORMAT)); break;
+        case DXGI_FORMAT_BC2_UNORM:             memcpy(&ddpf, metadata_.IsPMAlpha() ? (&DDSPF_DXT2) : (&DDSPF_DXT3), sizeof(DDS_PIXELFORMAT)); break;
+        case DXGI_FORMAT_BC3_UNORM:             memcpy(&ddpf, metadata_.IsPMAlpha() ? (&DDSPF_DXT4) : (&DDSPF_DXT5), sizeof(DDS_PIXELFORMAT)); break;
         case DXGI_FORMAT_BC4_SNORM:             memcpy(&ddpf, &DDSPF_BC4_SNORM, sizeof(DDS_PIXELFORMAT)); break;
         case DXGI_FORMAT_BC5_SNORM:             memcpy(&ddpf, &DDSPF_BC5_SNORM, sizeof(DDS_PIXELFORMAT)); break;
         case DXGI_FORMAT_B5G6R5_UNORM:          memcpy(&ddpf, &DDSPF_R5G6B5, sizeof(DDS_PIXELFORMAT)); break;
@@ -671,14 +671,14 @@ HRESULT DirectX::EncodeDDSHeader(
         case DXGI_FORMAT_BC2_UNORM_SRGB:
             if (flags & DDS_FLAGS_FORCE_DX9_LEGACY)
             {
-                memcpy(&ddpf, metadata.IsPMAlpha() ? (&DDSPF_DXT2) : (&DDSPF_DXT3), sizeof(DDS_PIXELFORMAT));
+                memcpy(&ddpf, metadata_.IsPMAlpha() ? (&DDSPF_DXT2) : (&DDSPF_DXT3), sizeof(DDS_PIXELFORMAT));
             }
             break;
 
         case DXGI_FORMAT_BC3_UNORM_SRGB:
             if (flags & DDS_FLAGS_FORCE_DX9_LEGACY)
             {
-                memcpy(&ddpf, metadata.IsPMAlpha() ? (&DDSPF_DXT4) : (&DDSPF_DXT5), sizeof(DDS_PIXELFORMAT));
+                memcpy(&ddpf, metadata_.IsPMAlpha() ? (&DDSPF_DXT4) : (&DDSPF_DXT5), sizeof(DDS_PIXELFORMAT));
             }
             break;
 
@@ -743,39 +743,39 @@ HRESULT DirectX::EncodeDDSHeader(
     header->flags = DDS_HEADER_FLAGS_TEXTURE;
     header->caps = DDS_SURFACE_FLAGS_TEXTURE;
 
-    if (metadata.mipLevels > 0)
+    if (metadata_.mipLevels > 0)
     {
         header->flags |= DDS_HEADER_FLAGS_MIPMAP;
 
-        if (metadata.mipLevels > UINT16_MAX)
+        if (metadata_.mipLevels > UINT16_MAX)
             return E_INVALIDARG;
 
-        header->mipMapCount = static_cast<uint32_t>(metadata.mipLevels);
+        header->mipMapCount = static_cast<uint32_t>(metadata_.mipLevels);
 
         if (header->mipMapCount > 1)
             header->caps |= DDS_SURFACE_FLAGS_MIPMAP;
     }
 
-    switch (metadata.dimension)
+    switch (metadata_.dimension)
     {
     case TEX_DIMENSION_TEXTURE1D:
-        if (metadata.width > UINT32_MAX)
+        if (metadata_.width > UINT32_MAX)
             return E_INVALIDARG;
 
-        header->width = static_cast<uint32_t>(metadata.width);
+        header->width = static_cast<uint32_t>(metadata_.width);
         header->height = header->depth = 1;
         break;
 
     case TEX_DIMENSION_TEXTURE2D:
-        if (metadata.height > UINT32_MAX
-            || metadata.width > UINT32_MAX)
+        if (metadata_.height > UINT32_MAX
+            || metadata_.width > UINT32_MAX)
             return E_INVALIDARG;
 
-        header->height = static_cast<uint32_t>(metadata.height);
-        header->width = static_cast<uint32_t>(metadata.width);
+        header->height = static_cast<uint32_t>(metadata_.height);
+        header->width = static_cast<uint32_t>(metadata_.width);
         header->depth = 1;
 
-        if (metadata.IsCubemap())
+        if (metadata_.IsCubemap())
         {
             header->caps |= DDS_SURFACE_FLAGS_CUBEMAP;
             header->caps2 |= DDS_CUBEMAP_ALLFACES;
@@ -783,16 +783,16 @@ HRESULT DirectX::EncodeDDSHeader(
         break;
 
     case TEX_DIMENSION_TEXTURE3D:
-        if (metadata.height > UINT32_MAX
-            || metadata.width > UINT32_MAX
-            || metadata.depth > UINT16_MAX)
+        if (metadata_.height > UINT32_MAX
+            || metadata_.width > UINT32_MAX
+            || metadata_.depth > UINT16_MAX)
             return E_INVALIDARG;
 
         header->flags |= DDS_HEADER_FLAGS_VOLUME;
         header->caps2 |= DDS_FLAGS_VOLUME;
-        header->height = static_cast<uint32_t>(metadata.height);
-        header->width = static_cast<uint32_t>(metadata.width);
-        header->depth = static_cast<uint32_t>(metadata.depth);
+        header->height = static_cast<uint32_t>(metadata_.height);
+        header->width = static_cast<uint32_t>(metadata_.width);
+        header->depth = static_cast<uint32_t>(metadata_.depth);
         break;
 
     default:
@@ -800,7 +800,7 @@ HRESULT DirectX::EncodeDDSHeader(
     }
 
     size_t rowPitch, slicePitch;
-    HRESULT hr = ComputePitch(metadata.format, metadata.width, metadata.height, rowPitch, slicePitch, CP_FLAGS_NONE);
+    HRESULT hr = ComputePitch(metadata_.format, metadata_.width, metadata_.height, rowPitch, slicePitch, CP_FLAGS_NONE);
     if (FAILED(hr))
         return hr;
 
@@ -808,7 +808,7 @@ HRESULT DirectX::EncodeDDSHeader(
         || rowPitch > UINT32_MAX)
         return E_FAIL;
 
-    if (IsCompressed(metadata.format))
+    if (IsCompressed(metadata_.format))
     {
         header->flags |= DDS_HEADER_FLAGS_LINEARSIZE;
         header->pitchOrLinearSize = static_cast<uint32_t>(slicePitch);
@@ -827,25 +827,25 @@ HRESULT DirectX::EncodeDDSHeader(
         assert(ext);
 
         memset(ext, 0, sizeof(DDS_HEADER_DXT10));
-        ext->dxgiFormat = metadata.format;
-        ext->resourceDimension = metadata.dimension;
+        ext->dxgiFormat = metadata_.format;
+        ext->resourceDimension = metadata_.dimension;
 
-        if (metadata.arraySize > UINT16_MAX)
+        if (metadata_.arraySize > UINT16_MAX)
             return E_INVALIDARG;
 
         static_assert(static_cast<int>(TEX_MISC_TEXTURECUBE) == static_cast<int>(DDS_RESOURCE_MISC_TEXTURECUBE), "DDS header mismatch");
 
-        ext->miscFlag = metadata.miscFlags & ~static_cast<uint32_t>(TEX_MISC_TEXTURECUBE);
+        ext->miscFlag = metadata_.miscFlags & ~static_cast<uint32_t>(TEX_MISC_TEXTURECUBE);
 
-        if (metadata.miscFlags & TEX_MISC_TEXTURECUBE)
+        if (metadata_.miscFlags & TEX_MISC_TEXTURECUBE)
         {
             ext->miscFlag |= TEX_MISC_TEXTURECUBE;
-            assert((metadata.arraySize % 6) == 0);
-            ext->arraySize = static_cast<UINT>(metadata.arraySize / 6);
+            assert((metadata_.arraySize % 6) == 0);
+            ext->arraySize = static_cast<UINT>(metadata_.arraySize / 6);
         }
         else
         {
-            ext->arraySize = static_cast<UINT>(metadata.arraySize);
+            ext->arraySize = static_cast<UINT>(metadata_.arraySize);
         }
 
         static_assert(static_cast<int>(TEX_MISC2_ALPHA_MODE_MASK) == static_cast<int>(DDS_MISC_FLAGS2_ALPHA_MODE_MASK), "DDS header mismatch");
@@ -859,7 +859,7 @@ HRESULT DirectX::EncodeDDSHeader(
         if (flags & DDS_FLAGS_FORCE_DX10_EXT_MISC2)
         {
             // This was formerly 'reserved'. D3DX10 and D3DX11 will fail if this value is anything other than 0
-            ext->miscFlags2 = metadata.miscFlags2;
+            ext->miscFlags2 = metadata_.miscFlags2;
         }
     }
     else
@@ -1233,7 +1233,7 @@ namespace
     HRESULT CopyImage(
         _In_reads_bytes_(size) const void* pPixels,
         _In_ size_t size,
-        _In_ const TexMetadata& metadata,
+        _In_ const TexMetadata& metadata_,
         _In_ CP_FLAGS cpFlags,
         _In_ uint32_t convFlags,
         _In_reads_opt_(256) const uint32_t *pal8,
@@ -1256,7 +1256,7 @@ namespace
         }
 
         size_t pixelSize, nimages;
-        if (!DetermineImageArray(metadata, cpFlags, nimages, pixelSize))
+        if (!DetermineImageArray(metadata_, cpFlags, nimages, pixelSize))
             return HRESULT_E_ARITHMETIC_OVERFLOW;
 
         if ((nimages == 0) || (nimages != image.GetImageCount()))
@@ -1278,7 +1278,7 @@ namespace
         if (!SetupImageArray(
             const_cast<uint8_t*>(reinterpret_cast<const uint8_t*>(pPixels)),
             pixelSize,
-            metadata,
+            metadata_,
             cpFlags,
             timages.get(),
             nimages))
@@ -1301,16 +1301,16 @@ namespace
         if (convFlags & CONV_FLAGS_SWIZZLE)
             tflags |= TEXP_SCANLINE_LEGACY;
 
-        switch (metadata.dimension)
+        switch (metadata_.dimension)
         {
         case TEX_DIMENSION_TEXTURE1D:
         case TEX_DIMENSION_TEXTURE2D:
         {
             size_t index = 0;
-            for (size_t item = 0; item < metadata.arraySize; ++item)
+            for (size_t item = 0; item < metadata_.arraySize; ++item)
             {
                 size_t lastgood = 0;
-                for (size_t level = 0; level < metadata.mipLevels; ++level, ++index)
+                for (size_t level = 0; level < metadata_.mipLevels; ++level, ++index)
                 {
                     if (index >= nimages)
                         return E_FAIL;
@@ -1329,7 +1329,7 @@ namespace
                     if (!pDest)
                         return E_POINTER;
 
-                    if (IsCompressed(metadata.format))
+                    if (IsCompressed(metadata_.format))
                     {
                         size_t csize = std::min<size_t>(images[index].slicePitch, timages[index].slicePitch);
                         memcpy(pDest, pSrc, csize);
@@ -1347,9 +1347,9 @@ namespace
                             }
                         }
                     }
-                    else if (IsPlanar(metadata.format))
+                    else if (IsPlanar(metadata_.format))
                     {
-                        const size_t count = ComputeScanlines(metadata.format, images[index].height);
+                        const size_t count = ComputeScanlines(metadata_.format, images[index].height);
                         if (!count)
                             return E_UNEXPECTED;
 
@@ -1378,7 +1378,7 @@ namespace
                                 else
                                 {
                                     const TEXP_LEGACY_FORMAT lformat = FindLegacyFormat(convFlags);
-                                    if (!LegacyExpandScanline(pDest, dpitch, metadata.format,
+                                    if (!LegacyExpandScanline(pDest, dpitch, metadata_.format,
                                         pSrc, spitch, lformat, pal8,
                                         tflags))
                                         return E_FAIL;
@@ -1387,12 +1387,12 @@ namespace
                             else if (convFlags & CONV_FLAGS_SWIZZLE)
                             {
                                 SwizzleScanline(pDest, dpitch, pSrc, spitch,
-                                    metadata.format, tflags);
+                                    metadata_.format, tflags);
                             }
                             else
                             {
                                 CopyScanline(pDest, dpitch, pSrc, spitch,
-                                    metadata.format, tflags);
+                                    metadata_.format, tflags);
                             }
 
                             pSrc += spitch;
@@ -1407,10 +1407,10 @@ namespace
         case TEX_DIMENSION_TEXTURE3D:
         {
             size_t index = 0;
-            size_t d = metadata.depth;
+            size_t d = metadata_.depth;
 
             size_t lastgood = 0;
-            for (size_t level = 0; level < metadata.mipLevels; ++level)
+            for (size_t level = 0; level < metadata_.mipLevels; ++level)
             {
                 for (size_t slice = 0; slice < d; ++slice, ++index)
                 {
@@ -1431,7 +1431,7 @@ namespace
                     if (!pDest)
                         return E_POINTER;
 
-                    if (IsCompressed(metadata.format))
+                    if (IsCompressed(metadata_.format))
                     {
                         size_t csize = std::min<size_t>(images[index].slicePitch, timages[index].slicePitch);
                         memcpy(pDest, pSrc, csize);
@@ -1449,7 +1449,7 @@ namespace
                             }
                         }
                     }
-                    else if (IsPlanar(metadata.format))
+                    else if (IsPlanar(metadata_.format))
                     {
                         // Direct3D does not support any planar formats for Texture3D
                         return HRESULT_E_NOT_SUPPORTED;
@@ -1471,7 +1471,7 @@ namespace
                                 else
                                 {
                                     const TEXP_LEGACY_FORMAT lformat = FindLegacyFormat(convFlags);
-                                    if (!LegacyExpandScanline(pDest, dpitch, metadata.format,
+                                    if (!LegacyExpandScanline(pDest, dpitch, metadata_.format,
                                         pSrc, spitch, lformat, pal8,
                                         tflags))
                                         return E_FAIL;
@@ -1479,11 +1479,11 @@ namespace
                             }
                             else if (convFlags & CONV_FLAGS_SWIZZLE)
                             {
-                                SwizzleScanline(pDest, dpitch, pSrc, spitch, metadata.format, tflags);
+                                SwizzleScanline(pDest, dpitch, pSrc, spitch, metadata_.format, tflags);
                             }
                             else
                             {
-                                CopyScanline(pDest, dpitch, pSrc, spitch, metadata.format, tflags);
+                                CopyScanline(pDest, dpitch, pSrc, spitch, metadata_.format, tflags);
                             }
 
                             pSrc += spitch;
@@ -1514,9 +1514,9 @@ namespace
         if (!images)
             return E_FAIL;
 
-        const TexMetadata& metadata = image.GetMetadata();
+        const TexMetadata& metadata_ = image.GetMetadata();
 
-        if (IsPlanar(metadata.format))
+        if (IsPlanar(metadata_.format))
             return HRESULT_E_NOT_SUPPORTED;
 
         uint32_t tflags = (convFlags & CONV_FLAGS_NOALPHA) ? TEXP_SCANLINE_SETALPHA : 0u;
@@ -1536,11 +1536,11 @@ namespace
             {
                 if (convFlags & CONV_FLAGS_SWIZZLE)
                 {
-                    SwizzleScanline(pPixels, rowPitch, pPixels, rowPitch, metadata.format, tflags);
+                    SwizzleScanline(pPixels, rowPitch, pPixels, rowPitch, metadata_.format, tflags);
                 }
                 else
                 {
-                    CopyScanline(pPixels, rowPitch, pPixels, rowPitch, metadata.format, tflags);
+                    CopyScanline(pPixels, rowPitch, pPixels, rowPitch, metadata_.format, tflags);
                 }
 
                 pPixels += rowPitch;
@@ -1565,20 +1565,20 @@ HRESULT DirectX::GetMetadataFromDDSMemory(
     const void* pSource,
     size_t size,
     DDS_FLAGS flags,
-    TexMetadata& metadata) noexcept
+    TexMetadata& metadata_) noexcept
 {
     if (!pSource || size == 0)
         return E_INVALIDARG;
 
     uint32_t convFlags = 0;
-    return DecodeDDSHeader(pSource, size, flags, metadata, convFlags);
+    return DecodeDDSHeader(pSource, size, flags, metadata_, convFlags);
 }
 
 _Use_decl_annotations_
 HRESULT DirectX::GetMetadataFromDDSFile(
     const wchar_t* szFile,
     DDS_FLAGS flags,
-    TexMetadata& metadata) noexcept
+    TexMetadata& metadata_) noexcept
 {
     if (!szFile)
         return E_INVALIDARG;
@@ -1654,7 +1654,7 @@ HRESULT DirectX::GetMetadataFromDDSFile(
 #endif
 
     uint32_t convFlags = 0;
-    return DecodeDDSHeader(header, headerLen, flags, metadata, convFlags);
+    return DecodeDDSHeader(header, headerLen, flags, metadata_, convFlags);
 }
 
 
@@ -1666,7 +1666,7 @@ HRESULT DirectX::LoadFromDDSMemory(
     const void* pSource,
     size_t size,
     DDS_FLAGS flags,
-    TexMetadata* metadata,
+    TexMetadata* metadata_,
     ScratchImage& image) noexcept
 {
     if (!pSource || size == 0)
@@ -1724,8 +1724,8 @@ HRESULT DirectX::LoadFromDDSMemory(
         image.Release();
         return hr;
     }
-    if (metadata)
-        memcpy(metadata, &mdata, sizeof(TexMetadata));
+    if (metadata_)
+        memcpy(metadata_, &mdata, sizeof(TexMetadata));
 
     return S_OK;
 }
@@ -1738,7 +1738,7 @@ _Use_decl_annotations_
 HRESULT DirectX::LoadFromDDSFile(
     const wchar_t* szFile,
     DDS_FLAGS flags,
-    TexMetadata* metadata,
+    TexMetadata* metadata_,
     ScratchImage& image) noexcept
 {
     if (!szFile)
@@ -1970,8 +1970,8 @@ HRESULT DirectX::LoadFromDDSFile(
         }
     }
 
-    if (metadata)
-        memcpy(metadata, &mdata, sizeof(TexMetadata));
+    if (metadata_)
+        memcpy(metadata_, &mdata, sizeof(TexMetadata));
 
     return S_OK;
 }
@@ -1984,7 +1984,7 @@ _Use_decl_annotations_
 HRESULT DirectX::SaveToDDSMemory(
     const Image* images,
     size_t nimages,
-    const TexMetadata& metadata,
+    const TexMetadata& metadata_,
     DDS_FLAGS flags,
     Blob& blob) noexcept
 {
@@ -1993,7 +1993,7 @@ HRESULT DirectX::SaveToDDSMemory(
 
     // Determine memory required
     size_t required = 0;
-    HRESULT hr = EncodeDDSHeader(metadata, flags, nullptr, 0, required);
+    HRESULT hr = EncodeDDSHeader(metadata_, flags, nullptr, 0, required);
     if (FAILED(hr))
         return hr;
 
@@ -2004,11 +2004,11 @@ HRESULT DirectX::SaveToDDSMemory(
         if (!images[i].pixels)
             return E_POINTER;
 
-        if (images[i].format != metadata.format)
+        if (images[i].format != metadata_.format)
             return E_FAIL;
 
         size_t ddsRowPitch, ddsSlicePitch;
-        hr = ComputePitch(metadata.format, images[i].width, images[i].height, ddsRowPitch, ddsSlicePitch, CP_FLAGS_NONE);
+        hr = ComputePitch(metadata_.format, images[i].width, images[i].height, ddsRowPitch, ddsSlicePitch, CP_FLAGS_NONE);
         if (FAILED(hr))
             return hr;
 
@@ -2034,7 +2034,7 @@ HRESULT DirectX::SaveToDDSMemory(
     auto pDestination = static_cast<uint8_t*>(blob.GetBufferPointer());
     assert(pDestination);
 
-    hr = EncodeDDSHeader(metadata, flags, pDestination, blob.GetBufferSize(), required);
+    hr = EncodeDDSHeader(metadata_, flags, pDestination, blob.GetBufferSize(), required);
     if (FAILED(hr))
     {
         blob.Release();
@@ -2050,15 +2050,15 @@ HRESULT DirectX::SaveToDDSMemory(
         return E_FAIL;
     }
 
-    switch (static_cast<DDS_RESOURCE_DIMENSION>(metadata.dimension))
+    switch (static_cast<DDS_RESOURCE_DIMENSION>(metadata_.dimension))
     {
     case DDS_DIMENSION_TEXTURE1D:
     case DDS_DIMENSION_TEXTURE2D:
     {
         size_t index = 0;
-        for (size_t item = 0; item < metadata.arraySize; ++item)
+        for (size_t item = 0; item < metadata_.arraySize; ++item)
         {
-            for (size_t level = 0; level < metadata.mipLevels; ++level)
+            for (size_t level = 0; level < metadata_.mipLevels; ++level)
             {
                 if (index >= nimages)
                 {
@@ -2077,7 +2077,7 @@ HRESULT DirectX::SaveToDDSMemory(
                 else
                 {
                     size_t ddsRowPitch, ddsSlicePitch;
-                    hr = ComputePitch(metadata.format, images[index].width, images[index].height, ddsRowPitch, ddsSlicePitch, CP_FLAGS_NONE);
+                    hr = ComputePitch(metadata_.format, images[index].width, images[index].height, ddsRowPitch, ddsSlicePitch, CP_FLAGS_NONE);
                     if (FAILED(hr))
                     {
                         blob.Release();
@@ -2089,7 +2089,7 @@ HRESULT DirectX::SaveToDDSMemory(
                     const uint8_t * __restrict sPtr = images[index].pixels;
                     uint8_t * __restrict dPtr = pDestination;
 
-                    const size_t lines = ComputeScanlines(metadata.format, images[index].height);
+                    const size_t lines = ComputeScanlines(metadata_.format, images[index].height);
                     const size_t csize = std::min<size_t>(rowPitch, ddsRowPitch);
                     size_t tremaining = remaining;
                     for (size_t j = 0; j < lines; ++j)
@@ -2119,16 +2119,16 @@ HRESULT DirectX::SaveToDDSMemory(
 
     case DDS_DIMENSION_TEXTURE3D:
     {
-        if (metadata.arraySize != 1)
+        if (metadata_.arraySize != 1)
         {
             blob.Release();
             return E_FAIL;
         }
 
-        size_t d = metadata.depth;
+        size_t d = metadata_.depth;
 
         size_t index = 0;
-        for (size_t level = 0; level < metadata.mipLevels; ++level)
+        for (size_t level = 0; level < metadata_.mipLevels; ++level)
         {
             for (size_t slice = 0; slice < d; ++slice)
             {
@@ -2149,7 +2149,7 @@ HRESULT DirectX::SaveToDDSMemory(
                 else
                 {
                     size_t ddsRowPitch, ddsSlicePitch;
-                    hr = ComputePitch(metadata.format, images[index].width, images[index].height, ddsRowPitch, ddsSlicePitch, CP_FLAGS_NONE);
+                    hr = ComputePitch(metadata_.format, images[index].width, images[index].height, ddsRowPitch, ddsSlicePitch, CP_FLAGS_NONE);
                     if (FAILED(hr))
                     {
                         blob.Release();
@@ -2161,7 +2161,7 @@ HRESULT DirectX::SaveToDDSMemory(
                     const uint8_t * __restrict sPtr = images[index].pixels;
                     uint8_t * __restrict dPtr = pDestination;
 
-                    const size_t lines = ComputeScanlines(metadata.format, images[index].height);
+                    const size_t lines = ComputeScanlines(metadata_.format, images[index].height);
                     const size_t csize = std::min<size_t>(rowPitch, ddsRowPitch);
                     size_t tremaining = remaining;
                     for (size_t j = 0; j < lines; ++j)
@@ -2208,7 +2208,7 @@ _Use_decl_annotations_
 HRESULT DirectX::SaveToDDSFile(
     const Image* images,
     size_t nimages,
-    const TexMetadata& metadata,
+    const TexMetadata& metadata_,
     DDS_FLAGS flags,
     const wchar_t* szFile) noexcept
 {
@@ -2218,7 +2218,7 @@ HRESULT DirectX::SaveToDDSFile(
     // Create DDS Header
     uint8_t header[MAX_HEADER_SIZE];
     size_t required;
-    HRESULT hr = EncodeDDSHeader(metadata, flags, header, MAX_HEADER_SIZE, required);
+    HRESULT hr = EncodeDDSHeader(metadata_, flags, header, MAX_HEADER_SIZE, required);
     if (FAILED(hr))
         return hr;
 
@@ -2259,15 +2259,15 @@ HRESULT DirectX::SaveToDDSFile(
 #endif
 
     // Write images
-    switch (static_cast<DDS_RESOURCE_DIMENSION>(metadata.dimension))
+    switch (static_cast<DDS_RESOURCE_DIMENSION>(metadata_.dimension))
     {
     case DDS_DIMENSION_TEXTURE1D:
     case DDS_DIMENSION_TEXTURE2D:
     {
         size_t index = 0;
-        for (size_t item = 0; item < metadata.arraySize; ++item)
+        for (size_t item = 0; item < metadata_.arraySize; ++item)
         {
-            for (size_t level = 0; level < metadata.mipLevels; ++level, ++index)
+            for (size_t level = 0; level < metadata_.mipLevels; ++level, ++index)
             {
                 if (index >= nimages)
                     return E_FAIL;
@@ -2279,7 +2279,7 @@ HRESULT DirectX::SaveToDDSFile(
                 assert(images[index].slicePitch > 0);
 
                 size_t ddsRowPitch, ddsSlicePitch;
-                hr = ComputePitch(metadata.format, images[index].width, images[index].height, ddsRowPitch, ddsSlicePitch, CP_FLAGS_NONE);
+                hr = ComputePitch(metadata_.format, images[index].width, images[index].height, ddsRowPitch, ddsSlicePitch, CP_FLAGS_NONE);
                 if (FAILED(hr))
                     return hr;
 
@@ -2315,7 +2315,7 @@ HRESULT DirectX::SaveToDDSFile(
 
                     const uint8_t * __restrict sPtr = images[index].pixels;
 
-                    const size_t lines = ComputeScanlines(metadata.format, images[index].height);
+                    const size_t lines = ComputeScanlines(metadata_.format, images[index].height);
                     for (size_t j = 0; j < lines; ++j)
                     {
 #ifdef WIN32
@@ -2344,13 +2344,13 @@ HRESULT DirectX::SaveToDDSFile(
 
     case DDS_DIMENSION_TEXTURE3D:
     {
-        if (metadata.arraySize != 1)
+        if (metadata_.arraySize != 1)
             return E_FAIL;
 
-        size_t d = metadata.depth;
+        size_t d = metadata_.depth;
 
         size_t index = 0;
-        for (size_t level = 0; level < metadata.mipLevels; ++level)
+        for (size_t level = 0; level < metadata_.mipLevels; ++level)
         {
             for (size_t slice = 0; slice < d; ++slice, ++index)
             {
@@ -2364,7 +2364,7 @@ HRESULT DirectX::SaveToDDSFile(
                 assert(images[index].slicePitch > 0);
 
                 size_t ddsRowPitch, ddsSlicePitch;
-                hr = ComputePitch(metadata.format, images[index].width, images[index].height, ddsRowPitch, ddsSlicePitch, CP_FLAGS_NONE);
+                hr = ComputePitch(metadata_.format, images[index].width, images[index].height, ddsRowPitch, ddsSlicePitch, CP_FLAGS_NONE);
                 if (FAILED(hr))
                     return hr;
 
@@ -2400,7 +2400,7 @@ HRESULT DirectX::SaveToDDSFile(
 
                     const uint8_t * __restrict sPtr = images[index].pixels;
 
-                    const size_t lines = ComputeScanlines(metadata.format, images[index].height);
+                    const size_t lines = ComputeScanlines(metadata_.format, images[index].height);
                     for (size_t j = 0; j < lines; ++j)
                     {
 #ifdef WIN32

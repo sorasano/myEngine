@@ -67,13 +67,13 @@ namespace DirectX
             assert(dest > 0);
             assert(lf != nullptr);
 
-            const float scale = float(source) / float(dest);
+            const float scale_ = float(source) / float(dest);
 
             // Mirror is the same case as clamp for linear
 
             for (size_t u = 0; u < dest; ++u)
             {
-                const float srcB = (float(u) + 0.5f) * scale + 0.5f;
+                const float srcB = (float(u) + 0.5f) * scale_ + 0.5f;
 
                 ptrdiff_t isrcB = ptrdiff_t(srcB);
                 ptrdiff_t isrcA = isrcB - 1;
@@ -167,11 +167,11 @@ namespace DirectX
             assert(dest > 0);
             assert(cf != nullptr);
 
-            const float scale = float(source) / float(dest);
+            const float scale_ = float(source) / float(dest);
 
             for (size_t u = 0; u < dest; ++u)
             {
-                const float srcB = (float(u) + 0.5f) * scale - 0.5f;
+                const float srcB = (float(u) + 0.5f) * scale_ - 0.5f;
 
                 const ptrdiff_t isrcB = bounduvw(ptrdiff_t(srcB), ptrdiff_t(source) - 1, wrap, mirror);
                 const ptrdiff_t isrcA = bounduvw(isrcB - 1, ptrdiff_t(source) - 1, wrap, mirror);
@@ -189,7 +189,7 @@ namespace DirectX
             }
         }
 
-#define CUBIC_INTERPOLATE( res, dx, p0, p1, p2, p3 ) \
+#define CUBIC_INTERPOLATE( res, dx_, p0, p1, p2, p3 ) \
 { \
     const XMVECTOR a0 = (p1); \
     const XMVECTOR d0 = XMVectorSubtract(p0, a0); \
@@ -200,7 +200,7 @@ namespace DirectX
     const XMVECTOR a2 = XMVectorAdd(XMVectorMultiply(g_cubicHalf, d0), XMVectorMultiply(g_cubicHalf, d2)); \
     XMVECTOR a3 = XMVectorSubtract(XMVectorMultiply(g_cubicSixth, d3), XMVectorMultiply(g_cubicSixth, d0)); \
     a3 = XMVectorSubtract(a3, XMVectorMultiply(g_cubicHalf, d2)); \
-    const XMVECTOR vdx = XMVectorReplicate(dx); \
+    const XMVECTOR vdx = XMVectorReplicate(dx_); \
     const XMVECTOR vdx2 = XMVectorMultiply(vdx, vdx); \
     const XMVECTOR vdx3 = XMVectorMultiply(vdx2, vdx); \
     res = XMVectorAdd(XMVectorAdd(XMVectorAdd(a0, XMVectorMultiply(a1, vdx)), XMVectorMultiply(a2, vdx2)), XMVectorMultiply(a3, vdx3)); \
@@ -251,8 +251,8 @@ namespace DirectX
             assert(source > 0);
             assert(dest > 0);
 
-            const float scale = float(dest) / float(source);
-            const float scaleInv = 0.5f / scale;
+            const float scale_ = float(dest) / float(source);
+            const float scaleInv = 0.5f / scale_;
 
             // Determine storage required for filter and allocate memory if needed
             size_t totalSize = TF_FILTER_SIZE + TF_FROM_SIZE + TF_TO_SIZE;
@@ -261,8 +261,8 @@ namespace DirectX
             for (size_t u = 0; u < source; ++u)
             {
                 const float src = float(u) - 0.5f;
-                const float destMin = src * scale;
-                const float destMax = destMin + scale;
+                const float destMin = src * scale_;
+                const float destMax = destMin + scale_;
                 const float t = destMax - destMin + repeat + 1.f;
                 totalSize += TF_FROM_SIZE + TF_TO_SIZE + size_t(t) * TF_TO_SIZE * 2;
             }
@@ -319,8 +319,8 @@ namespace DirectX
                 {
                     const float src = float(u + j) - 0.5f;
 
-                    float destMin = src * scale;
-                    float destMax = destMin + scale;
+                    float destMin = src * scale_;
+                    float destMax = destMin + scale_;
 
                     if (!wrap)
                     {

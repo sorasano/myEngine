@@ -2,7 +2,8 @@
 #include "d3dx12.h"
 #include "array"
 #include "DirectXMath.h"
-#include "DirectXTex.h"
+#include <DirectXTex.h>
+
 #include "vector"
 
 class PostEffect
@@ -44,17 +45,17 @@ public:	//メンバ関数
 	//更新
 	void Update();
 	//描画
-	void Draw(ID3D12GraphicsCommandList* cmdList);
+	void Draw(ID3D12GraphicsCommandList* cmdList_);
 	//パイプライン設定、作成
 	void CreateGraphicsPipeLine();
 
 	//描画前処理
-	void PreDrawScene(ID3D12GraphicsCommandList* cmdList);
+	void PreDrawScene(ID3D12GraphicsCommandList* cmdList_);
 	//描画後処理
-	void PostDrawScene(ID3D12GraphicsCommandList* cmdList);
+	void PostDrawScene(ID3D12GraphicsCommandList* cmdList_);
 
 public:	//静的メンバ関数
-	static void SetDevice(ID3D12Device* device) { PostEffect::device = device; }
+	static void SetDevice(ID3D12Device* device) { PostEffect::device_ = device; }
 
 public:	//セッター
 	//アルファ値
@@ -62,40 +63,40 @@ public:	//セッター
 	//色
 	void SetColor(XMFLOAT3 c) { color.x = c.x; color.y = c.y; color.z = c.z; }
 	//座標
-	void SetPosition(XMFLOAT2 pos) { position = pos; }
+	void SetPosition(XMFLOAT2 pos) { position_ = pos; }
 	//角度
-	void SetRotation(float rot) { rotation = rot; }
+	void SetRotation(float rot) { rotation_ = rot; }
 	//スケール
-	void SetScale(XMFLOAT2 sca) { scale = sca; }
+	void SetScale(XMFLOAT2 sca) { scale_ = sca; }
 
 private:	//静的メンバ変数
 	//デバイス
-	static ID3D12Device* device;
+	static ID3D12Device* device_;
 	//ルートシグネチャ
-	static ComPtr<ID3D12RootSignature>rootsignature;
+	static ComPtr<ID3D12RootSignature>rootsignature_;
 	//パイプラインステートオブジェクト
-	static ComPtr<ID3D12PipelineState>pipelinestate;
+	static ComPtr<ID3D12PipelineState>pipelinestate_;
 	//画面クリアカラー
 	static const float clearColor[4];
 
 private:	//メンバ変数
 	//頂点バッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vbView;
+	D3D12_VERTEX_BUFFER_VIEW vbView_;
 	//頂点データ
-	Vertex vertices[6];
-	Vertex* vertMap = nullptr;
+	Vertex vertices_[6];
+	Vertex* vertMap_ = nullptr;
 	//定数バッファ マテリアル
-	ComPtr<ID3D12Resource>constBuffMaterial;
-	ConstBuffMaterial* constMapMaterial = nullptr;
+	ComPtr<ID3D12Resource>constBuffMaterial_;
+	ConstBuffMaterial* constMapMaterial_ = nullptr;
 	//定数バッファ 変形行列
-	ComPtr<ID3D12Resource>constBuffTransform;
-	ConstBuffTransform* constMapTransform = nullptr;
+	ComPtr<ID3D12Resource>constBuffTransform_;
+	ConstBuffTransform* constMapTransform_ = nullptr;
 	//テクスチャの色
 	XMFLOAT4 color = { 1,1,1,1 };
 	//テクスチャバッファ
-	ComPtr<ID3D12Resource>textureBuff;
+	ComPtr<ID3D12Resource>textureBuff_;
 	//デスクリプタヒープ
-	ComPtr<ID3D12DescriptorHeap> srvHeap;
+	ComPtr<ID3D12DescriptorHeap> srvHeap_;
 
 	//深度バッファ
 	ComPtr<ID3D12Resource>depthBuff;
@@ -105,9 +106,9 @@ private:	//メンバ変数
 	ComPtr<ID3D12DescriptorHeap>descHeapDSV;
 
 private:
-	float rotation = 0;
-	XMFLOAT2 position = { 0,0 };
-	XMFLOAT2 scale = { 100.0f,100.0f };
+	float rotation_ = 0;
+	XMFLOAT2 position_ = { 0,0 };
+	XMFLOAT2 scale_ = { 100.0f,100.0f };
 
 };
 

@@ -229,7 +229,7 @@ namespace
             return E_OUTOFMEMORY;
         }
 
-        const XMVECTOR scale = XMVectorReplicate(alphaScale);
+        const XMVECTOR scale_ = XMVectorReplicate(alphaScale);
 
         const uint8_t *pSrcRow0 = srcImage.pixels;
         if (!pSrcRow0)
@@ -260,10 +260,10 @@ namespace
             for (size_t x = 0; x < srcImage.width - 1; ++x)
             {
                 // [0]=(x+0, y+0), [1]=(x+0, y+1), [2]=(x+1, y+0), [3]=(x+1, y+1)
-                XMVECTOR v1 = XMVectorSaturate(XMVectorMultiply(XMVectorSplatW(*pRow0), scale));
-                const XMVECTOR v2 = XMVectorSaturate(XMVectorMultiply(XMVectorSplatW(*pRow1), scale));
-                XMVECTOR v3 = XMVectorSaturate(XMVectorMultiply(XMVectorSplatW(*(pRow0++)), scale));
-                const XMVECTOR v4 = XMVectorSaturate(XMVectorMultiply(XMVectorSplatW(*(pRow1++)), scale));
+                XMVECTOR v1 = XMVectorSaturate(XMVectorMultiply(XMVectorSplatW(*pRow0), scale_));
+                const XMVECTOR v2 = XMVectorSaturate(XMVectorMultiply(XMVectorSplatW(*pRow1), scale_));
+                XMVECTOR v3 = XMVectorSaturate(XMVectorMultiply(XMVectorSplatW(*(pRow0++)), scale_));
+                const XMVECTOR v4 = XMVectorSaturate(XMVectorMultiply(XMVectorSplatW(*(pRow1++)), scale_));
 
                 v1 = XMVectorMergeXY(v1, v2); // [v1.x v2.x --- ---]
                 v3 = XMVectorMergeXY(v3, v4); // [v3.x v4.x --- ---]
@@ -907,9 +907,9 @@ namespace
         if (!scanline)
             return E_OUTOFMEMORY;
 
-        XMVECTOR* target = scanline.get();
+        XMVECTOR* target_ = scanline.get();
 
-        XMVECTOR* row = target + width;
+        XMVECTOR* row = target_ + width;
 
         // Resize base image to each target mip level
         for (size_t level = 1; level < levels; ++level)
@@ -951,11 +951,11 @@ namespace
                 size_t sx = 0;
                 for (size_t x = 0; x < nwidth; ++x)
                 {
-                    target[x] = row[sx >> 16];
+                    target_[x] = row[sx >> 16];
                     sx += xinc;
                 }
 
-                if (!StoreScanline(pDest, dest->rowPitch, dest->format, target, nwidth))
+                if (!StoreScanline(pDest, dest->rowPitch, dest->format, target_, nwidth))
                     return E_FAIL;
                 pDest += dest->rowPitch;
 
@@ -996,10 +996,10 @@ namespace
         if (!scanline)
             return E_OUTOFMEMORY;
 
-        XMVECTOR* target = scanline.get();
+        XMVECTOR* target_ = scanline.get();
 
-        XMVECTOR* urow0 = target + width;
-        XMVECTOR* urow1 = target + width * 2;
+        XMVECTOR* urow0 = target_ + width;
+        XMVECTOR* urow1 = target_ + width * 2;
 
         const XMVECTOR* urow2 = urow0 + 1;
         const XMVECTOR* urow3 = urow1 + 1;
@@ -1050,10 +1050,10 @@ namespace
                 {
                     const size_t x2 = x << 1;
 
-                    AVERAGE4(target[x], urow0[x2], urow1[x2], urow2[x2], urow3[x2])
+                    AVERAGE4(target_[x], urow0[x2], urow1[x2], urow2[x2], urow3[x2])
                 }
 
-                if (!StoreScanlineLinear(pDest, dest->rowPitch, dest->format, target, nwidth, filter))
+                if (!StoreScanlineLinear(pDest, dest->rowPitch, dest->format, target_, nwidth, filter))
                     return E_FAIL;
                 pDest += dest->rowPitch;
             }
@@ -1096,10 +1096,10 @@ namespace
         LinearFilter* lfX = lf.get();
         LinearFilter* lfY = lf.get() + width;
 
-        XMVECTOR* target = scanline.get();
+        XMVECTOR* target_ = scanline.get();
 
-        XMVECTOR* row0 = target + width;
-        XMVECTOR* row1 = target + width * 2;
+        XMVECTOR* row0 = target_ + width;
+        XMVECTOR* row1 = target_ + width * 2;
 
         // Resize base image to each target mip level
         for (size_t level = 1; level < levels; ++level)
@@ -1164,10 +1164,10 @@ namespace
                 {
                     auto const& toX = lfX[x];
 
-                    BILINEAR_INTERPOLATE(target[x], toX, toY, row0, row1)
+                    BILINEAR_INTERPOLATE(target_[x], toX, toY, row0, row1)
                 }
 
-                if (!StoreScanlineLinear(pDest, dest->rowPitch, dest->format, target, nwidth, filter))
+                if (!StoreScanlineLinear(pDest, dest->rowPitch, dest->format, target_, nwidth, filter))
                     return E_FAIL;
                 pDest += dest->rowPitch;
             }
@@ -1209,12 +1209,12 @@ namespace
         CubicFilter* cfX = cf.get();
         CubicFilter* cfY = cf.get() + width;
 
-        XMVECTOR* target = scanline.get();
+        XMVECTOR* target_ = scanline.get();
 
-        XMVECTOR* row0 = target + width;
-        XMVECTOR* row1 = target + width * 2;
-        XMVECTOR* row2 = target + width * 3;
-        XMVECTOR* row3 = target + width * 4;
+        XMVECTOR* row0 = target_ + width;
+        XMVECTOR* row1 = target_ + width * 2;
+        XMVECTOR* row2 = target_ + width * 3;
+        XMVECTOR* row3 = target_ + width * 4;
 
         // Resize base image to each target mip level
         for (size_t level = 1; level < levels; ++level)
@@ -1351,10 +1351,10 @@ namespace
                     CUBIC_INTERPOLATE(C2, toX.x, row2[toX.u0], row2[toX.u1], row2[toX.u2], row2[toX.u3])
                     CUBIC_INTERPOLATE(C3, toX.x, row3[toX.u0], row3[toX.u1], row3[toX.u2], row3[toX.u3])
 
-                    CUBIC_INTERPOLATE(target[x], toY.x, C0, C1, C2, C3)
+                    CUBIC_INTERPOLATE(target_[x], toY.x, C0, C1, C2, C3)
                 }
 
-                if (!StoreScanlineLinear(pDest, dest->rowPitch, dest->format, target, nwidth, filter))
+                if (!StoreScanlineLinear(pDest, dest->rowPitch, dest->format, target_, nwidth, filter))
                     return E_FAIL;
                 pDest += dest->rowPitch;
             }
@@ -1659,9 +1659,9 @@ namespace
         if (!scanline)
             return E_OUTOFMEMORY;
 
-        XMVECTOR* target = scanline.get();
+        XMVECTOR* target_ = scanline.get();
 
-        XMVECTOR* row = target + width;
+        XMVECTOR* row = target_ + width;
 
         // Resize base image to each target mip level
         for (size_t level = 1; level < levels; ++level)
@@ -1712,11 +1712,11 @@ namespace
                         size_t sx = 0;
                         for (size_t x = 0; x < nwidth; ++x)
                         {
-                            target[x] = row[sx >> 16];
+                            target_[x] = row[sx >> 16];
                             sx += xinc;
                         }
 
-                        if (!StoreScanline(pDest, dest->rowPitch, dest->format, target, nwidth))
+                        if (!StoreScanline(pDest, dest->rowPitch, dest->format, target_, nwidth))
                             return E_FAIL;
                         pDest += dest->rowPitch;
 
@@ -1761,11 +1761,11 @@ namespace
                     size_t sx = 0;
                     for (size_t x = 0; x < nwidth; ++x)
                     {
-                        target[x] = row[sx >> 16];
+                        target_[x] = row[sx >> 16];
                         sx += xinc;
                     }
 
-                    if (!StoreScanline(pDest, dest->rowPitch, dest->format, target, nwidth))
+                    if (!StoreScanline(pDest, dest->rowPitch, dest->format, target_, nwidth))
                         return E_FAIL;
                     pDest += dest->rowPitch;
 
@@ -1810,12 +1810,12 @@ namespace
         if (!scanline)
             return E_OUTOFMEMORY;
 
-        XMVECTOR* target = scanline.get();
+        XMVECTOR* target_ = scanline.get();
 
-        XMVECTOR* urow0 = target + width;
-        XMVECTOR* urow1 = target + width * 2;
-        XMVECTOR* vrow0 = target + width * 3;
-        XMVECTOR* vrow1 = target + width * 4;
+        XMVECTOR* urow0 = target_ + width;
+        XMVECTOR* urow1 = target_ + width * 2;
+        XMVECTOR* vrow0 = target_ + width * 3;
+        XMVECTOR* vrow1 = target_ + width * 4;
 
         const XMVECTOR* urow2 = urow0 + 1;
         const XMVECTOR* urow3 = urow1 + 1;
@@ -1894,11 +1894,11 @@ namespace
                         {
                             const size_t x2 = x << 1;
 
-                            AVERAGE8(target[x], urow0[x2], urow1[x2], urow2[x2], urow3[x2],
+                            AVERAGE8(target_[x], urow0[x2], urow1[x2], urow2[x2], urow3[x2],
                                 vrow0[x2], vrow1[x2], vrow2[x2], vrow3[x2])
                         }
 
-                        if (!StoreScanlineLinear(pDest, dest->rowPitch, dest->format, target, nwidth, filter))
+                        if (!StoreScanlineLinear(pDest, dest->rowPitch, dest->format, target_, nwidth, filter))
                             return E_FAIL;
                         pDest += dest->rowPitch;
                     }
@@ -1938,10 +1938,10 @@ namespace
                     {
                         const size_t x2 = x << 1;
 
-                        AVERAGE4(target[x], urow0[x2], urow1[x2], urow2[x2], urow3[x2])
+                        AVERAGE4(target_[x], urow0[x2], urow1[x2], urow2[x2], urow3[x2])
                     }
 
-                    if (!StoreScanlineLinear(pDest, dest->rowPitch, dest->format, target, nwidth, filter))
+                    if (!StoreScanlineLinear(pDest, dest->rowPitch, dest->format, target_, nwidth, filter))
                         return E_FAIL;
                     pDest += dest->rowPitch;
                 }
@@ -1989,12 +1989,12 @@ namespace
         LinearFilter* lfY = lf.get() + width;
         LinearFilter* lfZ = lf.get() + width + height;
 
-        XMVECTOR* target = scanline.get();
+        XMVECTOR* target_ = scanline.get();
 
-        XMVECTOR* urow0 = target + width;
-        XMVECTOR* urow1 = target + width * 2;
-        XMVECTOR* vrow0 = target + width * 3;
-        XMVECTOR* vrow1 = target + width * 4;
+        XMVECTOR* urow0 = target_ + width;
+        XMVECTOR* urow1 = target_ + width * 2;
+        XMVECTOR* vrow0 = target_ + width * 3;
+        XMVECTOR* vrow1 = target_ + width * 4;
 
         // Resize base image to each target mip level
         for (size_t level = 1; level < levels; ++level)
@@ -2073,10 +2073,10 @@ namespace
                         {
                             auto const& toX = lfX[x];
 
-                            TRILINEAR_INTERPOLATE(target[x], toX, toY, toZ, urow0, urow1, vrow0, vrow1)
+                            TRILINEAR_INTERPOLATE(target_[x], toX, toY, toZ, urow0, urow1, vrow0, vrow1)
                         }
 
-                        if (!StoreScanlineLinear(pDest, dest->rowPitch, dest->format, target, nwidth, filter))
+                        if (!StoreScanlineLinear(pDest, dest->rowPitch, dest->format, target_, nwidth, filter))
                             return E_FAIL;
                         pDest += dest->rowPitch;
                     }
@@ -2133,10 +2133,10 @@ namespace
                     {
                         auto const& toX = lfX[x];
 
-                        BILINEAR_INTERPOLATE(target[x], toX, toY, urow0, urow1)
+                        BILINEAR_INTERPOLATE(target_[x], toX, toY, urow0, urow1)
                     }
 
-                    if (!StoreScanlineLinear(pDest, dest->rowPitch, dest->format, target, nwidth, filter))
+                    if (!StoreScanlineLinear(pDest, dest->rowPitch, dest->format, target_, nwidth, filter))
                         return E_FAIL;
                     pDest += dest->rowPitch;
                 }
@@ -2184,7 +2184,7 @@ namespace
         CubicFilter* cfY = cf.get() + width;
         CubicFilter* cfZ = cf.get() + width + height;
 
-        XMVECTOR* target = scanline.get();
+        XMVECTOR* target_ = scanline.get();
 
         XMVECTOR* urow[4];
         XMVECTOR* vrow[4];
@@ -2385,10 +2385,10 @@ namespace
                                 CUBIC_INTERPOLATE(D[j], toY.x, C0, C1, C2, C3)
                             }
 
-                            CUBIC_INTERPOLATE(target[x], toZ.x, D[0], D[1], D[2], D[3])
+                            CUBIC_INTERPOLATE(target_[x], toZ.x, D[0], D[1], D[2], D[3])
                         }
 
-                        if (!StoreScanlineLinear(pDest, dest->rowPitch, dest->format, target, nwidth, filter))
+                        if (!StoreScanlineLinear(pDest, dest->rowPitch, dest->format, target_, nwidth, filter))
                             return E_FAIL;
                         pDest += dest->rowPitch;
                     }
@@ -2514,10 +2514,10 @@ namespace
                         CUBIC_INTERPOLATE(C2, toX.x, srow[0][toX.u0], srow[0][toX.u1], srow[0][toX.u2], srow[0][toX.u3])
                         CUBIC_INTERPOLATE(C3, toX.x, trow[0][toX.u0], trow[0][toX.u1], trow[0][toX.u2], trow[0][toX.u3])
 
-                        CUBIC_INTERPOLATE(target[x], toY.x, C0, C1, C2, C3)
+                        CUBIC_INTERPOLATE(target_[x], toY.x, C0, C1, C2, C3)
                     }
 
-                    if (!StoreScanlineLinear(pDest, dest->rowPitch, dest->format, target, nwidth, filter))
+                    if (!StoreScanlineLinear(pDest, dest->rowPitch, dest->format, target_, nwidth, filter))
                         return E_FAIL;
                     pDest += dest->rowPitch;
                 }
@@ -2984,29 +2984,29 @@ _Use_decl_annotations_
 HRESULT DirectX::GenerateMipMaps(
     const Image* srcImages,
     size_t nimages,
-    const TexMetadata& metadata,
+    const TexMetadata& metadata_,
     TEX_FILTER_FLAGS filter,
     size_t levels,
     ScratchImage& mipChain)
 {
-    if (!srcImages || !nimages || !IsValid(metadata.format))
+    if (!srcImages || !nimages || !IsValid(metadata_.format))
         return E_INVALIDARG;
 
-    if (metadata.IsVolumemap()
-        || IsCompressed(metadata.format) || IsTypeless(metadata.format) || IsPlanar(metadata.format) || IsPalettized(metadata.format))
+    if (metadata_.IsVolumemap()
+        || IsCompressed(metadata_.format) || IsTypeless(metadata_.format) || IsPlanar(metadata_.format) || IsPalettized(metadata_.format))
         return HRESULT_E_NOT_SUPPORTED;
 
-    if (!CalculateMipLevels(metadata.width, metadata.height, levels))
+    if (!CalculateMipLevels(metadata_.width, metadata_.height, levels))
         return E_INVALIDARG;
 
     if (levels <= 1)
         return E_INVALIDARG;
 
     std::vector<Image> baseImages;
-    baseImages.reserve(metadata.arraySize);
-    for (size_t item = 0; item < metadata.arraySize; ++item)
+    baseImages.reserve(metadata_.arraySize);
+    for (size_t item = 0; item < metadata_.arraySize; ++item)
     {
-        const size_t index = metadata.ComputeIndex(0, item, 0);
+        const size_t index = metadata_.ComputeIndex(0, item, 0);
         if (index >= nimages)
             return E_FAIL;
 
@@ -3014,7 +3014,7 @@ HRESULT DirectX::GenerateMipMaps(
         if (!src.pixels)
             return E_POINTER;
 
-        if (src.format != metadata.format || src.width != metadata.width || src.height != metadata.height)
+        if (src.format != metadata_.format || src.width != metadata_.width || src.height != metadata_.height)
         {
             // All base images must be the same format, width, and height
             return E_FAIL;
@@ -3023,7 +3023,7 @@ HRESULT DirectX::GenerateMipMaps(
         baseImages.push_back(src);
     }
 
-    assert(baseImages.size() == metadata.arraySize);
+    assert(baseImages.size() == metadata_.arraySize);
 
     HRESULT hr = E_UNEXPECTED;
 
@@ -3033,16 +3033,16 @@ HRESULT DirectX::GenerateMipMaps(
     static_assert(TEX_FILTER_POINT == 0x100000, "TEX_FILTER_ flag values don't match TEX_FILTER_MODE_MASK");
 
 #ifdef WIN32
-    bool usewic = !metadata.IsPMAlpha() && UseWICFiltering(metadata.format, filter);
+    bool usewic = !metadata_.IsPMAlpha() && UseWICFiltering(metadata_.format, filter);
 
     WICPixelFormatGUID pfGUID = {};
-    const bool wicpf = (usewic) ? DXGIToWIC(metadata.format, pfGUID, true) : false;
+    const bool wicpf = (usewic) ? DXGIToWIC(metadata_.format, pfGUID, true) : false;
 
     if (usewic && !wicpf)
     {
         // Check to see if the source and/or result size is too big for WIC
-        const uint64_t expandedSize = uint64_t(std::max<size_t>(1, metadata.width >> 1)) * uint64_t(std::max<size_t>(1, metadata.height >> 1)) * sizeof(float) * 4;
-        const uint64_t expandedSize2 = uint64_t(metadata.width) * uint64_t(metadata.height) * sizeof(float) * 4;
+        const uint64_t expandedSize = uint64_t(std::max<size_t>(1, metadata_.width >> 1)) * uint64_t(std::max<size_t>(1, metadata_.height >> 1)) * sizeof(float) * 4;
+        const uint64_t expandedSize2 = uint64_t(metadata_.width) * uint64_t(metadata_.height) * sizeof(float) * 4;
         if (expandedSize > UINT32_MAX || expandedSize2 > UINT32_MAX)
         {
             if (filter & TEX_FILTER_FORCE_WIC)
@@ -3068,13 +3068,13 @@ HRESULT DirectX::GenerateMipMaps(
             if (wicpf)
             {
                 // Case 1: Base image format is supported by Windows Imaging Component
-                TexMetadata mdata2 = metadata;
+                TexMetadata mdata2 = metadata_;
                 mdata2.mipLevels = levels;
                 hr = mipChain.Initialize(mdata2);
                 if (FAILED(hr))
                     return hr;
 
-                for (size_t item = 0; item < metadata.arraySize; ++item)
+                for (size_t item = 0; item < metadata_.arraySize; ++item)
                 {
                     hr = GenerateMipMapsUsingWIC(baseImages[item], filter, levels, pfGUID, mipChain, item);
                     if (FAILED(hr))
@@ -3089,9 +3089,9 @@ HRESULT DirectX::GenerateMipMaps(
             else
             {
                 // Case 2: Base image format is not supported by WIC, so we have to convert, generate, and convert back
-                assert(metadata.format != DXGI_FORMAT_R32G32B32A32_FLOAT);
+                assert(metadata_.format != DXGI_FORMAT_R32G32B32A32_FLOAT);
 
-                TexMetadata mdata2 = metadata;
+                TexMetadata mdata2 = metadata_;
                 mdata2.mipLevels = levels;
                 mdata2.format = DXGI_FORMAT_R32G32B32A32_FLOAT;
                 ScratchImage tMipChain;
@@ -3099,7 +3099,7 @@ HRESULT DirectX::GenerateMipMaps(
                 if (FAILED(hr))
                     return hr;
 
-                for (size_t item = 0; item < metadata.arraySize; ++item)
+                for (size_t item = 0; item < metadata_.arraySize; ++item)
                 {
                     ScratchImage temp;
                     hr = ConvertToR32G32B32A32(baseImages[item], temp);
@@ -3115,7 +3115,7 @@ HRESULT DirectX::GenerateMipMaps(
                         return hr;
                 }
 
-                return ConvertFromR32G32B32A32(tMipChain.GetImages(), tMipChain.GetImageCount(), tMipChain.GetMetadata(), metadata.format, mipChain);
+                return ConvertFromR32G32B32A32(tMipChain.GetImages(), tMipChain.GetImageCount(), tMipChain.GetMetadata(), metadata_.format, mipChain);
             }
         }
 
@@ -3127,24 +3127,24 @@ HRESULT DirectX::GenerateMipMaps(
 #endif // WIN32
     {
         //--- Use custom filters to generate mipmaps ----------------------------------
-        TexMetadata mdata2 = metadata;
+        TexMetadata mdata2 = metadata_;
         mdata2.mipLevels = levels;
 
         unsigned long filter_select = (filter & TEX_FILTER_MODE_MASK);
         if (!filter_select)
         {
             // Default filter choice
-            filter_select = (ispow2(metadata.width) && ispow2(metadata.height)) ? TEX_FILTER_BOX : TEX_FILTER_LINEAR;
+            filter_select = (ispow2(metadata_.width) && ispow2(metadata_.height)) ? TEX_FILTER_BOX : TEX_FILTER_LINEAR;
         }
 
         switch (filter_select)
         {
         case TEX_FILTER_BOX:
-            hr = Setup2DMips(&baseImages[0], metadata.arraySize, mdata2, mipChain);
+            hr = Setup2DMips(&baseImages[0], metadata_.arraySize, mdata2, mipChain);
             if (FAILED(hr))
                 return hr;
 
-            for (size_t item = 0; item < metadata.arraySize; ++item)
+            for (size_t item = 0; item < metadata_.arraySize; ++item)
             {
                 hr = Generate2DMipsBoxFilter(levels, filter, mipChain, item);
                 if (FAILED(hr))
@@ -3153,11 +3153,11 @@ HRESULT DirectX::GenerateMipMaps(
             return hr;
 
         case TEX_FILTER_POINT:
-            hr = Setup2DMips(&baseImages[0], metadata.arraySize, mdata2, mipChain);
+            hr = Setup2DMips(&baseImages[0], metadata_.arraySize, mdata2, mipChain);
             if (FAILED(hr))
                 return hr;
 
-            for (size_t item = 0; item < metadata.arraySize; ++item)
+            for (size_t item = 0; item < metadata_.arraySize; ++item)
             {
                 hr = Generate2DMipsPointFilter(levels, mipChain, item);
                 if (FAILED(hr))
@@ -3166,11 +3166,11 @@ HRESULT DirectX::GenerateMipMaps(
             return hr;
 
         case TEX_FILTER_LINEAR:
-            hr = Setup2DMips(&baseImages[0], metadata.arraySize, mdata2, mipChain);
+            hr = Setup2DMips(&baseImages[0], metadata_.arraySize, mdata2, mipChain);
             if (FAILED(hr))
                 return hr;
 
-            for (size_t item = 0; item < metadata.arraySize; ++item)
+            for (size_t item = 0; item < metadata_.arraySize; ++item)
             {
                 hr = Generate2DMipsLinearFilter(levels, filter, mipChain, item);
                 if (FAILED(hr))
@@ -3179,11 +3179,11 @@ HRESULT DirectX::GenerateMipMaps(
             return hr;
 
         case TEX_FILTER_CUBIC:
-            hr = Setup2DMips(&baseImages[0], metadata.arraySize, mdata2, mipChain);
+            hr = Setup2DMips(&baseImages[0], metadata_.arraySize, mdata2, mipChain);
             if (FAILED(hr))
                 return hr;
 
-            for (size_t item = 0; item < metadata.arraySize; ++item)
+            for (size_t item = 0; item < metadata_.arraySize; ++item)
             {
                 hr = Generate2DMipsCubicFilter(levels, filter, mipChain, item);
                 if (FAILED(hr))
@@ -3192,11 +3192,11 @@ HRESULT DirectX::GenerateMipMaps(
             return hr;
 
         case TEX_FILTER_TRIANGLE:
-            hr = Setup2DMips(&baseImages[0], metadata.arraySize, mdata2, mipChain);
+            hr = Setup2DMips(&baseImages[0], metadata_.arraySize, mdata2, mipChain);
             if (FAILED(hr))
                 return hr;
 
-            for (size_t item = 0; item < metadata.arraySize; ++item)
+            for (size_t item = 0; item < metadata_.arraySize; ++item)
             {
                 hr = Generate2DMipsTriangleFilter(levels, filter, mipChain, item);
                 if (FAILED(hr))
@@ -3325,32 +3325,32 @@ _Use_decl_annotations_
 HRESULT DirectX::GenerateMipMaps3D(
     const Image* srcImages,
     size_t nimages,
-    const TexMetadata& metadata,
+    const TexMetadata& metadata_,
     TEX_FILTER_FLAGS filter,
     size_t levels,
     ScratchImage& mipChain)
 {
-    if (!srcImages || !nimages || !IsValid(metadata.format))
+    if (!srcImages || !nimages || !IsValid(metadata_.format))
         return E_INVALIDARG;
 
     if (filter & TEX_FILTER_FORCE_WIC)
         return HRESULT_E_NOT_SUPPORTED;
 
-    if (!metadata.IsVolumemap()
-        || IsCompressed(metadata.format) || IsTypeless(metadata.format) || IsPlanar(metadata.format) || IsPalettized(metadata.format))
+    if (!metadata_.IsVolumemap()
+        || IsCompressed(metadata_.format) || IsTypeless(metadata_.format) || IsPlanar(metadata_.format) || IsPalettized(metadata_.format))
         return HRESULT_E_NOT_SUPPORTED;
 
-    if (!CalculateMipLevels3D(metadata.width, metadata.height, metadata.depth, levels))
+    if (!CalculateMipLevels3D(metadata_.width, metadata_.height, metadata_.depth, levels))
         return E_INVALIDARG;
 
     if (levels <= 1)
         return E_INVALIDARG;
 
     std::vector<Image> baseImages;
-    baseImages.reserve(metadata.depth);
-    for (size_t slice = 0; slice < metadata.depth; ++slice)
+    baseImages.reserve(metadata_.depth);
+    for (size_t slice = 0; slice < metadata_.depth; ++slice)
     {
-        const size_t index = metadata.ComputeIndex(0, 0, slice);
+        const size_t index = metadata_.ComputeIndex(0, 0, slice);
         if (index >= nimages)
             return E_FAIL;
 
@@ -3358,7 +3358,7 @@ HRESULT DirectX::GenerateMipMaps3D(
         if (!src.pixels)
             return E_POINTER;
 
-        if (src.format != metadata.format || src.width != metadata.width || src.height != metadata.height)
+        if (src.format != metadata_.format || src.width != metadata_.width || src.height != metadata_.height)
         {
             // All base images must be the same format, width, and height
             return E_FAIL;
@@ -3367,7 +3367,7 @@ HRESULT DirectX::GenerateMipMaps3D(
         baseImages.push_back(src);
     }
 
-    assert(baseImages.size() == metadata.depth);
+    assert(baseImages.size() == metadata_.depth);
 
     HRESULT hr = E_UNEXPECTED;
 
@@ -3377,57 +3377,57 @@ HRESULT DirectX::GenerateMipMaps3D(
     if (!filter_select)
     {
         // Default filter choice
-        filter_select = (ispow2(metadata.width) && ispow2(metadata.height) && ispow2(metadata.depth)) ? TEX_FILTER_BOX : TEX_FILTER_TRIANGLE;
+        filter_select = (ispow2(metadata_.width) && ispow2(metadata_.height) && ispow2(metadata_.depth)) ? TEX_FILTER_BOX : TEX_FILTER_TRIANGLE;
     }
 
     switch (filter_select)
     {
     case TEX_FILTER_BOX:
-        hr = Setup3DMips(&baseImages[0], metadata.depth, levels, mipChain);
+        hr = Setup3DMips(&baseImages[0], metadata_.depth, levels, mipChain);
         if (FAILED(hr))
             return hr;
 
-        hr = Generate3DMipsBoxFilter(metadata.depth, levels, filter, mipChain);
+        hr = Generate3DMipsBoxFilter(metadata_.depth, levels, filter, mipChain);
         if (FAILED(hr))
             mipChain.Release();
         return hr;
 
     case TEX_FILTER_POINT:
-        hr = Setup3DMips(&baseImages[0], metadata.depth, levels, mipChain);
+        hr = Setup3DMips(&baseImages[0], metadata_.depth, levels, mipChain);
         if (FAILED(hr))
             return hr;
 
-        hr = Generate3DMipsPointFilter(metadata.depth, levels, mipChain);
+        hr = Generate3DMipsPointFilter(metadata_.depth, levels, mipChain);
         if (FAILED(hr))
             mipChain.Release();
         return hr;
 
     case TEX_FILTER_LINEAR:
-        hr = Setup3DMips(&baseImages[0], metadata.depth, levels, mipChain);
+        hr = Setup3DMips(&baseImages[0], metadata_.depth, levels, mipChain);
         if (FAILED(hr))
             return hr;
 
-        hr = Generate3DMipsLinearFilter(metadata.depth, levels, filter, mipChain);
+        hr = Generate3DMipsLinearFilter(metadata_.depth, levels, filter, mipChain);
         if (FAILED(hr))
             mipChain.Release();
         return hr;
 
     case TEX_FILTER_CUBIC:
-        hr = Setup3DMips(&baseImages[0], metadata.depth, levels, mipChain);
+        hr = Setup3DMips(&baseImages[0], metadata_.depth, levels, mipChain);
         if (FAILED(hr))
             return hr;
 
-        hr = Generate3DMipsCubicFilter(metadata.depth, levels, filter, mipChain);
+        hr = Generate3DMipsCubicFilter(metadata_.depth, levels, filter, mipChain);
         if (FAILED(hr))
             mipChain.Release();
         return hr;
 
     case TEX_FILTER_TRIANGLE:
-        hr = Setup3DMips(&baseImages[0], metadata.depth, levels, mipChain);
+        hr = Setup3DMips(&baseImages[0], metadata_.depth, levels, mipChain);
         if (FAILED(hr))
             return hr;
 
-        hr = Generate3DMipsTriangleFilter(metadata.depth, levels, filter, mipChain);
+        hr = Generate3DMipsTriangleFilter(metadata_.depth, levels, filter, mipChain);
         if (FAILED(hr))
             mipChain.Release();
         return hr;
@@ -3441,19 +3441,19 @@ _Use_decl_annotations_
 HRESULT DirectX::ScaleMipMapsAlphaForCoverage(
     const Image* srcImages,
     size_t nimages,
-    const TexMetadata& metadata,
+    const TexMetadata& metadata_,
     size_t item,
     float alphaReference,
     ScratchImage& mipChain) noexcept
 {
-    if (!srcImages || !nimages || !IsValid(metadata.format) || nimages > metadata.mipLevels || !mipChain.GetImages())
+    if (!srcImages || !nimages || !IsValid(metadata_.format) || nimages > metadata_.mipLevels || !mipChain.GetImages())
         return E_INVALIDARG;
 
-    if (metadata.IsVolumemap()
-        || IsCompressed(metadata.format) || IsTypeless(metadata.format) || IsPlanar(metadata.format) || IsPalettized(metadata.format))
+    if (metadata_.IsVolumemap()
+        || IsCompressed(metadata_.format) || IsTypeless(metadata_.format) || IsPlanar(metadata_.format) || IsPalettized(metadata_.format))
         return HRESULT_E_NOT_SUPPORTED;
 
-    if (srcImages[0].format != metadata.format || srcImages[0].width != metadata.width || srcImages[0].height != metadata.height)
+    if (srcImages[0].format != metadata_.format || srcImages[0].width != metadata_.width || srcImages[0].height != metadata_.height)
     {
         // Base image must be the same format, width, and height
         return E_FAIL;
@@ -3478,7 +3478,7 @@ HRESULT DirectX::ScaleMipMapsAlphaForCoverage(
 
         const uint8_t *pSrc = src.pixels;
         const size_t rowPitch = src.rowPitch;
-        for (size_t h = 0; h < metadata.height; ++h)
+        for (size_t h = 0; h < metadata_.height; ++h)
         {
             const size_t msize = std::min<size_t>(dest->rowPitch, rowPitch);
             memcpy(pDest, pSrc, msize);
@@ -3487,7 +3487,7 @@ HRESULT DirectX::ScaleMipMapsAlphaForCoverage(
         }
     }
 
-    for (size_t level = 1; level < metadata.mipLevels; ++level)
+    for (size_t level = 1; level < metadata_.mipLevels; ++level)
     {
         if (level >= nimages)
             return E_FAIL;

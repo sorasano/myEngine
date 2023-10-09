@@ -5,7 +5,7 @@
 #include "sstream"
 #include "stdio.h"
 
-const std::string JsonLoader::kDefaultbaseDirectory = "Resources/json/";
+const std::string JsonLoader::kDefaultbaseDirectory_ = "Resources/json/";
 const std::string JsonLoader::kExtension = ".json";
 
 LevelData* JsonLoader::LoadFile(const std::string filename)
@@ -14,7 +14,7 @@ LevelData* JsonLoader::LoadFile(const std::string filename)
 	//-----jsonファイル読み込み-----
 
 	//連結してフルパスを得る
-	const std::string fullpath = kDefaultbaseDirectory + filename + kExtension;
+	const std::string fullpath = kDefaultbaseDirectory_ + filename + kExtension;
 
 	//ファイルストリーム
 	std::ifstream file;
@@ -77,10 +77,10 @@ LevelData* JsonLoader::LoadFile(const std::string filename)
 			objectData.translation.m128_f32[2] = -(float)transform["translation"][1];
 			objectData.translation.m128_f32[3] = 1.0f;
 			// 回転角
-			objectData.rotation.m128_f32[0] = -(float)transform["rotation"][1];
-			objectData.rotation.m128_f32[1] = -(float)transform["rotation"][2];
-			objectData.rotation.m128_f32[2] = (float)transform["rotation"][0];
-			objectData.rotation.m128_f32[3] = 0.0f;
+			objectData.rotation_.m128_f32[0] = -(float)transform["rotation"][1];
+			objectData.rotation_.m128_f32[1] = -(float)transform["rotation"][2];
+			objectData.rotation_.m128_f32[2] = (float)transform["rotation"][0];
+			objectData.rotation_.m128_f32[3] = 0.0f;
 			// スケーリング
 			objectData.scaling.m128_f32[0] = (float)transform["scaling"][1];
 			objectData.scaling.m128_f32[1] = (float)transform["scaling"][2];

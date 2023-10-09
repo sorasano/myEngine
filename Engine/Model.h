@@ -5,7 +5,7 @@
 #include <DirectXMath.h>
 #include <d3dx12.h>
 #include <string>
-#include "Base/DirectXCommon.h"
+#include "DirectXCommon.h"
 
 using namespace Microsoft::WRL;
 using namespace DirectX;
@@ -70,20 +70,20 @@ public:
 	void Update();
 	//ゲッター
 	Material GetMaterial() { return material; };
-	ComPtr<ID3D12DescriptorHeap> GetDescHeap() { return descHeap; };
-	ComPtr<ID3D12PipelineState> GetPipelinestate() { return pipelinestate; };
-	ComPtr<ID3D12RootSignature> GetRootSignature() { return rootsignature; };
-	CD3DX12_GPU_DESCRIPTOR_HANDLE GetSrv() { return gpuDescHandleSRV; };
+	ComPtr<ID3D12DescriptorHeap> GetDescHeap() { return descHeap_; };
+	ComPtr<ID3D12PipelineState> GetPipelinestate() { return pipelinestate_; };
+	ComPtr<ID3D12RootSignature> GetRootSignature() { return rootsignature_; };
+	CD3DX12_GPU_DESCRIPTOR_HANDLE GetSrv() { return gpuDescHandleSRV_; };
 	UINT GetIndicesSize() { return (UINT)sizeof(indices.size()); };
 public:
-	DirectXCommon* dx = nullptr;
-	ComPtr<ID3D12Resource> constBuffMaterial;
+	DirectXCommon* dx_ = nullptr;
+	ComPtr<ID3D12Resource> constBuffMaterial_;
 public:
 	D3D12_RECT scissorRect{};
 	D3D12_VIEWPORT viewport{};
 
-	D3D12_INDEX_BUFFER_VIEW ibView = {};
-	D3D12_VERTEX_BUFFER_VIEW vbView = {};		//頂点バッファビュー
+	D3D12_INDEX_BUFFER_VIEW ibView_ = {};
+	D3D12_VERTEX_BUFFER_VIEW vbView_ = {};		//頂点バッファビュー
 	uint32_t textureIndex = 0;	//テクスチャ番号
 
 private:
@@ -103,30 +103,30 @@ private:
 	};
 	//Vertex関連
 	size_t verticesCount = 24;
-	std::vector<VertexPosNormalUvSkin> vertices;	//外部に渡す用の頂点データ
+	std::vector<VertexPosNormalUvSkin> vertices_;	//外部に渡す用の頂点データ
 	size_t indicesCount = 36;
 	std::vector<unsigned short> indices;
 	//インデックスバッファ関連
 	ComPtr<ID3D12Resource> indexBuff;
 	//頂点バッファ初期化
-	ComPtr<ID3D12Resource> vertBuff;
+	ComPtr<ID3D12Resource> vertBuff_;
 	//ルートシグネチャ
-	ComPtr<ID3D12RootSignature> rootsignature;
+	ComPtr<ID3D12RootSignature> rootsignature_;
 	//パイプライン
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineDesc{};	//グラフィックスパイプライン
 	//パイプラインステート
-	ComPtr<ID3D12PipelineState> pipelinestate;
+	ComPtr<ID3D12PipelineState> pipelinestate_;
 	//マテリアル
 	Material material;
 	// デスクリプタヒープ
-	ComPtr<ID3D12DescriptorHeap> descHeap;
+	ComPtr<ID3D12DescriptorHeap> descHeap_;
 	// デスクリプタサイズ
-	UINT descriptorHandleIncrementSize = 0;
+	UINT descriptorHandleIncrementSize_ = 0;
 	// テクスチャバッファ
-	ComPtr<ID3D12Resource> texbuff;
+	ComPtr<ID3D12Resource> texbuff_;
 	// シェーダリソースビューのハンドル(CPU)
-	CD3DX12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV;
+	CD3DX12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV_;
 	// シェーダリソースビューのハンドル(CPU)
-	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV;
+	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV_;
 };
 

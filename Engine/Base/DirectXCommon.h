@@ -40,7 +40,7 @@ public:
 	void InitializeImgui();
 
 	//ÉQÉbÉ^Å[
-	ID3D12Device* GetDevice() { return device.Get(); }
+	ID3D12Device* GetDevice() { return device_.Get(); }
 	IDXGISwapChain4* GetSwapChain() { return swapChain.Get(); }
 	ID3D12GraphicsCommandList* GetCommandList() { return commandList.Get(); }
 	ID3D12Debug* GetDebugController() { return debugController.Get(); }
@@ -59,7 +59,7 @@ public:
 	WinApp* winApp_;
 private:
 	//DirectX
-	ComPtr<ID3D12Device> device;
+	ComPtr<ID3D12Device> device_;
 	ComPtr<IDXGISwapChain4> swapChain;
 	ComPtr<ID3D12GraphicsCommandList> commandList;
 	ComPtr<ID3D12Debug> debugController;

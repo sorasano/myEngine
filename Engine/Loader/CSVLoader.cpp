@@ -5,7 +5,7 @@
 #include "stdio.h"
 #include <string>
 
-const std::string CSVLoader::kDefaultbaseDirectory = "Resources/csv/";
+const std::string CSVLoader::kDefaultbaseDirectory_ = "Resources/csv/";
 const std::string CSVLoader::kExtension = ".csv";
 
 void CSVLoader::LoadCSV(const std::string fileName)
@@ -16,7 +16,7 @@ void CSVLoader::LoadCSV(const std::string fileName)
 	type_.clear();
 
 	//連結してフルパスを得る
-	const std::string fullpath = kDefaultbaseDirectory + fileName + kExtension;
+	const std::string fullpath = kDefaultbaseDirectory_ + fileName + kExtension;
 
 	//ファイルを開く
 	std::ifstream file;
@@ -37,7 +37,7 @@ void CSVLoader::LoadCSV(const std::string fileName)
 
 		if (key == "position")
 		{
-			DirectX::XMFLOAT3 pos;
+			DirectX::XMFLOAT3 pos = {};
 			line_stream >> pos.x;
 			line_stream >> pos.y;
 			line_stream >> pos.z;

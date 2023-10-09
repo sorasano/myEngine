@@ -14,6 +14,9 @@
 #include <DirectXMath.h>
 #include <DirectXPackedVector.h>
 
+#pragma warning(push)
+#pragma warning(disable:5267)
+
 namespace DirectX
 {
 //-------------------------------------------------------------------------------------

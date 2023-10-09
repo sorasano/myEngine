@@ -2570,7 +2570,7 @@ _Use_decl_annotations_
 HRESULT DirectX::Internal::ConvertFromR32G32B32A32(
     const Image* srcImages,
     size_t nimages,
-    const TexMetadata& metadata,
+    const TexMetadata& metadata_,
     DXGI_FORMAT format,
     ScratchImage& result) noexcept
 {
@@ -2579,9 +2579,9 @@ HRESULT DirectX::Internal::ConvertFromR32G32B32A32(
 
     result.Release();
 
-    assert(metadata.format == DXGI_FORMAT_R32G32B32A32_FLOAT);
+    assert(metadata_.format == DXGI_FORMAT_R32G32B32A32_FLOAT);
 
-    TexMetadata mdata2 = metadata;
+    TexMetadata mdata2 = metadata_;
     mdata2.format = format;
     HRESULT hr = result.Initialize(mdata2);
     if (FAILED(hr))
@@ -3763,11 +3763,11 @@ namespace
                 v = XMVectorAdd(v, vError); \
                 if (norm) v = XMVectorMultiply(v, scalev); \
                 \
-                XMVECTOR target; \
+                XMVECTOR target_; \
                 if (pDiffusionErrors) \
                 { \
-                    target = XMVectorRound(v); \
-                    vError = XMVectorSubtract(v, target); \
+                    target_ = XMVectorRound(v); \
+                    vError = XMVectorSubtract(v, target_); \
                     if (norm) vError = XMVectorDivide(vError, scalev); \
                     \
                     /* Distribute error to next scanline and next pixel */ \
@@ -3779,15 +3779,15 @@ namespace
                 else \
                 { \
                     /* Applied ordered dither */ \
-                    target = XMVectorAdd(v, ordered[ index & 3 ]); \
-                    target = XMVectorRound(target); \
+                    target_ = XMVectorAdd(v, ordered[ index & 3 ]); \
+                    target_ = XMVectorRound(target_); \
                 } \
                 \
-                target = XMVectorMin(scalev, target); \
-                target = XMVectorMax((clampzero) ? g_XMZero : (XMVectorAdd(XMVectorNegate(scalev), g_XMOne)), target); \
+                target_ = XMVectorMin(scalev, target_); \
+                target_ = XMVectorMax((clampzero) ? g_XMZero : (XMVectorAdd(XMVectorNegate(scalev), g_XMOne)), target_); \
                 \
                 XMFLOAT4A tmp; \
-                XMStoreFloat4A(&tmp, target); \
+                XMStoreFloat4A(&tmp, target_); \
                 \
                 auto dPtr = &dest[ index ]; \
                 if (dPtr >= ePtr) break; \
@@ -3818,11 +3818,11 @@ namespace
                 v = XMVectorAdd(v, vError); \
                 if (norm) v = XMVectorMultiply(v, scalev); \
                 \
-                XMVECTOR target; \
+                XMVECTOR target_; \
                 if (pDiffusionErrors) \
                 { \
-                    target = XMVectorRound(v); \
-                    vError = XMVectorSubtract(v, target); \
+                    target_ = XMVectorRound(v); \
+                    vError = XMVectorSubtract(v, target_); \
                     if (norm) vError = XMVectorDivide(vError, scalev); \
                     \
                     /* Distribute error to next scanline and next pixel */ \
@@ -3834,15 +3834,15 @@ namespace
                 else \
                 { \
                     /* Applied ordered dither */ \
-                    target = XMVectorAdd(v, ordered[ index & 3 ]); \
-                    target = XMVectorRound(target); \
+                    target_ = XMVectorAdd(v, ordered[ index & 3 ]); \
+                    target_ = XMVectorRound(target_); \
                 } \
                 \
-                target = XMVectorMin(scalev, target); \
-                target = XMVectorMax((clampzero) ? g_XMZero : (XMVectorAdd(XMVectorNegate(scalev), g_XMOne)), target); \
+                target_ = XMVectorMin(scalev, target_); \
+                target_ = XMVectorMax((clampzero) ? g_XMZero : (XMVectorAdd(XMVectorNegate(scalev), g_XMOne)), target_); \
                 \
                 XMFLOAT4A tmp; \
-                XMStoreFloat4A(&tmp, target); \
+                XMStoreFloat4A(&tmp, target_); \
                 \
                 auto dPtr = &dest[ index ]; \
                 if (dPtr >= ePtr) break; \
@@ -3871,11 +3871,11 @@ namespace
                 v = XMVectorAdd(v, vError); \
                 if (norm) v = XMVectorMultiply(v, scalev); \
                 \
-                XMVECTOR target; \
+                XMVECTOR target_; \
                 if (pDiffusionErrors) \
                 { \
-                    target = XMVectorRound(v); \
-                    vError = XMVectorSubtract(v, target); \
+                    target_ = XMVectorRound(v); \
+                    vError = XMVectorSubtract(v, target_); \
                     if (norm) vError = XMVectorDivide(vError, scalev); \
                     \
                     /* Distribute error to next scanline and next pixel */ \
@@ -3887,16 +3887,16 @@ namespace
                 else \
                 { \
                     /* Applied ordered dither */ \
-                    target = XMVectorAdd(v, ordered[ index & 3 ]); \
-                    target = XMVectorRound(target); \
+                    target_ = XMVectorAdd(v, ordered[ index & 3 ]); \
+                    target_ = XMVectorRound(target_); \
                 } \
                 \
-                target = XMVectorMin(scalev, target); \
-                target = XMVectorMax((clampzero) ? g_XMZero : (XMVectorAdd(XMVectorNegate(scalev), g_XMOne)), target); \
+                target_ = XMVectorMin(scalev, target_); \
+                target_ = XMVectorMax((clampzero) ? g_XMZero : (XMVectorAdd(XMVectorNegate(scalev), g_XMOne)), target_); \
                 \
                 auto dPtr = &dest[ index ]; \
                 if (dPtr >= ePtr) break; \
-                *dPtr = type(static_cast<type>((selectw) ? XMVectorGetW(target) : XMVectorGetX(target)) & mask); \
+                *dPtr = type(static_cast<type>((selectw) ? XMVectorGetW(target_) : XMVectorGetX(target_)) & mask); \
             } \
             return true; \
         } \
@@ -4007,11 +4007,11 @@ bool DirectX::Internal::StoreScanlineDither(
                 XMVECTOR v = XMVectorClamp(sPtr[index], MinXR, MaxXR);
                 v = XMVectorMultiplyAdd(v, Scale, vError);
 
-                XMVECTOR target;
+                XMVECTOR target_;
                 if (pDiffusionErrors)
                 {
-                    target = XMVectorRound(v);
-                    vError = XMVectorSubtract(v, target);
+                    target_ = XMVectorRound(v);
+                    vError = XMVectorSubtract(v, target_);
                     vError = XMVectorDivide(vError, Scale);
 
                     // Distribute error to next scanline and next pixel
@@ -4023,15 +4023,15 @@ bool DirectX::Internal::StoreScanlineDither(
                 else
                 {
                     // Applied ordered dither
-                    target = XMVectorAdd(v, ordered[index & 3]);
-                    target = XMVectorRound(target);
+                    target_ = XMVectorAdd(v, ordered[index & 3]);
+                    target_ = XMVectorRound(target_);
                 }
 
-                target = XMVectorAdd(target, Bias);
-                target = XMVectorClamp(target, g_XMZero, g_Scale10pc);
+                target_ = XMVectorAdd(target_, Bias);
+                target_ = XMVectorClamp(target_, g_XMZero, g_Scale10pc);
 
                 XMFLOAT4A tmp;
-                XMStoreFloat4A(&tmp, target);
+                XMStoreFloat4A(&tmp, target_);
 
                 auto dPtr = &dest[index];
                 if (dPtr >= ePtr) break;
@@ -4086,11 +4086,11 @@ bool DirectX::Internal::StoreScanlineDither(
                 v = XMVectorAdd(v, vError);
                 v = XMVectorMultiply(v, Scale);
 
-                XMVECTOR target;
+                XMVECTOR target_;
                 if (pDiffusionErrors)
                 {
-                    target = XMVectorRound(v);
-                    vError = XMVectorSubtract(v, target);
+                    target_ = XMVectorRound(v);
+                    vError = XMVectorSubtract(v, target_);
                     vError = XMVectorDivide(vError, Scale);
 
                     // Distribute error to next scanline and next pixel
@@ -4102,14 +4102,14 @@ bool DirectX::Internal::StoreScanlineDither(
                 else
                 {
                     // Applied ordered dither
-                    target = XMVectorAdd(v, ordered[index & 3]);
-                    target = XMVectorRound(target);
+                    target_ = XMVectorAdd(v, ordered[index & 3]);
+                    target_ = XMVectorRound(target_);
                 }
 
-                target = XMVectorClamp(target, g_XMZero, Scale2);
+                target_ = XMVectorClamp(target_, g_XMZero, Scale2);
 
                 XMFLOAT4A tmp;
-                XMStoreFloat4A(&tmp, target);
+                XMStoreFloat4A(&tmp, target_);
 
                 auto dPtr = &dest[index];
                 if (dPtr >= ePtr) break;
@@ -4174,11 +4174,11 @@ bool DirectX::Internal::StoreScanlineDither(
                 v = XMVectorAdd(v, vError);
                 v = XMVectorMultiply(v, g_Scale565pc);
 
-                XMVECTOR target;
+                XMVECTOR target_;
                 if (pDiffusionErrors)
                 {
-                    target = XMVectorRound(v);
-                    vError = XMVectorSubtract(v, target);
+                    target_ = XMVectorRound(v);
+                    vError = XMVectorSubtract(v, target_);
                     vError = XMVectorDivide(vError, g_Scale565pc);
 
                     // Distribute error to next scanline and next pixel
@@ -4190,14 +4190,14 @@ bool DirectX::Internal::StoreScanlineDither(
                 else
                 {
                     // Applied ordered dither
-                    target = XMVectorAdd(v, ordered[index & 3]);
-                    target = XMVectorRound(target);
+                    target_ = XMVectorAdd(v, ordered[index & 3]);
+                    target_ = XMVectorRound(target_);
                 }
 
-                target = XMVectorClamp(target, g_XMZero, g_Scale565pc);
+                target_ = XMVectorClamp(target_, g_XMZero, g_Scale565pc);
 
                 XMFLOAT4A tmp;
-                XMStoreFloat4A(&tmp, target);
+                XMStoreFloat4A(&tmp, target_);
 
                 auto dPtr = &dest[index];
                 if (dPtr >= ePtr) break;
@@ -4223,11 +4223,11 @@ bool DirectX::Internal::StoreScanlineDither(
                 v = XMVectorAdd(v, vError);
                 v = XMVectorMultiply(v, g_Scale5551pc);
 
-                XMVECTOR target;
+                XMVECTOR target_;
                 if (pDiffusionErrors)
                 {
-                    target = XMVectorRound(v);
-                    vError = XMVectorSubtract(v, target);
+                    target_ = XMVectorRound(v);
+                    vError = XMVectorSubtract(v, target_);
                     vError = XMVectorDivide(vError, g_Scale5551pc);
 
                     // Distribute error to next scanline and next pixel
@@ -4239,21 +4239,21 @@ bool DirectX::Internal::StoreScanlineDither(
                 else
                 {
                     // Applied ordered dither
-                    target = XMVectorAdd(v, ordered[index & 3]);
-                    target = XMVectorRound(target);
+                    target_ = XMVectorAdd(v, ordered[index & 3]);
+                    target_ = XMVectorRound(target_);
                 }
 
-                target = XMVectorClamp(target, g_XMZero, g_Scale5551pc);
+                target_ = XMVectorClamp(target_, g_XMZero, g_Scale5551pc);
 
                 XMFLOAT4A tmp;
-                XMStoreFloat4A(&tmp, target);
+                XMStoreFloat4A(&tmp, target_);
 
                 auto dPtr = &dest[index];
                 if (dPtr >= ePtr) break;
                 dPtr->x = uint16_t(static_cast<uint16_t>(tmp.x) & 0x1F);
                 dPtr->y = uint16_t(static_cast<uint16_t>(tmp.y) & 0x1F);
                 dPtr->z = uint16_t(static_cast<uint16_t>(tmp.z) & 0x1F);
-                dPtr->w = (XMVectorGetW(target) > threshold) ? 1u : 0u;
+                dPtr->w = (XMVectorGetW(target_) > threshold) ? 1u : 0u;
             }
             return true;
         }
@@ -4278,11 +4278,11 @@ bool DirectX::Internal::StoreScanlineDither(
                 v = XMVectorAdd(v, vError);
                 v = XMVectorMultiply(v, g_Scale8pc);
 
-                XMVECTOR target;
+                XMVECTOR target_;
                 if (pDiffusionErrors)
                 {
-                    target = XMVectorRound(v);
-                    vError = XMVectorSubtract(v, target);
+                    target_ = XMVectorRound(v);
+                    vError = XMVectorSubtract(v, target_);
                     vError = XMVectorDivide(vError, g_Scale8pc);
 
                     // Distribute error to next scanline and next pixel
@@ -4294,14 +4294,14 @@ bool DirectX::Internal::StoreScanlineDither(
                 else
                 {
                     // Applied ordered dither
-                    target = XMVectorAdd(v, ordered[index & 3]);
-                    target = XMVectorRound(target);
+                    target_ = XMVectorAdd(v, ordered[index & 3]);
+                    target_ = XMVectorRound(target_);
                 }
 
-                target = XMVectorClamp(target, g_XMZero, g_Scale8pc);
+                target_ = XMVectorClamp(target_, g_XMZero, g_Scale8pc);
 
                 XMFLOAT4A tmp;
-                XMStoreFloat4A(&tmp, target);
+                XMStoreFloat4A(&tmp, target_);
 
                 auto dPtr = &dest[index];
                 if (dPtr >= ePtr) break;
@@ -4333,11 +4333,11 @@ bool DirectX::Internal::StoreScanlineDither(
                 v = XMVectorAdd(v, vError);
                 v = XMVectorMultiply(v, g_Scale4pc);
 
-                XMVECTOR target;
+                XMVECTOR target_;
                 if (pDiffusionErrors)
                 {
-                    target = XMVectorRound(v);
-                    vError = XMVectorSubtract(v, target);
+                    target_ = XMVectorRound(v);
+                    vError = XMVectorSubtract(v, target_);
                     vError = XMVectorDivide(vError, g_Scale4pc);
 
                     // Distribute error to next scanline and next pixel
@@ -4349,14 +4349,14 @@ bool DirectX::Internal::StoreScanlineDither(
                 else
                 {
                     // Applied ordered dither
-                    target = XMVectorAdd(v, ordered[index & 3]);
-                    target = XMVectorRound(target);
+                    target_ = XMVectorAdd(v, ordered[index & 3]);
+                    target_ = XMVectorRound(target_);
                 }
 
-                target = XMVectorClamp(target, g_XMZero, g_Scale4pc);
+                target_ = XMVectorClamp(target_, g_XMZero, g_Scale4pc);
 
                 XMFLOAT4A tmp;
-                XMStoreFloat4A(&tmp, target);
+                XMStoreFloat4A(&tmp, target_);
 
                 auto dPtr = &dest[index];
                 if (dPtr >= ePtr) break;
@@ -4918,25 +4918,25 @@ _Use_decl_annotations_
 HRESULT DirectX::Convert(
     const Image* srcImages,
     size_t nimages,
-    const TexMetadata& metadata,
+    const TexMetadata& metadata_,
     DXGI_FORMAT format,
     TEX_FILTER_FLAGS filter,
     float threshold,
     ScratchImage& result) noexcept
 {
-    if (!srcImages || !nimages || (metadata.format == format) || !IsValid(format))
+    if (!srcImages || !nimages || (metadata_.format == format) || !IsValid(format))
         return E_INVALIDARG;
 
-    if (IsCompressed(metadata.format) || IsCompressed(format)
-        || IsPlanar(metadata.format) || IsPlanar(format)
-        || IsPalettized(metadata.format) || IsPalettized(format)
-        || IsTypeless(metadata.format) || IsTypeless(format))
+    if (IsCompressed(metadata_.format) || IsCompressed(format)
+        || IsPlanar(metadata_.format) || IsPlanar(format)
+        || IsPalettized(metadata_.format) || IsPalettized(format)
+        || IsTypeless(metadata_.format) || IsTypeless(format))
         return HRESULT_E_NOT_SUPPORTED;
 
-    if ((metadata.width > UINT32_MAX) || (metadata.height > UINT32_MAX))
+    if ((metadata_.width > UINT32_MAX) || (metadata_.height > UINT32_MAX))
         return E_INVALIDARG;
 
-    TexMetadata mdata2 = metadata;
+    TexMetadata mdata2 = metadata_;
     mdata2.format = format;
     HRESULT hr = result.Initialize(mdata2);
     if (FAILED(hr))
@@ -4956,16 +4956,16 @@ HRESULT DirectX::Convert(
     }
 
     WICPixelFormatGUID pfGUID, targetGUID;
-    const bool usewic = !metadata.IsPMAlpha() && UseWICConversion(filter, metadata.format, format, pfGUID, targetGUID);
+    const bool usewic = !metadata_.IsPMAlpha() && UseWICConversion(filter, metadata_.format, format, pfGUID, targetGUID);
 
-    switch (metadata.dimension)
+    switch (metadata_.dimension)
     {
     case TEX_DIMENSION_TEXTURE1D:
     case TEX_DIMENSION_TEXTURE2D:
         for (size_t index = 0; index < nimages; ++index)
         {
             const Image& src = srcImages[index];
-            if (src.format != metadata.format)
+            if (src.format != metadata_.format)
             {
                 result.Release();
                 return E_FAIL;
@@ -5006,8 +5006,8 @@ HRESULT DirectX::Convert(
     case TEX_DIMENSION_TEXTURE3D:
     {
         size_t index = 0;
-        size_t d = metadata.depth;
-        for (size_t level = 0; level < metadata.mipLevels; ++level)
+        size_t d = metadata_.depth;
+        for (size_t level = 0; level < metadata_.mipLevels; ++level)
         {
             for (size_t slice = 0; slice < d; ++slice, ++index)
             {
@@ -5018,7 +5018,7 @@ HRESULT DirectX::Convert(
                 }
 
                 const Image& src = srcImages[index];
-                if (src.format != metadata.format)
+                if (src.format != metadata_.format)
                 {
                     result.Release();
                     return E_FAIL;
@@ -5118,26 +5118,26 @@ _Use_decl_annotations_
 HRESULT DirectX::ConvertToSinglePlane(
     const Image* srcImages,
     size_t nimages,
-    const TexMetadata& metadata,
+    const TexMetadata& metadata_,
     ScratchImage& result) noexcept
 {
     if (!srcImages || !nimages)
         return E_INVALIDARG;
 
-    if (metadata.IsVolumemap())
+    if (metadata_.IsVolumemap())
     {
         // Direct3D does not support any planar formats for Texture3D
         return HRESULT_E_NOT_SUPPORTED;
     }
 
-    const DXGI_FORMAT format = PlanarToSingle(metadata.format);
+    const DXGI_FORMAT format = PlanarToSingle(metadata_.format);
     if (format == DXGI_FORMAT_UNKNOWN)
         return HRESULT_E_NOT_SUPPORTED;
 
-    if ((metadata.width > UINT32_MAX) || (metadata.height > UINT32_MAX))
+    if ((metadata_.width > UINT32_MAX) || (metadata_.height > UINT32_MAX))
         return E_INVALIDARG;
 
-    TexMetadata mdata2 = metadata;
+    TexMetadata mdata2 = metadata_;
     mdata2.format = format;
     HRESULT hr = result.Initialize(mdata2);
     if (FAILED(hr))
@@ -5159,7 +5159,7 @@ HRESULT DirectX::ConvertToSinglePlane(
     for (size_t index = 0; index < nimages; ++index)
     {
         const Image& src = srcImages[index];
-        if (src.format != metadata.format)
+        if (src.format != metadata_.format)
         {
             result.Release();
             return E_FAIL;

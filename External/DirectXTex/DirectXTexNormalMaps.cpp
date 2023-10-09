@@ -108,7 +108,7 @@ namespace
         XMVECTOR* row0 = scanline.get();
         XMVECTOR* row1 = row0 + width;
         XMVECTOR* row2 = row1 + width;
-        XMVECTOR* target = row2 + width;
+        XMVECTOR* target_ = row2 + width;
 
         float* val0 = buffer.get();
         float* val1 = val0 + width + 2;
@@ -168,7 +168,7 @@ namespace
             EvaluateRow(row2, val2, width, flags);
 
             // Generate target scanline
-            XMVECTOR *dptr = target;
+            XMVECTOR *dptr = target_;
             for (size_t x = 0; x < width; ++x)
             {
                 // Compute normal via central differencing
@@ -228,7 +228,7 @@ namespace
                 }
             }
 
-            if (!StoreScanline(pDest, normalMap.rowPitch, format, target, width))
+            if (!StoreScanline(pDest, normalMap.rowPitch, format, target_, width))
                 return E_FAIL;
 
             // Cycle buffers
@@ -313,7 +313,7 @@ _Use_decl_annotations_
 HRESULT DirectX::ComputeNormalMap(
     const Image* srcImages,
     size_t nimages,
-    const TexMetadata& metadata,
+    const TexMetadata& metadata_,
     CNMAP_FLAGS flags,
     float amplitude,
     DXGI_FORMAT format,
@@ -322,10 +322,10 @@ HRESULT DirectX::ComputeNormalMap(
     if (!srcImages || !nimages || !IsValid(format))
         return E_INVALIDARG;
 
-    if (IsCompressed(format) || IsCompressed(metadata.format)
-        || IsTypeless(format) || IsTypeless(metadata.format)
-        || IsPlanar(format) || IsPlanar(metadata.format)
-        || IsPalettized(format) || IsPalettized(metadata.format))
+    if (IsCompressed(format) || IsCompressed(metadata_.format)
+        || IsTypeless(format) || IsTypeless(metadata_.format)
+        || IsPlanar(format) || IsPlanar(metadata_.format)
+        || IsPalettized(format) || IsPalettized(metadata_.format))
         return HRESULT_E_NOT_SUPPORTED;
 
     static_assert(CNMAP_CHANNEL_RED == 0x1, "CNMAP_CHANNEL_ flag values don't match mask");
@@ -345,7 +345,7 @@ HRESULT DirectX::ComputeNormalMap(
 
     normalMaps.Release();
 
-    TexMetadata mdata2 = metadata;
+    TexMetadata mdata2 = metadata_;
     mdata2.format = format;
     HRESULT hr = normalMaps.Initialize(mdata2);
     if (FAILED(hr))

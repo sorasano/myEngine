@@ -14,7 +14,7 @@ private:
 	//Œv‘ªI—¹ŠÔ
 	LARGE_INTEGER timeEnd{};
 	//ŒÅ’è‚·‚éŠÔ
-	float frameTime = 1 / 60.0f;
+	float frameTime_ = 1 / 60.0f;
 	// FPS’l
 	float fps;
 

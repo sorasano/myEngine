@@ -708,8 +708,8 @@ static void ShowDemoWindowWidgets()
             ImGui::SliderFloat("slider float (log)", &f2, -10.0f, 10.0f, "%.4f", ImGuiSliderFlags_Logarithmic);
 
             IMGUI_DEMO_MARKER("Widgets/Basic/SliderAngle");
-            static float angle = 0.0f;
-            ImGui::SliderAngle("slider angle", &angle);
+            static float angle_ = 0.0f;
+            ImGui::SliderAngle("slider angle", &angle_);
 
             // Using the format string to display a name instead of an integer.
             // Here we completely omit '%d' from the format string, so it'll only display a name.
@@ -1752,10 +1752,10 @@ static void ShowDemoWindowWidgets()
             refresh_time = ImGui::GetTime();
         while (refresh_time < ImGui::GetTime()) // Create data at fixed 60 Hz rate for the demo
         {
-            static float phase = 0.0f;
-            values[values_offset] = cosf(phase);
+            static float phase_ = 0.0f;
+            values[values_offset] = cosf(phase_);
             values_offset = (values_offset + 1) % IM_ARRAYSIZE(values);
-            phase += 0.10f * values_offset;
+            phase_ += 0.10f * values_offset;
             refresh_time += 1.0f / 60.0f;
         }
 
@@ -2299,10 +2299,10 @@ static void ShowDemoWindowWidgets()
                 Mode_Move,
                 Mode_Swap
             };
-            static int mode = 0;
-            if (ImGui::RadioButton("Copy", mode == Mode_Copy)) { mode = Mode_Copy; } ImGui::SameLine();
-            if (ImGui::RadioButton("Move", mode == Mode_Move)) { mode = Mode_Move; } ImGui::SameLine();
-            if (ImGui::RadioButton("Swap", mode == Mode_Swap)) { mode = Mode_Swap; }
+            static int mode_ = 0;
+            if (ImGui::RadioButton("Copy", mode_ == Mode_Copy)) { mode_ = Mode_Copy; } ImGui::SameLine();
+            if (ImGui::RadioButton("Move", mode_ == Mode_Move)) { mode_ = Mode_Move; } ImGui::SameLine();
+            if (ImGui::RadioButton("Swap", mode_ == Mode_Swap)) { mode_ = Mode_Swap; }
             static const char* names[9] =
             {
                 "Bobby", "Beatrice", "Betty",
@@ -2324,9 +2324,9 @@ static void ShowDemoWindowWidgets()
 
                     // Display preview (could be anything, e.g. when dragging an image we could decide to display
                     // the filename and a small preview of the image, etc.)
-                    if (mode == Mode_Copy) { ImGui::Text("Copy %s", names[n]); }
-                    if (mode == Mode_Move) { ImGui::Text("Move %s", names[n]); }
-                    if (mode == Mode_Swap) { ImGui::Text("Swap %s", names[n]); }
+                    if (mode_ == Mode_Copy) { ImGui::Text("Copy %s", names[n]); }
+                    if (mode_ == Mode_Move) { ImGui::Text("Move %s", names[n]); }
+                    if (mode_ == Mode_Swap) { ImGui::Text("Swap %s", names[n]); }
                     ImGui::EndDragDropSource();
                 }
                 if (ImGui::BeginDragDropTarget())
@@ -2335,16 +2335,16 @@ static void ShowDemoWindowWidgets()
                     {
                         IM_ASSERT(payload->DataSize == sizeof(int));
                         int payload_n = *(const int*)payload->Data;
-                        if (mode == Mode_Copy)
+                        if (mode_ == Mode_Copy)
                         {
                             names[n] = names[payload_n];
                         }
-                        if (mode == Mode_Move)
+                        if (mode_ == Mode_Move)
                         {
                             names[n] = names[payload_n];
                             names[payload_n] = "";
                         }
-                        if (mode == Mode_Swap)
+                        if (mode_ == Mode_Swap)
                         {
                             const char* tmp = names[n];
                             names[n] = names[payload_n];

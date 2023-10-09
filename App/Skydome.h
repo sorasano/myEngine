@@ -8,7 +8,7 @@ class Skydome
 public:
 	void Initialize();
 	void Update(float eyeZ);
-	void Draw(ID3D12GraphicsCommandList* cmdList);
+	void Draw(ID3D12GraphicsCommandList* cmdList_);
 
 private:
 	XMFLOAT3 position_ = { 0,0,0 };

@@ -17,11 +17,11 @@ Player::Player()
 
 Player::~Player()
 {
-	FBX_SAFE_DELETE(playerObject);
-	FBX_SAFE_DELETE(playerModel);
-	FBX_SAFE_DELETE(playerBulletModel);
-	FBX_SAFE_DELETE(bReticleModel);
-	FBX_SAFE_DELETE(fReticleModel);
+	FBX_SAFE_DELETE(playerObject_);
+	FBX_SAFE_DELETE(playerModel_);
+	FBX_SAFE_DELETE(playerBulletModel_);
+	FBX_SAFE_DELETE(bReticleModel_);
+	FBX_SAFE_DELETE(fReticleModel_);
 }
 
 void Player::Initialize(Input* input)
@@ -30,37 +30,37 @@ void Player::Initialize(Input* input)
 	this->input_ = input;
 
 	//モデル名を指定してファイル読み込み
-	playerModel = FbxLoader::GetInstance()->LoadModelFromFile("player");
-	playerBulletModel = FbxLoader::GetInstance()->LoadModelFromFile("playerBullet");
-	bReticleModel = FbxLoader::GetInstance()->LoadModelFromFile("backReticle");
-	fReticleModel = FbxLoader::GetInstance()->LoadModelFromFile("frontReticle");
+	playerModel_ = FbxLoader::GetInstance()->LoadModelFromFile("player");
+	playerBulletModel_ = FbxLoader::GetInstance()->LoadModelFromFile("playerBullet");
+	bReticleModel_ = FbxLoader::GetInstance()->LoadModelFromFile("backReticle");
+	fReticleModel_ = FbxLoader::GetInstance()->LoadModelFromFile("frontReticle");
 
 	//3dオブジェクト生成とモデルのセット
-	playerObject = new FbxObject3D;
-	playerObject->Initialize();
-	playerObject->SetModel(playerModel);
+	playerObject_ = new FbxObject3D;
+	playerObject_->Initialize();
+	playerObject_->SetModel(playerModel_);
 
 	//弾モデルセット
-	this->bulletModel_ = playerBulletModel;
+	this->bulletModel_ = playerBulletModel_;
 
 	//レティクルモデルセット
-	frontReticleObject = new FbxObject3D;
-	frontReticleObject->Initialize();
-	frontReticleObject->SetModel(fReticleModel);
+	frontReticleObject_ = new FbxObject3D;
+	frontReticleObject_->Initialize();
+	frontReticleObject_->SetModel(fReticleModel_);
 
-	backReticleObject = new FbxObject3D;
-	backReticleObject->Initialize();
-	backReticleObject->SetModel(bReticleModel);
+	backReticleObject_ = new FbxObject3D;
+	backReticleObject_->Initialize();
+	backReticleObject_->SetModel(bReticleModel_);
 
 	//ラジアン変換
 	fRRotation_.y = static_cast<float>(90 * (PI / 180));
 	bRRotation_.y = static_cast<float>(90 * (PI / 180));
 
 	//スプライト
-	speedSprite = new Sprite();
-	speedSprite->SetTextureNum(2);
-	speedSprite->Initialize();
-	speedSprite->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
+	speedSprite_ = new Sprite();
+	speedSprite_->SetTextureNum(2);
+	speedSprite_->Initialize();
+	speedSprite_->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
 }
 
 void Player::Update()
@@ -77,18 +77,18 @@ void Player::Update()
 	//弾の更新
 	BulletUpdate();
 
-	if (isInvincible) {
-		invincibleTimer++;
-		if (invincibleTimer > InvincibleTime) {
-			isInvincible = false;
-			invincibleTimer = 0;
+	if (isInvincible_) {
+		invincibleTimer_++;
+		if (invincibleTimer_ > InvincibleTime_) {
+			isInvincible_ = false;
+			invincibleTimer_ = 0;
 		}
 	}
 
-	playerObject->SetPosition(position_);
-	playerObject->SetScale(scale_);
-	playerObject->SetRotate(rotation_);
-	playerObject->Update();
+	playerObject_->SetPosition(position_);
+	playerObject_->SetScale(scale_);
+	playerObject_->SetRotate(rotation_);
+	playerObject_->Update();
 
 	//ImGui::Begin("position");
 	//ImGui::Text("%f,%f,%f",position_.x,position_.y,position_.z);
@@ -99,11 +99,11 @@ void Player::Update()
 
 void Player::Draw(ID3D12GraphicsCommandList* cmdList)
 {
-	if (isInvincible) {
+	if (isInvincible_) {
 
 	}
 	else {
-		playerObject->Draw(cmdList);
+		playerObject_->Draw(cmdList);
 	}
 
 	//弾
@@ -116,31 +116,31 @@ void Player::Draw(ID3D12GraphicsCommandList* cmdList)
 void Player::DrawSprite(ID3D12GraphicsCommandList* cmdList)
 {
 	//レティクル
-	frontReticleObject->Draw(cmdList);
-	backReticleObject->Draw(cmdList);
+	frontReticleObject_->Draw(cmdList);
+	backReticleObject_->Draw(cmdList);
 
 	//スピードUI
-	speedSprite->Draw(cmdList);
+	speedSprite_->Draw(cmdList);
 }
 
 void Player::SpeedUpByEnemy()
 {
-	if (addSpeed + addSpeedByEnemy >= MaxSpeed) {
-		addSpeed = MaxSpeed;
+	if (addSpeed_ + addSpeedByEnemy_ >= MaxSpeed_) {
+		addSpeed_ = MaxSpeed_;
 	}
 	else {
-		addSpeed += addSpeedByEnemy;
+		addSpeed_ += addSpeedByEnemy_;
 	}
 }
 
 void Player::SpeedDownByEnemy()
 {
-	if (!isInvincible) {
-		if (addSpeed - subSpeedByEnemy <= 0) {
-			addSpeed = 0;
+	if (!isInvincible_) {
+		if (addSpeed_ - subSpeedByEnemy_ <= 0) {
+			addSpeed_ = 0;
 		}
 		else {
-			addSpeed -= subSpeedByEnemy;
+			addSpeed_ -= subSpeedByEnemy_;
 		}
 	}
 }
@@ -152,35 +152,35 @@ void Player::Move()
 
 		//座標を移動する処理
 		if (input_->PushKey(DIK_W)) {
-			if (MoveMax.y > position_.y) { position_.y += speedXY; }
+			if (MoveMax_.y > position_.y) { position_.y += speedXY_; }
 		}
 		else if (input_->PushKey(DIK_S)) {
-			if (-MoveMax.y < position_.y) { position_.y -= speedXY; }
+			if (-MoveMax_.y < position_.y) { position_.y -= speedXY_; }
 		}
 
 		if (input_->PushKey(DIK_A)) {
-			if (-MoveMax.x < position_.x) { position_.x -= speedXY; }
+			if (-MoveMax_.x < position_.x) { position_.x -= speedXY_; }
 		}
 		else if (input_->PushKey(DIK_D)) {
-			if (MoveMax.x > position_.x) { position_.x += speedXY; }
+			if (MoveMax_.x > position_.x) { position_.x += speedXY_; }
 		}
 
 	}
 
-	position_.z += speedZ + addSpeed;
+	position_.z += speedZ_ + addSpeed_;
 
 }
 
 void Player::Shot()
 {
-	bulletCoolTimer++;
+	bulletCoolTimer_++;
 
 	if (input_->PushKey(DIK_SPACE)) {
 
-		if (BulletCoolTime < bulletCoolTimer) {
+		if (BulletCoolTime_ < bulletCoolTimer_) {
 			MakeBullet();
 
-			bulletCoolTimer = 0;
+			bulletCoolTimer_ = 0;
 		}
 	}
 }
@@ -201,16 +201,16 @@ void Player::BulletUpdate()
 void Player::MakeBullet()
 {
 	//自機とレティクルのベクトルを取る
-	Vector3 velocity = playerToReticleVec;
+	Vector3 velocity = playerToReticleVec_;
 
 	//正規化をして速度をかける
 	velocity.normalize();
 
-	bulletSpeed = (speedZ + addSpeed);
-	velocity* bulletSpeed;
+	bulletSpeed_ = (speedZ_ + addSpeed_);
+	velocity* bulletSpeed_;
 
 	//z軸は自機も動いているためそのスピードも足す
-	velocity.z += (speedZ + addSpeed);
+	velocity.z += (speedZ_ + addSpeed_);
 
 	//弾の生成
 	std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
@@ -228,30 +228,30 @@ void Player::UpdateRaticle()
 		fRPosition_ = reticlePosition_;
 
 		//中央のレティクルは自機と,レティクル座標のベクトルから座標を算出
-		playerVec = { position_.x,position_.y,position_.z };
-		reticleVec = { reticlePosition_.x, reticlePosition_.y, reticlePosition_.z };
-		playerToReticleVec = reticleVec - playerVec;
+		playerVec_ = { position_.x,position_.y,position_.z };
+		reticleVec_ = { reticlePosition_.x, reticlePosition_.y, reticlePosition_.z };
+		playerToReticleVec_ = reticleVec_ - playerVec_;
 
 		//自機からのベクトルを求める
-		playerToReticleVec = playerToReticleVec / (kDistancePlayerTo3DFrontReticle / kDistancePlayerTo3DBackReticle);
+		playerToReticleVec_ = playerToReticleVec_ / (kDistancePlayerTo3DFrontReticle_ / kDistancePlayerTo3DBackReticle_);
 
 		//自機からのベクトルと自機の座標を足す
 		bRPosition_ = position_;
-		bRPosition_.x += playerToReticleVec.x;
-		bRPosition_.y += playerToReticleVec.y;
-		bRPosition_.z += playerToReticleVec.z;
+		bRPosition_.x += playerToReticleVec_.x;
+		bRPosition_.y += playerToReticleVec_.y;
+		bRPosition_.z += playerToReticleVec_.z;
 	}
 
 	//オブジェクトの更新
-	frontReticleObject->SetPosition(fRPosition_);
-	frontReticleObject->SetRotate(fRRotation_);
-	frontReticleObject->SetScale(fRScale_);
-	frontReticleObject->Update();
+	frontReticleObject_->SetPosition(fRPosition_);
+	frontReticleObject_->SetRotate(fRRotation_);
+	frontReticleObject_->SetScale(fRScale_);
+	frontReticleObject_->Update();
 
-	backReticleObject->SetPosition(bRPosition_);
-	backReticleObject->SetRotate(bRRotation_);
-	backReticleObject->SetScale(bRScale_);
-	backReticleObject->Update();
+	backReticleObject_->SetPosition(bRPosition_);
+	backReticleObject_->SetRotate(bRRotation_);
+	backReticleObject_->SetScale(bRScale_);
+	backReticleObject_->Update();
 }
 
 void Player::MoveRaticle()
@@ -259,24 +259,24 @@ void Player::MoveRaticle()
 	//レティクルの移動
 
 	//自機から設定した距離進んだところに座標を設定
-	reticlePosition_.z = position_.z + kDistancePlayerTo3DFrontReticle;
+	reticlePosition_.z = position_.z + kDistancePlayerTo3DFrontReticle_;
 
 	//入力で移動
 	if (input_->PushKey(DIK_UP) || input_->PushKey(DIK_DOWN) || input_->PushKey(DIK_RIGHT) || input_->PushKey(DIK_LEFT)) {
 
 		//座標を移動する処理
 		if (input_->PushKey(DIK_UP)) {
-			if (ReticleMoveMax.y > reticlePosition_.y) { reticlePosition_.y += reticleSpeedXY; }
+			if (ReticleMoveMax_.y > reticlePosition_.y) { reticlePosition_.y += reticleSpeedXY_; }
 		}
 		else if (input_->PushKey(DIK_DOWN)) {
-			if (-ReticleMoveMax.y < reticlePosition_.y) { reticlePosition_.y -= reticleSpeedXY; }
+			if (-ReticleMoveMax_.y < reticlePosition_.y) { reticlePosition_.y -= reticleSpeedXY_; }
 		}
 
 		if (input_->PushKey(DIK_LEFT)) {
-			if (-ReticleMoveMax.x < reticlePosition_.x) { reticlePosition_.x -= reticleSpeedXY; }
+			if (-ReticleMoveMax_.x < reticlePosition_.x) { reticlePosition_.x -= reticleSpeedXY_; }
 		}
 		else if (input_->PushKey(DIK_RIGHT)) {
-			if (ReticleMoveMax.x > reticlePosition_.x) { reticlePosition_.x += reticleSpeedXY; }
+			if (ReticleMoveMax_.x > reticlePosition_.x) { reticlePosition_.x += reticleSpeedXY_; }
 		}
 
 	}
@@ -287,17 +287,17 @@ void Player::UpdateSprite()
 	//今のスピードが最大スピードの何割か計算しスケールをそれに合わせる
 
 	//今のスピード(基礎スピードはのぞく)が何割か
-	float speedRate = addSpeed / MaxSpeed;
+	float speedRate = addSpeed_ / MaxSpeed_;
 	//スプライトの最大サイズ
-	float speedSpriteMaxSize = window_width - (speedSpriteXSpace * 2);
+	float speedSpriteMaxSize = window_width - (speedSpriteXSpace_ * 2);
 
 	//最大サイズと今のスピードの割合をかける
-	speedSpriteScale.x = speedSpriteMaxSize * speedRate;
+	speedSpriteScale_.x = speedSpriteMaxSize * speedRate;
 
 	//更新
-	speedSprite->SetScale(speedSpriteScale);
-	speedSprite->SetPosition(speedSpritePosition);
-	speedSprite->Update();
+	speedSprite_->SetScale(speedSpriteScale_);
+	speedSprite_->SetPosition(speedSpritePosition_);
+	speedSprite_->Update();
 }
 
 void Player::Reset()
@@ -305,8 +305,8 @@ void Player::Reset()
 	//座標
 	position_ = { 0,0,0 };
 	//速度
-	speedZ = 0.5f;
-	addSpeed = 0.0f;
+	speedZ_ = 0.5f;
+	addSpeed_ = 0.0f;
 
 	//レティクル
 	reticlePosition_ = { 0,0,0 };
@@ -322,7 +322,7 @@ CollisionData Player::GetColData()
 
 	CollisionData colData;
 
-	colData.position = this->position_;
+	colData.position_ = this->position_;
 	colData.size = this->colSize_;
 
 	return colData;

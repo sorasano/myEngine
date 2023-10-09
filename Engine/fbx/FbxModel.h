@@ -18,13 +18,16 @@
 #include "d3d12.h"
 #include "d3dx12.h"
 
+#pragma warning(push)
+#pragma warning(disable:4324)
+
 struct Node {
 	//名前
 	std::string name;
 	//ローカルスケール
 	DirectX::XMVECTOR  scaling = { 1,1,1,0 };
 	//ローカル回転角
-	DirectX::XMVECTOR  rotation = { 0,0,0,0 };
+	DirectX::XMVECTOR  rotation_ = { 0,0,0,0 };
 	//ローカル移動
 	DirectX::XMVECTOR  translation = { 0,0,0,1 };
 	//ローカル変形行列
@@ -34,6 +37,8 @@ struct Node {
 	//親ノード
 	Node* parent = nullptr;
 };
+
+#pragma warning(pop)
 
 class FbxModel
 {
@@ -95,10 +100,10 @@ public:
 public:
 
 	//バッファ生成
-	void CreateBuffers(ID3D12Device* device);
+	void CreateBuffers(ID3D12Device* device_);
 
 	//描画
-	void Draw(ID3D12GraphicsCommandList* cmdList);
+	void Draw(ID3D12GraphicsCommandList* cmdList_);
 
 	//ゲッター
 	
@@ -111,15 +116,15 @@ public:
 
 private:
 	//頂点バッファ
-	ComPtr<ID3D12Resource> vertBuff;
+	ComPtr<ID3D12Resource> vertBuff_;
 	//インデックスバッファ
 	ComPtr<ID3D12Resource>indexBuff;
 	//テクスチャバッファ
 	ComPtr<ID3D12Resource>texBuff;
 	//頂点バッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vbView = {};
+	D3D12_VERTEX_BUFFER_VIEW vbView_ = {};
 	//インデックスバッファビュー
-	D3D12_INDEX_BUFFER_VIEW ibView = {};
+	D3D12_INDEX_BUFFER_VIEW ibView_ = {};
 	//SRV用デスクリプタヒープ
 	ComPtr<ID3D12DescriptorHeap>descHeapSRV;
 
@@ -131,7 +136,7 @@ private:
 	//メッシュを持つノード
 	Node* meshNode = nullptr;
 	//頂点データ配列
-	std::vector<VertexPosNormalUvSkin> vertices;
+	std::vector<VertexPosNormalUvSkin> vertices_;
 	//頂点インデックス配列
 	std::vector<unsigned short> indices;
 
@@ -140,9 +145,9 @@ private:
 	//ディフューズ係数
 	DirectX::XMFLOAT3 diffuse = { 1,1,1 };
 	//テクスチャメタデータ
-	DirectX::TexMetadata metadata = {};
+	DirectX::TexMetadata metadata_ = {};
 	//スクラッチイメージ
-	DirectX::ScratchImage scratchImg = {};
+	DirectX::ScratchImage scratchImg_ = {};
 
 	//ボーン配列
 	std::vector<Bone> bones;

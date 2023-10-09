@@ -41,7 +41,7 @@ public: // サブクラス
 		using XMFLOAT3 = DirectX::XMFLOAT3;
 
 		//座標
-		XMFLOAT3 position = {};
+		XMFLOAT3 position_ = {};
 		//速度
 		XMFLOAT3 velocity = {};
 		//加速度
@@ -74,7 +74,7 @@ public: // 静的メンバ関数
 	/// <param name="device">デバイス</param>
 	/// <param name="window_width">画面幅</param>
 	/// <param name="window_height">画面高さ</param>
-	static void StaticInitialize(DirectXCommon* dx, int window_width, int window_height);
+	static void StaticInitialize(DirectXCommon* dx, int windowWidth, int windowHeight);
 
 	/// <summary>
 	/// 静的更新
@@ -98,25 +98,25 @@ public: // 静的メンバ関数
 	/// 3Dオブジェクト生成
 	/// </summary>
 	/// <returns></returns>
-	ParticleManager* Create(DirectXCommon* dx_, const std::string& resourcename);
+	ParticleManager* Create(DirectXCommon* dx, const std::string& resourcename);
 
 	/// <summary>
 	/// 視点座標の取得
 	/// </summary>
 	/// <returns>座標</returns>
-	const XMFLOAT3& GetEye() { return eye; }
+	const XMFLOAT3& GetEye() { return eye_; }
 
 	/// <summary>
 	/// 視点座標の設定
 	/// </summary>
 	/// <param name="position">座標</param>
-	void SetEye(XMFLOAT3 eye);
+	void SetEye(XMFLOAT3 eye_);
 
 	/// <summary>
 	/// 注視点座標の取得
 	/// </summary>
 	/// <returns>座標</returns>
-	const XMFLOAT3& GetTarget() { return target; }
+	const XMFLOAT3& GetTarget() { return target_; }
 
 	/// <summary>
 	/// 注視点座標の設定
@@ -134,52 +134,52 @@ public: // 静的メンバ関数
 
 private: // 静的メンバ変数
 	// デバイス
-	static ID3D12Device* device;
+	static ID3D12Device* device_;
 	// デスクリプタサイズ
-	static UINT descriptorHandleIncrementSize;
+	static UINT descriptorHandleIncrementSize_;
 	// コマンドリスト
-	ID3D12GraphicsCommandList* cmdList = nullptr;
+	ID3D12GraphicsCommandList* cmdList_ = nullptr;
 	// ルートシグネチャ
-	static ComPtr<ID3D12RootSignature> rootsignature;
+	static ComPtr<ID3D12RootSignature> rootsignature_;
 	// パイプラインステートオブジェクト
-	static ComPtr<ID3D12PipelineState> pipelinestate;
+	static ComPtr<ID3D12PipelineState> pipelinestate_;
 	// デスクリプタヒープ
-	ComPtr<ID3D12DescriptorHeap> descHeap;
+	ComPtr<ID3D12DescriptorHeap> descHeap_;
 	// 頂点バッファ
-	ComPtr<ID3D12Resource> vertBuff;
+	ComPtr<ID3D12Resource> vertBuff_;
 	//// インデックスバッファ
 	// ComPtr<ID3D12Resource> indexBuff;
 	//// テクスチャバッファ
 	// ComPtr<ID3D12Resource> texbuff;
 	// シェーダリソースビューのハンドル(CPU)
-	CD3DX12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV;
+	CD3DX12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV_;
 	// シェーダリソースビューのハンドル(CPU)
-	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV;
+	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV_;
 	// ビュー行列
-	static XMMATRIX matView;
+	static XMMATRIX matView_;
 	// 射影行列
-	static XMMATRIX matProjection;
+	static XMMATRIX matProjection_;
 	// 視点座標
-	static XMFLOAT3 eye;
+	static XMFLOAT3 eye_;
 	// 注視点座標
-	static XMFLOAT3 target;
+	static XMFLOAT3 target_;
 	// 上方向ベクトル
-	static XMFLOAT3 up;
+	static XMFLOAT3 up_;
 	// 頂点バッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vbView = {};
+	D3D12_VERTEX_BUFFER_VIEW vbView_ = {};
 	// インデックスバッファビュー
-	D3D12_INDEX_BUFFER_VIEW ibView = {};
+	D3D12_INDEX_BUFFER_VIEW ibView_ = {};
 	// 頂点データ配列
-	static VertexPos vertices[vertexCount];
+	static VertexPos vertices_[vertexCount];
 	//// 頂点インデックス配列
 	// unsigned short indices[indexCount];
 
 	//ビューボード行列
-	static XMMATRIX matBillbord;
+	static XMMATRIX matBillbord_;
 	//Y軸周りのビューボード行列
-	static XMMATRIX matBillbordY;
+	static XMMATRIX matBillbordY_;
 
-	static DirectXCommon* dx;
+	static DirectXCommon* dx_;
 
 private:// 静的メンバ関数
 	/// <summary>
@@ -192,7 +192,7 @@ private:// 静的メンバ関数
 	/// </summary>
 	/// <param name="window_width">画面横幅</param>
 	/// <param name="window_height">画面縦幅</param>
-	static void InitializeCamera(int window_width, int window_height);
+	static void InitializeCamera(int windowWidth, int windowHeight);
 
 	/// <summary>
 	/// グラフィックパイプライン生成
@@ -234,15 +234,15 @@ public: // メンバ関数
 
 private: // メンバ変数
 
-	ComPtr<ID3D12Resource> constBuff; // 定数バッファ
+	ComPtr<ID3D12Resource> constBuff_; // 定数バッファ
 
 	// テクスチャバッファ
-	ComPtr<ID3D12Resource> texbuff;
+	ComPtr<ID3D12Resource> texbuff_;
 
 	// ローカルスケール
-	XMFLOAT3 scale = { 1,1,1 };
+	XMFLOAT3 scale_ = { 1,1,1 };
 
 	//パーティクル配列
-	std::forward_list<Particle> particles;
+	std::forward_list<Particle> particles_;
 };
 

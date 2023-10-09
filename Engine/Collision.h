@@ -8,7 +8,7 @@ enum CollType {
 };
 
 struct CollisionData {
-	DirectX::XMFLOAT3 position = {};
+	DirectX::XMFLOAT3 position_ = {};
 	DirectX::XMFLOAT3 size = {};
 	float radius = 0.0f;
 };

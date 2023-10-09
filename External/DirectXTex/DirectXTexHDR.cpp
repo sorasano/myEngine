@@ -96,14 +96,14 @@ namespace
     HRESULT DecodeHDRHeader(
         _In_reads_bytes_(size) const void* pSource,
         size_t size,
-        _Out_ TexMetadata& metadata,
+        _Out_ TexMetadata& metadata_,
         size_t& offset,
         float& exposure) noexcept
     {
         if (!pSource)
             return E_INVALIDARG;
 
-        memset(&metadata, 0, sizeof(TexMetadata));
+        memset(&metadata_, 0, sizeof(TexMetadata));
 
         exposure = 1.f;
 
@@ -294,12 +294,12 @@ namespace
 
         offset = size_t(info - static_cast<const char*>(pSource));
 
-        metadata.width = width;
-        metadata.height = height;
-        metadata.depth = metadata.arraySize = metadata.mipLevels = 1;
-        metadata.format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-        metadata.dimension = TEX_DIMENSION_TEXTURE2D;
-        metadata.SetAlphaMode(TEX_ALPHA_MODE_OPAQUE);
+        metadata_.width = width;
+        metadata_.height = height;
+        metadata_.depth = metadata_.arraySize = metadata_.mipLevels = 1;
+        metadata_.format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+        metadata_.dimension = TEX_DIMENSION_TEXTURE2D;
+        metadata_.SetAlphaMode(TEX_ALPHA_MODE_OPAQUE);
 
         return S_OK;
     }
@@ -582,18 +582,18 @@ namespace
 // Obtain metadata from HDR file in memory/on disk
 //-------------------------------------------------------------------------------------
 _Use_decl_annotations_
-HRESULT DirectX::GetMetadataFromHDRMemory(const void* pSource, size_t size, TexMetadata& metadata) noexcept
+HRESULT DirectX::GetMetadataFromHDRMemory(const void* pSource, size_t size, TexMetadata& metadata_) noexcept
 {
     if (!pSource || size == 0)
         return E_INVALIDARG;
 
     size_t offset;
     float exposure;
-    return DecodeHDRHeader(pSource, size, metadata, offset, exposure);
+    return DecodeHDRHeader(pSource, size, metadata_, offset, exposure);
 }
 
 _Use_decl_annotations_
-HRESULT DirectX::GetMetadataFromHDRFile(const wchar_t* szFile, TexMetadata& metadata) noexcept
+HRESULT DirectX::GetMetadataFromHDRFile(const wchar_t* szFile, TexMetadata& metadata_) noexcept
 {
     if (!szFile)
         return E_INVALIDARG;
@@ -670,7 +670,7 @@ HRESULT DirectX::GetMetadataFromHDRFile(const wchar_t* szFile, TexMetadata& meta
 
     size_t offset;
     float exposure;
-    return DecodeHDRHeader(header, headerLen, metadata, offset, exposure);
+    return DecodeHDRHeader(header, headerLen, metadata_, offset, exposure);
 }
 
 
@@ -678,7 +678,7 @@ HRESULT DirectX::GetMetadataFromHDRFile(const wchar_t* szFile, TexMetadata& meta
 // Load a HDR file in memory
 //-------------------------------------------------------------------------------------
 _Use_decl_annotations_
-HRESULT DirectX::LoadFromHDRMemory(const void* pSource, size_t size, TexMetadata* metadata, ScratchImage& image) noexcept
+HRESULT DirectX::LoadFromHDRMemory(const void* pSource, size_t size, TexMetadata* metadata_, ScratchImage& image) noexcept
 {
     if (!pSource || size == 0)
         return E_INVALIDARG;
@@ -884,8 +884,8 @@ HRESULT DirectX::LoadFromHDRMemory(const void* pSource, size_t size, TexMetadata
         }
     }
 
-    if (metadata)
-        memcpy(metadata, &mdata, sizeof(TexMetadata));
+    if (metadata_)
+        memcpy(metadata_, &mdata, sizeof(TexMetadata));
 
     return S_OK;
 }
@@ -895,7 +895,7 @@ HRESULT DirectX::LoadFromHDRMemory(const void* pSource, size_t size, TexMetadata
 // Load a HDR file from disk
 //-------------------------------------------------------------------------------------
 _Use_decl_annotations_
-HRESULT DirectX::LoadFromHDRFile(const wchar_t* szFile, TexMetadata* metadata, ScratchImage& image) noexcept
+HRESULT DirectX::LoadFromHDRFile(const wchar_t* szFile, TexMetadata* metadata_, ScratchImage& image) noexcept
 {
     if (!szFile)
         return E_INVALIDARG;
@@ -977,7 +977,7 @@ HRESULT DirectX::LoadFromHDRFile(const wchar_t* szFile, TexMetadata* metadata, S
         return E_FAIL;
 #endif
 
-    return LoadFromHDRMemory(temp.get(), len, metadata, image);
+    return LoadFromHDRMemory(temp.get(), len, metadata_, image);
 }
 
 

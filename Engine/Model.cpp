@@ -17,9 +17,9 @@ Model* Model::GetInstance()
 	return &instance;
 }
 
-void Model::Initialize(DirectXCommon* dx_, const std::string& filename, const std::string& resourcename)
+void Model::Initialize(DirectXCommon* dx, const std::string& filename, const std::string& resourcename)
 {
-	dx = dx_;
+	dx_ = dx;
 
 	//デスクリプタ初期化
 	InitializeDesc();
@@ -68,21 +68,21 @@ void Model::InitializeVertex(const std::string& modelname)
 		if (key == "mtllib")
 		{
 			//マテリアルのファイル名読み込み
-			std::string filename;
-			line_stream >> filename;
+			std::string materialFilename;
+			line_stream >> materialFilename;
 			//マテリアル読み込み
-			LoadMaterial(directoryPath, filename);
+			LoadMaterial(directoryPath, materialFilename);
 		}
 		//頂点座標
 		if (key == "v")
 		{
 			//XYZ座標読み込み
-			XMFLOAT3 position{};
-			line_stream >> position.x;
-			line_stream >> position.y;
-			line_stream >> position.z;
+			XMFLOAT3 position_{};
+			line_stream >> position_.x;
+			line_stream >> position_.y;
+			line_stream >> position_.z;
 			//座標データに追加
-			positions.emplace_back(position);
+			positions.emplace_back(position_);
 		}
 		//テクスチャ
 		if (key == "vt")
@@ -126,7 +126,7 @@ void Model::InitializeVertex(const std::string& modelname)
 				vertex.pos = positions[indexPosition - 1];
 				vertex.normal = normals[indexNormal - 1];
 				vertex.uv = texcoords[indexTexcoord - 1];
-				vertices.emplace_back(vertex);
+				vertices_.emplace_back(vertex);
 				//頂点インデックスに追加
 				indices.emplace_back((unsigned short)indices.size());
 			}
@@ -135,7 +135,7 @@ void Model::InitializeVertex(const std::string& modelname)
 	//ファイルを閉じる
 	file.close();
 
-	UINT sizeVB = static_cast<UINT>(sizeof(VertexPosNormalUvSkin) * vertices.size());
+	UINT sizeVB = static_cast<UINT>(sizeof(VertexPosNormalUvSkin) * vertices_.size());
 
 	// ヒーププロパティ
 	CD3DX12_HEAP_PROPERTIES heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
@@ -143,30 +143,30 @@ void Model::InitializeVertex(const std::string& modelname)
 	CD3DX12_RESOURCE_DESC resourceDesc = CD3DX12_RESOURCE_DESC::Buffer(sizeVB);
 
 	// 頂点バッファ生成
-	result = dx->GetDevice()->CreateCommittedResource(
+	result = dx_->GetDevice()->CreateCommittedResource(
 		&heapProps, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
-		IID_PPV_ARGS(&vertBuff));
+		IID_PPV_ARGS(&vertBuff_));
 	assert(SUCCEEDED(result));
 
 	// 頂点バッファへのデータ転送
-	VertexPosNormalUvSkin* vertMap = nullptr;
-	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
+	VertexPosNormalUvSkin* vertMap_ = nullptr;
+	result = vertBuff_->Map(0, nullptr, (void**)&vertMap_);
 	if (SUCCEEDED(result)) {
-		std::copy(vertices.begin(), vertices.end(), vertMap);
-		vertBuff->Unmap(0, nullptr);
+		std::copy(vertices_.begin(), vertices_.end(), vertMap_);
+		vertBuff_->Unmap(0, nullptr);
 	}
 
 	// 頂点バッファビューの作成
-	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
-	vbView.SizeInBytes = sizeVB;
-	vbView.StrideInBytes = sizeof(vertices[0]);
+	vbView_.BufferLocation = vertBuff_->GetGPUVirtualAddress();
+	vbView_.SizeInBytes = sizeVB;
+	vbView_.StrideInBytes = sizeof(vertices_[0]);
 
 	UINT sizeIB = static_cast<UINT>(sizeof(unsigned short) * indices.size());
 	// リソース設定
 	resourceDesc.Width = sizeIB;
 
 	// インデックスバッファ生成
-	result = dx->GetDevice()->CreateCommittedResource(
+	result = dx_->GetDevice()->CreateCommittedResource(
 		&heapProps, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
 		IID_PPV_ARGS(&indexBuff));
 
@@ -181,9 +181,9 @@ void Model::InitializeVertex(const std::string& modelname)
 	}
 
 	// インデックスバッファビューの作成
-	ibView.BufferLocation = indexBuff->GetGPUVirtualAddress();
-	ibView.Format = DXGI_FORMAT_R16_UINT;
-	ibView.SizeInBytes = sizeIB;
+	ibView_.BufferLocation = indexBuff->GetGPUVirtualAddress();
+	ibView_.Format = DXGI_FORMAT_R16_UINT;
+	ibView_.SizeInBytes = sizeIB;
 }
 
 void Model::InitializeDesc()
@@ -195,13 +195,13 @@ void Model::InitializeDesc()
 	descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	descHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;//シェーダから見えるように
 	descHeapDesc.NumDescriptors = 1; // シェーダーリソースビュー1つ
-	result = dx->GetDevice()->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&descHeap));//生成
+	result = dx_->GetDevice()->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&descHeap_));//生成
 	if (FAILED(result)) {
 		assert(0);
 	}
 
 	// デスクリプタサイズを取得
-	descriptorHandleIncrementSize = dx->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	descriptorHandleIncrementSize_ = dx_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 }
 
 void Model::CompileShader(const wchar_t* file, const wchar_t* file2)
@@ -246,7 +246,7 @@ void Model::CompileShader(const wchar_t* file, const wchar_t* file2)
 	vsBlob = vsBlob;
 	errorBlob = errorBlob;
 
-	ID3DBlob* psBlob_ = nullptr;	//頂点シェーダーオブジェクト
+	//ID3DBlob* psBlob_ = nullptr;	//頂点シェーダーオブジェクト
 
 	//ピクセルシェーダーの読み込みとコンパイル
 	result = D3DCompileFromFile(
@@ -378,13 +378,13 @@ void Model::CompileShader(const wchar_t* file, const wchar_t* file2)
 	// バージョン自動判定のシリアライズ
 	result = D3DX12SerializeVersionedRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
 	// ルートシグネチャの生成
-	result = dx->GetDevice()->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(), IID_PPV_ARGS(&rootsignature));
+	result = dx_->GetDevice()->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(), IID_PPV_ARGS(&rootsignature_));
 	assert(SUCCEEDED(result));
 
-	gpipeline.pRootSignature = rootsignature.Get();
+	gpipeline.pRootSignature = rootsignature_.Get();
 
 	// グラフィックスパイプラインの生成
-	result = dx->GetDevice()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&pipelinestate));
+	result = dx_->GetDevice()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&pipelinestate_));
 	assert(SUCCEEDED(result));
 }
 
@@ -454,8 +454,8 @@ void Model::LoadTexture(const std::string& resourcename)
 {
 	HRESULT result = S_FALSE;
 
-	TexMetadata metadata{};
-	ScratchImage scratchImg{};
+	TexMetadata metadata_{};
+	ScratchImage scratchImg_{};
 	ScratchImage mipChain{};
 
 	//ファイルパスを結合
@@ -463,45 +463,44 @@ void Model::LoadTexture(const std::string& resourcename)
 
 	//ユニコード文字列に変換する
 	wchar_t wfilepath[128];
-	int iBufferSize = MultiByteToWideChar(CP_ACP, 0,
-		resourcename.c_str(), -1, wfilepath, _countof(wfilepath));
-
+	MultiByteToWideChar(CP_ACP, 0,
+	resourcename.c_str(), -1, wfilepath, _countof(wfilepath));
 
 	// WICテクスチャのロード
-	result = LoadFromWICFile(wfilepath, WIC_FLAGS_NONE, &metadata, scratchImg);
+	result = LoadFromWICFile(wfilepath, WIC_FLAGS_NONE, &metadata_, scratchImg_);
 
 	// ミップマップ生成
 	result = GenerateMipMaps(
-		scratchImg.GetImages(), scratchImg.GetImageCount(), scratchImg.GetMetadata(),
+		scratchImg_.GetImages(), scratchImg_.GetImageCount(), scratchImg_.GetMetadata(),
 		TEX_FILTER_DEFAULT, 0, mipChain);
 	if (SUCCEEDED(result)) {
-		scratchImg = std::move(mipChain);
-		metadata = scratchImg.GetMetadata();
+		scratchImg_ = std::move(mipChain);
+		metadata_ = scratchImg_.GetMetadata();
 	}
 
 	// 読み込んだディフューズテクスチャをSRGBとして扱う
-	metadata.format = MakeSRGB(metadata.format);
+	metadata_.format = MakeSRGB(metadata_.format);
 
 	// リソース設定
 	CD3DX12_RESOURCE_DESC texresDesc = CD3DX12_RESOURCE_DESC::Tex2D(
-		metadata.format, metadata.width, (UINT)metadata.height, (UINT16)metadata.arraySize,
-		(UINT16)metadata.mipLevels);
+		metadata_.format, metadata_.width, (UINT)metadata_.height, (UINT16)metadata_.arraySize,
+		(UINT16)metadata_.mipLevels);
 
 	// ヒーププロパティ
 	CD3DX12_HEAP_PROPERTIES heapProps =
 		CD3DX12_HEAP_PROPERTIES(D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0);
 
 	// テクスチャ用バッファの生成
-	result = dx->GetDevice()->CreateCommittedResource(
+	result = dx_->GetDevice()->CreateCommittedResource(
 		&heapProps, D3D12_HEAP_FLAG_NONE, &texresDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ, // テクスチャ用指定
-		nullptr, IID_PPV_ARGS(&texbuff));
+		nullptr, IID_PPV_ARGS(&texbuff_));
 	assert(SUCCEEDED(result));
 
 	// テクスチャバッファにデータ転送
-	for (size_t i = 0; i < metadata.mipLevels; i++) {
-		const Image* img = scratchImg.GetImage(i, 0, 0); // 生データ抽出
-		result = texbuff->WriteToSubresource(
+	for (size_t i = 0; i < metadata_.mipLevels; i++) {
+		const Image* img = scratchImg_.GetImage(i, 0, 0); // 生データ抽出
+		result = texbuff_->WriteToSubresource(
 			(UINT)i,
 			nullptr,              // 全領域へコピー
 			img->pixels,          // 元データアドレス
@@ -512,20 +511,20 @@ void Model::LoadTexture(const std::string& resourcename)
 	}
 
 	// シェーダリソースビュー作成
-	cpuDescHandleSRV = CD3DX12_CPU_DESCRIPTOR_HANDLE(descHeap->GetCPUDescriptorHandleForHeapStart(), 0, descriptorHandleIncrementSize);
-	gpuDescHandleSRV = CD3DX12_GPU_DESCRIPTOR_HANDLE(descHeap->GetGPUDescriptorHandleForHeapStart(), 0, descriptorHandleIncrementSize);
+	cpuDescHandleSRV_ = CD3DX12_CPU_DESCRIPTOR_HANDLE(descHeap_->GetCPUDescriptorHandleForHeapStart(), 0, descriptorHandleIncrementSize_);
+	gpuDescHandleSRV_ = CD3DX12_GPU_DESCRIPTOR_HANDLE(descHeap_->GetGPUDescriptorHandleForHeapStart(), 0, descriptorHandleIncrementSize_);
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{}; // 設定構造体
-	D3D12_RESOURCE_DESC resDesc = texbuff->GetDesc();
+	D3D12_RESOURCE_DESC resDesc = texbuff_->GetDesc();
 
 	srvDesc.Format = resDesc.Format;
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;//2Dテクスチャ
 	srvDesc.Texture2D.MipLevels = 1;
 
-	dx->GetDevice()->CreateShaderResourceView(texbuff.Get(), //ビューと関連付けるバッファ
+	dx_->GetDevice()->CreateShaderResourceView(texbuff_.Get(), //ビューと関連付けるバッファ
 		&srvDesc, //テクスチャ設定情報
-		cpuDescHandleSRV
+		cpuDescHandleSRV_
 	);
 
 	textureIndex = 0;

@@ -13,18 +13,18 @@ Enemy::Enemy()
 
 Enemy::~Enemy()
 {
-	FBX_SAFE_DELETE(enemyObject);
+	FBX_SAFE_DELETE(enemyObject_);
 }
 
-void Enemy::Initialize(FbxModel* EnemyModel, FbxModel* enemyBulletModel)
+void Enemy::Initialize(FbxModel* EnemyModel, FbxModel* enemyBulletModel_)
 {
 
 	//3dオブジェクト生成とモデルのセット
-	enemyObject = new FbxObject3D;
-	enemyObject->Initialize();
-	enemyObject->SetModel(EnemyModel);
+	enemyObject_ = new FbxObject3D;
+	enemyObject_->Initialize();
+	enemyObject_->SetModel(EnemyModel);
 
-	this->bulletModel_ = enemyBulletModel;
+	this->bulletModel_ = enemyBulletModel_;
 
 }
 
@@ -34,51 +34,51 @@ void Enemy::Update(XMFLOAT3 pPos, float pSpeed)
 	this->playerPosition_ = pPos;
 	this->playerSpeed_ = pSpeed;
 
-	if (!isDead) {
+	if (!isDead_) {
 
 		//画面内に停滞させる
 		StopInScreen();
 
 		//移動
-		if (moveType != NOTMOVE) {
+		if (moveType_ != NOTMOVE) {
 			Move();
 		}
 
 		//射撃
-		if (shotType != NOTSHOT) {
+		if (shotType_ != NOTSHOT) {
 			//プレイヤーのスピードで発射し始める座標を変更
-			shotStartPos = ShotStart * playerSpeed_;
+			shotStartPos_ = ShotStart_ * playerSpeed_;
 
-			if (position_.z < playerPosition_.z + shotStartPos) {
+			if (position_.z < playerPosition_.z + shotStartPos_) {
 				BulletUpdate();
 			}
 		}
 	}
 	//パーティクル
-	else if (isParticle) {
+	else if (isParticle_) {
 		UpdateParticle();
 	}
 
-	enemyObject->SetPosition(position_);
-	enemyObject->SetScale(scale_);
-	enemyObject->SetRotate(rotation_);
-	enemyObject->Update();
+	enemyObject_->SetPosition(position_);
+	enemyObject_->SetScale(scale_);
+	enemyObject_->SetRotate(rotation_);
+	enemyObject_->Update();
 }
 
-void Enemy::Draw(ID3D12GraphicsCommandList* cmdList)
+void Enemy::Draw(ID3D12GraphicsCommandList* cmdList_)
 {
-	if (!isDead) {
-		enemyObject->Draw(cmdList);
+	if (!isDead_) {
+		enemyObject_->Draw(cmdList_);
 
 		//弾
 		for (std::unique_ptr<EnemyBullet>& bullet : bullets_)
 		{
-			bullet->Draw(cmdList);
+			bullet->Draw(cmdList_);
 		}
 	}
 	//----パーティクル----
-	else if (isParticle) {
-		particle->Draw();
+	else if (isParticle_) {
+		particle_->Draw();
 	}
 
 }
@@ -86,7 +86,7 @@ void Enemy::Draw(ID3D12GraphicsCommandList* cmdList)
 void Enemy::Move()
 {
 
-	switch (moveType)
+	switch (moveType_)
 	{
 	case NOTMOVE:
 		break;
@@ -109,46 +109,46 @@ void Enemy::Move()
 
 void Enemy::MoveX()
 {
-	if (moveX) {
+	if (moveX_) {
 
-		if (position_.x < moveMaxX) {
-			position_.x += moveSpeed;
+		if (position_.x < moveMaxX_) {
+			position_.x += moveSpeed_;
 		}
 		else {
-			moveX = false;
+			moveX_ = false;
 		}
 
 	}
 	else {
 
-		if (position_.x > -moveMaxX) {
-			position_.x -= moveSpeed;
+		if (position_.x > -moveMaxX_) {
+			position_.x -= moveSpeed_;
 		}
 		else {
-			moveX = true;
+			moveX_= true;
 		}
 	}
 }
 
 void Enemy::MoveY()
 {
-	if (moveY) {
+	if (moveY_) {
 
-		if (position_.y < moveMaxY) {
-			position_.y += moveSpeed;
+		if (position_.y < moveMaxY_) {
+			position_.y += moveSpeed_;
 		}
 		else {
-			moveY = false;
+			moveY_ = false;
 		}
 
 	}
 	else {
 
-		if (position_.y > -moveMaxY) {
-			position_.y -= moveSpeed;
+		if (position_.y > -moveMaxY_) {
+			position_.y -= moveSpeed_;
 		}
 		else {
-			moveY = true;
+			moveY_ = true;
 		}
 	}
 }
@@ -156,19 +156,19 @@ void Enemy::MoveY()
 void Enemy::Reflection()
 {
 	//移動を反対向きにさせる
-	if (moveType != NOTMOVE) {
-		if (moveX) {
-			moveX = false;
+	if (moveType_ != NOTMOVE) {
+		if (moveX_) {
+			moveX_ = false;
 		}
 		else {
-			moveX = true;
+			moveX_= true;
 		}
 
-		if (moveY) {
-			moveY = false;
+		if (moveY_) {
+			moveY_ = false;
 		}
 		else {
-			moveY = true;
+			moveY_ = true;
 		}
 	}
 }
@@ -177,21 +177,21 @@ void Enemy::StopInScreen()
 {
 
 	//stopInScreenがtrueの場合、プレイヤーからstopInScreenPosition進んだ距離に到達したら停滞フラグをオンに
-	if (stopInScreen && position_.z < playerPosition_.z + stopInScreenPosition) {
-		isStopInScreen = true;
-		stopInScreen = false;
+	if (stopInScreen_ && position_.z < playerPosition_.z + stopInScreenPosition_) {
+		isStopInScreen_ = true;
+		stopInScreen_ = false;
 	}
 
 	//停滞フラグがオンの場合
-	if(isStopInScreen){
+	if(isStopInScreen_){
 
 		//自機についていく
 		position_.z += playerSpeed_;
 
 		//タイマーを進める
-		stopInScreenTimer++;
-		if (stopInScreenTimer > StopInScreenTime) {
-			isStopInScreen = false;
+		stopInScreenTimer_++;
+		if (stopInScreenTimer_ > StopInScreenTime_) {
+			isStopInScreen_ = false;
 		}
 	}
 
@@ -200,17 +200,16 @@ void Enemy::StopInScreen()
 void Enemy::InitializeParticle()
 {
 	//フラグをtrueに
-	isParticle = true;
+	isParticle_ = true;
 	//タイマーセット
-	particleTimer = ParticleTime;
+	particleTimer_ = ParticleTime_;
 
 	//パーティクル生成
-	particle = new ParticleManager();
-	particle->Initialize("Resources/effect/effect1.png");
+	particle_ = new ParticleManager();
+	particle_->Initialize("Resources/effect/effect1.png");
 
 	for (int i = 0; i < 100; i++) {
 		//X,Y,Zすべてpositionから[+1.0f,-1.0f]でランダムに分布
-		const float md_pos = 1.0f;
 
 		XMFLOAT3 pos{};
 		pos.x = Random(position_.x - 1.0f, position_.x + 1.0f);
@@ -230,37 +229,37 @@ void Enemy::InitializeParticle()
 		acc.y = Random(md_acc, 0);
 
 		//追加
-		particle->Add(ParticleTime, pos, vel, acc);
+		particle_->Add(ParticleTime_, pos, vel, acc);
 
 	}
 
-	particle->Update();
+	particle_->Update();
 }
 
 void Enemy::UpdateParticle()
 {
 
 	//particle有効時間が過ぎたらフラグをfalseに
-	if (particleTimer > 0) {
-		particleTimer--;
+	if (particleTimer_ > 0) {
+		particleTimer_--;
 	}
 	else {
-		isParticle = false;
+		isParticle_ = false;
 	}
 
-	if (isParticle) {
-		particle->Update();
+	if (isParticle_) {
+		particle_->Update();
 	}
 }
 
 void Enemy::Shot()
 {
-	bulletCoolTimer++;
+	bulletCoolTimer_++;
 
-	if (BulletCoolTime < bulletCoolTimer) {
+	if (BulletCoolTime_ < bulletCoolTimer_) {
 		MakeBullet();
 
-		bulletCoolTimer = 0;
+		bulletCoolTimer_ = 0;
 	}
 
 }
@@ -286,7 +285,7 @@ void Enemy::MakeBullet()
 {
 	Vector3 velocity = {};
 
-	switch (shotType)
+	switch (shotType_)
 	{
 	case NOTSHOT:
 
@@ -295,20 +294,20 @@ void Enemy::MakeBullet()
 	case STRAIGHTSHOT:
 		//z軸の-方向の単位ベクトルに速度をかける
 		velocity = { 0.0f,0.0f,-1.0f };
-		velocity *= bulletSpeed;
+		velocity *= bulletSpeed_;
 		break;
 
 	case HOMINGSHOT:
 
 		//自機と敵のベクトルを取る
-		Vector3 playerVec = { playerPosition_.x ,playerPosition_.y,playerPosition_.z };
+		Vector3 playerVec_ = { playerPosition_.x ,playerPosition_.y,playerPosition_.z };
 		Vector3 enemyVec = { position_.x,position_.y,position_.z };
 
-		velocity = playerVec - enemyVec;
+		velocity = playerVec_ - enemyVec;
 
 		//正規化をして速度をかける
 		velocity.normalize();
-		velocity *= bulletSpeed;
+		velocity *= bulletSpeed_;
 
 		velocity.z += playerSpeed_;
 
@@ -326,7 +325,7 @@ CollisionData Enemy::GetColData()
 
 	CollisionData colData;
 
-	colData.position = this->position_;
+	colData.position_ = this->position_;
 	colData.size = this->colSize_;
 
 	return colData;
@@ -335,38 +334,38 @@ CollisionData Enemy::GetColData()
 void Enemy::SetType(int type)
 {
 
-	this->type = type;
+	this->type_ = type;
 
 	switch (type)
 	{
 	case NOTHING:
-		shotType = NOTSHOT;
-		moveType = NOTMOVE;
+		shotType_ = NOTSHOT;
+		moveType_ = NOTMOVE;
 		break;
 
 	case NORMAL:
-		shotType = STRAIGHTSHOT;
-		moveType = NOTMOVE;
+		shotType_ = STRAIGHTSHOT;
+		moveType_ = NOTMOVE;
 		break;
 
 	case HOMING:
-		shotType = HOMINGSHOT;
-		moveType = NOTMOVE;
+		shotType_ = HOMINGSHOT;
+		moveType_ = NOTMOVE;
 		break;
 
 	case MOVINGX:
-		shotType = STRAIGHTSHOT;
-		moveType = MOVEX;
+		shotType_= STRAIGHTSHOT;
+		moveType_ = MOVEX;
 		break;
 
 	case MOVINGY:
-		shotType = STRAIGHTSHOT;
-		moveType = MOVEY;
+		shotType_ = STRAIGHTSHOT;
+		moveType_= MOVEY;
 		break;
 
 	case MOVINGDIA:
-		shotType = STRAIGHTSHOT;
-		moveType = MOVEDIA;
+		shotType_ = STRAIGHTSHOT;
+		moveType_ = MOVEDIA;
 		break;
 	}
 }

@@ -48,10 +48,10 @@ public:
 	void SetRotation(XMFLOAT3 rot) { this->rotation_ = rot; }
 	void SetScale(XMFLOAT3 sca) { this->scale_ = sca; }
 
-	float GetSpeed() { return speedZ + addSpeed; }
+	float GetSpeed() { return speedZ_ + addSpeed_; }
 	CollisionData GetColData();
 
-	void SetIsInvincible(bool isInvincible) { this->isInvincible = isInvincible; }
+	void SetIsInvincible(bool isInvincible) { this->isInvincible_ = isInvincible; }
 
 	//弾
 	int GetBulletSize() { return static_cast<int>(bullets_.size()); }
@@ -65,63 +65,63 @@ private:
 	XMFLOAT3 scale_ = { 1,1,1 };
 
 	//ワールド変換行列
-	XMMATRIX matWorld = {};
+	XMMATRIX matWorld_ = {};
 
 	//当たり判定用
 	XMFLOAT3 colSize_ = {1.0f,1.0f,1.0f};
 
 private:
 	//FBX
-	FbxObject3D* playerObject = nullptr;
+	FbxObject3D* playerObject_ = nullptr;
 	//モデル
-	FbxModel* playerModel = nullptr;
-	FbxModel* playerBulletModel = nullptr;
-	FbxModel* fReticleModel = nullptr;
-	FbxModel* bReticleModel = nullptr;
+	FbxModel* playerModel_ = nullptr;
+	FbxModel* playerBulletModel_ = nullptr;
+	FbxModel* fReticleModel_ = nullptr;
+	FbxModel* bReticleModel_ = nullptr;
 
 	//入力
 	Input* input_ = nullptr;
 
 	//移動範囲
-	const XMFLOAT2 MoveMax = { 20.0f,10.0f };
+	const XMFLOAT2 MoveMax_ = { 20.0f,10.0f };
 	//移動スピード(xy)
-	float speedXY = 0.5f;
+	float speedXY_ = 0.5f;
 	//移動スピード(z)
-	float speedZ = 0.5f;
+	float speedZ_ = 0.5f;
 
 	//基礎スピード以外の加速スピード
-	float addSpeed = 2.0f;
+	float addSpeed_ = 0.0f;
 	//敵を倒した時の加速量
-	float addSpeedByEnemy = 0.5f;
+	float addSpeedByEnemy_ = 0.5f;
 	//敵に被弾した時の減速
-	float subSpeedByEnemy = 0.5f;
+	float subSpeedByEnemy_ = 0.5f;
 
 	//最大加速量
-	const float MaxSpeed = 5.0f;
+	const float MaxSpeed_ = 5.0f;
 
 	//無敵時間
-	bool isInvincible = false;
-	const int InvincibleTime = 10;
-	int invincibleTimer = 0;
+	bool isInvincible_ = false;
+	const int InvincibleTime_ = 10;
+	int invincibleTimer_ = 0;
 
 	//--------レティクル--------
 
 	//レティクル座標
 	XMFLOAT3 reticlePosition_ = { 0,0,0 };
 	//移動範囲
-	const XMFLOAT2 ReticleMoveMax = { 40.0f,15.0f };
+	const XMFLOAT2 ReticleMoveMax_ = { 40.0f,15.0f };
 	//移動スピード(xy)
-	float reticleSpeedXY = 1.0f;
+	float reticleSpeedXY_ = 1.0f;
 
 	//前(奥)のレティクル
-	FbxObject3D* frontReticleObject = nullptr;
+	FbxObject3D* frontReticleObject_ = nullptr;
 
 	//後ろ(手前)のレティクル
-	FbxObject3D* backReticleObject = nullptr;
+	FbxObject3D* backReticleObject_ = nullptr;
 
 	//自機からの距離
-	const float kDistancePlayerTo3DFrontReticle = 25.0f;
-	const float kDistancePlayerTo3DBackReticle = kDistancePlayerTo3DFrontReticle / 2;
+	const float kDistancePlayerTo3DFrontReticle_ = 25.0f;
+	const float kDistancePlayerTo3DBackReticle_ = kDistancePlayerTo3DFrontReticle_ / 2;
 
 	XMFLOAT3 fRPosition_ = { 0,0,0 };
 	XMFLOAT3 fRRotation_ = { 0,0,0 };
@@ -133,31 +133,31 @@ private:
 	XMFLOAT3 bRScale_ = { 1,1,1 };
 
 	//ベクトル
-	Vector3 playerVec = {};
-	Vector3 reticleVec = {};
-	Vector3 playerToReticleVec = {};
+	Vector3 playerVec_ = {};
+	Vector3 reticleVec_ = {};
+	Vector3 playerToReticleVec_ = {};
 
 	//-----スプライト------
-	Sprite* speedSprite = nullptr;
+	Sprite* speedSprite_ = nullptr;
 
 	//スケールはxが変動、yが固定
-	XMFLOAT2 speedSpriteScale = {0,32};
-	XMFLOAT2 speedSpritePosition = { window_width / 2,window_height - 64};
+	XMFLOAT2 speedSpriteScale_ = {0,32};
+	XMFLOAT2 speedSpritePosition_ = { window_width / 2,window_height - 64};
 
 	//スプライトの左右両端をどのくらい開けるか
-	float speedSpriteXSpace = 64;
+	float speedSpriteXSpace_ = 64;
 
-public:
+private:
 
 	//弾
 	FbxModel* bulletModel_ = nullptr;
 	std::list<std::unique_ptr<PlayerBullet>> bullets_;
 
 	//弾の発射クールタイム
-	const int BulletCoolTime = 5;
-	int bulletCoolTimer = 0;
+	const int BulletCoolTime_ = 5;
+	int bulletCoolTimer_ = 0;
 
 	//弾の速度
-	float bulletSpeed = 0;
+	float bulletSpeed_ = 0;
 };
 

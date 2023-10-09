@@ -39,22 +39,22 @@ private:
 	XMFLOAT3 scale_ = { 1,1,1 };
 
 	//ワールド変換行列
-	XMMATRIX matWorld = {};
+	XMMATRIX matWorld_ = {};
 
 	//当たり判定用
 	XMFLOAT3 colSize_ = { 0.5f,0.5f,2.0f };
 
 private:
 	//FBX
-	FbxObject3D* playerBulletObject = nullptr;
+	FbxObject3D* playerBulletObject_ = nullptr;
 
 	//移動ベクトル
 	Vector3 velocity_ = {};
 
 	//寿命
-	static const int32_t lifeTime = 60 * 5;
+	static const int32_t lifeTime_ = 60 * 5;
 	//デスタイマー
-	int32_t deathTimer_ = lifeTime;
+	int32_t deathTimer_ = lifeTime_;
 	//デスフラグ
 	bool isDead_ = false;
 

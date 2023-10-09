@@ -14,16 +14,16 @@ BossBullet::BossBullet()
 
 BossBullet::~BossBullet()
 {
-	FBX_SAFE_DELETE(BossBulletObject);
+	FBX_SAFE_DELETE(BossBulletObject_);
 }
 
 void BossBullet::Initialize(FbxModel* model, XMFLOAT3 position, Vector3 velocity, float playerSpeed)
 {
 
 	//3dオブジェクト生成とモデルのセット
-	BossBulletObject = new FbxObject3D;
-	BossBulletObject->Initialize();
-	BossBulletObject->SetModel(model);
+	BossBulletObject_ = new FbxObject3D;
+	BossBulletObject_->Initialize();
+	BossBulletObject_->SetModel(model);
 
 	//座標、スピードをセット
 	this->position_ = position;
@@ -53,15 +53,15 @@ void BossBullet::Update()
 		isDead_ = true;
 	}
 
-	BossBulletObject->SetPosition(position_);
-	BossBulletObject->SetScale(scale_);
-	BossBulletObject->SetRotate(rotation_);
-	BossBulletObject->Update();
+	BossBulletObject_->SetPosition(position_);
+	BossBulletObject_->SetScale(scale_);
+	BossBulletObject_->SetRotate(rotation_);
+	BossBulletObject_->Update();
 }
 
 void BossBullet::Draw(ID3D12GraphicsCommandList* cmdList)
 {
-	BossBulletObject->Draw(cmdList);
+	BossBulletObject_->Draw(cmdList);
 }
 
 void BossBullet::Move()
@@ -80,7 +80,7 @@ CollisionData BossBullet::GetColData()
 {
 	CollisionData colData;
 
-	colData.position = this->position_;
+	colData.position_ = this->position_;
 	colData.size = this->colSize_;
 
 	return colData;

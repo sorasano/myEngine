@@ -254,9 +254,9 @@ namespace
         if (!scanline)
             return E_OUTOFMEMORY;
 
-        XMVECTOR* target = scanline.get();
+        XMVECTOR* target_ = scanline.get();
 
-        XMVECTOR* row = target + destImage.width;
+        XMVECTOR* row = target_ + destImage.width;
 
 #ifdef _DEBUG
         memset(row, 0xCD, sizeof(XMVECTOR)*srcImage.width);
@@ -285,11 +285,11 @@ namespace
             size_t sx = 0;
             for (size_t x = 0; x < destImage.width; ++x)
             {
-                target[x] = row[sx >> 16];
+                target_[x] = row[sx >> 16];
                 sx += xinc;
             }
 
-            if (!StoreScanline(pDest, destImage.rowPitch, destImage.format, target, destImage.width))
+            if (!StoreScanline(pDest, destImage.rowPitch, destImage.format, target_, destImage.width))
                 return E_FAIL;
             pDest += destImage.rowPitch;
 
@@ -316,9 +316,9 @@ namespace
         if (!scanline)
             return E_OUTOFMEMORY;
 
-        XMVECTOR* target = scanline.get();
+        XMVECTOR* target_ = scanline.get();
 
-        XMVECTOR* urow0 = target + destImage.width;
+        XMVECTOR* urow0 = target_ + destImage.width;
         XMVECTOR* urow1 = urow0 + srcImage.width;
 
 #ifdef _DEBUG
@@ -351,10 +351,10 @@ namespace
             {
                 const size_t x2 = x << 1;
 
-                AVERAGE4(target[x], urow0[x2], urow1[x2], urow2[x2], urow3[x2])
+                AVERAGE4(target_[x], urow0[x2], urow1[x2], urow2[x2], urow3[x2])
             }
 
-            if (!StoreScanlineLinear(pDest, destImage.rowPitch, destImage.format, target, destImage.width, filter))
+            if (!StoreScanlineLinear(pDest, destImage.rowPitch, destImage.format, target_, destImage.width, filter))
                 return E_FAIL;
             pDest += destImage.rowPitch;
         }
@@ -386,9 +386,9 @@ namespace
         CreateLinearFilter(srcImage.width, destImage.width, (filter & TEX_FILTER_WRAP_U) != 0, lfX);
         CreateLinearFilter(srcImage.height, destImage.height, (filter & TEX_FILTER_WRAP_V) != 0, lfY);
 
-        XMVECTOR* target = scanline.get();
+        XMVECTOR* target_ = scanline.get();
 
-        XMVECTOR* row0 = target + destImage.width;
+        XMVECTOR* row0 = target_ + destImage.width;
         XMVECTOR* row1 = row0 + srcImage.width;
 
 #ifdef _DEBUG
@@ -438,10 +438,10 @@ namespace
             {
                 auto const& toX = lfX[x];
 
-                BILINEAR_INTERPOLATE(target[x], toX, toY, row0, row1)
+                BILINEAR_INTERPOLATE(target_[x], toX, toY, row0, row1)
             }
 
-            if (!StoreScanlineLinear(pDest, destImage.rowPitch, destImage.format, target, destImage.width, filter))
+            if (!StoreScanlineLinear(pDest, destImage.rowPitch, destImage.format, target_, destImage.width, filter))
                 return E_FAIL;
             pDest += destImage.rowPitch;
         }
@@ -473,9 +473,9 @@ namespace
         CreateCubicFilter(srcImage.width, destImage.width, (filter & TEX_FILTER_WRAP_U) != 0, (filter & TEX_FILTER_MIRROR_U) != 0, cfX);
         CreateCubicFilter(srcImage.height, destImage.height, (filter & TEX_FILTER_WRAP_V) != 0, (filter & TEX_FILTER_MIRROR_V) != 0, cfY);
 
-        XMVECTOR* target = scanline.get();
+        XMVECTOR* target_ = scanline.get();
 
-        XMVECTOR* row0 = target + destImage.width;
+        XMVECTOR* row0 = target_ + destImage.width;
         XMVECTOR* row1 = row0 + srcImage.width;
         XMVECTOR* row2 = row0 + srcImage.width * 2;
         XMVECTOR* row3 = row0 + srcImage.width * 3;
@@ -599,10 +599,10 @@ namespace
                 CUBIC_INTERPOLATE(C2, toX.x, row2[toX.u0], row2[toX.u1], row2[toX.u2], row2[toX.u3])
                 CUBIC_INTERPOLATE(C3, toX.x, row3[toX.u0], row3[toX.u1], row3[toX.u2], row3[toX.u3])
 
-                CUBIC_INTERPOLATE(target[x], toY.x, C0, C1, C2, C3)
+                CUBIC_INTERPOLATE(target_[x], toY.x, C0, C1, C2, C3)
             }
 
-            if (!StoreScanlineLinear(pDest, destImage.rowPitch, destImage.format, target, destImage.width, filter))
+            if (!StoreScanlineLinear(pDest, destImage.rowPitch, destImage.format, target_, destImage.width, filter))
                 return E_FAIL;
             pDest += destImage.rowPitch;
         }
@@ -931,7 +931,7 @@ _Use_decl_annotations_
 HRESULT DirectX::Resize(
     const Image* srcImages,
     size_t nimages,
-    const TexMetadata& metadata,
+    const TexMetadata& metadata_,
     size_t width,
     size_t height,
     TEX_FILTER_FLAGS filter,
@@ -943,7 +943,7 @@ HRESULT DirectX::Resize(
     if ((width > UINT32_MAX) || (height > UINT32_MAX))
         return E_INVALIDARG;
 
-    TexMetadata mdata2 = metadata;
+    TexMetadata mdata2 = metadata_;
     mdata2.width = width;
     mdata2.height = height;
     mdata2.mipLevels = 1;
@@ -952,16 +952,16 @@ HRESULT DirectX::Resize(
         return hr;
 
 #ifdef WIN32
-    bool usewic = !metadata.IsPMAlpha() && UseWICFiltering(metadata.format, filter);
+    bool usewic = !metadata_.IsPMAlpha() && UseWICFiltering(metadata_.format, filter);
 
     WICPixelFormatGUID pfGUID = {};
-    const bool wicpf = (usewic) ? DXGIToWIC(metadata.format, pfGUID, true) : false;
+    const bool wicpf = (usewic) ? DXGIToWIC(metadata_.format, pfGUID, true) : false;
 
     if (usewic && !wicpf)
     {
         // Check to see if the source and/or result size is too big for WIC
         const uint64_t expandedSize = uint64_t(width) * uint64_t(height) * sizeof(float) * 4;
-        const uint64_t expandedSize2 = uint64_t(metadata.width) * uint64_t(metadata.height) * sizeof(float) * 4;
+        const uint64_t expandedSize2 = uint64_t(metadata_.width) * uint64_t(metadata_.height) * sizeof(float) * 4;
         if (expandedSize > UINT32_MAX || expandedSize2 > UINT32_MAX)
         {
             if (filter & TEX_FILTER_FORCE_WIC)
@@ -972,15 +972,15 @@ HRESULT DirectX::Resize(
     }
 #endif
 
-    switch (metadata.dimension)
+    switch (metadata_.dimension)
     {
     case TEX_DIMENSION_TEXTURE1D:
     case TEX_DIMENSION_TEXTURE2D:
-        assert(metadata.depth == 1);
+        assert(metadata_.depth == 1);
 
-        for (size_t item = 0; item < metadata.arraySize; ++item)
+        for (size_t item = 0; item < metadata_.arraySize; ++item)
         {
-            const size_t srcIndex = metadata.ComputeIndex(0, item, 0);
+            const size_t srcIndex = metadata_.ComputeIndex(0, item, 0);
             if (srcIndex >= nimages)
             {
                 result.Release();
@@ -995,7 +995,7 @@ HRESULT DirectX::Resize(
                 return E_POINTER;
             }
 
-            if (srcimg->format != metadata.format)
+            if (srcimg->format != metadata_.format)
             {
                 result.Release();
                 return E_FAIL;
@@ -1037,11 +1037,11 @@ HRESULT DirectX::Resize(
         break;
 
     case TEX_DIMENSION_TEXTURE3D:
-        assert(metadata.arraySize == 1);
+        assert(metadata_.arraySize == 1);
 
-        for (size_t slice = 0; slice < metadata.depth; ++slice)
+        for (size_t slice = 0; slice < metadata_.depth; ++slice)
         {
-            const size_t srcIndex = metadata.ComputeIndex(0, 0, slice);
+            const size_t srcIndex = metadata_.ComputeIndex(0, 0, slice);
             if (srcIndex >= nimages)
             {
                 result.Release();
@@ -1056,7 +1056,7 @@ HRESULT DirectX::Resize(
                 return E_POINTER;
             }
 
-            if (srcimg->format != metadata.format)
+            if (srcimg->format != metadata_.format)
             {
                 result.Release();
                 return E_FAIL;

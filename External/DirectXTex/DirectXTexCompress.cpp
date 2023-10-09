@@ -636,7 +636,7 @@ _Use_decl_annotations_
 HRESULT DirectX::Compress(
     const Image* srcImages,
     size_t nimages,
-    const TexMetadata& metadata,
+    const TexMetadata& metadata_,
     DXGI_FORMAT format,
     TEX_COMPRESS_FLAGS compress,
     float threshold,
@@ -645,16 +645,16 @@ HRESULT DirectX::Compress(
     if (!srcImages || !nimages)
         return E_INVALIDARG;
 
-    if (IsCompressed(metadata.format) || !IsCompressed(format))
+    if (IsCompressed(metadata_.format) || !IsCompressed(format))
         return E_INVALIDARG;
 
     if (IsTypeless(format)
-        || IsTypeless(metadata.format) || IsPlanar(metadata.format) || IsPalettized(metadata.format))
+        || IsTypeless(metadata_.format) || IsPlanar(metadata_.format) || IsPalettized(metadata_.format))
         return HRESULT_E_NOT_SUPPORTED;
 
     cImages.Release();
 
-    TexMetadata mdata2 = metadata;
+    TexMetadata mdata2 = metadata_;
     mdata2.format = format;
     HRESULT hr = cImages.Initialize(mdata2);
     if (FAILED(hr))
@@ -771,14 +771,14 @@ _Use_decl_annotations_
 HRESULT DirectX::Decompress(
     const Image* cImages,
     size_t nimages,
-    const TexMetadata& metadata,
+    const TexMetadata& metadata_,
     DXGI_FORMAT format,
     ScratchImage& images) noexcept
 {
     if (!cImages || !nimages)
         return E_INVALIDARG;
 
-    if (!IsCompressed(metadata.format) || IsCompressed(format))
+    if (!IsCompressed(metadata_.format) || IsCompressed(format))
         return E_INVALIDARG;
 
     if (format == DXGI_FORMAT_UNKNOWN)
@@ -802,7 +802,7 @@ HRESULT DirectX::Decompress(
 
     images.Release();
 
-    TexMetadata mdata2 = metadata;
+    TexMetadata mdata2 = metadata_;
     mdata2.format = format;
     HRESULT hr = images.Initialize(mdata2);
     if (FAILED(hr))

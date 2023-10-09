@@ -509,30 +509,30 @@ _Use_decl_annotations_
 HRESULT DirectX::EvaluateImage(
     const Image* images,
     size_t nimages,
-    const TexMetadata& metadata,
+    const TexMetadata& metadata_,
     std::function<void __cdecl(_In_reads_(width) const XMVECTOR* pixels, size_t width, size_t y)> pixelFunc)
 {
     if (!images || !nimages)
         return E_INVALIDARG;
 
-    if (!IsValid(metadata.format))
+    if (!IsValid(metadata_.format))
         return E_INVALIDARG;
 
-    if (IsPlanar(metadata.format) || IsPalettized(metadata.format) || IsTypeless(metadata.format))
+    if (IsPlanar(metadata_.format) || IsPalettized(metadata_.format) || IsTypeless(metadata_.format))
         return HRESULT_E_NOT_SUPPORTED;
 
-    if (metadata.width > UINT32_MAX
-        || metadata.height > UINT32_MAX)
+    if (metadata_.width > UINT32_MAX
+        || metadata_.height > UINT32_MAX)
         return E_INVALIDARG;
 
-    if (metadata.IsVolumemap() && metadata.depth > UINT16_MAX)
+    if (metadata_.IsVolumemap() && metadata_.depth > UINT16_MAX)
         return E_INVALIDARG;
 
     ScratchImage temp;
-    DXGI_FORMAT format = metadata.format;
+    DXGI_FORMAT format = metadata_.format;
     if (IsCompressed(format))
     {
-        HRESULT hr = Decompress(images, nimages, metadata, DXGI_FORMAT_R32G32B32A32_FLOAT, temp);
+        HRESULT hr = Decompress(images, nimages, metadata_, DXGI_FORMAT_R32G32B32A32_FLOAT, temp);
         if (FAILED(hr))
             return hr;
 
@@ -543,7 +543,7 @@ HRESULT DirectX::EvaluateImage(
         format = DXGI_FORMAT_R32G32B32A32_FLOAT;
     }
 
-    switch (metadata.dimension)
+    switch (metadata_.dimension)
     {
     case TEX_DIMENSION_TEXTURE1D:
     case TEX_DIMENSION_TEXTURE2D:
@@ -565,8 +565,8 @@ HRESULT DirectX::EvaluateImage(
     case TEX_DIMENSION_TEXTURE3D:
     {
         size_t index = 0;
-        size_t d = metadata.depth;
-        for (size_t level = 0; level < metadata.mipLevels; ++level)
+        size_t d = metadata_.depth;
+        for (size_t level = 0; level < metadata_.mipLevels; ++level)
         {
             for (size_t slice = 0; slice < d; ++slice, ++index)
             {
@@ -639,24 +639,24 @@ HRESULT DirectX::TransformImage(
 _Use_decl_annotations_
 HRESULT DirectX::TransformImage(
     const Image* srcImages,
-    size_t nimages, const TexMetadata& metadata,
+    size_t nimages, const TexMetadata& metadata_,
     std::function<void __cdecl(_Out_writes_(width) XMVECTOR* outPixels, _In_reads_(width) const XMVECTOR* inPixels, size_t width, size_t y)> pixelFunc,
     ScratchImage& result)
 {
     if (!srcImages || !nimages)
         return E_INVALIDARG;
 
-    if (IsPlanar(metadata.format) || IsPalettized(metadata.format) || IsCompressed(metadata.format) || IsTypeless(metadata.format))
+    if (IsPlanar(metadata_.format) || IsPalettized(metadata_.format) || IsCompressed(metadata_.format) || IsTypeless(metadata_.format))
         return HRESULT_E_NOT_SUPPORTED;
 
-    if (metadata.width > UINT32_MAX
-        || metadata.height > UINT32_MAX)
+    if (metadata_.width > UINT32_MAX
+        || metadata_.height > UINT32_MAX)
         return E_INVALIDARG;
 
-    if (metadata.IsVolumemap() && metadata.depth > UINT16_MAX)
+    if (metadata_.IsVolumemap() && metadata_.depth > UINT16_MAX)
         return E_INVALIDARG;
 
-    HRESULT hr = result.Initialize(metadata);
+    HRESULT hr = result.Initialize(metadata_);
     if (FAILED(hr))
         return hr;
 
@@ -673,14 +673,14 @@ HRESULT DirectX::TransformImage(
         return E_POINTER;
     }
 
-    switch (metadata.dimension)
+    switch (metadata_.dimension)
     {
     case TEX_DIMENSION_TEXTURE1D:
     case TEX_DIMENSION_TEXTURE2D:
         for (size_t index = 0; index < nimages; ++index)
         {
             const Image& src = srcImages[index];
-            if (src.format != metadata.format)
+            if (src.format != metadata_.format)
             {
                 result.Release();
                 return E_FAIL;
@@ -712,8 +712,8 @@ HRESULT DirectX::TransformImage(
     case TEX_DIMENSION_TEXTURE3D:
     {
         size_t index = 0;
-        size_t d = metadata.depth;
-        for (size_t level = 0; level < metadata.mipLevels; ++level)
+        size_t d = metadata_.depth;
+        for (size_t level = 0; level < metadata_.mipLevels; ++level)
         {
             for (size_t slice = 0; slice < d; ++slice, ++index)
             {
@@ -724,7 +724,7 @@ HRESULT DirectX::TransformImage(
                 }
 
                 const Image& src = srcImages[index];
-                if (src.format != metadata.format)
+                if (src.format != metadata_.format)
                 {
                     result.Release();
                     return E_FAIL;

@@ -34,7 +34,7 @@ public:
 	//再起敵にノード構成を解析
 	void ParseNodeRecursive(FbxModel* model, FbxNode* fbxNode, Node* parent = nullptr);
 	//メッシュ読み取り
-	void ParseMesh(FbxModel* model, FbxNode* fbxNode);
+	void ParseMesh(FbxModel* model_, FbxNode* fbxNode);
 	//ディレクトリを含んだファイルパスからファイル名を抽出する
 	std::string ExtractFileName(const std::string& path);
 
@@ -59,15 +59,15 @@ public://メッシュサブ関数
 
 private:
 	//D3D12デバイス
-	ID3D12Device* device = nullptr;
+	ID3D12Device* device_ = nullptr;
 	//FBXマネージャー
-	FbxManager* fbxManager = nullptr;
+	FbxManager* fbxManager_ = nullptr;
 	//FBXインポーター
-	FbxImporter* fbxImporter = nullptr;
+	FbxImporter* fbxImporter_ = nullptr;
 
 private:
 	//テクスチャがない場合の標準テクスチャファイル名
-	static const string defaultTextureFileName;
+	static const string defaultTextureFileName_;
 
 private:
 	// privateなコンストラクタ（シングルトンパターン）

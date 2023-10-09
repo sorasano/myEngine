@@ -3,7 +3,7 @@
 #include "Random.h"
 #define PI 3.1415
 
-void BackGround::Initialize(float adjustPos)
+void BackGround::Initialize(float adjustPos_)
 {
 	//モデル読み込み
 	groundModel = FbxLoader::GetInstance()->LoadModelFromFile("ground");
@@ -19,7 +19,7 @@ void BackGround::Initialize(float adjustPos)
 	backGroundModels.insert(std::make_pair("pillar", pillarModel));
 
 	//-------背景配置------
-	SetObject(adjustPos);
+	SetObject(adjustPos_);
 }
 
 void BackGround::Update()
@@ -29,14 +29,14 @@ void BackGround::Update()
 	}
 }
 
-void BackGround::Draw(ID3D12GraphicsCommandList* cmdList)
+void BackGround::Draw(ID3D12GraphicsCommandList* cmdList_)
 {
 	for (auto& object : backGroundObjects) {
-		object->Draw(cmdList);
+		object->Draw(cmdList_);
 	}
 }
 
-void BackGround::SetObject(float adjustPos)
+void BackGround::SetObject(float adjustPos_)
 {
 	//ランダムで配置するマップを選択
 	int num = static_cast<int>(Random(1.0f,4.99f));
@@ -44,7 +44,7 @@ void BackGround::SetObject(float adjustPos)
 	//jsonファイル読み込み
 	LoadJson(num);
 	//オブジェクトの配置
-	ArrangementObject(adjustPos);
+	ArrangementObject(adjustPos_);
 }
 
 void BackGround::LoadJson(int num)
@@ -67,22 +67,22 @@ void BackGround::LoadJson(int num)
 	}
 }
 
-void BackGround::ArrangementObject(float adjustPos)
+void BackGround::ArrangementObject(float adjustPos_)
 {
 
 	// レベルデータからオブジェクトを生成、配置
 	for (auto& objectData : levelData->objects) {
 		// ファイル名から登録済みモデルを検索
-		FbxModel* model = nullptr;
+		FbxModel* model_ = nullptr;
 		decltype(backGroundModels)::iterator it = backGroundModels.find(objectData.fileName);
 		if (it != backGroundModels.end()) {
-			model = it->second;
+			model_ = it->second;
 		}
 
 		// モデルを指定して3Dオブジェクトを生成
 		FbxObject3D* newObject = new FbxObject3D;
 		newObject->Initialize();
-		newObject->SetModel(model);
+		newObject->SetModel(model_);
 
 		// 座標
 		DirectX::XMFLOAT3 pos;
@@ -90,19 +90,19 @@ void BackGround::ArrangementObject(float adjustPos)
 		//下に配置
 		pos.y -= 12.0f;
 		//調整
-		pos.z += adjustPos;
+		pos.z += adjustPos_;
 		newObject->SetPosition(pos);
 
 		// 回転角
 		DirectX::XMFLOAT3 rot;
-		DirectX::XMStoreFloat3(&rot, objectData.rotation);
+		DirectX::XMStoreFloat3(&rot, objectData.rotation_);
 		rot.x = static_cast<float>(90 * (PI / 180));
 		newObject->SetRotate(rot);
 
 		// サイズ
-		DirectX::XMFLOAT3 scale;
-		DirectX::XMStoreFloat3(&scale, objectData.scaling);
-		newObject->SetScale(scale);
+		DirectX::XMFLOAT3 scale_;
+		DirectX::XMStoreFloat3(&scale_, objectData.scaling);
+		newObject->SetScale(scale_);
 
 		//更新
 		newObject->Update();
@@ -112,7 +112,7 @@ void BackGround::ArrangementObject(float adjustPos)
 
 		//オブジェクトがgroundの時そのポジションを中心とする
 		if (it->first == "ground") {
-			this->position = pos;
+			this->position_ = pos;
 		}
 	}
 }

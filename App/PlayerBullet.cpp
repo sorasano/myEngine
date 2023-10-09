@@ -14,16 +14,16 @@ PlayerBullet::PlayerBullet()
 
 PlayerBullet::~PlayerBullet()
 {
-	FBX_SAFE_DELETE(playerBulletObject);
+	FBX_SAFE_DELETE(playerBulletObject_);
 }
 
 void PlayerBullet::Initialize(FbxModel* model, XMFLOAT3 position, Vector3 velocity)
 {
 
 	//3dオブジェクト生成とモデルのセット
-	playerBulletObject = new FbxObject3D;
-	playerBulletObject->Initialize();
-	playerBulletObject->SetModel(model);
+	playerBulletObject_ = new FbxObject3D;
+	playerBulletObject_->Initialize();
+	playerBulletObject_->SetModel(model);
 
 	//座標、スピードをセット
 	this->position_ = position;
@@ -53,15 +53,15 @@ void PlayerBullet::Update()
 		isDead_ = true;
 	}
 
-	playerBulletObject->SetPosition(position_);
-	playerBulletObject->SetScale(scale_);
-	playerBulletObject->SetRotate(rotation_);
-	playerBulletObject->Update();
+	playerBulletObject_->SetPosition(position_);
+	playerBulletObject_->SetScale(scale_);
+	playerBulletObject_->SetRotate(rotation_);
+	playerBulletObject_->Update();
 }
 
 void PlayerBullet::Draw(ID3D12GraphicsCommandList* cmdList)
 {
-	playerBulletObject->Draw(cmdList);
+	playerBulletObject_->Draw(cmdList);
 }
 
 void PlayerBullet::Move()
@@ -80,7 +80,7 @@ CollisionData PlayerBullet::GetColData()
 {
 	CollisionData colData;
 
-	colData.position = this->position_;
+	colData.position_ = this->position_;
 	colData.size = this->colSize_;
 
 	return colData;

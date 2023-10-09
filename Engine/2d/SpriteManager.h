@@ -2,7 +2,9 @@
 #include "d3dx12.h"
 #include "DirectXMath.h"
 #include "array"
-#include "DirectXTex.h"
+
+#include <DirectXTex.h>
+
 #include "vector"
 
 class SpriteManager
@@ -26,25 +28,25 @@ public:	//メンバ関数
 	void SetTextureCommand(int number);
 
 public:	//ゲッター
-	ID3D12Resource* GetTextureBuff(int number) { return textureBuff[number].Get(); }
-	ID3D12DescriptorHeap* GetSrvHeap() { return srvHeap.Get(); }
+	ID3D12Resource* GetTextureBuff(int number) { return textureBuff_[number].Get(); }
+	ID3D12DescriptorHeap* GetSrvHeap() { return srvHeap_.Get(); }
 
 public:
-	static void SetDevice(ID3D12Device* device) { SpriteManager::device = device; }
+	static void SetDevice(ID3D12Device* device) { SpriteManager::device_ = device; }
 
 private:	//静的メンバ変数
 	//デバイス
-	static ID3D12Device* device;
+	static ID3D12Device* device_;
 
 private:	//メンバ変数
 	//テクスチャバッファ
-	std::array<Microsoft::WRL::ComPtr<ID3D12Resource>, kMaxSrvCount>textureBuff;
+	std::array<Microsoft::WRL::ComPtr<ID3D12Resource>, kMaxSrvCount>textureBuff_;
 	//デスクリプタヒープ
-	ComPtr<ID3D12DescriptorHeap> srvHeap;
-	std::vector<DirectX::TexMetadata> metadata;
-	std::vector<DirectX::ScratchImage> scratchImg;
+	ComPtr<ID3D12DescriptorHeap> srvHeap_;
+	std::vector<DirectX::TexMetadata> metadata_;
+	std::vector<DirectX::ScratchImage> scratchImg_;
 
 	//ファイル格納ルートパス
-	static const std::string kDefaultbaseDirectory;
+	static const std::string kDefaultbaseDirectory_;
 };
 

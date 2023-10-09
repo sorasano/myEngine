@@ -14,9 +14,9 @@ void FPS::FpsControlEnd() {
 	float elapsedFrame = static_cast<float>(timeEnd.QuadPart - timeStart.QuadPart) /
 		static_cast<float>(cpuClock.QuadPart);
 	//ó]óTÇ™Ç†ÇÈÇ∆Ç´ÇÕë“Ç¬
-	if (elapsedFrame < frameTime) {
+	if (elapsedFrame < frameTime_) {
 		// sleepéûä‘
-		DWORD sleepTime = static_cast<DWORD>((frameTime - elapsedFrame) * 1000.0f);
+		DWORD sleepTime = static_cast<DWORD>((frameTime_ - elapsedFrame) * 1000.0f);
 		timeBeginPeriod(1);
 		//êQÇÈ
 		Sleep(sleepTime);
@@ -26,6 +26,6 @@ void FPS::FpsControlEnd() {
 	fps = 1 / elapsedFrame;
 }
 
-void FPS::SetFrameRate(float fps_) { frameTime = 1.0f / fps_; }
+void FPS::SetFrameRate(float fps_) { frameTime_ = 1.0f / fps_; }
 
 float FPS::GetFrameRate() { return fps; }

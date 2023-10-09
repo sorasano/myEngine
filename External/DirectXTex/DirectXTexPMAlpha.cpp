@@ -265,27 +265,27 @@ _Use_decl_annotations_
 HRESULT DirectX::PremultiplyAlpha(
     const Image* srcImages,
     size_t nimages,
-    const TexMetadata& metadata,
+    const TexMetadata& metadata_,
     TEX_PMALPHA_FLAGS flags,
     ScratchImage& result) noexcept
 {
     if (!srcImages || !nimages)
         return E_INVALIDARG;
 
-    if (IsCompressed(metadata.format)
-        || IsPlanar(metadata.format)
-        || IsPalettized(metadata.format)
-        || IsTypeless(metadata.format)
-        || !HasAlpha(metadata.format))
+    if (IsCompressed(metadata_.format)
+        || IsPlanar(metadata_.format)
+        || IsPalettized(metadata_.format)
+        || IsTypeless(metadata_.format)
+        || !HasAlpha(metadata_.format))
         return HRESULT_E_NOT_SUPPORTED;
 
-    if ((metadata.width > UINT32_MAX) || (metadata.height > UINT32_MAX))
+    if ((metadata_.width > UINT32_MAX) || (metadata_.height > UINT32_MAX))
         return E_INVALIDARG;
 
-    if (metadata.IsPMAlpha() != ((flags & TEX_PMALPHA_REVERSE) != 0))
+    if (metadata_.IsPMAlpha() != ((flags & TEX_PMALPHA_REVERSE) != 0))
         return E_FAIL;
 
-    TexMetadata mdata2 = metadata;
+    TexMetadata mdata2 = metadata_;
     mdata2.SetAlphaMode((flags & TEX_PMALPHA_REVERSE) ? TEX_ALPHA_MODE_STRAIGHT : TEX_ALPHA_MODE_PREMULTIPLIED);
     HRESULT hr = result.Initialize(mdata2);
     if (FAILED(hr))
@@ -307,7 +307,7 @@ HRESULT DirectX::PremultiplyAlpha(
     for (size_t index = 0; index < nimages; ++index)
     {
         const Image& src = srcImages[index];
-        if (src.format != metadata.format)
+        if (src.format != metadata_.format)
         {
             result.Release();
             return E_FAIL;
@@ -317,7 +317,7 @@ HRESULT DirectX::PremultiplyAlpha(
             return E_FAIL;
 
         const Image& dst = dest[index];
-        assert(dst.format == metadata.format);
+        assert(dst.format == metadata_.format);
 
         if (src.width != dst.width || src.height != dst.height)
         {

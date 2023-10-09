@@ -33,7 +33,7 @@ namespace
     HRESULT Capture(
         _In_ ID3D11DeviceContext* pContext,
         _In_ ID3D11Resource* pSource,
-        const TexMetadata& metadata,
+        const TexMetadata& metadata_,
         const ScratchImage& result) noexcept
     {
         if (!pContext || !pSource || !result.GetPixels())
@@ -66,17 +66,17 @@ namespace
 
 #endif
 
-        if (metadata.IsVolumemap())
+        if (metadata_.IsVolumemap())
         {
             //--- Volume texture ----------------------------------------------------------
-            assert(metadata.arraySize == 1);
+            assert(metadata_.arraySize == 1);
 
-            size_t height = metadata.height;
-            size_t depth = metadata.depth;
+            size_t height = metadata_.height;
+            size_t depth = metadata_.depth;
 
-            for (size_t level = 0; level < metadata.mipLevels; ++level)
+            for (size_t level = 0; level < metadata_.mipLevels; ++level)
             {
-                const UINT dindex = D3D11CalcSubresource(static_cast<UINT>(level), 0, static_cast<UINT>(metadata.mipLevels));
+                const UINT dindex = D3D11CalcSubresource(static_cast<UINT>(level), 0, static_cast<UINT>(metadata_.mipLevels));
 
                 D3D11_MAPPED_SUBRESOURCE mapped;
                 HRESULT hr = pContext->Map(pSource, dindex, D3D11_MAP_READ, 0, &mapped);
@@ -90,7 +90,7 @@ namespace
                     return E_POINTER;
                 }
 
-                const size_t lines = ComputeScanlines(metadata.format, height);
+                const size_t lines = ComputeScanlines(metadata_.format, height);
                 if (!lines)
                 {
                     pContext->Unmap(pSource, dindex);
@@ -136,15 +136,15 @@ namespace
         else
         {
             //--- 1D or 2D texture --------------------------------------------------------
-            assert(metadata.depth == 1);
+            assert(metadata_.depth == 1);
 
-            for (size_t item = 0; item < metadata.arraySize; ++item)
+            for (size_t item = 0; item < metadata_.arraySize; ++item)
             {
-                size_t height = metadata.height;
+                size_t height = metadata_.height;
 
-                for (size_t level = 0; level < metadata.mipLevels; ++level)
+                for (size_t level = 0; level < metadata_.mipLevels; ++level)
                 {
-                    const UINT dindex = D3D11CalcSubresource(static_cast<UINT>(level), static_cast<UINT>(item), static_cast<UINT>(metadata.mipLevels));
+                    const UINT dindex = D3D11CalcSubresource(static_cast<UINT>(level), static_cast<UINT>(item), static_cast<UINT>(metadata_.mipLevels));
 
                     D3D11_MAPPED_SUBRESOURCE mapped;
                     HRESULT hr = pContext->Map(pSource, dindex, D3D11_MAP_READ, 0, &mapped);
@@ -164,7 +164,7 @@ namespace
                         return E_POINTER;
                     }
 
-                    const size_t lines = ComputeScanlines(metadata.format, height);
+                    const size_t lines = ComputeScanlines(metadata_.format, height);
                     if (!lines)
                     {
                         pContext->Unmap(pSource, dindex);
@@ -204,7 +204,7 @@ namespace
 _Use_decl_annotations_
 bool DirectX::IsSupportedTexture(
     ID3D11Device* pDevice,
-    const TexMetadata& metadata) noexcept
+    const TexMetadata& metadata_) noexcept
 {
     if (!pDevice)
         return false;
@@ -212,7 +212,7 @@ bool DirectX::IsSupportedTexture(
     const D3D_FEATURE_LEVEL fl = pDevice->GetFeatureLevel();
 
     // Validate format
-    const DXGI_FORMAT fmt = metadata.format;
+    const DXGI_FORMAT fmt = metadata_.format;
 
     if (!IsValid(fmt))
         return false;
@@ -244,14 +244,14 @@ bool DirectX::IsSupportedTexture(
     }
 
     // Validate miplevel count
-    if (metadata.mipLevels > D3D11_REQ_MIP_LEVELS)
+    if (metadata_.mipLevels > D3D11_REQ_MIP_LEVELS)
         return false;
 
     // Validate array size, dimension, and width/height
-    const size_t arraySize = metadata.arraySize;
-    const size_t iWidth = metadata.width;
-    const size_t iHeight = metadata.height;
-    const size_t iDepth = metadata.depth;
+    const size_t arraySize = metadata_.arraySize;
+    const size_t iWidth = metadata_.width;
+    const size_t iHeight = metadata_.height;
+    const size_t iDepth = metadata_.depth;
 
     // Most cases are known apriori based on feature level, but we use this for robustness to handle the few optional cases
     UINT formatSupport = 0;
@@ -261,12 +261,12 @@ bool DirectX::IsSupportedTexture(
         formatSupport = 0;
     }
 
-    if (metadata.mipLevels > 1 && !(formatSupport & D3D11_FORMAT_SUPPORT_MIP))
+    if (metadata_.mipLevels > 1 && !(formatSupport & D3D11_FORMAT_SUPPORT_MIP))
     {
         return false;
     }
 
-    switch (metadata.dimension)
+    switch (metadata_.dimension)
     {
     case TEX_DIMENSION_TEXTURE1D:
         if (!(formatSupport & D3D11_FORMAT_SUPPORT_TEXTURE1D))
@@ -294,7 +294,7 @@ bool DirectX::IsSupportedTexture(
         break;
 
     case TEX_DIMENSION_TEXTURE2D:
-        if (metadata.IsCubemap())
+        if (metadata_.IsCubemap())
         {
             if (!(formatSupport & D3D11_FORMAT_SUPPORT_TEXTURECUBE))
                 return false;
@@ -404,11 +404,11 @@ HRESULT DirectX::CreateTexture(
     ID3D11Device* pDevice,
     const Image* srcImages,
     size_t nimages,
-    const TexMetadata& metadata,
+    const TexMetadata& metadata_,
     ID3D11Resource** ppResource) noexcept
 {
     return CreateTextureEx(
-        pDevice, srcImages, nimages, metadata,
+        pDevice, srcImages, nimages, metadata_,
         D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0, 0, false,
         ppResource);
 }
@@ -418,7 +418,7 @@ HRESULT DirectX::CreateTextureEx(
     ID3D11Device* pDevice,
     const Image* srcImages,
     size_t nimages,
-    const TexMetadata& metadata,
+    const TexMetadata& metadata_,
     D3D11_USAGE usage,
     unsigned int bindFlags,
     unsigned int cpuAccessFlags,
@@ -431,43 +431,43 @@ HRESULT DirectX::CreateTextureEx(
 
     *ppResource = nullptr;
 
-    if (!metadata.mipLevels || !metadata.arraySize)
+    if (!metadata_.mipLevels || !metadata_.arraySize)
         return E_INVALIDARG;
 
-    if ((metadata.width > UINT32_MAX) || (metadata.height > UINT32_MAX)
-        || (metadata.mipLevels > UINT16_MAX) || (metadata.arraySize > UINT16_MAX))
+    if ((metadata_.width > UINT32_MAX) || (metadata_.height > UINT32_MAX)
+        || (metadata_.mipLevels > UINT16_MAX) || (metadata_.arraySize > UINT16_MAX))
         return E_INVALIDARG;
 
-    std::unique_ptr<D3D11_SUBRESOURCE_DATA[]> initData(new (std::nothrow) D3D11_SUBRESOURCE_DATA[metadata.mipLevels * metadata.arraySize]);
+    std::unique_ptr<D3D11_SUBRESOURCE_DATA[]> initData(new (std::nothrow) D3D11_SUBRESOURCE_DATA[metadata_.mipLevels * metadata_.arraySize]);
     if (!initData)
         return E_OUTOFMEMORY;
 
     // Fill out subresource array
-    if (metadata.IsVolumemap())
+    if (metadata_.IsVolumemap())
     {
         //--- Volume case -------------------------------------------------------------
-        if (!metadata.depth)
+        if (!metadata_.depth)
             return E_INVALIDARG;
 
-        if (metadata.depth > UINT16_MAX)
+        if (metadata_.depth > UINT16_MAX)
             return E_INVALIDARG;
 
-        if (metadata.arraySize > 1)
+        if (metadata_.arraySize > 1)
             // Direct3D 11 doesn't support arrays of 3D textures
             return HRESULT_E_NOT_SUPPORTED;
 
-        size_t depth = metadata.depth;
+        size_t depth = metadata_.depth;
 
         size_t idx = 0;
-        for (size_t level = 0; level < metadata.mipLevels; ++level)
+        for (size_t level = 0; level < metadata_.mipLevels; ++level)
         {
-            const size_t index = metadata.ComputeIndex(level, 0, 0);
+            const size_t index = metadata_.ComputeIndex(level, 0, 0);
             if (index >= nimages)
                 return E_FAIL;
 
             const Image& img = srcImages[index];
 
-            if (img.format != metadata.format)
+            if (img.format != metadata_.format)
                 return E_FAIL;
 
             if (!img.pixels)
@@ -479,7 +479,7 @@ HRESULT DirectX::CreateTextureEx(
             const uint8_t* pSlice = img.pixels + img.slicePitch;
             for (size_t slice = 1; slice < depth; ++slice)
             {
-                const size_t tindex = metadata.ComputeIndex(level, 0, slice);
+                const size_t tindex = metadata_.ComputeIndex(level, 0, slice);
                 if (tindex >= nimages)
                     return E_FAIL;
 
@@ -489,7 +489,7 @@ HRESULT DirectX::CreateTextureEx(
                     return E_POINTER;
 
                 if (timg.pixels != pSlice
-                    || timg.format != metadata.format
+                    || timg.format != metadata_.format
                     || timg.rowPitch != img.rowPitch
                     || timg.slicePitch != img.slicePitch)
                     return E_FAIL;
@@ -497,7 +497,7 @@ HRESULT DirectX::CreateTextureEx(
                 pSlice = timg.pixels + img.slicePitch;
             }
 
-            assert(idx < (metadata.mipLevels * metadata.arraySize));
+            assert(idx < (metadata_.mipLevels * metadata_.arraySize));
 
             initData[idx].pSysMem = img.pixels;
             initData[idx].SysMemPitch = static_cast<DWORD>(img.rowPitch);
@@ -512,23 +512,23 @@ HRESULT DirectX::CreateTextureEx(
     {
         //--- 1D or 2D texture case ---------------------------------------------------
         size_t idx = 0;
-        for (size_t item = 0; item < metadata.arraySize; ++item)
+        for (size_t item = 0; item < metadata_.arraySize; ++item)
         {
-            for (size_t level = 0; level < metadata.mipLevels; ++level)
+            for (size_t level = 0; level < metadata_.mipLevels; ++level)
             {
-                const size_t index = metadata.ComputeIndex(level, item, 0);
+                const size_t index = metadata_.ComputeIndex(level, item, 0);
                 if (index >= nimages)
                     return E_FAIL;
 
                 const Image& img = srcImages[index];
 
-                if (img.format != metadata.format)
+                if (img.format != metadata_.format)
                     return E_FAIL;
 
                 if (!img.pixels)
                     return E_POINTER;
 
-                assert(idx < (metadata.mipLevels * metadata.arraySize));
+                assert(idx < (metadata_.mipLevels * metadata_.arraySize));
 
                 initData[idx].pSysMem = img.pixels;
                 initData[idx].SysMemPitch = static_cast<DWORD>(img.rowPitch);
@@ -541,16 +541,16 @@ HRESULT DirectX::CreateTextureEx(
     // Create texture using static initialization data
     HRESULT hr = E_UNEXPECTED;
 
-    const DXGI_FORMAT tformat = (forceSRGB) ? MakeSRGB(metadata.format) : metadata.format;
+    const DXGI_FORMAT tformat = (forceSRGB) ? MakeSRGB(metadata_.format) : metadata_.format;
 
-    switch (metadata.dimension)
+    switch (metadata_.dimension)
     {
     case TEX_DIMENSION_TEXTURE1D:
     {
         D3D11_TEXTURE1D_DESC desc = {};
-        desc.Width = static_cast<UINT>(metadata.width);
-        desc.MipLevels = static_cast<UINT>(metadata.mipLevels);
-        desc.ArraySize = static_cast<UINT>(metadata.arraySize);
+        desc.Width = static_cast<UINT>(metadata_.width);
+        desc.MipLevels = static_cast<UINT>(metadata_.mipLevels);
+        desc.ArraySize = static_cast<UINT>(metadata_.arraySize);
         desc.Format = tformat;
         desc.Usage = usage;
         desc.BindFlags = bindFlags;
@@ -564,17 +564,17 @@ HRESULT DirectX::CreateTextureEx(
     case TEX_DIMENSION_TEXTURE2D:
     {
         D3D11_TEXTURE2D_DESC desc = {};
-        desc.Width = static_cast<UINT>(metadata.width);
-        desc.Height = static_cast<UINT>(metadata.height);
-        desc.MipLevels = static_cast<UINT>(metadata.mipLevels);
-        desc.ArraySize = static_cast<UINT>(metadata.arraySize);
+        desc.Width = static_cast<UINT>(metadata_.width);
+        desc.Height = static_cast<UINT>(metadata_.height);
+        desc.MipLevels = static_cast<UINT>(metadata_.mipLevels);
+        desc.ArraySize = static_cast<UINT>(metadata_.arraySize);
         desc.Format = tformat;
         desc.SampleDesc.Count = 1;
         desc.SampleDesc.Quality = 0;
         desc.Usage = usage;
         desc.BindFlags = bindFlags;
         desc.CPUAccessFlags = cpuAccessFlags;
-        if (metadata.IsCubemap())
+        if (metadata_.IsCubemap())
             desc.MiscFlags = miscFlags | D3D11_RESOURCE_MISC_TEXTURECUBE;
         else
             desc.MiscFlags = miscFlags & ~static_cast<uint32_t>(D3D11_RESOURCE_MISC_TEXTURECUBE);
@@ -586,10 +586,10 @@ HRESULT DirectX::CreateTextureEx(
     case TEX_DIMENSION_TEXTURE3D:
     {
         D3D11_TEXTURE3D_DESC desc = {};
-        desc.Width = static_cast<UINT>(metadata.width);
-        desc.Height = static_cast<UINT>(metadata.height);
-        desc.Depth = static_cast<UINT>(metadata.depth);
-        desc.MipLevels = static_cast<UINT>(metadata.mipLevels);
+        desc.Width = static_cast<UINT>(metadata_.width);
+        desc.Height = static_cast<UINT>(metadata_.height);
+        desc.Depth = static_cast<UINT>(metadata_.depth);
+        desc.MipLevels = static_cast<UINT>(metadata_.mipLevels);
         desc.Format = tformat;
         desc.Usage = usage;
         desc.BindFlags = bindFlags;
@@ -613,11 +613,11 @@ HRESULT DirectX::CreateShaderResourceView(
     ID3D11Device* pDevice,
     const Image* srcImages,
     size_t nimages,
-    const TexMetadata& metadata,
+    const TexMetadata& metadata_,
     ID3D11ShaderResourceView** ppSRV) noexcept
 {
     return CreateShaderResourceViewEx(
-        pDevice, srcImages, nimages, metadata,
+        pDevice, srcImages, nimages, metadata_,
         D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0, 0, false,
         ppSRV);
 }
@@ -627,7 +627,7 @@ HRESULT DirectX::CreateShaderResourceViewEx(
     ID3D11Device* pDevice,
     const Image* srcImages,
     size_t nimages,
-    const TexMetadata& metadata,
+    const TexMetadata& metadata_,
     D3D11_USAGE usage,
     unsigned int bindFlags,
     unsigned int cpuAccessFlags,
@@ -644,7 +644,7 @@ HRESULT DirectX::CreateShaderResourceViewEx(
         return E_INVALIDARG;
 
     ComPtr<ID3D11Resource> resource;
-    HRESULT hr = CreateTextureEx(pDevice, srcImages, nimages, metadata,
+    HRESULT hr = CreateTextureEx(pDevice, srcImages, nimages, metadata_,
         usage, bindFlags, cpuAccessFlags, miscFlags, forceSRGB,
         resource.GetAddressOf());
     if (FAILED(hr))
@@ -654,59 +654,59 @@ HRESULT DirectX::CreateShaderResourceViewEx(
 
     D3D11_SHADER_RESOURCE_VIEW_DESC SRVDesc = {};
     if (forceSRGB)
-        SRVDesc.Format = MakeSRGB(metadata.format);
+        SRVDesc.Format = MakeSRGB(metadata_.format);
     else
-        SRVDesc.Format = metadata.format;
+        SRVDesc.Format = metadata_.format;
 
-    switch (metadata.dimension)
+    switch (metadata_.dimension)
     {
     case TEX_DIMENSION_TEXTURE1D:
-        if (metadata.arraySize > 1)
+        if (metadata_.arraySize > 1)
         {
             SRVDesc.ViewDimension = D3D_SRV_DIMENSION_TEXTURE1DARRAY;
-            SRVDesc.Texture1DArray.MipLevels = static_cast<UINT>(metadata.mipLevels);
-            SRVDesc.Texture1DArray.ArraySize = static_cast<UINT>(metadata.arraySize);
+            SRVDesc.Texture1DArray.MipLevels = static_cast<UINT>(metadata_.mipLevels);
+            SRVDesc.Texture1DArray.ArraySize = static_cast<UINT>(metadata_.arraySize);
         }
         else
         {
             SRVDesc.ViewDimension = D3D_SRV_DIMENSION_TEXTURE1D;
-            SRVDesc.Texture1D.MipLevels = static_cast<UINT>(metadata.mipLevels);
+            SRVDesc.Texture1D.MipLevels = static_cast<UINT>(metadata_.mipLevels);
         }
         break;
 
     case TEX_DIMENSION_TEXTURE2D:
-        if (metadata.IsCubemap())
+        if (metadata_.IsCubemap())
         {
-            if (metadata.arraySize > 6)
+            if (metadata_.arraySize > 6)
             {
-                assert((metadata.arraySize % 6) == 0);
+                assert((metadata_.arraySize % 6) == 0);
                 SRVDesc.ViewDimension = D3D_SRV_DIMENSION_TEXTURECUBEARRAY;
-                SRVDesc.TextureCubeArray.MipLevels = static_cast<UINT>(metadata.mipLevels);
-                SRVDesc.TextureCubeArray.NumCubes = static_cast<UINT>(metadata.arraySize / 6);
+                SRVDesc.TextureCubeArray.MipLevels = static_cast<UINT>(metadata_.mipLevels);
+                SRVDesc.TextureCubeArray.NumCubes = static_cast<UINT>(metadata_.arraySize / 6);
             }
             else
             {
                 SRVDesc.ViewDimension = D3D_SRV_DIMENSION_TEXTURECUBE;
-                SRVDesc.TextureCube.MipLevels = static_cast<UINT>(metadata.mipLevels);
+                SRVDesc.TextureCube.MipLevels = static_cast<UINT>(metadata_.mipLevels);
             }
         }
-        else if (metadata.arraySize > 1)
+        else if (metadata_.arraySize > 1)
         {
             SRVDesc.ViewDimension = D3D_SRV_DIMENSION_TEXTURE2DARRAY;
-            SRVDesc.Texture2DArray.MipLevels = static_cast<UINT>(metadata.mipLevels);
-            SRVDesc.Texture2DArray.ArraySize = static_cast<UINT>(metadata.arraySize);
+            SRVDesc.Texture2DArray.MipLevels = static_cast<UINT>(metadata_.mipLevels);
+            SRVDesc.Texture2DArray.ArraySize = static_cast<UINT>(metadata_.arraySize);
         }
         else
         {
             SRVDesc.ViewDimension = D3D_SRV_DIMENSION_TEXTURE2D;
-            SRVDesc.Texture2D.MipLevels = static_cast<UINT>(metadata.mipLevels);
+            SRVDesc.Texture2D.MipLevels = static_cast<UINT>(metadata_.mipLevels);
         }
         break;
 
     case TEX_DIMENSION_TEXTURE3D:
-        assert(metadata.arraySize == 1);
+        assert(metadata_.arraySize == 1);
         SRVDesc.ViewDimension = D3D_SRV_DIMENSION_TEXTURE3D;
-        SRVDesc.Texture3D.MipLevels = static_cast<UINT>(metadata.mipLevels);
+        SRVDesc.Texture3D.MipLevels = static_cast<UINT>(metadata_.mipLevels);
         break;
 
     default:

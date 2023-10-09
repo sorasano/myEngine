@@ -283,14 +283,14 @@ _Use_decl_annotations_
 HRESULT DirectX::FlipRotate(
     const Image* srcImages,
     size_t nimages,
-    const TexMetadata& metadata,
+    const TexMetadata& metadata_,
     TEX_FR_FLAGS flags,
     ScratchImage& result) noexcept
 {
     if (!srcImages || !nimages)
         return E_INVALIDARG;
 
-    if (IsCompressed(metadata.format))
+    if (IsCompressed(metadata_.format))
     {
         // We don't support flip/rotate operations on compressed images
         return HRESULT_E_NOT_SUPPORTED;
@@ -318,14 +318,14 @@ HRESULT DirectX::FlipRotate(
         return E_INVALIDARG;
     }
 
-    TexMetadata mdata2 = metadata;
+    TexMetadata mdata2 = metadata_;
 
     bool flipwh = false;
     if ((rotateMode == TEX_FR_ROTATE90) || (rotateMode == TEX_FR_ROTATE270))
     {
         flipwh = true;
-        mdata2.width = metadata.height;
-        mdata2.height = metadata.width;
+        mdata2.width = metadata_.height;
+        mdata2.height = metadata_.width;
     }
 
     HRESULT hr = result.Initialize(mdata2);
@@ -346,12 +346,12 @@ HRESULT DirectX::FlipRotate(
     }
 
     WICPixelFormatGUID pfGUID;
-    const bool wicpf = DXGIToWIC(metadata.format, pfGUID);
+    const bool wicpf = DXGIToWIC(metadata_.format, pfGUID);
 
     for (size_t index = 0; index < nimages; ++index)
     {
         const Image& src = srcImages[index];
-        if (src.format != metadata.format)
+        if (src.format != metadata_.format)
         {
             result.Release();
             return E_FAIL;
@@ -361,7 +361,7 @@ HRESULT DirectX::FlipRotate(
             return E_FAIL;
 
         const Image& dst = dest[index];
-        assert(dst.format == metadata.format);
+        assert(dst.format == metadata_.format);
 
         if (flipwh)
         {
