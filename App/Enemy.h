@@ -38,9 +38,9 @@ public:
 	Enemy* GetInstance();
 	Enemy();
 	~Enemy();
-	void Initialize(FbxModel* EnemyModel, FbxModel* enemyBulletModel_);
+	void Initialize(FbxModel* EnemyModel, FbxModel* enemyBulletModel);
 	void Update(XMFLOAT3 pPos,float pSpeed);
-	void Draw(ID3D12GraphicsCommandList* cmdList_);
+	void Draw(ID3D12GraphicsCommandList* cmdList);
 
 	//ˆÚ“®
 	void Move();

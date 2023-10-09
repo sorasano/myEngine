@@ -16,7 +16,7 @@ Enemy::~Enemy()
 	FBX_SAFE_DELETE(enemyObject_);
 }
 
-void Enemy::Initialize(FbxModel* EnemyModel, FbxModel* enemyBulletModel_)
+void Enemy::Initialize(FbxModel* EnemyModel, FbxModel* enemyBulletModel)
 {
 
 	//3dオブジェクト生成とモデルのセット
@@ -24,7 +24,7 @@ void Enemy::Initialize(FbxModel* EnemyModel, FbxModel* enemyBulletModel_)
 	enemyObject_->Initialize();
 	enemyObject_->SetModel(EnemyModel);
 
-	this->bulletModel_ = enemyBulletModel_;
+	this->bulletModel_ = enemyBulletModel;
 
 }
 
@@ -65,15 +65,15 @@ void Enemy::Update(XMFLOAT3 pPos, float pSpeed)
 	enemyObject_->Update();
 }
 
-void Enemy::Draw(ID3D12GraphicsCommandList* cmdList_)
+void Enemy::Draw(ID3D12GraphicsCommandList* cmdList)
 {
 	if (!isDead_) {
-		enemyObject_->Draw(cmdList_);
+		enemyObject_->Draw(cmdList);
 
 		//弾
 		for (std::unique_ptr<EnemyBullet>& bullet : bullets_)
 		{
-			bullet->Draw(cmdList_);
+			bullet->Draw(cmdList);
 		}
 	}
 	//----パーティクル----
