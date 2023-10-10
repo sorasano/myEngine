@@ -107,7 +107,7 @@ const Vector3 operator/(const Vector3& v, float s)
 	return temp /= s;
 }
 
-//üŒ`•âŠÔ
+//ç·šå½¢è£œé–“
 const Vector3 lerp(Vector3 start, Vector3 end, float t) {
 	
 	Vector3 result;

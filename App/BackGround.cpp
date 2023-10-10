@@ -5,7 +5,7 @@
 
 void BackGround::Initialize(float adjustPos_)
 {
-	//ƒ‚ƒfƒ‹“Ç‚İ‚İ
+	//ãƒ¢ãƒ‡ãƒ«èª­ã¿è¾¼ã¿
 	groundModel = FbxLoader::GetInstance()->LoadModelFromFile("ground");
 	boxModel = FbxLoader::GetInstance()->LoadModelFromFile("box");
 	treeModel = FbxLoader::GetInstance()->LoadModelFromFile("tree");
@@ -18,7 +18,7 @@ void BackGround::Initialize(float adjustPos_)
 	backGroundModels.insert(std::make_pair("wall", wallModel));
 	backGroundModels.insert(std::make_pair("pillar", pillarModel));
 
-	//-------”wŒi”z’u------
+	//-------èƒŒæ™¯é…ç½®------
 	SetObject(adjustPos_);
 }
 
@@ -38,18 +38,18 @@ void BackGround::Draw(ID3D12GraphicsCommandList* cmdList_)
 
 void BackGround::SetObject(float adjustPos_)
 {
-	//ƒ‰ƒ“ƒ_ƒ€‚Å”z’u‚·‚éƒ}ƒbƒv‚ğ‘I‘ğ
+	//ãƒ©ãƒ³ãƒ€ãƒ ã§é…ç½®ã™ã‚‹ãƒãƒƒãƒ—ã‚’é¸æŠ
 	int num = static_cast<int>(Random(1.0f,4.99f));
 
-	//jsonƒtƒ@ƒCƒ‹“Ç‚İ‚İ
+	//jsonãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿
 	LoadJson(num);
-	//ƒIƒuƒWƒFƒNƒg‚Ì”z’u
+	//ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®é…ç½®
 	ArrangementObject(adjustPos_);
 }
 
 void BackGround::LoadJson(int num)
 {
-	// ƒŒƒxƒ‹ƒf[ƒ^‚Ì“Ç‚İ‚İ
+	// ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿
 	switch (num)
 	{
 	case 1:
@@ -70,47 +70,47 @@ void BackGround::LoadJson(int num)
 void BackGround::ArrangementObject(float adjustPos_)
 {
 
-	// ƒŒƒxƒ‹ƒf[ƒ^‚©‚çƒIƒuƒWƒFƒNƒg‚ğ¶¬A”z’u
+	// ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿ã‹ã‚‰ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆã€é…ç½®
 	for (auto& objectData : levelData->objects) {
-		// ƒtƒ@ƒCƒ‹–¼‚©‚ç“o˜^Ï‚İƒ‚ƒfƒ‹‚ğŒŸõ
+		// ãƒ•ã‚¡ã‚¤ãƒ«åã‹ã‚‰ç™»éŒ²æ¸ˆã¿ãƒ¢ãƒ‡ãƒ«ã‚’æ¤œç´¢
 		FbxModel* model_ = nullptr;
 		decltype(backGroundModels)::iterator it = backGroundModels.find(objectData.fileName);
 		if (it != backGroundModels.end()) {
 			model_ = it->second;
 		}
 
-		// ƒ‚ƒfƒ‹‚ğw’è‚µ‚Ä3DƒIƒuƒWƒFƒNƒg‚ğ¶¬
+		// ãƒ¢ãƒ‡ãƒ«ã‚’æŒ‡å®šã—ã¦3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆ
 		FbxObject3D* newObject = new FbxObject3D;
 		newObject->Initialize();
 		newObject->SetModel(model_);
 
-		// À•W
+		// åº§æ¨™
 		DirectX::XMFLOAT3 pos;
 		DirectX::XMStoreFloat3(&pos, objectData.translation);
-		//‰º‚É”z’u
+		//ä¸‹ã«é…ç½®
 		pos.y -= 12.0f;
-		//’²®
+		//èª¿æ•´
 		pos.z += adjustPos_;
 		newObject->SetPosition(pos);
 
-		// ‰ñ“]Šp
+		// å›è»¢è§’
 		DirectX::XMFLOAT3 rot;
 		DirectX::XMStoreFloat3(&rot, objectData.rotation_);
 		rot.x = static_cast<float>(90 * (PI / 180));
 		newObject->SetRotate(rot);
 
-		// ƒTƒCƒY
+		// ã‚µã‚¤ã‚º
 		DirectX::XMFLOAT3 scale_;
 		DirectX::XMStoreFloat3(&scale_, objectData.scaling);
 		newObject->SetScale(scale_);
 
-		//XV
+		//æ›´æ–°
 		newObject->Update();
 
-		// ”z—ñ‚É“o˜^
+		// é…åˆ—ã«ç™»éŒ²
 		backGroundObjects.push_back(newObject);
 
-		//ƒIƒuƒWƒFƒNƒg‚ªground‚Ì‚»‚Ìƒ|ƒWƒVƒ‡ƒ“‚ğ’†S‚Æ‚·‚é
+		//ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒgroundã®æ™‚ãã®ãƒã‚¸ã‚·ãƒ§ãƒ³ã‚’ä¸­å¿ƒã¨ã™ã‚‹
 		if (it->first == "ground") {
 			this->position_ = pos;
 		}
@@ -120,9 +120,9 @@ void BackGround::ArrangementObject(float adjustPos_)
 void BackGround::DeleteObject()
 {
 	for (auto& object : backGroundObjects) {
-		//—v‘f‚Ì‰ğ•ú
+		//è¦ç´ ã®è§£æ”¾
 		delete object;
 	}
-	//‚·‚×‚Ä‚Ì—v‘f‚ğƒRƒ“ƒeƒi‚©‚çæ‚èœ‚­
+	//ã™ã¹ã¦ã®è¦ç´ ã‚’ã‚³ãƒ³ãƒ†ãƒŠã‹ã‚‰å–ã‚Šé™¤ã
 	backGroundObjects.clear();
 }

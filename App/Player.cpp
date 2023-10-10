@@ -26,24 +26,24 @@ Player::~Player()
 
 void Player::Initialize(Input* input)
 {
-	//“ü—Í‚ÌƒZƒbƒg
+	//å…¥åŠ›ã®ã‚»ãƒƒãƒˆ
 	this->input_ = input;
 
-	//ƒ‚ƒfƒ‹–¼‚ğw’è‚µ‚Äƒtƒ@ƒCƒ‹“Ç‚İ‚İ
+	//ãƒ¢ãƒ‡ãƒ«åã‚’æŒ‡å®šã—ã¦ãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿
 	playerModel_ = FbxLoader::GetInstance()->LoadModelFromFile("player");
 	playerBulletModel_ = FbxLoader::GetInstance()->LoadModelFromFile("playerBullet");
 	bReticleModel_ = FbxLoader::GetInstance()->LoadModelFromFile("backReticle");
 	fReticleModel_ = FbxLoader::GetInstance()->LoadModelFromFile("frontReticle");
 
-	//3dƒIƒuƒWƒFƒNƒg¶¬‚Æƒ‚ƒfƒ‹‚ÌƒZƒbƒg
+	//3dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç”Ÿæˆã¨ãƒ¢ãƒ‡ãƒ«ã®ã‚»ãƒƒãƒˆ
 	playerObject_ = new FbxObject3D;
 	playerObject_->Initialize();
 	playerObject_->SetModel(playerModel_);
 
-	//’eƒ‚ƒfƒ‹ƒZƒbƒg
+	//å¼¾ãƒ¢ãƒ‡ãƒ«ã‚»ãƒƒãƒˆ
 	this->bulletModel_ = playerBulletModel_;
 
-	//ƒŒƒeƒBƒNƒ‹ƒ‚ƒfƒ‹ƒZƒbƒg
+	//ãƒ¬ãƒ†ã‚£ã‚¯ãƒ«ãƒ¢ãƒ‡ãƒ«ã‚»ãƒƒãƒˆ
 	frontReticleObject_ = new FbxObject3D;
 	frontReticleObject_->Initialize();
 	frontReticleObject_->SetModel(fReticleModel_);
@@ -52,11 +52,11 @@ void Player::Initialize(Input* input)
 	backReticleObject_->Initialize();
 	backReticleObject_->SetModel(bReticleModel_);
 
-	//ƒ‰ƒWƒAƒ“•ÏŠ·
+	//ãƒ©ã‚¸ã‚¢ãƒ³å¤‰æ›
 	fRRotation_.y = static_cast<float>(90 * (PI / 180));
 	bRRotation_.y = static_cast<float>(90 * (PI / 180));
 
-	//ƒXƒvƒ‰ƒCƒg
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	speedSprite_ = new Sprite();
 	speedSprite_->SetTextureNum(2);
 	speedSprite_->Initialize();
@@ -65,16 +65,16 @@ void Player::Initialize(Input* input)
 
 void Player::Update()
 {
-	//ˆÚ“®
+	//ç§»å‹•
 	Move();
 
-	//ƒŒƒeƒBƒNƒ‹‚ÌXV
+	//ãƒ¬ãƒ†ã‚£ã‚¯ãƒ«ã®æ›´æ–°
 	UpdateRaticle();
 
-	//ƒXƒvƒ‰ƒCƒg‚ÌXV
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®æ›´æ–°
 	UpdateSprite();
 
-	//’e‚ÌXV
+	//å¼¾ã®æ›´æ–°
 	BulletUpdate();
 
 	if (isInvincible_) {
@@ -106,7 +106,7 @@ void Player::Draw(ID3D12GraphicsCommandList* cmdList)
 		playerObject_->Draw(cmdList);
 	}
 
-	//’e
+	//å¼¾
 	for (std::unique_ptr<PlayerBullet>& bullet : bullets_)
 	{
 		bullet->Draw(cmdList);
@@ -115,11 +115,11 @@ void Player::Draw(ID3D12GraphicsCommandList* cmdList)
 
 void Player::DrawSprite(ID3D12GraphicsCommandList* cmdList)
 {
-	//ƒŒƒeƒBƒNƒ‹
+	//ãƒ¬ãƒ†ã‚£ã‚¯ãƒ«
 	frontReticleObject_->Draw(cmdList);
 	backReticleObject_->Draw(cmdList);
 
-	//ƒXƒs[ƒhUI
+	//ã‚¹ãƒ”ãƒ¼ãƒ‰UI
 	speedSprite_->Draw(cmdList);
 }
 
@@ -150,7 +150,7 @@ void Player::Move()
 
 	if (input_->PushKey(DIK_W) || input_->PushKey(DIK_S) || input_->PushKey(DIK_D) || input_->PushKey(DIK_A)) {
 
-		//À•W‚ğˆÚ“®‚·‚éˆ—
+		//åº§æ¨™ã‚’ç§»å‹•ã™ã‚‹å‡¦ç†
 		if (input_->PushKey(DIK_W)) {
 			if (MoveMax_.y > position_.y) { position_.y += speedXY_; }
 		}
@@ -187,32 +187,32 @@ void Player::Shot()
 
 void Player::BulletUpdate()
 {
-	//---’e---
+	//---å¼¾---
 	Shot();
-	//ƒvƒŒƒCƒ„[‚Ì’eXV
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å¼¾æ›´æ–°
 	for (std::unique_ptr<PlayerBullet>& bullet : bullets_)
 	{
 		bullet->Update();
 	}
-	//ƒfƒXƒtƒ‰ƒO‚Ì—§‚Á‚½’e‚ğíœ
+	//ãƒ‡ã‚¹ãƒ•ãƒ©ã‚°ã®ç«‹ã£ãŸå¼¾ã‚’å‰Šé™¤
 	bullets_.remove_if([](std::unique_ptr<PlayerBullet>& bullet) {return bullet->GetIsDead(); });
 }
 
 void Player::MakeBullet()
 {
-	//©‹@‚ÆƒŒƒeƒBƒNƒ‹‚ÌƒxƒNƒgƒ‹‚ğæ‚é
+	//è‡ªæ©Ÿã¨ãƒ¬ãƒ†ã‚£ã‚¯ãƒ«ã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’å–ã‚‹
 	Vector3 velocity = playerToReticleVec_;
 
-	//³‹K‰»‚ğ‚µ‚Ä‘¬“x‚ğ‚©‚¯‚é
+	//æ­£è¦åŒ–ã‚’ã—ã¦é€Ÿåº¦ã‚’ã‹ã‘ã‚‹
 	velocity.normalize();
 
 	bulletSpeed_ = (speedZ_ + addSpeed_);
 	velocity* bulletSpeed_;
 
-	//z²‚Í©‹@‚à“®‚¢‚Ä‚¢‚é‚½‚ß‚»‚ÌƒXƒs[ƒh‚à‘«‚·
+	//zè»¸ã¯è‡ªæ©Ÿã‚‚å‹•ã„ã¦ã„ã‚‹ãŸã‚ãã®ã‚¹ãƒ”ãƒ¼ãƒ‰ã‚‚è¶³ã™
 	velocity.z += (speedZ_ + addSpeed_);
 
-	//’e‚Ì¶¬
+	//å¼¾ã®ç”Ÿæˆ
 	std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
 	newBullet->Initialize(bulletModel_, position_, velocity);
 	bullets_.push_back(std::move(newBullet));
@@ -222,27 +222,27 @@ void Player::UpdateRaticle()
 {
 	MoveRaticle();
 
-	//©‹@‚Ìƒ[ƒ‹ƒhÀ•W‚©‚ç3DƒŒƒeƒBƒNƒ‹‚Ìƒ[ƒ‹ƒhÀ•W‚ğŒvZ
+	//è‡ªæ©Ÿã®ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã‹ã‚‰3Dãƒ¬ãƒ†ã‚£ã‚¯ãƒ«ã®ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã‚’è¨ˆç®—
 	{
-		//‰œ‚ÌƒŒƒeƒBƒNƒ‹‚ÍƒŒƒeƒBƒNƒ‹À•W‚ğ‚»‚Ì‚Ü‚Ü“ü‚ê‚é
+		//å¥¥ã®ãƒ¬ãƒ†ã‚£ã‚¯ãƒ«ã¯ãƒ¬ãƒ†ã‚£ã‚¯ãƒ«åº§æ¨™ã‚’ãã®ã¾ã¾å…¥ã‚Œã‚‹
 		fRPosition_ = reticlePosition_;
 
-		//’†‰›‚ÌƒŒƒeƒBƒNƒ‹‚Í©‹@‚Æ,ƒŒƒeƒBƒNƒ‹À•W‚ÌƒxƒNƒgƒ‹‚©‚çÀ•W‚ğZo
+		//ä¸­å¤®ã®ãƒ¬ãƒ†ã‚£ã‚¯ãƒ«ã¯è‡ªæ©Ÿã¨,ãƒ¬ãƒ†ã‚£ã‚¯ãƒ«åº§æ¨™ã®ãƒ™ã‚¯ãƒˆãƒ«ã‹ã‚‰åº§æ¨™ã‚’ç®—å‡º
 		playerVec_ = { position_.x,position_.y,position_.z };
 		reticleVec_ = { reticlePosition_.x, reticlePosition_.y, reticlePosition_.z };
 		playerToReticleVec_ = reticleVec_ - playerVec_;
 
-		//©‹@‚©‚ç‚ÌƒxƒNƒgƒ‹‚ğ‹‚ß‚é
+		//è‡ªæ©Ÿã‹ã‚‰ã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’æ±‚ã‚ã‚‹
 		playerToReticleVec_ = playerToReticleVec_ / (kDistancePlayerTo3DFrontReticle_ / kDistancePlayerTo3DBackReticle_);
 
-		//©‹@‚©‚ç‚ÌƒxƒNƒgƒ‹‚Æ©‹@‚ÌÀ•W‚ğ‘«‚·
+		//è‡ªæ©Ÿã‹ã‚‰ã®ãƒ™ã‚¯ãƒˆãƒ«ã¨è‡ªæ©Ÿã®åº§æ¨™ã‚’è¶³ã™
 		bRPosition_ = position_;
 		bRPosition_.x += playerToReticleVec_.x;
 		bRPosition_.y += playerToReticleVec_.y;
 		bRPosition_.z += playerToReticleVec_.z;
 	}
 
-	//ƒIƒuƒWƒFƒNƒg‚ÌXV
+	//ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®æ›´æ–°
 	frontReticleObject_->SetPosition(fRPosition_);
 	frontReticleObject_->SetRotate(fRRotation_);
 	frontReticleObject_->SetScale(fRScale_);
@@ -256,15 +256,15 @@ void Player::UpdateRaticle()
 
 void Player::MoveRaticle()
 {
-	//ƒŒƒeƒBƒNƒ‹‚ÌˆÚ“®
+	//ãƒ¬ãƒ†ã‚£ã‚¯ãƒ«ã®ç§»å‹•
 
-	//©‹@‚©‚çİ’è‚µ‚½‹——£i‚ñ‚¾‚Æ‚±‚ë‚ÉÀ•W‚ğİ’è
+	//è‡ªæ©Ÿã‹ã‚‰è¨­å®šã—ãŸè·é›¢é€²ã‚“ã ã¨ã“ã‚ã«åº§æ¨™ã‚’è¨­å®š
 	reticlePosition_.z = position_.z + kDistancePlayerTo3DFrontReticle_;
 
-	//“ü—Í‚ÅˆÚ“®
+	//å…¥åŠ›ã§ç§»å‹•
 	if (input_->PushKey(DIK_UP) || input_->PushKey(DIK_DOWN) || input_->PushKey(DIK_RIGHT) || input_->PushKey(DIK_LEFT)) {
 
-		//À•W‚ğˆÚ“®‚·‚éˆ—
+		//åº§æ¨™ã‚’ç§»å‹•ã™ã‚‹å‡¦ç†
 		if (input_->PushKey(DIK_UP)) {
 			if (ReticleMoveMax_.y > reticlePosition_.y) { reticlePosition_.y += reticleSpeedXY_; }
 		}
@@ -284,17 +284,17 @@ void Player::MoveRaticle()
 
 void Player::UpdateSprite()
 {
-	//¡‚ÌƒXƒs[ƒh‚ªÅ‘åƒXƒs[ƒh‚Ì‰½Š„‚©ŒvZ‚µƒXƒP[ƒ‹‚ğ‚»‚ê‚É‡‚í‚¹‚é
+	//ä»Šã®ã‚¹ãƒ”ãƒ¼ãƒ‰ãŒæœ€å¤§ã‚¹ãƒ”ãƒ¼ãƒ‰ã®ä½•å‰²ã‹è¨ˆç®—ã—ã‚¹ã‚±ãƒ¼ãƒ«ã‚’ãã‚Œã«åˆã‚ã›ã‚‹
 
-	//¡‚ÌƒXƒs[ƒh(Šî‘bƒXƒs[ƒh‚Í‚Ì‚¼‚­)‚ª‰½Š„‚©
+	//ä»Šã®ã‚¹ãƒ”ãƒ¼ãƒ‰(åŸºç¤ã‚¹ãƒ”ãƒ¼ãƒ‰ã¯ã®ãã)ãŒä½•å‰²ã‹
 	float speedRate = addSpeed_ / MaxSpeed_;
-	//ƒXƒvƒ‰ƒCƒg‚ÌÅ‘åƒTƒCƒY
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®æœ€å¤§ã‚µã‚¤ã‚º
 	float speedSpriteMaxSize = window_width - (speedSpriteXSpace_ * 2);
 
-	//Å‘åƒTƒCƒY‚Æ¡‚ÌƒXƒs[ƒh‚ÌŠ„‡‚ğ‚©‚¯‚é
+	//æœ€å¤§ã‚µã‚¤ã‚ºã¨ä»Šã®ã‚¹ãƒ”ãƒ¼ãƒ‰ã®å‰²åˆã‚’ã‹ã‘ã‚‹
 	speedSpriteScale_.x = speedSpriteMaxSize * speedRate;
 
-	//XV
+	//æ›´æ–°
 	speedSprite_->SetScale(speedSpriteScale_);
 	speedSprite_->SetPosition(speedSpritePosition_);
 	speedSprite_->Update();
@@ -302,18 +302,18 @@ void Player::UpdateSprite()
 
 void Player::Reset()
 {
-	//À•W
+	//åº§æ¨™
 	position_ = { 0,0,0 };
-	//‘¬“x
+	//é€Ÿåº¦
 	speedZ_ = 0.5f;
 	addSpeed_ = 0.0f;
 
-	//ƒŒƒeƒBƒNƒ‹
+	//ãƒ¬ãƒ†ã‚£ã‚¯ãƒ«
 	reticlePosition_ = { 0,0,0 };
 	fRPosition_ = { 0,0,0 };
 	bRPosition_ = { 0,0,0 };
 
-	//’e
+	//å¼¾
 	bullets_.clear();
 }
 

@@ -6,40 +6,40 @@ ID3D12Device* Camera::device_ = nullptr;
 
 void Camera::StaticInitialize(ID3D12Device* dev)
 {
-	//NULL�`�F�b�N
+	//NULLチェック
 	assert(dev);
 	device_ = dev;
 }
 
 void Camera::Initialize(Input* input)
 {
-	//�����������o�Ɉڂ��čs��X�V
+	//引数をメンバに移して行列更新
 	this->input_ = input;
 
 	HRESULT result;
-	//�q�[�v�ݒ�
+	//ヒープ設定
 	D3D12_HEAP_PROPERTIES cbHeapProp{  };
-	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD;	//GPU�ւ̓]���p
-	//���\�[�X�ݒ�
+	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD;	//GPUへの転送用
+	//リソース設定
 	D3D12_RESOURCE_DESC cbResourceDesc{};
 	cbResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	cbResourceDesc.Width = (sizeof(ConstBufferCamera) + 0xff) & ~0xff;	//256�o�C�g�A���C�������g
+	cbResourceDesc.Width = (sizeof(ConstBufferCamera) + 0xff) & ~0xff;	//256バイトアラインメント
 	cbResourceDesc.Height = 1;
 	cbResourceDesc.DepthOrArraySize = 1;
 	cbResourceDesc.MipLevels = 1;
 	cbResourceDesc.SampleDesc.Count = 1;
 	cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-	//�萔�o�b�t�@�̐���
+	//定数バッファの生成
 	result = device_->CreateCommittedResource(
-		&cbHeapProp,//�q�[�v�ݒ�
+		&cbHeapProp,//ヒープ設定
 		D3D12_HEAP_FLAG_NONE,
-		&cbResourceDesc,//���\�[�X�ݒ�
+		&cbResourceDesc,//リソース設定
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
 		IID_PPV_ARGS(&constBuff_));
 	assert(SUCCEEDED(result));
-	//�萔�o�b�t�@�̃}�b�s���O
-	result = constBuff_->Map(0, nullptr, (void**)&constMap);//�}�b�s���O
+	//定数バッファのマッピング
+	result = constBuff_->Map(0, nullptr, (void**)&constMap);//マッピング
 	assert(SUCCEEDED(result));
 
 	UpdateMatrix();
@@ -47,14 +47,14 @@ void Camera::Initialize(Input* input)
 
 void Camera::UpdateMatrix()
 {
-	//��p�̍s���錾
+	//専用の行列を宣言
 	matProjection_ = XMMatrixPerspectiveFovLH(
-		XMConvertToRadians(45.0f),					//�㉺��p45�x
-		(float)WinApp::winW / WinApp::winH,	//�A�X�y�N�g��i��ʉ���/��ʏc���j
-		0.1f, 1000.0f								//�O���A����
+		XMConvertToRadians(45.0f),					//上下画角45度
+		(float)WinApp::winW / WinApp::winH,	//アスペクト比（画面横幅/画面縦幅）
+		0.1f, 1000.0f								//前橋、奥橋
 	);
 
-	//�r���[�ϊ��s��̌v�Z
+	//ビュー変換行列の計算
 	matView_ = XMMatrixLookAtLH(XMLoadFloat3(&eye_), XMLoadFloat3(&target_), XMLoadFloat3(&up_));
 
 	constMap->view = matView_;
@@ -63,7 +63,7 @@ void Camera::UpdateMatrix()
 
 void Camera::Update(XMFLOAT3 playerPos, XMFLOAT3 bossPos)
 {
-	//�f�[�^�X�V
+	//データ更新
 	this->playerPos_ = playerPos;
 	this->bossPos_ = bossPos;
 
@@ -90,14 +90,14 @@ void Camera::Update(XMFLOAT3 playerPos, XMFLOAT3 bossPos)
 
 void Camera::UpdateStraightMode()
 {
-	//���X�s�[�h�Ői�ݑ�����
+	//一定スピードで進み続ける
 	eye_.z += straightModeSpeed_;
 	target_.z = eye_.z + playerRange_;
 }
 
 void Camera::UpdatePlayerFollowMode()
 {
-	//�v���C���[�̌�납��v���C���[��Ǐ]���鎋�_
+	//プレイヤーの後ろからプレイヤーを追従する視点
 	eye_.z = playerPos_.z - playerRange_;
 	target_.z = playerPos_.z;
 }
@@ -106,15 +106,15 @@ void Camera::UpdateTitleToPlayMode()
 {
 	if (phase_ == 0) {
 
-		//�擾�����C�[�W���O�p�̊J�n�ʒu�ƏI���ʒu�ŃC�[�W���O���s��
+		//取得したイージング用の開始位置と終了位置でイージングを行う
 		eye_ = EaseIn3D(startEye_, endEye_, easeing_.timeRate);
 		target_ = EaseIn3D(startTarget_, endTarget_, easeing_.timeRate);
 
 		if (!easeing_.GetActive()) {
-			//���o���I������玟�̃t�F�[�Y��
+			//演出が終わったら次のフェーズへ
 			phase_++;
 
-			//�C�[�W���O�p�̃f�[�^��ݒ肵�Ȃ���
+			//イージング用のデータを設定しなおす
 			easeing_.Start(easeingTime_);
 
 			startEye_ = eye_;
@@ -126,12 +126,12 @@ void Camera::UpdateTitleToPlayMode()
 	}
 	else if (phase_ == 1) {
 
-		//�擾�����C�[�W���O�p�̊J�n�ʒu�ƏI���ʒu�ŃC�[�W���O���s��
+		//取得したイージング用の開始位置と終了位置でイージングを行う
 		eye_ = EaseIn3D(startEye_, endEye_, easeing_.timeRate);
 		target_ = EaseIn3D(startTarget_, endTarget_, easeing_.timeRate);
 
 		if (!easeing_.GetActive()) {
-			//���o���I������烂�[�h�̐؂�ւ�
+			//演出が終わったらモードの切り替え
 			mode_ = PLAYERFOLLOWMODE;
 			isPerformance_ = false;
 		}
@@ -143,28 +143,28 @@ void Camera::UpdateTitleToPlayMode()
 void Camera::InitializeTitleToPlayMode()
 {
 
-	//�C�[�W���O�p�̊J�n�ʒu�ƏI���ʒu���擾
+	//イージング用の開始位置と終了位置を取得
 
-	//���݂̍��W���J�n�ʒu��
+	//現在の座標を開始位置に
 	startEye_ = eye_;
 	startTarget_ = target_;
 
-	//�������W��ێ�
+	//初期座標を保持
 	holdEye_ = startEye_;
 	holdTarget_ = startTarget_;
 
-	//���݂̕`��ő勗�����I���ʒu��
+	//現在の描画最大距離を終了位置に
 	endEye_ = eye_;
 	endTarget_ = target_;
 
 	endEye_.z = eye_.z + (rangeMaxZ_  * 2);
 	endTarget_.z = eye_.z + (rangeMaxZ_ * 2) + playerRange_;
 
-	//�C�[�W���O�p���l�̏�����
+	//イージング用数値の初期化
 	easeing_.Start(easeingTime_);
 	phase_ = 0;
 
-	//�p�t�H�[�}���X�t���O
+	//パフォーマンスフラグ
 	isPerformance_ = true;
 }
 
@@ -175,7 +175,7 @@ void Camera::DebugMode()
 
 	if (input_->PushKey(DIK_W) || input_->PushKey(DIK_S) || input_->PushKey(DIK_D) || input_->PushKey(DIK_A)) {
 
-		//���W���ړ����鏈��
+		//座標を移動する処理
 		if (input_->PushKey(DIK_W)) {
 			eye_.z += speed;
 		}
@@ -194,7 +194,7 @@ void Camera::DebugMode()
 
 	if (input_->PushKey(DIK_UP) || input_->PushKey(DIK_DOWN) || input_->PushKey(DIK_RIGHT) || input_->PushKey(DIK_LEFT)) {
 
-		//���W���ړ����鏈��
+		//座標を移動する処理
 		if (input_->PushKey(DIK_UP)) {
 			target_.y += speed;
 		}
@@ -216,7 +216,7 @@ void Camera::SetMode(int mode)
 {
 	this->mode_ = mode;
 
-	//���[�h���Ƃɏ��������K�v�ȏꍇ�͏�����
+	//モードごとに初期化が必要な場合は初期化
 	switch (mode_) {
 	case TITLETOPLAYMODE:
 		InitializeTitleToPlayMode();

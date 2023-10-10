@@ -18,11 +18,11 @@ float Random(float num1, float num2) {
 
 
 
-	//—”ƒV[ƒh¶¬Ší
+	//ä¹±æ•°ã‚·ãƒ¼ãƒ‰ç”Ÿæˆå™¨
 	std::random_device seedGem;
-	//ƒƒ‹ƒZƒ“ƒkEƒcƒCƒXƒ^[‚Ì—”ƒGƒ“ƒWƒ“
+	//ãƒ¡ãƒ«ã‚»ãƒ³ãƒŒãƒ»ãƒ„ã‚¤ã‚¹ã‚¿ãƒ¼ã®ä¹±æ•°ã‚¨ãƒ³ã‚¸ãƒ³
 	std::mt19937_64 engine(seedGem());
-	//—””ÍˆÍ‚Ìw’è
+	//ä¹±æ•°ç¯„å›²ã®æŒ‡å®š
 	std::uniform_real_distribution<float> dist(min, max);
 
 	return dist(engine);

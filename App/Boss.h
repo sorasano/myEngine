@@ -44,7 +44,7 @@ enum BossMoveType {
 class Boss
 {
 public:
-	//ƒVƒ“ƒOƒ‹ƒgƒ“ƒCƒ“ƒXƒ^ƒ“ƒX
+	//ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
 	Boss* GetInstance();
 	Boss();
 	~Boss();
@@ -52,24 +52,24 @@ public:
 	void Update(XMFLOAT3 pPos, float pSpeed);
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
-	//ˆÚ“®
+	//ç§»å‹•
 	void Move();
 	void MoveX();
 	void MoveY();
 
-	//ƒp[ƒeƒBƒNƒ‹
+	//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
 	void InitializeParticle();
 	void UpdateParticle();
 
-	//’e
+	//å¼¾
 	void Shot();
 	void BulletUpdate();
 	void MakeBullet(Vector3 velocity);
 
-	//ƒŠƒZƒbƒg
+	//ãƒªã‚»ãƒƒãƒˆ
 	void Reset();
 
-	//ƒQƒbƒ^[@ƒZƒbƒ^[@
+	//ã‚²ãƒƒã‚¿ãƒ¼ã€€ã‚»ãƒƒã‚¿ãƒ¼ã€€
 	XMFLOAT3 GetPosition() { return position_; };
 	XMFLOAT3 GetRotation() { return rotation_; };
 	XMFLOAT3 GetScale() { return scale_; };
@@ -87,99 +87,99 @@ public:
 
 	void ChangeAction();
 
-	//“–‚½‚è”»’è
+	//å½“ãŸã‚Šåˆ¤å®š
 	CollisionData GetColData();
 
-	//©‹@‚Ì’e‚Æ‚Ì“–‚½‚è”»’è
+	//è‡ªæ©Ÿã®å¼¾ã¨ã®å½“ãŸã‚Šåˆ¤å®š
 	void HitBullet();
 
-	//’e
+	//å¼¾
 	int GetBulletSize() { return static_cast<int>(bullets_.size()); }
 	CollisionData GetBulletColData(int i);
 	void SetBulletIsDead(bool isDead, int i);
 
 private:
-	//ƒAƒtƒBƒ“•ÏŠ·î•ñ;
+	//ã‚¢ãƒ•ã‚£ãƒ³å¤‰æ›æƒ…å ±;
 	XMFLOAT3 position_ = { 0,0,0 };
 	XMFLOAT3 rotation_ = { 0,0,0 };
 	XMFLOAT3 scale_ = { 1,1,1 };
 
-	//ƒ[ƒ‹ƒh•ÏŠ·s—ñ
+	//ãƒ¯ãƒ¼ãƒ«ãƒ‰å¤‰æ›è¡Œåˆ—
 	XMMATRIX matWorld_ = {};
 
-	//“–‚½‚è”»’è—p
+	//å½“ãŸã‚Šåˆ¤å®šç”¨
 	XMFLOAT3 colSize_ = { 2.0f,2.0f,1.0f };
 private:
 	//FBX
 	FbxObject3D* BossObject_ = nullptr;
-	//ƒ‚ƒfƒ‹
+	//ãƒ¢ãƒ‡ãƒ«
 	FbxModel* normalBossModel_ = nullptr;
 	FbxModel* hardBossModel_ = nullptr;
 
 	FbxModel* bossBulletModel_ = nullptr;
 
-	//€–Sƒtƒ‰ƒO
+	//æ­»äº¡ãƒ•ãƒ©ã‚°
 	bool isDead_ = false;
 
-	//’Êís“®	 0 Nothing@‰½‚à‚µ‚È‚¢,1 normal ³–Ê‚É‚½‚Ü‚ğ‘Å‚Â‚¾‚¯ 2 homing@ƒz[ƒ~ƒ“ƒO’e‚ğ‘Å‚Â, 3`5 “®‚«‚È‚ª‚ç³–Ê‚É’e‚ğ‘Å‚Â
+	//é€šå¸¸è¡Œå‹•	 0 Nothingã€€ä½•ã‚‚ã—ãªã„,1 normal æ­£é¢ã«ãŸã¾ã‚’æ‰“ã¤ã ã‘ 2 homingã€€ãƒ›ãƒ¼ãƒŸãƒ³ã‚°å¼¾ã‚’æ‰“ã¤, 3ï½5 å‹•ããªãŒã‚‰æ­£é¢ã«å¼¾ã‚’æ‰“ã¤
 	int normalAction_ = 0;
-	//2’iŠK–Ús“®	 0 Nothing@‰½‚à‚µ‚È‚¢,1 normal ³–Ê‚É‚½‚Ü‚ğ‘Å‚Â‚¾‚¯ 2 homing@ƒz[ƒ~ƒ“ƒO’e‚ğ‘Å‚Â, 3`5 “®‚«‚È‚ª‚ç³–Ê‚É’e‚ğ‘Å‚Â
+	//2æ®µéšç›®è¡Œå‹•	 0 Nothingã€€ä½•ã‚‚ã—ãªã„,1 normal æ­£é¢ã«ãŸã¾ã‚’æ‰“ã¤ã ã‘ 2 homingã€€ãƒ›ãƒ¼ãƒŸãƒ³ã‚°å¼¾ã‚’æ‰“ã¤, 3ï½5 å‹•ããªãŒã‚‰æ­£é¢ã«å¼¾ã‚’æ‰“ã¤
 	int hardAction_ = 0;
-	//ËŒ‚ƒ^ƒCƒv 0 ‰½‚à‚µ‚È‚¢ 1 ’¼ü 2 ƒvƒŒƒCƒ„[‚ÉŒü‚©‚Á‚Ä
+	//å°„æ’ƒã‚¿ã‚¤ãƒ— 0 ä½•ã‚‚ã—ãªã„ 1 ç›´ç·š 2 ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«å‘ã‹ã£ã¦
 	int shotType_ = 0;
-	//ˆÚ“®ƒ^ƒCƒv 0 ˆÚ“®‚µ‚È‚¢ 1 X² 2 Y² 3Î‚ß
+	//ç§»å‹•ã‚¿ã‚¤ãƒ— 0 ç§»å‹•ã—ãªã„ 1 Xè»¸ 2 Yè»¸ 3æ–œã‚
 	int moveType_ = 0;
 
-	//ƒAƒNƒVƒ‡ƒ“•Ï‰»
+	//ã‚¢ã‚¯ã‚·ãƒ§ãƒ³å¤‰åŒ–
 	const int ActionCoolTime_ = 100;
 	int actionCollTimer_ = 0;
-	//ƒAƒNƒVƒ‡ƒ“”(’Êí)
+	//ã‚¢ã‚¯ã‚·ãƒ§ãƒ³æ•°(é€šå¸¸)
 	int normalActionSize_ = 6;
-	//ƒAƒNƒVƒ‡ƒ“”(2’iŠK–Ú)
+	//ã‚¢ã‚¯ã‚·ãƒ§ãƒ³æ•°(2æ®µéšç›®)
 	int hardActionSize_ = 6;
 
-	//ƒ{ƒX2’iŠK–Úƒtƒ‰ƒO
+	//ãƒœã‚¹2æ®µéšç›®ãƒ•ãƒ©ã‚°
 	bool isBossHardMode_ = 0;
 	//hp
 	int hp_ = 50;
-	//2’iŠK–Ú‚É‚È‚éhp
+	//2æ®µéšç›®ã«ãªã‚‹hp
 	int changeHardHp_ = 25;
 
-	//-------ˆÚ“®-------
-	//ˆÚ“® true‚ª+‚ÉˆÚ“®’†‚Åfalse‚ª-‚ÉˆÚ“®’†
+	//-------ç§»å‹•-------
+	//ç§»å‹• trueãŒ+ã«ç§»å‹•ä¸­ã§falseãŒ-ã«ç§»å‹•ä¸­
 	bool moveX_ = true;
 	bool moveY_ = true;
-	//ˆÚ“®§ŒÀ
+	//ç§»å‹•åˆ¶é™
 	float moveMaxX_ = 10;
 	float moveMaxY_ = 10;
-	//ˆÚ“®ƒXƒs[ƒh
+	//ç§»å‹•ã‚¹ãƒ”ãƒ¼ãƒ‰
 	float moveSpeed_ = 0.1f;
 
-	//----------’e----------
+	//----------å¼¾----------
 	FbxModel* bulletModel_ = nullptr;
 	std::list<std::unique_ptr<BossBullet>> bullets_;
 
-	//’e‚Ì”­ËƒN[ƒ‹ƒ^ƒCƒ€
+	//å¼¾ã®ç™ºå°„ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ 
 	const int BulletCoolTime_ = 50;
 	int bulletCoolTimer_ = 0;
 
-	//’e‚Ì‘¬“x
+	//å¼¾ã®é€Ÿåº¦
 	float bulletSpeed_ = 1.0f;
 
-	//’e‚ğ‘Å‚¿n‚ß‚é”ÍˆÍ,ƒvƒŒƒCƒ„[‚©‚ç‰½i‚ñ‚¾‹——£‚©‚ç‚©
+	//å¼¾ã‚’æ‰“ã¡å§‹ã‚ã‚‹ç¯„å›²,ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‹ã‚‰ä½•é€²ã‚“ã è·é›¢ã‹ã‚‰ã‹
 	const float ShotStart_ = 100.0f;
 	float shotStartPos_ = 100.0f;
 
 
-	//-----ƒp[ƒeƒBƒNƒ‹-----
+	//-----ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«-----
 	ParticleManager* particle_ = nullptr;
 	bool isParticle_ = false;
 
-	//ƒp[ƒeƒBƒNƒ‹ŠÔ
+	//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«æ™‚é–“
 	const int ParticleTime_ = 30;
 	int particleTimer_ = 0;
 
-	//------ƒvƒŒƒCƒ„[------
+	//------ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼------
 	XMFLOAT3 playerPosition_ = {};
 	float playerSpeed_ = 0.0f;
 };

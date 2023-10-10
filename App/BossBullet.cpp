@@ -20,26 +20,26 @@ BossBullet::~BossBullet()
 void BossBullet::Initialize(FbxModel* model, XMFLOAT3 position, Vector3 velocity, float playerSpeed)
 {
 
-	//3dƒIƒuƒWƒFƒNƒg¶¬‚Æƒ‚ƒfƒ‹‚ÌƒZƒbƒg
+	//3dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç”Ÿæˆã¨ãƒ¢ãƒ‡ãƒ«ã®ã‚»ãƒƒãƒˆ
 	BossBulletObject_ = new FbxObject3D;
 	BossBulletObject_->Initialize();
 	BossBulletObject_->SetModel(model);
 
-	//À•WAƒXƒs[ƒh‚ğƒZƒbƒg
+	//åº§æ¨™ã€ã‚¹ãƒ”ãƒ¼ãƒ‰ã‚’ã‚»ãƒƒãƒˆ
 	this->position_ = position;
 	this->velocity_ = velocity;
 
 	//scale_.z = 5.0f;
 
-	//Šp“x‚ğƒxƒNƒgƒ‹‚©‚ç‹‚ß‚Äƒ‚ƒfƒ‹‚É”½‰f
-	//Y²ü‚èŠp“x
+	//è§’åº¦ã‚’ãƒ™ã‚¯ãƒˆãƒ«ã‹ã‚‰æ±‚ã‚ã¦ãƒ¢ãƒ‡ãƒ«ã«åæ˜ 
+	//Yè»¸å‘¨ã‚Šè§’åº¦
 	this->rotation_.y = std::atan2(velocity_.x, velocity_.z - playerSpeed);
 
-	//‰¡²•ûŒü‚Ì’·‚³‚ğ‹‚ß‚é
+	//æ¨ªè»¸æ–¹å‘ã®é•·ã•ã‚’æ±‚ã‚ã‚‹
 	Vector3 velocityXZ = { velocity_.x,0.0f,velocity_.z - playerSpeed };
 	float length = velocityXZ.length();
 
-	//X²ü‚èŠp“x
+	//Xè»¸å‘¨ã‚Šè§’åº¦
 	this->rotation_.x = std::atan2(-velocity_.y, length);
 
 }
@@ -48,7 +48,7 @@ void BossBullet::Update()
 {
 	Move();
 
-	//ˆê’èŠÔŒo‰ß‚Å’eíœ
+	//ä¸€å®šæ™‚é–“çµŒéã§å¼¾å‰Šé™¤
 	if (--deathTimer_ <= 0) {
 		isDead_ = true;
 	}

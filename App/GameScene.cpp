@@ -22,28 +22,28 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	this->dxCommon_ = dxCommon;
 	this->input_ = input;
 
-	//ƒJƒƒ‰‰Šú‰»
+	//ã‚«ãƒ¡ãƒ©åˆæœŸåŒ–
 	camera_ = new Camera;
 	camera_->StaticInitialize(dxCommon->GetDevice());
 	camera_->Initialize(input_);
 
-	//“–‚½‚è”»’è
+	//å½“ãŸã‚Šåˆ¤å®š
 	collisionManager_ = new Collision();
 
-	// ƒp[ƒeƒBƒNƒ‹Ã“I‰Šú‰»
+	// ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«é™çš„åˆæœŸåŒ–
 	ParticleManager::StaticInitialize(dxCommon, WinApp::winW, WinApp::winH);
 
-	//ƒXƒvƒ‰ƒCƒgƒ}ƒl[ƒWƒƒ[
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼
 	SpriteManager::SetDevice(dxCommon->GetDevice());
 	spriteManager_ = new SpriteManager;
 	spriteManager_->Initialize();
 
-	//------ƒeƒNƒXƒ`ƒƒ------
+	//------ãƒ†ã‚¯ã‚¹ãƒãƒ£------
 	spriteManager_->LoadFile(0, "title.png");
 	spriteManager_->LoadFile(1, "clear.png");
 	spriteManager_->LoadFile(2, "blue1x1.png");
 
-	//-----ƒXƒvƒ‰ƒCƒg------
+	//-----ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ------
 	Sprite::SetDevice(dxCommon->GetDevice());
 	Sprite::SetSpriteManager(spriteManager_);
 	Sprite::CreateGraphicsPipeLine();
@@ -64,46 +64,46 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 
 	//----------FBX----------
 
-	//fbxLoadr”Ä—p‰Šú‰»
+	//fbxLoadræ±ç”¨åˆæœŸåŒ–
 	FbxLoader::GetInstance()->Initialize(dxCommon->GetDevice());
 
-	//ƒfƒoƒCƒX‚ğƒZƒbƒg
+	//ãƒ‡ãƒã‚¤ã‚¹ã‚’ã‚»ãƒƒãƒˆ
 	FbxObject3D::SetDevice(dxCommon->GetDevice());
 	FbxObject3D::SetCamera(camera_);
-	//ƒOƒ‰ƒtƒBƒbƒNƒXƒpƒCƒvƒ‰ƒCƒ“¶¬
+	//ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ç”Ÿæˆ
 	FbxObject3D::CreateGraphicsPipeline();
 
-	//----------”wŒi----------
+	//----------èƒŒæ™¯----------
 
 	for (int i = 0; i < backGroundSize_; i++) {
 		std::unique_ptr<BackGround>newBackGround = std::make_unique<BackGround>();
 		newBackGround->Initialize(adjustPos_);
 
-		//Œ»İ‚ÌˆÊ’u+1‚Â•ª‚ÌƒTƒCƒY‚ÅŸ‚Ìƒ}ƒbƒv‚ÌˆÊ’u‚ÉƒZƒbƒg
+		//ç¾åœ¨ã®ä½ç½®+1ã¤åˆ†ã®ã‚µã‚¤ã‚ºã§æ¬¡ã®ãƒãƒƒãƒ—ã®ä½ç½®ã«ã‚»ãƒƒãƒˆ
 		adjustPos_ = newBackGround->GetPosition().z + newBackGround->GetSize();
 
 		backGrounds_.push_back(std::move(newBackGround));
 	}
 
-	//ƒXƒJƒCƒh[ƒ€‰Šú‰»
+	//ã‚¹ã‚«ã‚¤ãƒ‰ãƒ¼ãƒ åˆæœŸåŒ–
 	Skydome* newSkydome = new Skydome();
 	newSkydome->Initialize();
 	skydome_.reset(newSkydome);
 
-	//------------ƒvƒŒƒCƒ„[----------
+	//------------ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼----------
 
-	//ƒvƒŒƒCƒ„[‰Šú‰»
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼åˆæœŸåŒ–
 	Player* newPlayer = new Player();
 	newPlayer->Initialize(input_);
 	player_.reset(newPlayer);
 
-	//----------------“G--------------
+	//----------------æ•µ--------------
 
-	//ƒ‚ƒfƒ‹–¼‚ğw’è‚µ‚Äƒtƒ@ƒCƒ‹“Ç‚İ‚İ
+	//ãƒ¢ãƒ‡ãƒ«åã‚’æŒ‡å®šã—ã¦ãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿
 	enemyModel_ = FbxLoader::GetInstance()->LoadModelFromFile("enemy");
 	enemyBulletModel_ = FbxLoader::GetInstance()->LoadModelFromFile("enemyBullet");
 
-	//csvƒtƒ@ƒCƒ‹–¼‘O
+	//csvãƒ•ã‚¡ã‚¤ãƒ«åå‰
 	enemyCsvsName_ = {
 	"enemy1",
 	"enemy2",
@@ -112,10 +112,10 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 
 	enemyCSVSize_ = static_cast<int>(enemyCsvsName_.size());
 
-	//csvƒf[ƒ^‚ğƒtƒ@ƒCƒ‹”•ª,”z—ñ‚É“ü—Í
+	//csvãƒ‡ãƒ¼ã‚¿ã‚’ãƒ•ã‚¡ã‚¤ãƒ«æ•°åˆ†,é…åˆ—ã«å…¥åŠ›
 	for (int i = 0; i < enemyCSVSize_; i++) {
 
-		//ƒtƒ@ƒCƒ‹‚Ì–¼‘O‚ğæ“¾
+		//ãƒ•ã‚¡ã‚¤ãƒ«ã®åå‰ã‚’å–å¾—
 		std::string fileName = enemyCsvsName_[i];
 
 		std::unique_ptr<CSVLoader>newEnemyCsv = std::make_unique<CSVLoader>();
@@ -124,7 +124,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 
 	}
 
-	//ƒ{ƒX
+	//ãƒœã‚¹
 	Boss* newBoss = new Boss();
 	newBoss->Initialize();
 	boss_.reset(newBoss);
@@ -133,26 +133,26 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 void GameScene::Update()
 {
 
-	//ƒJƒƒ‰XV
+	//ã‚«ãƒ¡ãƒ©æ›´æ–°
 	camera_->Update(player_->GetPosition(), boss_->GetPosition());
 
-	//”wŒi
+	//èƒŒæ™¯
 	UpdateBackGround();
 
-	//ƒV[ƒ“‚ÌØ‚è‘Ö‚í‚è
+	//ã‚·ãƒ¼ãƒ³ã®åˆ‡ã‚Šæ›¿ã‚ã‚Š
 	ChangeScene();
 
-	//ƒp[ƒeƒBƒNƒ‹ƒ}ƒl[ƒWƒƒ[Ã“IXV
+	//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼é™çš„æ›´æ–°
 	ParticleManager::StaticUpdate(camera_->GetEye(), camera_->GetTarget());
 
-	//ƒV[ƒ“XV
+	//ã‚·ãƒ¼ãƒ³æ›´æ–°
 	switch (scene_)
 	{
 	case TITLE:
 
 		titleSprite_->Update();
 
-		//“G
+		//æ•µ
 		for (std::unique_ptr<Enemy>& enemy : enemys_)
 		{
 			if (UpadateRange(camera_->GetEye(), enemy->GetPosition())) {
@@ -164,10 +164,10 @@ void GameScene::Update()
 
 	case NORMALPLAY:
 
-		//©‹@
+		//è‡ªæ©Ÿ
 		player_->Update();
 
-		//“G
+		//æ•µ
 		for (std::unique_ptr<Enemy>& enemy : enemys_)
 		{
 			if (UpadateRange(camera_->GetEye(), enemy->GetPosition())) {
@@ -175,19 +175,19 @@ void GameScene::Update()
 			}
 		}
 
-		//“–‚½‚è”»’è
+		//å½“ãŸã‚Šåˆ¤å®š
 		Collition();
 
 		break;
 	case BOSSPLAY:
 
-		//©‹@
+		//è‡ªæ©Ÿ
 		player_->Update();
 
-		//ƒ{ƒX
+		//ãƒœã‚¹
 		boss_->Update(player_->GetPosition(), player_->GetSpeed());
 
-		//“–‚½‚è”»’è
+		//å½“ãŸã‚Šåˆ¤å®š
 		BossSceneCollition();
 
 		break;
@@ -198,7 +198,7 @@ void GameScene::Update()
 		break;
 	}
 
-	//‰‰o
+	//æ¼”å‡º
 	if (isPerformance_) {
 		UpdatePerformance();
 	}
@@ -208,10 +208,10 @@ void GameScene::Update()
 void GameScene::Draw()
 {
 
-	//ƒXƒJƒCƒh[ƒ€
+	//ã‚¹ã‚«ã‚¤ãƒ‰ãƒ¼ãƒ 
 	skydome_->Draw(dxCommon_->GetCommandList());
 
-	//”wŒi
+	//èƒŒæ™¯
 	for (std::unique_ptr<BackGround>& backGround : backGrounds_) {
 		if (UpadateRange(camera_->GetEye(), backGround->GetPosition())) {
 			backGround->Draw(dxCommon_->GetCommandList());
@@ -222,7 +222,7 @@ void GameScene::Draw()
 
 	case TITLE:
 
-		//“G
+		//æ•µ
 		for (std::unique_ptr<Enemy>& enemy : enemys_)
 		{
 			if (UpadateRange(camera_->GetEye(), enemy->GetPosition())) {
@@ -230,14 +230,14 @@ void GameScene::Draw()
 			}
 		}
 
-		//©‹@
+		//è‡ªæ©Ÿ
 		//player_->Draw(dxCommon_->GetCommandList());
 
 		break;
 
 	case NORMALPLAY:
 
-		//“G
+		//æ•µ
 		for (std::unique_ptr<Enemy>& enemy : enemys_)
 		{
 			if (UpadateRange(camera_->GetEye(), enemy->GetPosition())) {
@@ -245,17 +245,17 @@ void GameScene::Draw()
 			}
 		}
 
-		//©‹@
+		//è‡ªæ©Ÿ
 		player_->Draw(dxCommon_->GetCommandList());
 
 		break;
 
 	case BOSSPLAY:
 
-		//©‹@
+		//è‡ªæ©Ÿ
 		player_->Draw(dxCommon_->GetCommandList());
 
-		//ƒ{ƒX
+		//ãƒœã‚¹
 		boss_->Draw(dxCommon_->GetCommandList());
 
 		break;
@@ -301,7 +301,7 @@ bool GameScene::UpadateRange(XMFLOAT3 cameraPos, XMFLOAT3 pos)
 
 void GameScene::Collition()
 {
-#pragma region “G‚Æ©‹@‚Ì’e‚Ì“–‚½‚è”»’è
+#pragma region æ•µã¨è‡ªæ©Ÿã®å¼¾ã®å½“ãŸã‚Šåˆ¤å®š
 
 	if (player_->GetBulletSize() != 0) {
 
@@ -310,14 +310,14 @@ void GameScene::Collition()
 			for (std::unique_ptr<Enemy>& enemy : enemys_)
 			{
 				if (!enemy->GetIsDead()) {
-					//“–‚½‚Á‚½‚©
+					//å½“ãŸã£ãŸã‹
 					if (collisionManager_->CheckSquareToSquare(enemy->GetColData(), player_->GetBulletColData(i))) {
 
-						//“–‚½‚Á‚½‚ç“G‚ÍÁ‚µ‚Äƒp[ƒeƒBƒNƒ‹¶¬
+						//å½“ãŸã£ãŸã‚‰æ•µã¯æ¶ˆã—ã¦ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ç”Ÿæˆ
 						enemy->SetISDesd(true);
 						enemy->InitializeParticle();
 
-						//©‹@‚Ì’e‚ğÁ‚µA©‹@‚ÌƒXƒs[ƒh‚ğã‚°ƒXƒRƒA‚ğ‰ÁZ
+						//è‡ªæ©Ÿã®å¼¾ã‚’æ¶ˆã—ã€è‡ªæ©Ÿã®ã‚¹ãƒ”ãƒ¼ãƒ‰ã‚’ä¸Šã’ã‚¹ã‚³ã‚¢ã‚’åŠ ç®—
 						player_->SetBulletIsDead(true, i);
 						player_->SpeedUpByEnemy();
 					}
@@ -328,19 +328,19 @@ void GameScene::Collition()
 
 #pragma endregion 
 
-#pragma region	“G‚Æ©‹@‚Ì“–‚½‚è”»’è
+#pragma region	æ•µã¨è‡ªæ©Ÿã®å½“ãŸã‚Šåˆ¤å®š
 
 	for (std::unique_ptr<Enemy>& enemy : enemys_)
 	{
 		if (!enemy->GetIsDead()) {
-			//“–‚½‚Á‚½‚©
+			//å½“ãŸã£ãŸã‹
 			if (collisionManager_->CheckSquareToSquare(enemy->GetColData(), player_->GetColData())) {
 
-				//“–‚½‚Á‚½‚ç“G‚ÍÁ‚µ‚Äƒp[ƒeƒBƒNƒ‹¶¬
+				//å½“ãŸã£ãŸã‚‰æ•µã¯æ¶ˆã—ã¦ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ç”Ÿæˆ
 				enemy->SetISDesd(true);
 				enemy->InitializeParticle();
 
-				//©‹@‚ÌƒXƒs[ƒh‚ğ‰º‚°,­‚µ–³“GŠÔ‚É
+				//è‡ªæ©Ÿã®ã‚¹ãƒ”ãƒ¼ãƒ‰ã‚’ä¸‹ã’,å°‘ã—ç„¡æ•µæ™‚é–“ã«
 				player_->SpeedDownByEnemy();
 				player_->SetIsInvincible(true);
 
@@ -350,7 +350,7 @@ void GameScene::Collition()
 
 #pragma endregion 
 
-#pragma region	“G‚Æ“G
+#pragma region	æ•µã¨æ•µ
 
 	const int enemySize = static_cast<const int>(enemys_.size());
 
@@ -369,10 +369,10 @@ void GameScene::Collition()
 
 			if (!it1->get()->GetIsDead() && !it2->get()->GetIsDead()) {
 
-				//“–‚½‚Á‚½‚©
+				//å½“ãŸã£ãŸã‹
 				if (collisionManager_->CheckSquareToSquare(it1->get()->GetColData(), it2->get()->GetColData())) {
 
-					//“–‚½‚Á‚½‚ç”½Ë‚³‚¹‚é
+					//å½“ãŸã£ãŸã‚‰åå°„ã•ã›ã‚‹
 					it1->get()->Reflection();
 					it2->get()->Reflection();
 
@@ -385,7 +385,7 @@ void GameScene::Collition()
 
 #pragma endregion 
 
-#pragma region ©‹@‚Æ“G‚Ì’e
+#pragma region è‡ªæ©Ÿã¨æ•µã®å¼¾
 
 	for (std::unique_ptr<Enemy>& enemy : enemys_)
 	{
@@ -394,10 +394,10 @@ void GameScene::Collition()
 			for (int i = 0; i < enemy->GetBulletSize(); i++) {
 
 				if (!enemy->GetIsDead()) {
-					//“–‚½‚Á‚½‚©
+					//å½“ãŸã£ãŸã‹
 					if (collisionManager_->CheckSquareToSquare(player_->GetColData(), enemy->GetBulletColData(i))) {
 
-						//“–‚½‚Á‚½‚ç“G‚Ì’e‚ğÁ‚µA©‹@‚ÌƒXƒs[ƒh‚ğ‰º‚°‚°ƒXƒRƒA‚ğŒ¸Z
+						//å½“ãŸã£ãŸã‚‰æ•µã®å¼¾ã‚’æ¶ˆã—ã€è‡ªæ©Ÿã®ã‚¹ãƒ”ãƒ¼ãƒ‰ã‚’ä¸‹ã’ã’ã‚¹ã‚³ã‚¢ã‚’æ¸›ç®—
 						enemy->SetBulletIsDead(true, i);
 						player_->SpeedDownByEnemy();
 
@@ -416,26 +416,26 @@ void GameScene::CheckEnemy()
 {
 	for (std::unique_ptr<Enemy>& enemy : enemys_) {
 
-		//ƒJƒƒ‰‚æ‚èŒã‚ë‚És‚Á‚½‚ç€–S
+		//ã‚«ãƒ¡ãƒ©ã‚ˆã‚Šå¾Œã‚ã«è¡Œã£ãŸã‚‰æ­»äº¡
 		if (enemy->GetPosition().z < camera_->GetEye().z) {
 			enemy->SetISDesd(true);
 		}
 
 	}
 
-	//ƒfƒXƒtƒ‰ƒO‚ªtrue‚Åƒp[ƒeƒBƒNƒ‹‰‰o‚à‚È‚¯‚ê‚ÎƒŠƒXƒg‚©‚çíœ
+	//ãƒ‡ã‚¹ãƒ•ãƒ©ã‚°ãŒtrueã§ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«æ¼”å‡ºã‚‚ãªã‘ã‚Œã°ãƒªã‚¹ãƒˆã‹ã‚‰å‰Šé™¤
 	enemys_.remove_if([](std::unique_ptr<Enemy>& enemy) {return enemy->GetIsDead() && !enemy->GetIsParticle(); });
 
-	//“G‚ª0‚É‚È‚Á‚½‚ç
+	//æ•µãŒ0ã«ãªã£ãŸã‚‰
 	if (enemys_.size() == 0) {
 
-		//ƒtƒF[ƒY‚ªÅ‘åˆÈ‰º‚¾‚Á‚½‚ç‚Ü‚½ƒtƒF[ƒYˆÚs‚·‚é
+		//ãƒ•ã‚§ãƒ¼ã‚ºãŒæœ€å¤§ä»¥ä¸‹ã ã£ãŸã‚‰ã¾ãŸãƒ•ã‚§ãƒ¼ã‚ºç§»è¡Œã™ã‚‹
 		if (phase_ < MaxPhase_) {
 			SetEnemy();
 			phase_++;
 		}
 		else {
-			//ƒtƒF[ƒY‚ªÅI‚¾‚Á‚½‚çƒV[ƒ“ˆÚs
+			//ãƒ•ã‚§ãƒ¼ã‚ºãŒæœ€çµ‚ã ã£ãŸã‚‰ã‚·ãƒ¼ãƒ³ç§»è¡Œ
 			BossSceneInitialize();
 		}
 	}
@@ -445,28 +445,28 @@ void GameScene::CheckEnemy()
 void GameScene::UpdateBackGround()
 {
 
-	//”wŒi
+	//èƒŒæ™¯
 	for (std::unique_ptr<BackGround>& backGround : backGrounds_)
 	{
 		backGround->Update();
 
-		//”wŒi‚ÌˆÊ’u‚ğƒJƒƒ‰‚ª’Ê‚è‰ß‚¬‚½‚ç
+		//èƒŒæ™¯ã®ä½ç½®ã‚’ã‚«ãƒ¡ãƒ©ãŒé€šã‚ŠéããŸã‚‰
 		if (backGround->GetPosition().z + backGround->GetSize() * 2.5 < camera_->GetEye().z) {
 
-			//‰ß‚¬‚½ƒIƒuƒWƒFƒNƒg‚ğíœ
+			//éããŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å‰Šé™¤
 			backGround->DeleteObject();
 
-			//ƒIƒuƒWƒFƒNƒg‚ğ”z’u‚µ‚È‚¨‚·
+			//ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’é…ç½®ã—ãªãŠã™
 			backGround->SetObject(adjustPos_);
 
-			//Œ»İ‚ÌˆÊ’u+1‚Â•ª‚ÌƒTƒCƒY‚ÅŸ‚Ìƒ}ƒbƒv‚ÌˆÊ’u‚ÉƒZƒbƒg
+			//ç¾åœ¨ã®ä½ç½®+1ã¤åˆ†ã®ã‚µã‚¤ã‚ºã§æ¬¡ã®ãƒãƒƒãƒ—ã®ä½ç½®ã«ã‚»ãƒƒãƒˆ
 			adjustPos_ = backGround->GetPosition().z + backGround->GetSize();
 
 		}
 
 	}
 
-	//ƒXƒJƒCƒh[ƒ€
+	//ã‚¹ã‚«ã‚¤ãƒ‰ãƒ¼ãƒ 
 	skydome_->Update(camera_->GetEye().z);
 
 }
@@ -474,10 +474,10 @@ void GameScene::UpdateBackGround()
 void GameScene::SetEnemy()
 {
 
-	//”­¶‚³‚¹‚éˆÊ’u‚ÍÅ‘å•`‰æ‹——£‚©‚ç
+	//ç™ºç”Ÿã•ã›ã‚‹ä½ç½®ã¯æœ€å¤§æç”»è·é›¢ã‹ã‚‰
 	float makePos = player_->GetPosition().z + camera_->GetRangeMaxZ();
 
-	//‰½”Ô–Ú‚ÌCSV‚ğƒZƒbƒg‚·‚é‚©(ƒ‰ƒ“ƒ_ƒ€)
+	//ä½•ç•ªç›®ã®CSVã‚’ã‚»ãƒƒãƒˆã™ã‚‹ã‹(ãƒ©ãƒ³ãƒ€ãƒ )
 	int setNum = static_cast<int>(Random(0, enemyCSVSize_ - 0.001f));
 	auto it = enemyCsvs_.begin();
 	std::advance(it, setNum);
@@ -497,26 +497,26 @@ void GameScene::SetEnemy()
 
 void GameScene::Reset()
 {
-	//ƒvƒŒƒCƒ„[
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
 	player_->Reset();
 
-	//“G
+	//æ•µ
 	enemys_.clear();
 	SetEnemy();
 	phase_ = 1;
 
-	//ƒ{ƒX
+	//ãƒœã‚¹
 	boss_->Reset();
 
-	//ƒJƒƒ‰
+	//ã‚«ãƒ¡ãƒ©
 	camera_->Update(player_->GetPosition(), boss_->GetPosition());
 
-	//”wŒi
+	//èƒŒæ™¯
 	adjustPos_ = 0;
 	for (std::unique_ptr<BackGround>& backGround : backGrounds_) {
-		//ƒIƒuƒWƒFƒNƒg‚ğ”z’u‚µ‚È‚¨‚·
+		//ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’é…ç½®ã—ãªãŠã™
 		backGround->SetObject(adjustPos_);
-		//Œ»İ‚ÌˆÊ’u+1‚Â•ª‚ÌƒTƒCƒY‚ÅŸ‚Ìƒ}ƒbƒv‚ÌˆÊ’u‚ÉƒZƒbƒg
+		//ç¾åœ¨ã®ä½ç½®+1ã¤åˆ†ã®ã‚µã‚¤ã‚ºã§æ¬¡ã®ãƒãƒƒãƒ—ã®ä½ç½®ã«ã‚»ãƒƒãƒˆ
 		adjustPos_ = backGround->GetPosition().z + backGround->GetSize();
 	}
 
@@ -524,7 +524,7 @@ void GameScene::Reset()
 
 void GameScene::ChangeScene()
 {
-	//ƒV[ƒ“‚ÌØ‚è‘Ö‚¦A‚»‚Ìƒ^ƒCƒ~ƒ“ƒO‚Å‚Ìî•ñ‚ÌXV
+	//ã‚·ãƒ¼ãƒ³ã®åˆ‡ã‚Šæ›¿ãˆã€ãã®ã‚¿ã‚¤ãƒŸãƒ³ã‚°ã§ã®æƒ…å ±ã®æ›´æ–°
 	switch (scene_)
 	{
 	case TITLE:
@@ -539,18 +539,18 @@ void GameScene::ChangeScene()
 
 	case NORMALPLAY:
 
-		//ƒ{ƒXíƒVƒ‡[ƒgƒJƒbƒg
+		//ãƒœã‚¹æˆ¦ã‚·ãƒ§ãƒ¼ãƒˆã‚«ãƒƒãƒˆ
 		if (input_->TriggerKey(DIK_RETURN)) {
 			BossSceneInitialize();
 		}
 
-		//“G‚ÌƒŠƒXƒg‚©‚çíœ—vŒŠm”F
+		//æ•µã®ãƒªã‚¹ãƒˆã‹ã‚‰å‰Šé™¤è¦ä»¶ç¢ºèª
 		CheckEnemy();
 
 		break;
 	case BOSSPLAY:
 
-		//ƒ{ƒX‚ª€‚ñ‚¾‚çŸ‚ÌƒV[ƒ“‚Ö
+		//ãƒœã‚¹ãŒæ­»ã‚“ã ã‚‰æ¬¡ã®ã‚·ãƒ¼ãƒ³ã¸
 		if (boss_->GetIsDead()) {
 			scene_ = CLEAR;
 		}
@@ -572,15 +572,15 @@ void GameScene::ChangeScene()
 void GameScene::PlaySceneInitialize()
 {
 
-	//ƒvƒŒƒCƒ„[
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
 	player_->SetPosition(XMFLOAT3{ camera_->GetEye().x,camera_->GetEye().y  - 10,camera_->GetEye().z });
 	player_->Update();
 
-	//“G
+	//æ•µ
 	SetEnemy();
 	phase_ = 1;
 
-	//ƒJƒƒ‰
+	//ã‚«ãƒ¡ãƒ©
 	camera_->Update(player_->GetPosition(), boss_->GetPosition());
 	camera_->SetMode(TITLETOPLAYMODE);
 
@@ -607,7 +607,7 @@ void GameScene::UpdatePerformance()
 
 void GameScene::TitleToPlayPerformance()
 {
-	//ƒJƒƒ‰‰‰o‚ªI‚í‚Á‚½‚çƒV[ƒ“ˆÚs
+	//ã‚«ãƒ¡ãƒ©æ¼”å‡ºãŒçµ‚ã‚ã£ãŸã‚‰ã‚·ãƒ¼ãƒ³ç§»è¡Œ
 	if (!camera_->GetIsPerformance()) {
 		scene_ = NORMALPLAY;
 		isPerformance_ = false;
@@ -635,7 +635,7 @@ void GameScene::BossSceneInitialize()
 
 void GameScene::BossSceneCollition()
 {
-#pragma region ƒ{ƒX‚Æ©‹@‚Ì’e‚Ì“–‚½‚è”»’è
+#pragma region ãƒœã‚¹ã¨è‡ªæ©Ÿã®å¼¾ã®å½“ãŸã‚Šåˆ¤å®š
 
 	if (player_->GetBulletSize() != 0) {
 
@@ -643,15 +643,15 @@ void GameScene::BossSceneCollition()
 
 
 			if (!boss_->GetIsDead()) {
-				//“–‚½‚Á‚½‚©
+				//å½“ãŸã£ãŸã‹
 				if (collisionManager_->CheckSquareToSquare(boss_->GetColData(), player_->GetBulletColData(i))) {
 
-					//“–‚½‚Á‚½‚çhp‚ğ‚Ö‚ç‚µ‚Äƒp[ƒeƒBƒNƒ‹¶¬
+					//å½“ãŸã£ãŸã‚‰hpã‚’ã¸ã‚‰ã—ã¦ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ç”Ÿæˆ
 					boss_->HitBullet();
 					boss_->InitializeParticle();
 					boss_->SetIsParticle(true);
 
-					//©‹@‚Ì’e‚ğÁ‚µAƒXƒRƒA‚ğ‰ÁZ
+					//è‡ªæ©Ÿã®å¼¾ã‚’æ¶ˆã—ã€ã‚¹ã‚³ã‚¢ã‚’åŠ ç®—
 					player_->SetBulletIsDead(true, i);
 
 				}
@@ -662,7 +662,7 @@ void GameScene::BossSceneCollition()
 
 #pragma endregion 
 
-#pragma region ©‹@‚Æƒ{ƒX‚Ì’e
+#pragma region è‡ªæ©Ÿã¨ãƒœã‚¹ã®å¼¾
 
 
 	if (boss_->GetBulletSize() != 0) {
@@ -670,10 +670,10 @@ void GameScene::BossSceneCollition()
 		for (int i = 0; i < boss_->GetBulletSize(); i++) {
 
 			if (!boss_->GetIsDead()) {
-				//“–‚½‚Á‚½‚©
+				//å½“ãŸã£ãŸã‹
 				if (collisionManager_->CheckSquareToSquare(player_->GetColData(), boss_->GetBulletColData(i))) {
 
-					//“–‚½‚Á‚½‚ç“G‚Ì’e‚ğÁ‚µA©‹@‚ÌƒXƒs[ƒh‚ğ‰º‚°ƒXƒRƒA‚ğŒ¸Z
+					//å½“ãŸã£ãŸã‚‰æ•µã®å¼¾ã‚’æ¶ˆã—ã€è‡ªæ©Ÿã®ã‚¹ãƒ”ãƒ¼ãƒ‰ã‚’ä¸‹ã’ã‚¹ã‚³ã‚¢ã‚’æ¸›ç®—
 					boss_->SetBulletIsDead(true, i);
 					player_->SpeedDownByEnemy();
 

@@ -8,7 +8,7 @@ DirectX::XMFLOAT2 EaseIn2D(DirectX::XMFLOAT2 start, DirectX::XMFLOAT2 end, float
 {
 	float nowTime;
 
-	//‚±‚±‚ÉƒC[ƒWƒ“ƒO‚Ì®‚ğ“ü‚ê‚é
+	//ã“ã“ã«ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ã®å¼ã‚’å…¥ã‚Œã‚‹
 	nowTime = static_cast<float>(pow(timer, 3));
 
 	DirectX::XMFLOAT2 resultVec;
@@ -22,7 +22,7 @@ DirectX::XMFLOAT2 EaseOut2D(DirectX::XMFLOAT2 start, DirectX::XMFLOAT2 end, floa
 {
 	float nowTime;
 
-	//‚±‚±‚ÉƒC[ƒWƒ“ƒO‚Ì®‚ğ“ü‚ê‚é
+	//ã“ã“ã«ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ã®å¼ã‚’å…¥ã‚Œã‚‹
 	nowTime = static_cast <float>(1 - pow(1 - timer, 3));
 
 	DirectX::XMFLOAT2 resultVec;
@@ -36,7 +36,7 @@ DirectX::XMFLOAT3 EaseIn3D(DirectX::XMFLOAT3 start, DirectX::XMFLOAT3 end, float
 {
 	float nowTime;
 
-	//‚±‚±‚ÉƒC[ƒWƒ“ƒO‚Ì®‚ğ“ü‚ê‚é
+	//ã“ã“ã«ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ã®å¼ã‚’å…¥ã‚Œã‚‹
 	nowTime = static_cast<float>(pow(timer, 3));
 
 	DirectX::XMFLOAT3 resultVec;
@@ -51,7 +51,7 @@ DirectX::XMFLOAT3 EaseOut3D(DirectX::XMFLOAT3 start, DirectX::XMFLOAT3 end, floa
 {
 	float nowTime;
 
-	//‚±‚±‚ÉƒC[ƒWƒ“ƒO‚Ì®‚ğ“ü‚ê‚é
+	//ã“ã“ã«ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ã®å¼ã‚’å…¥ã‚Œã‚‹
 	nowTime = static_cast <float>(1 - pow(1 - timer, 3));
 
 	DirectX::XMFLOAT3 resultVec;
@@ -64,13 +64,13 @@ DirectX::XMFLOAT3 EaseOut3D(DirectX::XMFLOAT3 start, DirectX::XMFLOAT3 end, floa
 
 void Easing::Update()
 {
-	//Œ»İ‚ğæ“¾
+	//ç¾åœ¨æ™‚åˆ»ã‚’å–å¾—
 	nowCount = clock();
-	//æ“¾‚³‚ê‚½ƒC[ƒWƒ“ƒOŠJnŠÔ‚ÅI—¹ŠÔ‚ªŒˆ‚Ü‚é
+	//å–å¾—ã•ã‚ŒãŸã‚¤ãƒ¼ã‚¸ãƒ³ã‚°é–‹å§‹æ™‚é–“ã§çµ‚äº†æ™‚é–“ãŒæ±ºã¾ã‚‹
 	endCount = nowCount - startCount;
-	//ƒ^ƒCƒ}[‚Ìi‚İ‹ï‡‚ğfloatŒ^‚É•ÏŠ·
+	//ã‚¿ã‚¤ãƒãƒ¼ã®é€²ã¿å…·åˆã‚’floatå‹ã«å¤‰æ›
 	endTimer = static_cast<float>(endCount) / 1'000.0f;
-	//(ƒ^ƒCƒ}[‚Ìis“x/Å‘åŠÔ)‚ÅƒC[ƒWƒ“ƒO‚Ìi‚İ‹ï‡‚ğŒvZ
+	//(ã‚¿ã‚¤ãƒãƒ¼ã®é€²è¡Œåº¦/æœ€å¤§æ™‚é–“)ã§ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ã®é€²ã¿å…·åˆã‚’è¨ˆç®—
 	timeRate = min(endTimer / maxTime, 1.0f);
 	//timeRate = endTimer / maxTime;
 }

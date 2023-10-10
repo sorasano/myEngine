@@ -5,15 +5,15 @@
 class ImGuiManager
 {
 public:
-	//‰Šú‰»
+	//åˆæœŸåŒ–
 	void Initialize(WinApp* winApp, DirectXCommon* dxCommon);
-	//I—¹ŒÄ‚Ño‚µˆ—
+	//çµ‚äº†æ™‚å‘¼ã³å‡ºã—å‡¦ç†
 	void Finalize();
-	//ImGuió•tŠJn
+	//ImGuiå—ä»˜é–‹å§‹
 	void Begin();
-	//ImGuió•tI—¹
+	//ImGuiå—ä»˜çµ‚äº†
 	void End();
-	//•`‰æ
+	//æç”»
 	void Draw();
 
 
@@ -21,7 +21,7 @@ private:
 	WinApp* winApp_;
 	DirectXCommon* dxCommon_;
 
-	//SRV—pƒfƒXƒNƒŠƒvƒ^ƒq[ƒv
+	//SRVç”¨ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>srvHeap_;
 };
 

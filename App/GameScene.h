@@ -29,10 +29,10 @@ enum Scene {
 };
 
 enum Performance {
-	TITLETOPLAY,//ƒ^ƒCƒgƒ‹¨ƒvƒŒƒCƒV[ƒ“‘JˆÚ
-	INBOSS,//ƒ{ƒXí“±“ü
-	CLEARBOSS,//ƒ{ƒXíƒNƒŠƒA
-	GAMEOVERBOSS//ƒ{ƒXíƒQ[ƒ€ƒI[ƒo[
+	TITLETOPLAY,//ã‚¿ã‚¤ãƒˆãƒ«â†’ãƒ—ãƒ¬ã‚¤ã‚·ãƒ¼ãƒ³é·ç§»
+	INBOSS,//ãƒœã‚¹æˆ¦å°å…¥
+	CLEARBOSS,//ãƒœã‚¹æˆ¦ã‚¯ãƒªã‚¢
+	GAMEOVERBOSS//ãƒœã‚¹æˆ¦ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼
 };
 
 class GameScene
@@ -49,60 +49,60 @@ public:
 
 	void DrawSprite();
 
-	//XV”ÍˆÍ
+	//æ›´æ–°ç¯„å›²
 	bool UpadateRange(XMFLOAT3 cameraPos, XMFLOAT3 pos);
 
-	//“–‚½‚è”»’è
+	//å½“ãŸã‚Šåˆ¤å®š
 	void Collition();
 
-	//“G¶‘¶Šm”F
+	//æ•µç”Ÿå­˜ç¢ºèª
 	void CheckEnemy();
 
-	//”wŒiXV
+	//èƒŒæ™¯æ›´æ–°
 	void UpdateBackGround();
 
-	//“G”z’u
+	//æ•µé…ç½®
 	void SetEnemy();
 
-	//ƒŠƒZƒbƒg
+	//ãƒªã‚»ãƒƒãƒˆ
 	void Reset();
 
-	//ƒV[ƒ“Ø‚è‘Ö‚¦
+	//ã‚·ãƒ¼ãƒ³åˆ‡ã‚Šæ›¿ãˆ
 	void ChangeScene();
 
-	//ƒvƒŒƒCƒV[ƒ“‰Šú‰»
+	//ãƒ—ãƒ¬ã‚¤ã‚·ãƒ¼ãƒ³åˆæœŸåŒ–
 	void PlaySceneInitialize();
 
-	//ƒ{ƒXí
-	//‰Šú‰»
+	//ãƒœã‚¹æˆ¦
+	//åˆæœŸåŒ–
 	void BossSceneInitialize();
-	//“–‚½‚è”»’è
+	//å½“ãŸã‚Šåˆ¤å®š
 	void BossSceneCollition();
 
-	//‰‰o
+	//æ¼”å‡º
 	void UpdatePerformance();
-	//ƒ^ƒCƒgƒ‹¨ƒvƒŒƒCƒV[ƒ“‘JˆÚ‰‰o
+	//ã‚¿ã‚¤ãƒˆãƒ«â†’ãƒ—ãƒ¬ã‚¤ã‚·ãƒ¼ãƒ³é·ç§»æ¼”å‡º
 	void TitleToPlayPerformance();
-	//ƒ{ƒXí“±“ü‰‰o
+	//ãƒœã‚¹æˆ¦å°å…¥æ¼”å‡º
 	void BossInPerformance();
-	//ƒ{ƒXŒ‚”j‰‰o
+	//ãƒœã‚¹æ’ƒç ´æ¼”å‡º
 	void BossClearPerformance();
-	//ƒ{ƒX“¦–S‰‰o
+	//ãƒœã‚¹é€ƒäº¡æ¼”å‡º
 	void BossGameoverPerformance();
 
 private:
-	//ƒfƒoƒCƒX‚Æinput
+	//ãƒ‡ãƒã‚¤ã‚¹ã¨input
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	ID3D12GraphicsCommandList* commandList = nullptr;
 
-	//ƒJƒƒ‰
+	//ã‚«ãƒ¡ãƒ©
 	Camera* camera_{};
 
-	//ƒV[ƒ“
+	//ã‚·ãƒ¼ãƒ³
 	int scene_ = TITLE;
 
-	//ƒtƒF[ƒY
+	//ãƒ•ã‚§ãƒ¼ã‚º
 	int phase_ = 0;
 	const int MaxPhase_ = 3;
 
@@ -110,19 +110,19 @@ private:
 	FbxModel* enemyModel_ = nullptr;
 	FbxModel* enemyBulletModel_ = nullptr;
 
-	//ƒXƒJƒCƒh[ƒ€
+	//ã‚¹ã‚«ã‚¤ãƒ‰ãƒ¼ãƒ 
 	std::unique_ptr<Skydome> skydome_;
 
-	//”wŒi
+	//èƒŒæ™¯
 	std::list<std::unique_ptr<BackGround>> backGrounds_;
 	size_t backGroundSize_ = 5;
-	//’²®—p‚ÌÀ•W
+	//èª¿æ•´ç”¨ã®åº§æ¨™
 	float adjustPos_ = 0;
 
-	//ƒvƒŒƒCƒ„[
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
 	std::unique_ptr<Player> player_;
 
-	//“G
+	//æ•µ
 	std::list<std::unique_ptr<Enemy>> enemys_;
 
 	//csv
@@ -130,21 +130,21 @@ private:
 	std::vector<std::string> enemyCsvsName_;
 	int enemyCSVSize_ = 0;
 
-	//ƒ{ƒX
+	//ãƒœã‚¹
 	std::unique_ptr<Boss> boss_;
 
-	//ƒXƒvƒ‰ƒCƒgƒ}ƒl[ƒWƒƒ[
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼
 	SpriteManager* spriteManager_ = nullptr;
-	//ƒXƒvƒ‰ƒCƒg
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	Sprite* titleSprite_ = nullptr;
 	Sprite* clearSprite_ = nullptr;
 
-	//“–‚½‚è”»’è
+	//å½“ãŸã‚Šåˆ¤å®š
 	Collision* collisionManager_ = nullptr;
 
-	//‰‰oƒtƒ‰ƒO
+	//æ¼”å‡ºãƒ•ãƒ©ã‚°
 	bool isPerformance_ = false;
-	//‚È‚ñ‚Ì‰‰o‚©
+	//ãªã‚“ã®æ¼”å‡ºã‹
 	int performanceNum_ = TITLETOPLAY;
 };
 

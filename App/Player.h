@@ -8,7 +8,7 @@
 class Player
 {
 public:
-	//ƒVƒ“ƒOƒ‹ƒgƒ“ƒCƒ“ƒXƒ^ƒ“ƒX
+	//ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
 	Player* GetInstance();
 	Player();
 	~Player();
@@ -17,30 +17,30 @@ public:
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 	void DrawSprite(ID3D12GraphicsCommandList* cmdList);
 
-	//ƒXƒs[ƒhƒAƒbƒv
+	//ã‚¹ãƒ”ãƒ¼ãƒ‰ã‚¢ãƒƒãƒ—
 	void SpeedUpByEnemy();
-	//ƒXƒs[ƒhƒ_ƒEƒ“
+	//ã‚¹ãƒ”ãƒ¼ãƒ‰ãƒ€ã‚¦ãƒ³
 	void SpeedDownByEnemy();
 
-	//ˆÚ“®‘€ì
+	//ç§»å‹•æ“ä½œ
 	void Move();
 
-	//’e
+	//å¼¾
 	void Shot();
 	void BulletUpdate();
 	void MakeBullet();
 
-	//ƒŒƒeƒBƒNƒ‹
+	//ãƒ¬ãƒ†ã‚£ã‚¯ãƒ«
 	void UpdateRaticle();
 	void MoveRaticle();
 
-	//ƒXƒs[ƒhUI
+	//ã‚¹ãƒ”ãƒ¼ãƒ‰UI
 	void UpdateSprite();
 
-	//ƒŠƒZƒbƒg
+	//ãƒªã‚»ãƒƒãƒˆ
 	void Reset();
 
-	//ƒQƒbƒ^[@ƒZƒbƒ^[@
+	//ã‚²ãƒƒã‚¿ãƒ¼ã€€ã‚»ãƒƒã‚¿ãƒ¼ã€€
 	XMFLOAT3 GetPosition() { return position_; }
 	XMFLOAT3 GetRotation() { return rotation_; }
 	XMFLOAT3 GetScale() { return scale_; }
@@ -53,73 +53,73 @@ public:
 
 	void SetIsInvincible(bool isInvincible) { this->isInvincible_ = isInvincible; }
 
-	//’e
+	//å¼¾
 	int GetBulletSize() { return static_cast<int>(bullets_.size()); }
 	CollisionData GetBulletColData(int i);
 	void SetBulletIsDead(bool isDead,int i);
 
 private:
-	//ƒAƒtƒBƒ“•ÏŠ·î•ñ
+	//ã‚¢ãƒ•ã‚£ãƒ³å¤‰æ›æƒ…å ±
 	XMFLOAT3 position_ = { 0,0,0 };
 	XMFLOAT3 rotation_ = { 0,0,0 };
 	XMFLOAT3 scale_ = { 1,1,1 };
 
-	//ƒ[ƒ‹ƒh•ÏŠ·s—ñ
+	//ãƒ¯ãƒ¼ãƒ«ãƒ‰å¤‰æ›è¡Œåˆ—
 	XMMATRIX matWorld_ = {};
 
-	//“–‚½‚è”»’è—p
+	//å½“ãŸã‚Šåˆ¤å®šç”¨
 	XMFLOAT3 colSize_ = {1.0f,1.0f,1.0f};
 
 private:
 	//FBX
 	FbxObject3D* playerObject_ = nullptr;
-	//ƒ‚ƒfƒ‹
+	//ãƒ¢ãƒ‡ãƒ«
 	FbxModel* playerModel_ = nullptr;
 	FbxModel* playerBulletModel_ = nullptr;
 	FbxModel* fReticleModel_ = nullptr;
 	FbxModel* bReticleModel_ = nullptr;
 
-	//“ü—Í
+	//å…¥åŠ›
 	Input* input_ = nullptr;
 
-	//ˆÚ“®”ÍˆÍ
+	//ç§»å‹•ç¯„å›²
 	const XMFLOAT2 MoveMax_ = { 20.0f,10.0f };
-	//ˆÚ“®ƒXƒs[ƒh(xy)
+	//ç§»å‹•ã‚¹ãƒ”ãƒ¼ãƒ‰(xy)
 	float speedXY_ = 0.5f;
-	//ˆÚ“®ƒXƒs[ƒh(z)
+	//ç§»å‹•ã‚¹ãƒ”ãƒ¼ãƒ‰(z)
 	float speedZ_ = 0.5f;
 
-	//Šî‘bƒXƒs[ƒhˆÈŠO‚Ì‰Á‘¬ƒXƒs[ƒh
+	//åŸºç¤ã‚¹ãƒ”ãƒ¼ãƒ‰ä»¥å¤–ã®åŠ é€Ÿã‚¹ãƒ”ãƒ¼ãƒ‰
 	float addSpeed_ = 0.0f;
-	//“G‚ğ“|‚µ‚½‚Ì‰Á‘¬—Ê
+	//æ•µã‚’å€’ã—ãŸæ™‚ã®åŠ é€Ÿé‡
 	float addSpeedByEnemy_ = 0.5f;
-	//“G‚É”í’e‚µ‚½‚ÌŒ¸‘¬
+	//æ•µã«è¢«å¼¾ã—ãŸæ™‚ã®æ¸›é€Ÿ
 	float subSpeedByEnemy_ = 0.5f;
 
-	//Å‘å‰Á‘¬—Ê
+	//æœ€å¤§åŠ é€Ÿé‡
 	const float MaxSpeed_ = 5.0f;
 
-	//–³“GŠÔ
+	//ç„¡æ•µæ™‚é–“
 	bool isInvincible_ = false;
 	const int InvincibleTime_ = 10;
 	int invincibleTimer_ = 0;
 
-	//--------ƒŒƒeƒBƒNƒ‹--------
+	//--------ãƒ¬ãƒ†ã‚£ã‚¯ãƒ«--------
 
-	//ƒŒƒeƒBƒNƒ‹À•W
+	//ãƒ¬ãƒ†ã‚£ã‚¯ãƒ«åº§æ¨™
 	XMFLOAT3 reticlePosition_ = { 0,0,0 };
-	//ˆÚ“®”ÍˆÍ
+	//ç§»å‹•ç¯„å›²
 	const XMFLOAT2 ReticleMoveMax_ = { 40.0f,15.0f };
-	//ˆÚ“®ƒXƒs[ƒh(xy)
+	//ç§»å‹•ã‚¹ãƒ”ãƒ¼ãƒ‰(xy)
 	float reticleSpeedXY_ = 1.0f;
 
-	//‘O(‰œ)‚ÌƒŒƒeƒBƒNƒ‹
+	//å‰(å¥¥)ã®ãƒ¬ãƒ†ã‚£ã‚¯ãƒ«
 	FbxObject3D* frontReticleObject_ = nullptr;
 
-	//Œã‚ë(è‘O)‚ÌƒŒƒeƒBƒNƒ‹
+	//å¾Œã‚(æ‰‹å‰)ã®ãƒ¬ãƒ†ã‚£ã‚¯ãƒ«
 	FbxObject3D* backReticleObject_ = nullptr;
 
-	//©‹@‚©‚ç‚Ì‹——£
+	//è‡ªæ©Ÿã‹ã‚‰ã®è·é›¢
 	const float kDistancePlayerTo3DFrontReticle_ = 25.0f;
 	const float kDistancePlayerTo3DBackReticle_ = kDistancePlayerTo3DFrontReticle_ / 2;
 
@@ -132,32 +132,32 @@ private:
 	XMFLOAT3 bRRotation_ = { 0,0,0 };
 	XMFLOAT3 bRScale_ = { 1,1,1 };
 
-	//ƒxƒNƒgƒ‹
+	//ãƒ™ã‚¯ãƒˆãƒ«
 	Vector3 playerVec_ = {};
 	Vector3 reticleVec_ = {};
 	Vector3 playerToReticleVec_ = {};
 
-	//-----ƒXƒvƒ‰ƒCƒg------
+	//-----ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ------
 	Sprite* speedSprite_ = nullptr;
 
-	//ƒXƒP[ƒ‹‚Íx‚ª•Ï“®Ay‚ªŒÅ’è
+	//ã‚¹ã‚±ãƒ¼ãƒ«ã¯xãŒå¤‰å‹•ã€yãŒå›ºå®š
 	XMFLOAT2 speedSpriteScale_ = {0,32};
 	XMFLOAT2 speedSpritePosition_ = { window_width / 2,window_height - 64};
 
-	//ƒXƒvƒ‰ƒCƒg‚Ì¶‰E—¼’[‚ğ‚Ç‚Ì‚­‚ç‚¢ŠJ‚¯‚é‚©
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®å·¦å³ä¸¡ç«¯ã‚’ã©ã®ãã‚‰ã„é–‹ã‘ã‚‹ã‹
 	float speedSpriteXSpace_ = 64;
 
 private:
 
-	//’e
+	//å¼¾
 	FbxModel* bulletModel_ = nullptr;
 	std::list<std::unique_ptr<PlayerBullet>> bullets_;
 
-	//’e‚Ì”­ËƒN[ƒ‹ƒ^ƒCƒ€
+	//å¼¾ã®ç™ºå°„ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ 
 	const int BulletCoolTime_ = 5;
 	int bulletCoolTimer_ = 0;
 
-	//’e‚Ì‘¬“x
+	//å¼¾ã®é€Ÿåº¦
 	float bulletSpeed_ = 0;
 };
 

@@ -10,13 +10,13 @@
 using namespace DirectX;
 
 enum CameraMode {
-	STRAIGHTMODE,//’¼üˆÚ“®
-	PLAYERFOLLOWMODE,//Ž©‹@‚É’Ç]
-	TITLETOPLAYMODE,//ƒ^ƒCƒgƒ‹‚©‚çƒvƒŒƒC‘JˆÚ
-	BOSSINMODE,//ƒ{ƒXoŒ»‰‰o
-	BOSSCLERAMODE,//ƒ{ƒXŒ‚”j‰‰o
-	BOSSGAMEOVERAMODE,//ƒ{ƒX“¦–S‰‰o
-	DEBUGMODE,//ƒfƒoƒbƒNƒ‚[ƒh
+	STRAIGHTMODE,//ç›´ç·šç§»å‹•
+	PLAYERFOLLOWMODE,//è‡ªæ©Ÿã«è¿½å¾“
+	TITLETOPLAYMODE,//ã‚¿ã‚¤ãƒˆãƒ«ã‹ã‚‰ãƒ—ãƒ¬ã‚¤é·ç§»
+	BOSSINMODE,//ãƒœã‚¹å‡ºç¾æ¼”å‡º
+	BOSSCLERAMODE,//ãƒœã‚¹æ’ƒç ´æ¼”å‡º
+	BOSSGAMEOVERAMODE,//ãƒœã‚¹é€ƒäº¡æ¼”å‡º
+	DEBUGMODE,//ãƒ‡ãƒãƒƒã‚¯ãƒ¢ãƒ¼ãƒ‰
 };
 
 class Camera
@@ -51,17 +51,17 @@ public:
 
 	void Update(XMFLOAT3 playerPos, XMFLOAT3 bossPos);
 
-	//’¼üˆÚ“®ƒ‚[ƒh
+	//ç›´ç·šç§»å‹•ãƒ¢ãƒ¼ãƒ‰
 	void UpdateStraightMode();
-	//ƒvƒŒƒCƒ„[’Ç]ƒ‚[ƒh
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼è¿½å¾“ãƒ¢ãƒ¼ãƒ‰
 	void UpdatePlayerFollowMode();
 
-	//ƒ^ƒCƒgƒ‹‚©‚çƒvƒŒƒC‘JˆÚXV
+	//ã‚¿ã‚¤ãƒˆãƒ«ã‹ã‚‰ãƒ—ãƒ¬ã‚¤é·ç§»æ›´æ–°
 	void UpdateTitleToPlayMode();
-	//ƒ^ƒCƒgƒ‹‚©‚çƒvƒŒƒC‘JˆÚ‰Šú‰»
+	//ã‚¿ã‚¤ãƒˆãƒ«ã‹ã‚‰ãƒ—ãƒ¬ã‚¤é·ç§»åˆæœŸåŒ–
 	void InitializeTitleToPlayMode();
 
-	//ƒfƒoƒbƒNƒ‚[ƒh
+	//ãƒ‡ãƒãƒƒã‚¯ãƒ¢ãƒ¼ãƒ‰
 	void DebugMode();
 
 	XMMATRIX GetViewProjection()const { return matView_ * matProjection_; }
@@ -77,46 +77,46 @@ public:
 
 private:
 
-	//“ü—Í
+	//å…¥åŠ›
 	Input* input_ = nullptr;
 
-	float angle_ = 0.1f; // ƒJƒƒ‰‚Ì‰ñ“]Šp
+	float angle_ = 0.1f; // ã‚«ãƒ¡ãƒ©ã®å›žè»¢è§’
 
-	//ƒvƒŒƒCƒ„[À•W
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼åº§æ¨™
 	XMFLOAT3 playerPos_ = {};
-	//ƒ{ƒXÀ•W
+	//ãƒœã‚¹åº§æ¨™
 	XMFLOAT3 bossPos_ = {};
 
-	//•`‰æÅ‘å‹——£
+	//æç”»æœ€å¤§è·é›¢
 	float rangeMaxZ_ = 500.0f;
-	//ƒvƒŒƒCƒ„[‚ÆƒJƒƒ‰‚Ì‹——£
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨ã‚«ãƒ¡ãƒ©ã®è·é›¢
 	float playerRange_ = 30.0f;
 
-	//-----ƒJƒƒ‰ƒ‚[ƒh-----
+	//-----ã‚«ãƒ¡ãƒ©ãƒ¢ãƒ¼ãƒ‰-----
 	int mode_ = STRAIGHTMODE;
 
-	//ƒJƒƒ‰’¼üˆÚ“®ƒ‚[ƒhƒXƒs[ƒh
+	//ã‚«ãƒ¡ãƒ©ç›´ç·šç§»å‹•ãƒ¢ãƒ¼ãƒ‰ã‚¹ãƒ”ãƒ¼ãƒ‰
 	float straightModeSpeed_ = 1.0f;
 
-	//-----‰‰o—p-----
-	//Œ»ÝÀ•W
+	//-----æ¼”å‡ºç”¨-----
+	//ç¾åœ¨åº§æ¨™
 	XMFLOAT3 startEye_ = {};
 	XMFLOAT3 startTarget_ = {};
 
-	//ƒC[ƒWƒ“ƒOI—¹ˆÊ’u
+	//ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°çµ‚äº†ä½ç½®
 	XMFLOAT3 endEye_ = {};
 	XMFLOAT3 endTarget_ = {};
 
-	//Œ»Ý‚Ìƒf[ƒ^•Û‘¶—p
+	//ç¾åœ¨ã®ãƒ‡ãƒ¼ã‚¿ä¿å­˜ç”¨
 	XMFLOAT3 holdEye_ = {};
 	XMFLOAT3 holdTarget_ = {};
 
-	//ƒC[ƒWƒ“ƒO‰‰o—pƒf[ƒ^
+	//ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°æ¼”å‡ºç”¨ãƒ‡ãƒ¼ã‚¿
 	Easing easeing_;
-	//‰‰oŽžŠÔ
+	//æ¼”å‡ºæ™‚é–“
 	float easeingTime_ = 3.0f;
-	//‰‰o’†‚©
+	//æ¼”å‡ºä¸­ã‹
 	bool isPerformance_ = false;
-	//ƒtƒF[ƒY
+	//ãƒ•ã‚§ãƒ¼ã‚º
 	int phase_ = 0;
 };

@@ -7,95 +7,95 @@
 
 class Sprite
 {
-private:	//ƒGƒCƒŠƒAƒX
-	//Microsoft::WRL::‚ğÈ—ª
+private:	//ã‚¨ã‚¤ãƒªã‚¢ã‚¹
+	//Microsoft::WRL::ã‚’çœç•¥
 	template<class T>using ComPtr = Microsoft::WRL::ComPtr<T>;
-	//DirectX::‚ğÈ—ª
+	//DirectX::ã‚’çœç•¥
 	using XMFLOAT2 = DirectX::XMFLOAT2;
 	using XMFLOAT3 = DirectX::XMFLOAT3;
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
 
-public:	//ƒTƒuƒNƒ‰ƒX
-	//’è”ƒoƒbƒtƒ@
+public:	//ã‚µãƒ–ã‚¯ãƒ©ã‚¹
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡
 	struct ConstBuffMaterial
 	{
 		XMFLOAT4 color;
 	};
-	//’è”ƒoƒbƒtƒ@2
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡2
 	struct ConstBuffTransform
 	{
-		XMMATRIX mat;	//3D•ÏŠ·s—ñ
+		XMMATRIX mat;	//3Då¤‰æ›è¡Œåˆ—
 	};
-	//’¸“_ƒf[ƒ^—p\‘¢‘Ì
+	//é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿ç”¨æ§‹é€ ä½“
 	struct Vertex
 	{
 		XMFLOAT3 pos;
 		XMFLOAT2 uv;
 	};
 
-public:	//ƒƒ“ƒoŠÖ”
+public:	//ãƒ¡ãƒ³ãƒé–¢æ•°
 	void Initialize();
 	void Update();
 	void Draw(ID3D12GraphicsCommandList* cmdList_);
 
-public:	//Ã“Iƒƒ“ƒo•Ï”ƒZƒbƒ^[
+public:	//é™çš„ãƒ¡ãƒ³ãƒå¤‰æ•°ã‚»ãƒƒã‚¿ãƒ¼
 	static void SetDevice(ID3D12Device* device) { Sprite::device_ = device; }
 	static void SetSpriteManager(SpriteManager* spriteManager) { Sprite::spriteManager_ = spriteManager; }
 	static void CreateGraphicsPipeLine();
 
-public:	//ƒZƒbƒ^[
-	//ƒAƒ‹ƒtƒ@’l
+public:	//ã‚»ãƒƒã‚¿ãƒ¼
+	//ã‚¢ãƒ«ãƒ•ã‚¡å€¤
 	void SetAlpha(float alpha) { color.w = alpha; }
-	//F
+	//è‰²
 	void SetColor(XMFLOAT3 c) { color.x = c.x; color.y = c.y; color.z = c.z; }
-	//ƒeƒNƒXƒ`ƒƒ‚Ì”Ô†‚ğƒZƒbƒg
+	//ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ç•ªå·ã‚’ã‚»ãƒƒãƒˆ
 	void SetTextureNum(int num) { textureNum_ = num; }
-	//À•W
+	//åº§æ¨™
 	void SetPosition(XMFLOAT2 pos) { position_ = pos; }
-	//Šp“x
+	//è§’åº¦
 	void SetRotation(float rot) { rotation_ = rot; }
-	//ƒXƒP[ƒ‹
+	//ã‚¹ã‚±ãƒ¼ãƒ«
 	void SetScale(XMFLOAT2 sca) { scale_ = sca; }
 
 	void SetAnchorPoint(const DirectX::XMFLOAT2& point) { anchorPoint_ = point; }
 
-public:	//ƒQƒbƒ^[
-	//À•W
+public:	//ã‚²ãƒƒã‚¿ãƒ¼
+	//åº§æ¨™
 	XMFLOAT2 GetPosition() { return position_; }
-	//Šp“x
+	//è§’åº¦
 	float GetRotation() { return rotation_; }
-	//ƒXƒP[ƒ‹
+	//ã‚¹ã‚±ãƒ¼ãƒ«
 	XMFLOAT2 GetScale() { return scale_; }
 
 private:
-	//ƒfƒoƒCƒX
+	//ãƒ‡ãƒã‚¤ã‚¹
 	static ID3D12Device* device_;
-	//ƒXƒvƒ‰ƒCƒgƒ}ƒl[ƒWƒƒ[
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼
 	static SpriteManager* spriteManager_;
-	//ƒ‹[ƒgƒVƒOƒlƒ`ƒƒ
+	//ãƒ«ãƒ¼ãƒˆã‚·ã‚°ãƒãƒãƒ£
 	static ComPtr<ID3D12RootSignature>rootsignature_;
-	//ƒpƒCƒvƒ‰ƒCƒ“ƒXƒe[ƒgƒIƒuƒWƒFƒNƒg
+	//ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã‚¹ãƒ†ãƒ¼ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	static ComPtr<ID3D12PipelineState>pipelinestate_;
 
-private:	//ƒƒ“ƒo•Ï”
-	//g—p‚·‚éƒeƒNƒXƒ`ƒƒ‚Ì”Ô†
+private:	//ãƒ¡ãƒ³ãƒå¤‰æ•°
+	//ä½¿ç”¨ã™ã‚‹ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ç•ªå·
 	int textureNum_ = 0;
-	//’¸“_ƒoƒbƒtƒ@ƒrƒ…[
+	//é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼
 	D3D12_VERTEX_BUFFER_VIEW vbView_ = {};
-	//’¸“_ƒf[ƒ^
+	//é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿
 	Vertex vertices_[6] = {};
 	Vertex* vertMap_ = nullptr;
-	//’è”ƒoƒbƒtƒ@ ƒ}ƒeƒŠƒAƒ‹
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡ ãƒãƒ†ãƒªã‚¢ãƒ«
 	ComPtr<ID3D12Resource>constBuffMaterial_;
 	ConstBuffMaterial* constMapMaterial_ = nullptr;
-	//’è”ƒoƒbƒtƒ@ •ÏŒ`s—ñ
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡ å¤‰å½¢è¡Œåˆ—
 	ComPtr<ID3D12Resource>constBuffTransform_;
 	ConstBuffTransform* constMapTransform_ = nullptr;
 
 public:
 
-	//ƒeƒNƒXƒ`ƒƒ‚ÌF
+	//ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®è‰²
 	XMFLOAT4 color = { 1,1,1,1 };
 
 private:
@@ -104,7 +104,7 @@ private:
 	XMFLOAT2 position_ = { 0,0 };
 	XMFLOAT2 scale_ = { 100.0f,100.0f };
 
-	//ƒAƒ“ƒJ[ƒ|ƒCƒ“ƒg(À•W•ÏŠ·‚ÌŠî€“_)
+	//ã‚¢ãƒ³ã‚«ãƒ¼ãƒã‚¤ãƒ³ãƒˆ(åº§æ¨™å¤‰æ›ã®åŸºæº–ç‚¹)
 	DirectX::XMFLOAT2 anchorPoint_ = { 0.0f,0.0f };
 };
 

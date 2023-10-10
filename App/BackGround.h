@@ -9,46 +9,46 @@
 class BackGround
 {
 public:
-	//num = ‰½”Ô‚Ì”z’uƒf[ƒ^‚ğ“Ç‚İ‚İ‚±‚Ş‚©,adjustPos = ‚Ç‚Ì‚­‚ç‚¢‚¸‚ç‚·‚©
+	//num = ä½•ç•ªã®é…ç½®ãƒ‡ãƒ¼ã‚¿ã‚’èª­ã¿è¾¼ã¿ã“ã‚€ã‹,adjustPos = ã©ã®ãã‚‰ã„ãšã‚‰ã™ã‹
 	void Initialize(float adjustPos_);
 
 	void Update();
 
 	void Draw(ID3D12GraphicsCommandList* cmdList_);
 
-	//ƒIƒuƒWƒFƒNƒg‚Ì”z’u
+	//ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®é…ç½®
 	void SetObject(float adjustPos_);
-	//”z’uƒf[ƒ^‚ğƒ[ƒh num = ‰½”Ô‚Ì”z’uƒf[ƒ^‚ğ“Ç‚İ‚İ‚±‚Ş‚©
+	//é…ç½®ãƒ‡ãƒ¼ã‚¿ã‚’ãƒ­ãƒ¼ãƒ‰ num = ä½•ç•ªã®é…ç½®ãƒ‡ãƒ¼ã‚¿ã‚’èª­ã¿è¾¼ã¿ã“ã‚€ã‹
 	void LoadJson(int num);
-	//ƒIƒuƒWƒFƒNƒg‚Ì”z’u adjustPos = ‚Ç‚Ì‚­‚ç‚¢‚¸‚ç‚·‚©
+	//ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®é…ç½® adjustPos = ã©ã®ãã‚‰ã„ãšã‚‰ã™ã‹
 	void ArrangementObject(float adjustPos_);
 
-	//ƒIƒuƒWƒFƒNƒg‚Ìíœ
+	//ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å‰Šé™¤
 	void DeleteObject();
 
-	//ƒQƒbƒ^[
+	//ã‚²ãƒƒã‚¿ãƒ¼
 	float GetSize() { return size; }
 	XMFLOAT3 GetPosition() { return position_; }
 
 private:
 
-	//fbxƒ‚ƒfƒ‹
+	//fbxãƒ¢ãƒ‡ãƒ«
 	FbxModel* groundModel = nullptr;
 	FbxModel* boxModel = nullptr;
 	FbxModel* treeModel = nullptr;
 	FbxModel* wallModel = nullptr;
 	FbxModel* pillarModel = nullptr;
 
-	//ƒ‚ƒfƒ‹”z—ñ
+	//ãƒ¢ãƒ‡ãƒ«é…åˆ—
 	std::map<std::string, FbxModel*> backGroundModels;
 	std::vector<FbxObject3D*> backGroundObjects;
 
-	//”z’uƒf[ƒ^
+	//é…ç½®ãƒ‡ãƒ¼ã‚¿
 	LevelData* levelData = nullptr;
 
-	//‘S‘Ì‚ÌƒTƒCƒY
+	//å…¨ä½“ã®ã‚µã‚¤ã‚º
 	float size = 520.0f;
-	//”wŒi‚Ì’†S‚ÌˆÊ’u(ground‚ÌˆÊ’u)
+	//èƒŒæ™¯ã®ä¸­å¿ƒã®ä½ç½®(groundã®ä½ç½®)
 	XMFLOAT3 position_ = {};
 };
 

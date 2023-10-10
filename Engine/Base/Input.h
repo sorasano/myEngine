@@ -5,7 +5,7 @@
 using namespace Microsoft::WRL;
 
 #pragma once
-#define DIRECTINPUT_VERSION     0x0800   // DirectInput‚Ìƒo[ƒWƒ‡ƒ“w’è
+#define DIRECTINPUT_VERSION     0x0800   // DirectInputã®ãƒãƒ¼ã‚¸ãƒ§ãƒ³æŒ‡å®š
 #include <dinput.h>
 
 #pragma comment(lib, "dinput8.lib")
@@ -18,7 +18,7 @@ class Input
 {
 public:
 
-	//namespaceÈ—ª
+	//namespaceçœç•¥
 	template <class T> using Comptr = Microsoft::WRL::ComPtr<T>;
 
 public:
@@ -27,10 +27,10 @@ public:
 
 	void Update();
 
-	//ƒL[‚Ì‰Ÿ‰º‚ğƒ`ƒFƒbƒN
+	//ã‚­ãƒ¼ã®æŠ¼ä¸‹ã‚’ãƒã‚§ãƒƒã‚¯
 	bool PushKey(BYTE keyNumber);
 
-	//ƒL[‚ÌƒgƒŠƒK[‚ğƒ`ƒFƒbƒN
+	//ã‚­ãƒ¼ã®ãƒˆãƒªã‚¬ãƒ¼ã‚’ãƒã‚§ãƒƒã‚¯
 	bool TriggerKey(BYTE keyNumber);
 
 private:

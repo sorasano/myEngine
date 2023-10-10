@@ -3,9 +3,9 @@
 
 using namespace Microsoft::WRL;
 
-// ƒEƒBƒ“ƒhƒEƒTƒCƒY
-static const int window_width = 1280; // ‰¡•
-static const int window_height = 720; // c•
+// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚µã‚¤ã‚º
+static const int window_width = 1280; // æ¨ªå¹…
+static const int window_height = 720; // ç¸¦å¹…
 
 class WinApp
 {
@@ -17,10 +17,10 @@ public:
 
 	void Initialize();
 
-	//I—¹
+	//çµ‚äº†
 	void Finalize();
 
-	//ƒƒbƒZ[ƒW‚Ìˆ—
+	//ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®å‡¦ç†
 	bool processMessage();
 
 	//getter
@@ -28,10 +28,10 @@ public:
 
 	HINSTANCE GetHInstance() const { return w.hInstance; }
 public:
-	//ƒEƒBƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	//ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
 	HWND hwnd = nullptr;
 
-	// ƒEƒBƒ“ƒhƒEƒNƒ‰ƒX‚Ìİ’è
+	// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚¯ãƒ©ã‚¹ã®è¨­å®š
 	WNDCLASSEX w{};
 
 	static const int winW = 1280;

@@ -18,13 +18,13 @@ Boss::~Boss()
 
 void Boss::Initialize()
 {
-	//ƒ‚ƒfƒ‹–¼‚ğw’è‚µ‚Äƒtƒ@ƒCƒ‹“Ç‚İ‚İ
+	//ãƒ¢ãƒ‡ãƒ«åã‚’æŒ‡å®šã—ã¦ãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿
 	normalBossModel_ = FbxLoader::GetInstance()->LoadModelFromFile("normalBoss");
 	hardBossModel_ = FbxLoader::GetInstance()->LoadModelFromFile("hardBoss");
 
 	bossBulletModel_ = FbxLoader::GetInstance()->LoadModelFromFile("bossBullet");
 
-	//3dƒIƒuƒWƒFƒNƒg¶¬‚Æƒ‚ƒfƒ‹‚ÌƒZƒbƒg
+	//3dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç”Ÿæˆã¨ãƒ¢ãƒ‡ãƒ«ã®ã‚»ãƒƒãƒˆ
 	BossObject_ = new FbxObject3D;
 	BossObject_->Initialize();
 	BossObject_->SetModel(normalBossModel_);
@@ -35,25 +35,25 @@ void Boss::Initialize()
 
 void Boss::Update(XMFLOAT3 pPos, float pSpeed)
 {
-	//ƒvƒŒƒCƒ„[î•ñXV
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼æƒ…å ±æ›´æ–°
 	this->playerPosition_ = pPos;
 	this->playerSpeed_ = pSpeed;
 
 	if (!isDead_) {
 
-		//s“®•Ï‰»
+		//è¡Œå‹•å¤‰åŒ–
 		actionCollTimer_++;
 		if (actionCollTimer_ > ActionCoolTime_) {
 			actionCollTimer_ = 0;
 			ChangeAction();
 		}
 
-		//ˆÚ“®
+		//ç§»å‹•
 		Move();
 
-		//ËŒ‚
+		//å°„æ’ƒ
 		if (shotType_ != BOSSNOTSHOT) {
-			//ƒvƒŒƒCƒ„[‚ÌƒXƒs[ƒh‚Å”­Ë‚µn‚ß‚éÀ•W‚ğ•ÏX
+			//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚¹ãƒ”ãƒ¼ãƒ‰ã§ç™ºå°„ã—å§‹ã‚ã‚‹åº§æ¨™ã‚’å¤‰æ›´
 			shotStartPos_ = ShotStart_ * playerSpeed_;
 			if (position_.z < playerPosition_.z + shotStartPos_) {
 				BulletUpdate();
@@ -62,7 +62,7 @@ void Boss::Update(XMFLOAT3 pPos, float pSpeed)
 
 	}
 
-	//ƒp[ƒeƒBƒNƒ‹
+	//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
 	if (isParticle_) {
 		UpdateParticle();
 	}
@@ -78,13 +78,13 @@ void Boss::Draw(ID3D12GraphicsCommandList* cmdList)
 	if (!isDead_) {
 		BossObject_->Draw(cmdList);
 
-		//’e
+		//å¼¾
 		for (std::unique_ptr<BossBullet>& bullet : bullets_)
 		{
 			bullet->Draw(cmdList);
 		}
 	}
-	//----ƒp[ƒeƒBƒNƒ‹----
+	//----ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«----
 	if (isParticle_) {
 		particle_->Draw();
 	}
@@ -93,7 +93,7 @@ void Boss::Draw(ID3D12GraphicsCommandList* cmdList)
 
 void Boss::Move()
 {
-	//©‹@‚É’Ç]
+	//è‡ªæ©Ÿã«è¿½å¾“
 	position_.z += playerSpeed_;
 
 	switch (moveType_)
@@ -166,36 +166,36 @@ void Boss::MoveY()
 
 void Boss::InitializeParticle()
 {
-	//ƒtƒ‰ƒO‚ğtrue‚É
+	//ãƒ•ãƒ©ã‚°ã‚’trueã«
 	isParticle_ = true;
-	//ƒ^ƒCƒ}[ƒZƒbƒg
+	//ã‚¿ã‚¤ãƒãƒ¼ã‚»ãƒƒãƒˆ
 	particleTimer_ = ParticleTime_;
 
-	//ƒp[ƒeƒBƒNƒ‹¶¬
+	//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ç”Ÿæˆ
 	particle_ = new ParticleManager();
 	particle_->Initialize("Resources/effect/effect1.png");
 
 	for (int i = 0; i < 100; i++) {
-		//X,Y,Z‚·‚×‚Äposition‚©‚ç[+1.0f,-1.0f]‚Åƒ‰ƒ“ƒ_ƒ€‚É•ª•z
+		//X,Y,Zã™ã¹ã¦positionã‹ã‚‰[+1.0f,-1.0f]ã§ãƒ©ãƒ³ãƒ€ãƒ ã«åˆ†å¸ƒ
 
 		XMFLOAT3 pos{};
 		pos.x = Random(position_.x - 1.0f, position_.x + 1.0f);
 		pos.y = Random(position_.y - 1.0f, position_.y + 1.0f);
 		pos.z = Random(position_.z - 1.0f, position_.z + 1.0f);
 
-		//X,Y,Z‚·‚×‚Ä[-0.05f,+0.05f]‚Åƒ‰ƒ“ƒ_ƒ€‚É•ª•z
+		//X,Y,Zã™ã¹ã¦[-0.05f,+0.05f]ã§ãƒ©ãƒ³ãƒ€ãƒ ã«åˆ†å¸ƒ
 		const float md_vel = 0.05f;
 		XMFLOAT3 vel{};
 		vel.x = Random(-md_vel, md_vel);
 		vel.y = Random(-md_vel, md_vel);
 		vel.z = Random(-md_vel, md_vel);
 
-		//d—Í‚ÉŒ©—§‚Ä‚ÄY‚Ì‚İ[-0.001f,0]‚Åƒ‰ƒ“ƒ_ƒ€‚É•ª•z
+		//é‡åŠ›ã«è¦‹ç«‹ã¦ã¦Yã®ã¿[-0.001f,0]ã§ãƒ©ãƒ³ãƒ€ãƒ ã«åˆ†å¸ƒ
 		XMFLOAT3 acc{};
 		const float md_acc = -0.001f;
 		acc.y = Random(md_acc, 0);
 
-		//’Ç‰Á
+		//è¿½åŠ 
 		particle_->Add(ParticleTime_, pos, vel, acc);
 
 	}
@@ -206,7 +206,7 @@ void Boss::InitializeParticle()
 void Boss::UpdateParticle()
 {
 
-	//particle—LŒøŠÔ‚ª‰ß‚¬‚½‚çƒtƒ‰ƒO‚ğfalse‚É
+	//particleæœ‰åŠ¹æ™‚é–“ãŒéããŸã‚‰ãƒ•ãƒ©ã‚°ã‚’falseã«
 	if (particleTimer_ > 0) {
 		particleTimer_--;
 	}
@@ -222,12 +222,12 @@ void Boss::UpdateParticle()
 void Boss::Shot()
 {
 
-	//ƒN[ƒ‹ƒ^ƒCƒ€‚Å’e‚Ì”­ËŠÔŠu‚ğ’²®
+	//ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ ã§å¼¾ã®ç™ºå°„é–“éš”ã‚’èª¿æ•´
 	bulletCoolTimer_++;
 
 	if (BulletCoolTime_ < bulletCoolTimer_) {
 
-		//ËoŠp“x‚ğŒvZ‚µ’e‚Ì”­Ë
+		//å°„å‡ºè§’åº¦ã‚’è¨ˆç®—ã—å¼¾ã®ç™ºå°„
 		Vector3 velocity = {};
 		Vector3 playerVec_ = {};
 		Vector3 BossVec = {};
@@ -239,62 +239,62 @@ void Boss::Shot()
 			break;
 
 		case BOSSSTRAIGHTSHOT:
-			//z²‚Ì-•ûŒü‚Ì’PˆÊƒxƒNƒgƒ‹‚É‘¬“x‚ğ‚©‚¯‚é
+			//zè»¸ã®-æ–¹å‘ã®å˜ä½ãƒ™ã‚¯ãƒˆãƒ«ã«é€Ÿåº¦ã‚’ã‹ã‘ã‚‹
 			velocity = { 0.0f,0.0f,-1.0f };
 			velocity *= bulletSpeed_;
 
-			//’e‚Ì¶¬
+			//å¼¾ã®ç”Ÿæˆ
 			MakeBullet(velocity);
 			break;
 
 		case BOSSHOMINGSHOT:
 
-			//©‹@‚Æ“G‚ÌƒxƒNƒgƒ‹‚ğæ‚é
+			//è‡ªæ©Ÿã¨æ•µã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’å–ã‚‹
 			playerVec_ = { playerPosition_.x ,playerPosition_.y,playerPosition_.z };
 			BossVec = { position_.x,position_.y,position_.z };
 
 			velocity = playerVec_ - BossVec;
 
-			//³‹K‰»‚ğ‚µ‚Ä‘¬“x‚ğ‚©‚¯‚é
+			//æ­£è¦åŒ–ã‚’ã—ã¦é€Ÿåº¦ã‚’ã‹ã‘ã‚‹
 			velocity.normalize();
 			velocity *= bulletSpeed_;
 
 			velocity.z += playerSpeed_;
 
-			//’e‚Ì¶¬
+			//å¼¾ã®ç”Ÿæˆ
 			MakeBullet(velocity);
 			break;
 
 		case BOSSMULTISHOT:
 
-			//³–Ê
+			//æ­£é¢
 			velocity = { 0.0f,0.1f,-1.0f };
 			velocity *= bulletSpeed_;
-			//’e‚Ì¶¬
+			//å¼¾ã®ç”Ÿæˆ
 			MakeBullet(velocity);
 
-			//ã
+			//ä¸Š
 			velocity = { 0.0f,0.1f,-1.0f };
 			velocity *= bulletSpeed_;
-			//’e‚Ì¶¬
+			//å¼¾ã®ç”Ÿæˆ
 			MakeBullet(velocity);
 
-			//‰º
+			//ä¸‹
 			velocity = { 0.0f,-0.1f,-1.0f };
 			velocity *= bulletSpeed_;
-			//’e‚Ì¶¬
+			//å¼¾ã®ç”Ÿæˆ
 			MakeBullet(velocity);
 
-			//‰E
+			//å³
 			velocity = { 0.1f,0.0f,-1.0f };
 			velocity *= bulletSpeed_;
-			//’e‚Ì¶¬
+			//å¼¾ã®ç”Ÿæˆ
 			MakeBullet(velocity);
 
-			//¶
+			//å·¦
 			velocity = { -0.1f,0.0f,-1.0f };
 			velocity *= bulletSpeed_;
-			//’e‚Ì¶¬
+			//å¼¾ã®ç”Ÿæˆ
 			MakeBullet(velocity);
 
 			break;
@@ -307,24 +307,24 @@ void Boss::Shot()
 
 void Boss::BulletUpdate()
 {
-	//ƒvƒŒƒCƒ„[‚æ‚è‘O‚É‚¢‚é“G‚Ì’e‚Ì‚İ”­Ë
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚ˆã‚Šå‰ã«ã„ã‚‹æ•µã®å¼¾ã®ã¿ç™ºå°„
 	if (position_.z > playerPosition_.z) {
 		Shot();
 	}
 
-	//“G‚Ì’eXV
+	//æ•µã®å¼¾æ›´æ–°
 	for (std::unique_ptr<BossBullet>& bullet : bullets_)
 	{
 		bullet->Update();
 	}
 
-	//ƒfƒXƒtƒ‰ƒO‚Ì—§‚Á‚½’e‚ğíœ
+	//ãƒ‡ã‚¹ãƒ•ãƒ©ã‚°ã®ç«‹ã£ãŸå¼¾ã‚’å‰Šé™¤
 	bullets_.remove_if([](std::unique_ptr<BossBullet>& bullet) {return bullet->GetIsDead(); });
 }
 
 void Boss::MakeBullet(Vector3 velocity)
 {
-	//’e‚Ì¶¬
+	//å¼¾ã®ç”Ÿæˆ
 	std::unique_ptr<BossBullet> newBullet = std::make_unique<BossBullet>();
 	newBullet->Initialize(bulletModel_, position_, velocity, playerSpeed_);
 	bullets_.push_back(std::move(newBullet));
@@ -335,13 +335,13 @@ void Boss::Reset()
 {
 	position_ = { 0,0,0 };
 
-	//’e
+	//å¼¾
 	bullets_.clear();
 
-	//€–Sƒtƒ‰ƒO
+	//æ­»äº¡ãƒ•ãƒ©ã‚°
 	isDead_ = false;
 
-	//2’iŠK–ÚˆÚsƒtƒ‰ƒO
+	//2æ®µéšç›®ç§»è¡Œãƒ•ãƒ©ã‚°
 	isBossHardMode_ = false;
 
 	//hp
@@ -363,7 +363,7 @@ CollisionData Boss::GetColData()
 
 void Boss::HitBullet()
 {
-	//hp‚ª‚ ‚é‚È‚çŒ¸‚ç‚·A‚È‚¢‚È‚ç€–S
+	//hpãŒã‚ã‚‹ãªã‚‰æ¸›ã‚‰ã™ã€ãªã„ãªã‚‰æ­»äº¡
 	if (hp_) {
 		hp_--;
 	}
@@ -371,7 +371,7 @@ void Boss::HitBullet()
 		isDead_ = true;
 	}
 
-	//hp‚ª2’iŠK–ÚˆÚsƒ^ƒCƒ~ƒ“ƒO‚É‚È‚Á‚½‚ç2’iŠK–Ú‚Ö
+	//hpãŒ2æ®µéšç›®ç§»è¡Œã‚¿ã‚¤ãƒŸãƒ³ã‚°ã«ãªã£ãŸã‚‰2æ®µéšç›®ã¸
 	if (hp_ <= changeHardHp_) {
 		isBossHardMode_ = true;
 		BossObject_->SetModel(hardBossModel_);
@@ -462,13 +462,13 @@ void Boss::SetHardAction(int action)
 void Boss::ChangeAction()
 {
 
-	//’Êíƒ‚[ƒh
+	//é€šå¸¸ãƒ¢ãƒ¼ãƒ‰
 	if (!isBossHardMode_) {
 		int randNum = static_cast<int>(Random(0, normalActionSize_ - 0.001f));
 		SetNormalAction(randNum);
 	}
 	else {
-	//2’iŠK–Úƒ‚[ƒh
+	//2æ®µéšç›®ãƒ¢ãƒ¼ãƒ‰
 		int randNum = static_cast<int>(Random(0, hardActionSize_ - 0.001f));
 		SetHardAction(randNum);
 	}

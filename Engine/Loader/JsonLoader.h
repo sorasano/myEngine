@@ -4,28 +4,23 @@
 #include <vector>
 #include <DirectXMath.h>
 
-#pragma warning(push)
-#pragma warning(disable:4324)
-
-// ƒŒƒxƒ‹ƒf[ƒ^
+// ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿
 struct LevelData {
 
 	struct ObjectData {
-		// ƒtƒ@ƒCƒ‹–¼
-		std::string fileName;
-		// •½sˆÚ“®
+		// å¹³è¡Œç§»å‹•
 		DirectX::XMVECTOR translation;
-		// ‰ñ“]Šp
+		// å›è»¢è§’
 		DirectX::XMVECTOR rotation_;
-		// ƒXƒP[ƒŠƒ“ƒO
+		// ã‚¹ã‚±ãƒ¼ãƒªãƒ³ã‚°
 		DirectX::XMVECTOR scaling;
+		// ãƒ•ã‚¡ã‚¤ãƒ«å
+		std::string fileName;
 	};
 
-	// ƒIƒuƒWƒFƒNƒg”z—ñ
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆé…åˆ—
 	std::vector<ObjectData> objects;
 };
-
-#pragma warning(pop)
 
 class JsonLoader
 {
@@ -36,7 +31,7 @@ public:
 
 public:
 
-	//jsonƒtƒ@ƒCƒ‹Ši”[ƒ‹[ƒgƒpƒX
+	//jsonãƒ•ã‚¡ã‚¤ãƒ«æ ¼ç´ãƒ«ãƒ¼ãƒˆãƒ‘ã‚¹
 	static const std::string kDefaultbaseDirectory_;
 
 	static const std::string kExtension;

@@ -4,12 +4,12 @@
 void Skydome::Initialize()
 {
 	skydomeModel = FbxLoader::GetInstance()->LoadModelFromFile("skydome");
-	//3dƒIƒuƒWƒFƒNƒg¶¬‚Æƒ‚ƒfƒ‹‚ÌƒZƒbƒg
+	//3dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç”Ÿæˆã¨ãƒ¢ãƒ‡ãƒ«ã®ã‚»ãƒƒãƒˆ
 	skydomeObject = new FbxObject3D;
 	skydomeObject->Initialize();
 	skydomeObject->SetModel(skydomeModel);
 
-	//ƒ‰ƒWƒAƒ“•ÏŠ·
+	//ãƒ©ã‚¸ã‚¢ãƒ³å¤‰æ›
 	rotation_.x = static_cast<float>(90 * (PI / 180));
 	rotation_.z = static_cast<float>(120 * (PI / 180));
 }

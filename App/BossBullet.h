@@ -9,7 +9,7 @@
 class BossBullet
 {
 public:
-	//ƒVƒ“ƒOƒ‹ƒgƒ“ƒCƒ“ƒXƒ^ƒ“ƒX
+	//ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
 	BossBullet* GetInstance();
 	BossBullet();
 	~BossBullet();
@@ -22,7 +22,7 @@ public:
 	bool GetIsDead()const { return isDead_; }
 	void SetIsDead(bool isDead) { this->isDead_ = isDead; };
 
-	//ƒQƒbƒ^[@ƒZƒbƒ^[@
+	//ã‚²ãƒƒã‚¿ãƒ¼ã€€ã‚»ãƒƒã‚¿ãƒ¼ã€€
 	XMFLOAT3 GetPosition() { return position_; };
 	XMFLOAT3 GetRotation() { return rotation_; };
 	XMFLOAT3 GetScale() { return scale_; };
@@ -33,29 +33,29 @@ public:
 	CollisionData GetColData();
 
 private:
-	//ƒAƒtƒBƒ“•ÏŠ·î•ñ
+	//ã‚¢ãƒ•ã‚£ãƒ³å¤‰æ›æƒ…å ±
 	XMFLOAT3 position_ = { 0,0,0 };
 	XMFLOAT3 rotation_ = { 0,0,0 };
 	XMFLOAT3 scale_ = { 1,1,1 };
 
-	//ƒ[ƒ‹ƒh•ÏŠ·s—ñ
+	//ãƒ¯ãƒ¼ãƒ«ãƒ‰å¤‰æ›è¡Œåˆ—
 	XMMATRIX matWorld_ = {};
 
-	//“–‚½‚è”»’è—p
+	//å½“ãŸã‚Šåˆ¤å®šç”¨
 	XMFLOAT3 colSize_ = { 0.5f,0.5f,2.0f };
 
 private:
 	//FBX
 	FbxObject3D* BossBulletObject_ = nullptr;
 
-	//ˆÚ“®ƒxƒNƒgƒ‹
+	//ç§»å‹•ãƒ™ã‚¯ãƒˆãƒ«
 	Vector3 velocity_ = {};
 
-	//õ–½
+	//å¯¿å‘½
 	static const int32_t lifeTime_ = 60 * 5;
-	//ƒfƒXƒ^ƒCƒ}[
+	//ãƒ‡ã‚¹ã‚¿ã‚¤ãƒãƒ¼
 	int32_t deathTimer_ = lifeTime_;
-	//ƒfƒXƒtƒ‰ƒO
+	//ãƒ‡ã‚¹ãƒ•ãƒ©ã‚°
 	bool isDead_ = false;
 
 };

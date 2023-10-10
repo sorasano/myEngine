@@ -3,8 +3,8 @@
 #include "wrl.h"
 
 enum CollType {
-	SQUARE,//‹éŒ`
-	SPHERE//‹…
+	SQUARE,//çŸ©å½¢
+	SPHERE//çƒ
 };
 
 struct CollisionData {
@@ -15,19 +15,19 @@ struct CollisionData {
 
 class Collision
 {
-private:	//ƒGƒCƒŠƒAƒX
-	//Microsoft::WRL::‚ğÈ—ª
+private:	//ã‚¨ã‚¤ãƒªã‚¢ã‚¹
+	//Microsoft::WRL::ã‚’çœç•¥
 	template<class T>using ComPtr = Microsoft::WRL::ComPtr<T>;
-	//DirectX::‚ğÈ—ª
+	//DirectX::ã‚’çœç•¥
 	using XMFLOAT2 = DirectX::XMFLOAT2;
 	using XMFLOAT3 = DirectX::XMFLOAT3;
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public:
-	//‹éŒ`“¯m‚Ì“–‚½‚è”»’è
+	//çŸ©å½¢åŒå£«ã®å½“ãŸã‚Šåˆ¤å®š
 	bool CheckSquareToSquare(CollisionData A, CollisionData B);
-	//‹…“¯m‚Ì“–‚½‚è”»’è
+	//çƒåŒå£«ã®å½“ãŸã‚Šåˆ¤å®š
 	bool CheckSphereToSphere(CollisionData A, CollisionData B);
 };
 

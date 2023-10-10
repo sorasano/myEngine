@@ -19,7 +19,7 @@ Enemy::~Enemy()
 void Enemy::Initialize(FbxModel* EnemyModel, FbxModel* enemyBulletModel)
 {
 
-	//3dƒIƒuƒWƒFƒNƒg¶¬‚Æƒ‚ƒfƒ‹‚ÌƒZƒbƒg
+	//3dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç”Ÿæˆã¨ãƒ¢ãƒ‡ãƒ«ã®ã‚»ãƒƒãƒˆ
 	enemyObject_ = new FbxObject3D;
 	enemyObject_->Initialize();
 	enemyObject_->SetModel(EnemyModel);
@@ -30,23 +30,23 @@ void Enemy::Initialize(FbxModel* EnemyModel, FbxModel* enemyBulletModel)
 
 void Enemy::Update(XMFLOAT3 pPos, float pSpeed)
 {
-	//ƒvƒŒƒCƒ„[î•ñXV
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼æƒ…å ±æ›´æ–°
 	this->playerPosition_ = pPos;
 	this->playerSpeed_ = pSpeed;
 
 	if (!isDead_) {
 
-		//‰æ–Ê“à‚É’â‘Ø‚³‚¹‚é
+		//ç”»é¢å†…ã«åœæ»ã•ã›ã‚‹
 		StopInScreen();
 
-		//ˆÚ“®
+		//ç§»å‹•
 		if (moveType_ != NOTMOVE) {
 			Move();
 		}
 
-		//ËŒ‚
+		//å°„æ’ƒ
 		if (shotType_ != NOTSHOT) {
-			//ƒvƒŒƒCƒ„[‚ÌƒXƒs[ƒh‚Å”­Ë‚µn‚ß‚éÀ•W‚ğ•ÏX
+			//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚¹ãƒ”ãƒ¼ãƒ‰ã§ç™ºå°„ã—å§‹ã‚ã‚‹åº§æ¨™ã‚’å¤‰æ›´
 			shotStartPos_ = ShotStart_ * playerSpeed_;
 
 			if (position_.z < playerPosition_.z + shotStartPos_) {
@@ -54,7 +54,7 @@ void Enemy::Update(XMFLOAT3 pPos, float pSpeed)
 			}
 		}
 	}
-	//ƒp[ƒeƒBƒNƒ‹
+	//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
 	else if (isParticle_) {
 		UpdateParticle();
 	}
@@ -70,13 +70,13 @@ void Enemy::Draw(ID3D12GraphicsCommandList* cmdList)
 	if (!isDead_) {
 		enemyObject_->Draw(cmdList);
 
-		//’e
+		//å¼¾
 		for (std::unique_ptr<EnemyBullet>& bullet : bullets_)
 		{
 			bullet->Draw(cmdList);
 		}
 	}
-	//----ƒp[ƒeƒBƒNƒ‹----
+	//----ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«----
 	else if (isParticle_) {
 		particle_->Draw();
 	}
@@ -155,7 +155,7 @@ void Enemy::MoveY()
 
 void Enemy::Reflection()
 {
-	//ˆÚ“®‚ğ”½‘ÎŒü‚«‚É‚³‚¹‚é
+	//ç§»å‹•ã‚’åå¯¾å‘ãã«ã•ã›ã‚‹
 	if (moveType_ != NOTMOVE) {
 		if (moveX_) {
 			moveX_ = false;
@@ -176,19 +176,19 @@ void Enemy::Reflection()
 void Enemy::StopInScreen()
 {
 
-	//stopInScreen‚ªtrue‚Ìê‡AƒvƒŒƒCƒ„[‚©‚çstopInScreenPositioni‚ñ‚¾‹——£‚É“’B‚µ‚½‚ç’â‘Øƒtƒ‰ƒO‚ğƒIƒ“‚É
+	//stopInScreenãŒtrueã®å ´åˆã€ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‹ã‚‰stopInScreenPositioné€²ã‚“ã è·é›¢ã«åˆ°é”ã—ãŸã‚‰åœæ»ãƒ•ãƒ©ã‚°ã‚’ã‚ªãƒ³ã«
 	if (stopInScreen_ && position_.z < playerPosition_.z + stopInScreenPosition_) {
 		isStopInScreen_ = true;
 		stopInScreen_ = false;
 	}
 
-	//’â‘Øƒtƒ‰ƒO‚ªƒIƒ“‚Ìê‡
+	//åœæ»ãƒ•ãƒ©ã‚°ãŒã‚ªãƒ³ã®å ´åˆ
 	if(isStopInScreen_){
 
-		//©‹@‚É‚Â‚¢‚Ä‚¢‚­
+		//è‡ªæ©Ÿã«ã¤ã„ã¦ã„ã
 		position_.z += playerSpeed_;
 
-		//ƒ^ƒCƒ}[‚ği‚ß‚é
+		//ã‚¿ã‚¤ãƒãƒ¼ã‚’é€²ã‚ã‚‹
 		stopInScreenTimer_++;
 		if (stopInScreenTimer_ > StopInScreenTime_) {
 			isStopInScreen_ = false;
@@ -199,36 +199,36 @@ void Enemy::StopInScreen()
 
 void Enemy::InitializeParticle()
 {
-	//ƒtƒ‰ƒO‚ğtrue‚É
+	//ãƒ•ãƒ©ã‚°ã‚’trueã«
 	isParticle_ = true;
-	//ƒ^ƒCƒ}[ƒZƒbƒg
+	//ã‚¿ã‚¤ãƒãƒ¼ã‚»ãƒƒãƒˆ
 	particleTimer_ = ParticleTime_;
 
-	//ƒp[ƒeƒBƒNƒ‹¶¬
+	//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ç”Ÿæˆ
 	particle_ = new ParticleManager();
 	particle_->Initialize("Resources/effect/effect1.png");
 
 	for (int i = 0; i < 100; i++) {
-		//X,Y,Z‚·‚×‚Äposition‚©‚ç[+1.0f,-1.0f]‚Åƒ‰ƒ“ƒ_ƒ€‚É•ª•z
+		//X,Y,Zã™ã¹ã¦positionã‹ã‚‰[+1.0f,-1.0f]ã§ãƒ©ãƒ³ãƒ€ãƒ ã«åˆ†å¸ƒ
 
 		XMFLOAT3 pos{};
 		pos.x = Random(position_.x - 1.0f, position_.x + 1.0f);
 		pos.y = Random(position_.y - 1.0f, position_.y + 1.0f);
 		pos.z = Random(position_.z - 1.0f, position_.z + 1.0f);
 
-		//X,Y,Z‚·‚×‚Ä[-0.05f,+0.05f]‚Åƒ‰ƒ“ƒ_ƒ€‚É•ª•z
+		//X,Y,Zã™ã¹ã¦[-0.05f,+0.05f]ã§ãƒ©ãƒ³ãƒ€ãƒ ã«åˆ†å¸ƒ
 		const float md_vel = 0.05f;
 		XMFLOAT3 vel{};
 		vel.x = Random(-md_vel, md_vel);
 		vel.y = Random(-md_vel, md_vel);
 		vel.z = Random(-md_vel, md_vel);
 
-		//d—Í‚ÉŒ©—§‚Ä‚ÄY‚Ì‚İ[-0.001f,0]‚Åƒ‰ƒ“ƒ_ƒ€‚É•ª•z
+		//é‡åŠ›ã«è¦‹ç«‹ã¦ã¦Yã®ã¿[-0.001f,0]ã§ãƒ©ãƒ³ãƒ€ãƒ ã«åˆ†å¸ƒ
 		XMFLOAT3 acc{};
 		const float md_acc = -0.001f;
 		acc.y = Random(md_acc, 0);
 
-		//’Ç‰Á
+		//è¿½åŠ 
 		particle_->Add(ParticleTime_, pos, vel, acc);
 
 	}
@@ -239,7 +239,7 @@ void Enemy::InitializeParticle()
 void Enemy::UpdateParticle()
 {
 
-	//particle—LŒøŠÔ‚ª‰ß‚¬‚½‚çƒtƒ‰ƒO‚ğfalse‚É
+	//particleæœ‰åŠ¹æ™‚é–“ãŒéããŸã‚‰ãƒ•ãƒ©ã‚°ã‚’falseã«
 	if (particleTimer_ > 0) {
 		particleTimer_--;
 	}
@@ -266,18 +266,18 @@ void Enemy::Shot()
 
 void Enemy::BulletUpdate()
 {
-	//ƒvƒŒƒCƒ„[‚æ‚è‘O‚É‚¢‚é“G‚Ì’e‚Ì‚İ”­Ë
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚ˆã‚Šå‰ã«ã„ã‚‹æ•µã®å¼¾ã®ã¿ç™ºå°„
 	if (position_.z > playerPosition_.z) {
 		Shot();
 	}
 
-	//“G‚Ì’eXV
+	//æ•µã®å¼¾æ›´æ–°
 	for (std::unique_ptr<EnemyBullet>& bullet : bullets_)
 	{
 		bullet->Update();
 	}
 
-	//ƒfƒXƒtƒ‰ƒO‚Ì—§‚Á‚½’e‚ğíœ
+	//ãƒ‡ã‚¹ãƒ•ãƒ©ã‚°ã®ç«‹ã£ãŸå¼¾ã‚’å‰Šé™¤
 	bullets_.remove_if([](std::unique_ptr<EnemyBullet>& bullet) {return bullet->GetIsDead(); });
 }
 
@@ -292,20 +292,20 @@ void Enemy::MakeBullet()
 		break;
 
 	case STRAIGHTSHOT:
-		//z²‚Ì-•ûŒü‚Ì’PˆÊƒxƒNƒgƒ‹‚É‘¬“x‚ğ‚©‚¯‚é
+		//zè»¸ã®-æ–¹å‘ã®å˜ä½ãƒ™ã‚¯ãƒˆãƒ«ã«é€Ÿåº¦ã‚’ã‹ã‘ã‚‹
 		velocity = { 0.0f,0.0f,-1.0f };
 		velocity *= bulletSpeed_;
 		break;
 
 	case HOMINGSHOT:
 
-		//©‹@‚Æ“G‚ÌƒxƒNƒgƒ‹‚ğæ‚é
+		//è‡ªæ©Ÿã¨æ•µã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’å–ã‚‹
 		Vector3 playerVec_ = { playerPosition_.x ,playerPosition_.y,playerPosition_.z };
 		Vector3 enemyVec = { position_.x,position_.y,position_.z };
 
 		velocity = playerVec_ - enemyVec;
 
-		//³‹K‰»‚ğ‚µ‚Ä‘¬“x‚ğ‚©‚¯‚é
+		//æ­£è¦åŒ–ã‚’ã—ã¦é€Ÿåº¦ã‚’ã‹ã‘ã‚‹
 		velocity.normalize();
 		velocity *= bulletSpeed_;
 
@@ -314,7 +314,7 @@ void Enemy::MakeBullet()
 		break;
 	}
 
-	//’e‚Ì¶¬
+	//å¼¾ã®ç”Ÿæˆ
 	std::unique_ptr<EnemyBullet> newBullet = std::make_unique<EnemyBullet>();
 	newBullet->Initialize(bulletModel_, position_, velocity, playerSpeed_);
 	bullets_.push_back(std::move(newBullet));

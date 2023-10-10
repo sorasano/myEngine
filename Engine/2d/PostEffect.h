@@ -8,101 +8,101 @@
 
 class PostEffect
 {
-private:	//ƒGƒCƒŠƒAƒX
-	//Microsoft::WRL::‚ğÈ—ª
+private:	//ã‚¨ã‚¤ãƒªã‚¢ã‚¹
+	//Microsoft::WRL::ã‚’çœç•¥
 	template<class T>using ComPtr = Microsoft::WRL::ComPtr<T>;
-	//DirectX::‚ğÈ—ª
+	//DirectX::ã‚’çœç•¥
 	using XMFLOAT2 = DirectX::XMFLOAT2;
 	using XMFLOAT3 = DirectX::XMFLOAT3;
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
 
-public:	 //’è”
-	//SRV‚ÌÅ‘åŒÂ”
+public:	 //å®šæ•°
+	//SRVã®æœ€å¤§å€‹æ•°
 	static const size_t kMaxSrvCount = 2056;
 
-public:	//ƒTƒuƒNƒ‰ƒX
-	//’è”ƒoƒbƒtƒ@
+public:	//ã‚µãƒ–ã‚¯ãƒ©ã‚¹
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡
 	struct ConstBuffMaterial
 	{
 		XMFLOAT4 color;
 	};
-	//’è”ƒoƒbƒtƒ@2
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡2
 	struct ConstBuffTransform
 	{
-		XMMATRIX mat;	//3D•ÏŠ·s—ñ
+		XMMATRIX mat;	//3Då¤‰æ›è¡Œåˆ—
 	};
-	//’¸“_ƒf[ƒ^—p\‘¢‘Ì
+	//é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿ç”¨æ§‹é€ ä½“
 	struct Vertex
 	{
 		XMFLOAT3 pos;
 		XMFLOAT2 uv;
 	};
 
-public:	//ƒƒ“ƒoŠÖ”
-	//‰Šú‰»
+public:	//ãƒ¡ãƒ³ãƒé–¢æ•°
+	//åˆæœŸåŒ–
 	void Initialize();
-	//XV
+	//æ›´æ–°
 	void Update();
-	//•`‰æ
+	//æç”»
 	void Draw(ID3D12GraphicsCommandList* cmdList_);
-	//ƒpƒCƒvƒ‰ƒCƒ“İ’èAì¬
+	//ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³è¨­å®šã€ä½œæˆ
 	void CreateGraphicsPipeLine();
 
-	//•`‰æ‘Oˆ—
+	//æç”»å‰å‡¦ç†
 	void PreDrawScene(ID3D12GraphicsCommandList* cmdList_);
-	//•`‰æŒãˆ—
+	//æç”»å¾Œå‡¦ç†
 	void PostDrawScene(ID3D12GraphicsCommandList* cmdList_);
 
-public:	//Ã“Iƒƒ“ƒoŠÖ”
+public:	//é™çš„ãƒ¡ãƒ³ãƒé–¢æ•°
 	static void SetDevice(ID3D12Device* device) { PostEffect::device_ = device; }
 
-public:	//ƒZƒbƒ^[
-	//ƒAƒ‹ƒtƒ@’l
+public:	//ã‚»ãƒƒã‚¿ãƒ¼
+	//ã‚¢ãƒ«ãƒ•ã‚¡å€¤
 	void SetAlpha(float alpha) { color.w = alpha; }
-	//F
+	//è‰²
 	void SetColor(XMFLOAT3 c) { color.x = c.x; color.y = c.y; color.z = c.z; }
-	//À•W
+	//åº§æ¨™
 	void SetPosition(XMFLOAT2 pos) { position_ = pos; }
-	//Šp“x
+	//è§’åº¦
 	void SetRotation(float rot) { rotation_ = rot; }
-	//ƒXƒP[ƒ‹
+	//ã‚¹ã‚±ãƒ¼ãƒ«
 	void SetScale(XMFLOAT2 sca) { scale_ = sca; }
 
-private:	//Ã“Iƒƒ“ƒo•Ï”
-	//ƒfƒoƒCƒX
+private:	//é™çš„ãƒ¡ãƒ³ãƒå¤‰æ•°
+	//ãƒ‡ãƒã‚¤ã‚¹
 	static ID3D12Device* device_;
-	//ƒ‹[ƒgƒVƒOƒlƒ`ƒƒ
+	//ãƒ«ãƒ¼ãƒˆã‚·ã‚°ãƒãƒãƒ£
 	static ComPtr<ID3D12RootSignature>rootsignature_;
-	//ƒpƒCƒvƒ‰ƒCƒ“ƒXƒe[ƒgƒIƒuƒWƒFƒNƒg
+	//ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã‚¹ãƒ†ãƒ¼ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	static ComPtr<ID3D12PipelineState>pipelinestate_;
-	//‰æ–ÊƒNƒŠƒAƒJƒ‰[
+	//ç”»é¢ã‚¯ãƒªã‚¢ã‚«ãƒ©ãƒ¼
 	static const float clearColor[4];
 
-private:	//ƒƒ“ƒo•Ï”
-	//’¸“_ƒoƒbƒtƒ@ƒrƒ…[
+private:	//ãƒ¡ãƒ³ãƒå¤‰æ•°
+	//é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼
 	D3D12_VERTEX_BUFFER_VIEW vbView_;
-	//’¸“_ƒf[ƒ^
+	//é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿
 	Vertex vertices_[6];
 	Vertex* vertMap_ = nullptr;
-	//’è”ƒoƒbƒtƒ@ ƒ}ƒeƒŠƒAƒ‹
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡ ãƒãƒ†ãƒªã‚¢ãƒ«
 	ComPtr<ID3D12Resource>constBuffMaterial_;
 	ConstBuffMaterial* constMapMaterial_ = nullptr;
-	//’è”ƒoƒbƒtƒ@ •ÏŒ`s—ñ
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡ å¤‰å½¢è¡Œåˆ—
 	ComPtr<ID3D12Resource>constBuffTransform_;
 	ConstBuffTransform* constMapTransform_ = nullptr;
-	//ƒeƒNƒXƒ`ƒƒ‚ÌF
+	//ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®è‰²
 	XMFLOAT4 color = { 1,1,1,1 };
-	//ƒeƒNƒXƒ`ƒƒƒoƒbƒtƒ@
+	//ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒãƒƒãƒ•ã‚¡
 	ComPtr<ID3D12Resource>textureBuff_;
-	//ƒfƒXƒNƒŠƒvƒ^ƒq[ƒv
+	//ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—
 	ComPtr<ID3D12DescriptorHeap> srvHeap_;
 
-	//[“xƒoƒbƒtƒ@
+	//æ·±åº¦ãƒãƒƒãƒ•ã‚¡
 	ComPtr<ID3D12Resource>depthBuff;
-	//RTV—pƒfƒXƒNƒŠƒvƒ^ƒq[ƒv
+	//RTVç”¨ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—
 	ComPtr<ID3D12DescriptorHeap>descHeapRTV;
-	//DSV—pƒfƒXƒNƒŠƒvƒ^ƒq[ƒv
+	//DSVç”¨ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—
 	ComPtr<ID3D12DescriptorHeap>descHeapDSV;
 
 private:
