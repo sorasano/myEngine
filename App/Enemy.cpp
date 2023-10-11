@@ -295,6 +295,8 @@ void Enemy::MakeBullet()
 		//z軸の-方向の単位ベクトルに速度をかける
 		velocity = { 0.0f,0.0f,-1.0f };
 		velocity *= bulletSpeed_;
+		velocity.z += playerSpeed_;
+
 		break;
 
 	case HOMINGSHOT:
@@ -336,7 +338,7 @@ void Enemy::SetType(int type)
 
 	this->type_ = type;
 
-	switch (type)
+	switch (type_)
 	{
 	case NOTHING:
 		shotType_ = NOTSHOT;

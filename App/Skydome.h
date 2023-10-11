@@ -10,6 +10,9 @@ public:
 	void Update(float eyeZ);
 	void Draw(ID3D12GraphicsCommandList* cmdList_);
 
+	//端
+	float GetEdge() { return scale_.z / 2; }
+
 private:
 	XMFLOAT3 position_ = { 0,0,0 };
 	XMFLOAT3 rotation_ = { 0,0,0 };

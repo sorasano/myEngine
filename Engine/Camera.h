@@ -16,7 +16,6 @@ enum CameraMode {
 	BOSSINMODE,//ボス出現演出
 	BOSSCLERAMODE,//ボス撃破演出
 	BOSSGAMEOVERAMODE,//ボス逃亡演出
-	DEBUGMODE,//デバックモード
 };
 
 class Camera
@@ -41,6 +40,10 @@ private:
 	XMFLOAT3 eye_ = { 0, 1, 30 };
 	XMFLOAT3 target_ = { 0, 0, 0 };
 	XMFLOAT3 up_ = { 0, 1, 0 };;
+	//描画最小距離
+	float nearClip_ = 0.1f;
+	//描画最大距離
+	float farClip_ = 1000.0f;
 
 public:
 
@@ -68,7 +71,6 @@ public:
 	XMFLOAT3 GetEye() { return eye_; }
 	XMFLOAT3 GetTarget() { return target_; }
 	int GetMode() { return mode_; }
-	float GetRangeMaxZ() { return rangeMaxZ_; }
 	bool GetIsPerformance() { return isPerformance_; }
 
 	void SetEye(XMFLOAT3 eye) { this->eye_ = eye; }
@@ -87,8 +89,6 @@ private:
 	//ボス座標
 	XMFLOAT3 bossPos_ = {};
 
-	//描画最大距離
-	float rangeMaxZ_ = 500.0f;
 	//プレイヤーとカメラの距離
 	float playerRange_ = 30.0f;
 
@@ -97,7 +97,7 @@ private:
 
 	//カメラ直線移動モードスピード
 	float straightModeSpeed_ = 1.0f;
-
+	 
 	//-----演出用-----
 	//現在座標
 	XMFLOAT3 startEye_ = {};

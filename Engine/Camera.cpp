@@ -1,5 +1,7 @@
 #include "Camera.h"
 #include"Base/WinApp.h"
+#include "Imgui.h"
+
 using namespace DirectX;
 
 ID3D12Device* Camera::device_ = nullptr;
@@ -47,15 +49,19 @@ void Camera::Initialize(Input* input)
 
 void Camera::UpdateMatrix()
 {
+
+	//ビュー変換行列の計算
+	matView_ = XMMatrixLookAtLH(XMLoadFloat3(&eye_), XMLoadFloat3(&target_), XMLoadFloat3(&up_));
+
+	//描画距離の更新
+	float farClip = eye_.z + farClip_;
+
 	//専用の行列を宣言
 	matProjection_ = XMMatrixPerspectiveFovLH(
 		XMConvertToRadians(45.0f),					//上下画角45度
 		(float)WinApp::winW / WinApp::winH,	//アスペクト比（画面横幅/画面縦幅）
-		0.1f, 1000.0f								//前橋、奥橋
+		nearClip_, farClip								//前橋、奥橋
 	);
-
-	//ビュー変換行列の計算
-	matView_ = XMMatrixLookAtLH(XMLoadFloat3(&eye_), XMLoadFloat3(&target_), XMLoadFloat3(&up_));
 
 	constMap->view = matView_;
 	constMap->projection = matProjection_;
@@ -67,6 +73,7 @@ void Camera::Update(XMFLOAT3 playerPos, XMFLOAT3 bossPos)
 	this->playerPos_ = playerPos;
 	this->bossPos_ = bossPos;
 
+
 	switch (mode_) {
 	case STRAIGHTMODE:
 		UpdateStraightMode();
@@ -74,18 +81,20 @@ void Camera::Update(XMFLOAT3 playerPos, XMFLOAT3 bossPos)
 
 	case PLAYERFOLLOWMODE:
 		UpdatePlayerFollowMode();
+		//DebugMode();
 		break;
 
 	case TITLETOPLAYMODE:
 		UpdateTitleToPlayMode();
 		break;
-
-	case DEBUGMODE:
-		DebugMode();
-		break;
 	}
 
+
 	UpdateMatrix();
+
+	ImGui::Begin("cameraPos");
+	ImGui::Text("%f",eye_.z);
+	ImGui::End();
 }
 
 void Camera::UpdateStraightMode()
@@ -157,8 +166,8 @@ void Camera::InitializeTitleToPlayMode()
 	endEye_ = eye_;
 	endTarget_ = target_;
 
-	endEye_.z = eye_.z + (rangeMaxZ_  * 2);
-	endTarget_.z = eye_.z + (rangeMaxZ_ * 2) + playerRange_;
+	endEye_.z = eye_.z + farClip_;
+	endTarget_.z = eye_.z + farClip_ + playerRange_;
 
 	//イージング用数値の初期化
 	easeing_.Start(easeingTime_);
@@ -170,7 +179,7 @@ void Camera::InitializeTitleToPlayMode()
 
 void Camera::DebugMode()
 {
-
+	//カメラ操作
 	float speed = 1.0f;
 
 	if (input_->PushKey(DIK_W) || input_->PushKey(DIK_S) || input_->PushKey(DIK_D) || input_->PushKey(DIK_A)) {

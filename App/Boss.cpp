@@ -242,6 +242,7 @@ void Boss::Shot()
 			//z軸の-方向の単位ベクトルに速度をかける
 			velocity = { 0.0f,0.0f,-1.0f };
 			velocity *= bulletSpeed_;
+			velocity.z += playerSpeed_;
 
 			//弾の生成
 			MakeBullet(velocity);
@@ -268,32 +269,37 @@ void Boss::Shot()
 		case BOSSMULTISHOT:
 
 			//正面
-			velocity = { 0.0f,0.1f,-1.0f };
+			velocity = { 0.0f,0.0f,-1.0f };
 			velocity *= bulletSpeed_;
+			velocity.z += playerSpeed_;
 			//弾の生成
 			MakeBullet(velocity);
 
 			//上
 			velocity = { 0.0f,0.1f,-1.0f };
 			velocity *= bulletSpeed_;
+			velocity.z += playerSpeed_;
 			//弾の生成
 			MakeBullet(velocity);
 
 			//下
 			velocity = { 0.0f,-0.1f,-1.0f };
 			velocity *= bulletSpeed_;
+			velocity.z += playerSpeed_;
 			//弾の生成
 			MakeBullet(velocity);
 
 			//右
 			velocity = { 0.1f,0.0f,-1.0f };
 			velocity *= bulletSpeed_;
+			velocity.z += playerSpeed_;
 			//弾の生成
 			MakeBullet(velocity);
 
 			//左
 			velocity = { -0.1f,0.0f,-1.0f };
 			velocity *= bulletSpeed_;
+			velocity.z += playerSpeed_;
 			//弾の生成
 			MakeBullet(velocity);
 

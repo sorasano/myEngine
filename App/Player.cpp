@@ -85,6 +85,8 @@ void Player::Update()
 		}
 	}
 
+	//isInvincible_ = true;
+
 	playerObject_->SetPosition(position_);
 	playerObject_->SetScale(scale_);
 	playerObject_->SetRotate(rotation_);

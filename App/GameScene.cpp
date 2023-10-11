@@ -294,7 +294,8 @@ bool GameScene::UpadateRange(XMFLOAT3 cameraPos, XMFLOAT3 pos)
 
 	if (cameraPos.x - pos.x < 20.0f && cameraPos.x - pos.x > -20.0f) { return true; }
 	if (cameraPos.y - pos.y < 10.0f && cameraPos.y - pos.y > -10.0f) { return true; }
-	if (cameraPos.z - pos.z < -10.0f && cameraPos.z - pos.z > -camera_->GetRangeMaxZ()) { return true; }
+	//スカイドームまでを更新描画
+	if (cameraPos.z - pos.z < -10.0f && cameraPos.z - pos.z > -skydome_->GetEdge()) { return true; }
 
 	return false;
 }
@@ -474,12 +475,13 @@ void GameScene::UpdateBackGround()
 void GameScene::SetEnemy()
 {
 
-	//発生させる位置は最大描画距離から
-	float makePos = player_->GetPosition().z + camera_->GetRangeMaxZ();
+	//発生させる位置はスカイドームの端
+	float makePos = player_->GetPosition().z + skydome_->GetEdge();
 
 	//何番目のCSVをセットするか(ランダム)
 	int setNum = static_cast<int>(Random(0, enemyCSVSize_ - 0.001f));
 	auto it = enemyCsvs_.begin();
+	setNum = 2;
 	std::advance(it, setNum);
 
 	for (int i = 0; i < it->get()->GetSize(); i++)
