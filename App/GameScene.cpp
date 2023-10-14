@@ -36,7 +36,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	collisionManager_ = new Collision();
 
 	// パーティクル静的初期化
-	ParticleManager::StaticInitialize(dxCommon, WinApp::winW, WinApp::winH);
+	ParticleManager::StaticInitialize(dxCommon);
 
 	//スプライトマネージャー
 	SpriteManager::SetDevice(dxCommon->GetDevice());

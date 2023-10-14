@@ -54,8 +54,5 @@ public:
 
 	// ウィンドウクラスの設定
 	WNDCLASSEX w{};
-
-	static const int winW = 1280;
-	static const int winH = 720;
 };
 

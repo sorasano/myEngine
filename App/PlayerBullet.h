@@ -37,7 +37,7 @@ public:
 	void Initialize(FbxModel* model, XMFLOAT3 position, Vector3 velocity);
 	/**
 	* 更新
-	/
+	*/
 	void Update();
 	/**
 	* 描画

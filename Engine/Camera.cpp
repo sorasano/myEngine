@@ -64,7 +64,7 @@ void Camera::UpdateMatrix()
 	//専用の行列を宣言
 	matProjection_ = XMMatrixPerspectiveFovLH(
 		XMConvertToRadians(45.0f),					//上下画角45度
-		(float)WinApp::winW / WinApp::winH,	//アスペクト比（画面横幅/画面縦幅）
+		(float)window_width / window_height,	//アスペクト比（画面横幅/画面縦幅）
 		nearClip_, farClip								//前橋、奥橋
 	);
 
