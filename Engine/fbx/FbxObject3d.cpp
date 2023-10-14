@@ -1,3 +1,8 @@
+/**
+* @file FbxObject3d.cpp
+* @brief Fbx処理
+*/
+
 #include "FbxObject3d.h"
 #include "FbxLoader.h"
 

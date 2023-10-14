@@ -1,3 +1,8 @@
+/**
+* @file Model.h
+* @brief objãƒ¢ãƒ‡ãƒ«ã®å‡¦ç†
+*/
+
 #pragma once
 #include <Windows.h>
 #include <wrl.h>
@@ -13,40 +18,40 @@ using namespace DirectX;
 class Model
 {
 public:
-	// ’¸“_ƒf[ƒ^\‘¢‘Ì
+	// é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“
 	struct VertexPosNormalUvSkin
 	{
-		XMFLOAT3 pos; // xyzÀ•W
-		XMFLOAT3 normal; // –@üƒxƒNƒgƒ‹
+		XMFLOAT3 pos; // xyzåº§æ¨™
+		XMFLOAT3 normal; // æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«
 		XMFLOAT4 color;
-		XMFLOAT2 uv;  // uvÀ•W
+		XMFLOAT2 uv;  // uvåº§æ¨™
 	};
 
-	//// ’è”ƒoƒbƒtƒ@—pƒf[ƒ^\‘¢‘ÌB0
+	//// å®šæ•°ãƒãƒƒãƒ•ã‚¡ç”¨ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“B0
 	//struct ConstBufferDataB0
 	//{
-	//	XMMATRIX mat;	// ‚R‚c•ÏŠ·s—ñ
+	//	XMMATRIX mat;	// ï¼“ï¼¤å¤‰æ›è¡Œåˆ—
 	//};
-	//// ’è”ƒoƒbƒtƒ@—pƒf[ƒ^\‘¢‘ÌB1
+	//// å®šæ•°ãƒãƒƒãƒ•ã‚¡ç”¨ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“B1
 	//struct ConstBufferDataB1
 	//{
-	//	XMFLOAT3 ambient;	//ƒAƒ“ƒrƒGƒ“ƒgŒW”
-	//	float pad1;			//ƒpƒfƒBƒ“ƒO
-	//	XMFLOAT3 diffuse;	//ƒfƒBƒtƒ…[ƒYŒW”
-	//	float pad2;			//ƒpƒfƒBƒ“ƒO
-	//	XMFLOAT3 specular;	//ƒXƒyƒLƒ…ƒ‰[ŒW”
-	//	float alpha;		//ƒAƒ‹ƒtƒ@
+	//	XMFLOAT3 ambient;	//ã‚¢ãƒ³ãƒ“ã‚¨ãƒ³ãƒˆä¿‚æ•°
+	//	float pad1;			//ãƒ‘ãƒ‡ã‚£ãƒ³ã‚°
+	//	XMFLOAT3 diffuse;	//ãƒ‡ã‚£ãƒ•ãƒ¥ãƒ¼ã‚ºä¿‚æ•°
+	//	float pad2;			//ãƒ‘ãƒ‡ã‚£ãƒ³ã‚°
+	//	XMFLOAT3 specular;	//ã‚¹ãƒšã‚­ãƒ¥ãƒ©ãƒ¼ä¿‚æ•°
+	//	float alpha;		//ã‚¢ãƒ«ãƒ•ã‚¡
 	//};
-	//ƒ}ƒeƒŠƒAƒ‹
+	//ãƒãƒ†ãƒªã‚¢ãƒ«
 	struct Material
 	{
-		std::string name;	//ƒ}ƒeƒŠƒAƒ‹–¼
-		XMFLOAT3 ambient;	//ƒAƒ“ƒrƒGƒ“ƒg‰e‹¿“x
-		XMFLOAT3 diffuse;	//ƒfƒBƒtƒ…[ƒY‰e‹¿“x
-		XMFLOAT3 specular;	//ƒXƒyƒLƒ…ƒ‰[‰e‹¿“x
-		float alpha;	//ƒAƒ‹ƒtƒ@
-		std::string textureFilename;	//ƒeƒNƒXƒ`ƒƒƒtƒ@ƒCƒ‹–¼
-		//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+		std::string name;	//ãƒãƒ†ãƒªã‚¢ãƒ«å
+		XMFLOAT3 ambient;	//ã‚¢ãƒ³ãƒ“ã‚¨ãƒ³ãƒˆå½±éŸ¿åº¦
+		XMFLOAT3 diffuse;	//ãƒ‡ã‚£ãƒ•ãƒ¥ãƒ¼ã‚ºå½±éŸ¿åº¦
+		XMFLOAT3 specular;	//ã‚¹ãƒšã‚­ãƒ¥ãƒ©ãƒ¼å½±éŸ¿åº¦
+		float alpha;	//ã‚¢ãƒ«ãƒ•ã‚¡
+		std::string textureFilename;	//ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ•ã‚¡ã‚¤ãƒ«å
+		//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 		Material()
 		{
 			ambient = { 0.3f,0.3f,0.3f };
@@ -56,24 +61,78 @@ public:
 		}
 	};
 public:
-	//ƒVƒ“ƒOƒ‹ƒgƒ“ƒCƒ“ƒXƒ^ƒ“ƒX
+	/**
+	* @return Model ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹å–å¾—
+	*/
 	Model *GetInstance();
-	//‰Šú‰»			dxCommon,			obj‚Æmtl‚ª“ü‚Á‚Ä‚éƒtƒ@ƒCƒ‹‚Ì–¼‘O,	“\‚è•t‚¯‚é‰æ‘œ‚Ì–¼‘O
+
+	/**
+	* åˆæœŸåŒ–
+	*
+	* @param[in] dx_ dxCommon
+	* @param[in] filename objã¨mtlãŒå…¥ã£ã¦ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«ã®åå‰
+	* @param[in] resourcename è²¼ã‚Šä»˜ã‘ã‚‹ç”»åƒã®åå‰
+	*/
 	void Initialize(DirectXCommon* dx_, const std::string& filename , const std::string& resourcename);
 
-	void InitializeVertex(const std::string& filename);	//’¸“_‰Šú‰»
-	void InitializeDesc();	//ƒfƒXƒNƒŠƒvƒ^‰Šú‰»
-	void CompileShader(const wchar_t* file, const wchar_t* file2);	//ƒVƒF[ƒ_“Ç‚İ‚İ
+	/**
+	* é ‚ç‚¹åˆæœŸåŒ–
+	*
+	* @param[in] modelname ãƒ¢ãƒ‡ãƒ«ã®åå‰
+	*/
+	void InitializeVertex(const std::string& modelname);
+	/**
+	* ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿åˆæœŸåŒ–
+	*/
+	void InitializeDesc();
+	/**
+	* ã‚·ã‚§ãƒ¼ãƒ€èª­ã¿è¾¼ã¿
+	*
+	* @param[in] file ã‚·ã‚§ãƒ¼ãƒ€ãƒ•ã‚¡ã‚¤ãƒ«å1
+	* @param[in] file2 ã‚·ã‚§ãƒ¼ãƒ€ãƒ•ã‚¡ã‚¤ãƒ«å2
+	*/
+	void CompileShader(const wchar_t* file, const wchar_t* file2);
+	/**
+	* ãƒãƒ†ãƒªã‚¢ãƒ«èª­ã¿è¾¼ã¿
+	*
+	* @param[in] directoryPath ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
+	* @param[out] filename ãƒãƒ†ãƒªã‚¢ãƒ«ãƒ•ã‚¡ã‚¤ãƒ«å
+	*/
 	void LoadMaterial(const std::string& directoryPath, const std::string& filename);
+	/**
+	* ãƒ†ã‚¯ã‚¹ãƒãƒ£èª­ã¿è¾¼ã¿
+	*
+	* @param[in] resourcename ãƒ†ã‚¯ã‚¹ãƒãƒ£å
+	*/
 	void LoadTexture(const std::string& resourcename);
-	//XV
+	/**
+	* æ›´æ–°
+	*/
 	void Update();
-	//ƒQƒbƒ^[
+	//ã‚²ãƒƒã‚¿ãƒ¼
+	/**
+	* @return int materialå–å¾—
+	*/
 	Material GetMaterial() { return material; };
+	/**
+	* @return int descHeap_å–å¾—
+	*/
 	ComPtr<ID3D12DescriptorHeap> GetDescHeap() { return descHeap_; };
+	/**
+	* @return int pipelinestate_å–å¾—
+	*/
 	ComPtr<ID3D12PipelineState> GetPipelinestate() { return pipelinestate_; };
+	/**
+	* @return int rootsignature_å–å¾—
+	*/
 	ComPtr<ID3D12RootSignature> GetRootSignature() { return rootsignature_; };
+	/**
+	* @return int gpuDescHandleSRV_å–å¾—
+	*/
 	CD3DX12_GPU_DESCRIPTOR_HANDLE GetSrv() { return gpuDescHandleSRV_; };
+	/**
+	* @return int indicesã®ã‚µã‚¤ã‚ºå–å¾—
+	*/
 	UINT GetIndicesSize() { return (UINT)sizeof(indices.size()); };
 public:
 	DirectXCommon* dx_ = nullptr;
@@ -83,16 +142,16 @@ public:
 	D3D12_VIEWPORT viewport{};
 
 	D3D12_INDEX_BUFFER_VIEW ibView_ = {};
-	D3D12_VERTEX_BUFFER_VIEW vbView_ = {};		//’¸“_ƒoƒbƒtƒ@ƒrƒ…[
-	uint32_t textureIndex = 0;	//ƒeƒNƒXƒ`ƒƒ”Ô†
+	D3D12_VERTEX_BUFFER_VIEW vbView_ = {};		//é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼
+	uint32_t textureIndex = 0;	//ãƒ†ã‚¯ã‚¹ãƒãƒ£ç•ªå·
 
 private:
-	//’¸“_ƒf[ƒ^\‘¢‘Ì
+	//é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“
 	struct Vertex
 	{
-		XMFLOAT3 pos;	//À•W
-		XMFLOAT3 normalize;	//–@üƒxƒNƒgƒ‹
-		XMFLOAT2 uv;	//uvÀ•W
+		XMFLOAT3 pos;	//åº§æ¨™
+		XMFLOAT3 normalize;	//æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«
+		XMFLOAT2 uv;	//uvåº§æ¨™
 		XMFLOAT4 color = {1,0,0,1};
 		Vertex* parent = nullptr;
 	};
@@ -101,32 +160,32 @@ private:
 	{
 		int num;
 	};
-	//VertexŠÖ˜A
+	//Vertexé–¢é€£
 	size_t verticesCount = 24;
-	std::vector<VertexPosNormalUvSkin> vertices_;	//ŠO•”‚É“n‚·—p‚Ì’¸“_ƒf[ƒ^
+	std::vector<VertexPosNormalUvSkin> vertices_;	//å¤–éƒ¨ã«æ¸¡ã™ç”¨ã®é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿
 	size_t indicesCount = 36;
 	std::vector<unsigned short> indices;
-	//ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@ŠÖ˜A
+	//ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡é–¢é€£
 	ComPtr<ID3D12Resource> indexBuff;
-	//’¸“_ƒoƒbƒtƒ@‰Šú‰»
+	//é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡åˆæœŸåŒ–
 	ComPtr<ID3D12Resource> vertBuff_;
-	//ƒ‹[ƒgƒVƒOƒlƒ`ƒƒ
+	//ãƒ«ãƒ¼ãƒˆã‚·ã‚°ãƒãƒãƒ£
 	ComPtr<ID3D12RootSignature> rootsignature_;
-	//ƒpƒCƒvƒ‰ƒCƒ“
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineDesc{};	//ƒOƒ‰ƒtƒBƒbƒNƒXƒpƒCƒvƒ‰ƒCƒ“
-	//ƒpƒCƒvƒ‰ƒCƒ“ƒXƒe[ƒg
+	//ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineDesc{};	//ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³
+	//ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã‚¹ãƒ†ãƒ¼ãƒˆ
 	ComPtr<ID3D12PipelineState> pipelinestate_;
-	//ƒ}ƒeƒŠƒAƒ‹
+	//ãƒãƒ†ãƒªã‚¢ãƒ«
 	Material material;
-	// ƒfƒXƒNƒŠƒvƒ^ƒq[ƒv
+	// ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—
 	ComPtr<ID3D12DescriptorHeap> descHeap_;
-	// ƒfƒXƒNƒŠƒvƒ^ƒTƒCƒY
+	// ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã‚µã‚¤ã‚º
 	UINT descriptorHandleIncrementSize_ = 0;
-	// ƒeƒNƒXƒ`ƒƒƒoƒbƒtƒ@
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒãƒƒãƒ•ã‚¡
 	ComPtr<ID3D12Resource> texbuff_;
-	// ƒVƒF[ƒ_ƒŠƒ\[ƒXƒrƒ…[‚Ìƒnƒ“ƒhƒ‹(CPU)
+	// ã‚·ã‚§ãƒ¼ãƒ€ãƒªã‚½ãƒ¼ã‚¹ãƒ“ãƒ¥ãƒ¼ã®ãƒãƒ³ãƒ‰ãƒ«(CPU)
 	CD3DX12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV_;
-	// ƒVƒF[ƒ_ƒŠƒ\[ƒXƒrƒ…[‚Ìƒnƒ“ƒhƒ‹(CPU)
+	// ã‚·ã‚§ãƒ¼ãƒ€ãƒªã‚½ãƒ¼ã‚¹ãƒ“ãƒ¥ãƒ¼ã®ãƒãƒ³ãƒ‰ãƒ«(CPU)
 	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV_;
 };
 

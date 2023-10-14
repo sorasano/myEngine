@@ -1,3 +1,8 @@
+/**
+* @file Boss.cpp
+* @brief ボスの処理
+*/
+
 #include "Boss.h"
 #include "Random.h"
 

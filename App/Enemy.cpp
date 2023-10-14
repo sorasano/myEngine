@@ -1,3 +1,8 @@
+/**
+* @file Enemy.cpp
+* @brief 敵の処理
+*/
+
 #include "Enemy.h"
 #include "Random.h"
 

@@ -1,3 +1,8 @@
+/**
+* @file SpriteManager.cpp
+* @brief スプライト共通部分の処理
+*/
+
 #include "SpriteManager.h"
 const std::string SpriteManager::kDefaultbaseDirectory_ = "Resources/texture/";
 

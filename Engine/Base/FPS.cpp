@@ -1,3 +1,8 @@
+/**
+* @file FPS.cpp
+* @brief FPSの設定
+*/
+
 #include "FPS.h"
 
 void FPS::FpsControlBegin() {

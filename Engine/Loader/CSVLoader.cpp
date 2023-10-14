@@ -1,3 +1,8 @@
+/**
+* @file CSVLoader.cpp
+* @brief CSVから情報を読み取る
+*/
+
 #include "CSVLoader.h"
 
 #include<fstream>

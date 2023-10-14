@@ -1,3 +1,8 @@
+/**
+* @file Sprite.h
+* @brief スプライトの処理
+*/
+
 #pragma once
 #include "d3dx12.h"
 #include "DirectXMath.h"
@@ -35,37 +40,79 @@ public:	//サブクラス
 	};
 
 public:	//メンバ関数
+
+	/**
+	*	初期化
+	*/
 	void Initialize();
+	/**
+	*	更新
+	*/
 	void Update();
+	/**
+	* 描画
+	*
+	* @param[out] cmdList_ コマンドリスト
+	*/
 	void Draw(ID3D12GraphicsCommandList* cmdList_);
 
-public:	//静的メンバ変数セッター
+public:
+	//静的メンバ変数セッター
+	/**
+	* deviceセット
+	*/
 	static void SetDevice(ID3D12Device* device) { Sprite::device_ = device; }
+	/**
+	* spriteManagerセット
+	*/
 	static void SetSpriteManager(SpriteManager* spriteManager) { Sprite::spriteManager_ = spriteManager; }
+	/**
+	* パイプライン生成
+	*/
 	static void CreateGraphicsPipeLine();
 
 public:	//セッター
-	//アルファ値
+	/**
+	* アルファ値セット
+	*/
 	void SetAlpha(float alpha) { color.w = alpha; }
-	//色
+	/**
+	* 色セット
+	*/
 	void SetColor(XMFLOAT3 c) { color.x = c.x; color.y = c.y; color.z = c.z; }
-	//テクスチャの番号をセット
+	/**
+	* テクスチャの番号セット
+	*/
 	void SetTextureNum(int num) { textureNum_ = num; }
-	//座標
+	/**
+	* 座標セット
+	*/
 	void SetPosition(XMFLOAT2 pos) { position_ = pos; }
-	//角度
+	/**
+	* 角度セット
+	*/
 	void SetRotation(float rot) { rotation_ = rot; }
-	//スケール
+	/**
+	* スケールセット
+	*/
 	void SetScale(XMFLOAT2 sca) { scale_ = sca; }
-
+	/**
+	* アンカーポイントセット
+	*/
 	void SetAnchorPoint(const DirectX::XMFLOAT2& point) { anchorPoint_ = point; }
 
 public:	//ゲッター
-	//座標
+	/**
+	* @return XMFLOAT2 座標取得
+	*/
 	XMFLOAT2 GetPosition() { return position_; }
-	//角度
+	/**
+	* @return float 角度取得
+	*/
 	float GetRotation() { return rotation_; }
-	//スケール
+	/**
+	* @return XMFLOAT2 スケール取得
+	*/
 	XMFLOAT2 GetScale() { return scale_; }
 
 private:

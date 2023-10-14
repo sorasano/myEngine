@@ -1,3 +1,8 @@
+/**
+* @file BossBullet.cpp
+* @brief ボスの弾の処理
+*/
+
 #include "BossBullet.h"
 #include <cmath>
 #define PI 3.1415

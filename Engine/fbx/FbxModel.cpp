@@ -1,3 +1,8 @@
+/**
+* @file FbxModel.cpp
+* @brief Fbxモデル処理
+*/
+
 #include "FbxModel.h"
 
 FbxModel::FbxModel()
@@ -10,7 +15,7 @@ FbxModel::~FbxModel()
 	fbxScene->Destroy();
 }
 
-void FbxModel::CreateBuffers(ID3D12Device* device_)
+void FbxModel::CreateBuffers(ID3D12Device* device)
 {
 
 	HRESULT result;
@@ -21,7 +26,7 @@ void FbxModel::CreateBuffers(ID3D12Device* device_)
 	//頂点バッファ生成
 	CD3DX12_HEAP_PROPERTIES v1 = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 	CD3DX12_RESOURCE_DESC v2 = CD3DX12_RESOURCE_DESC::Buffer(sizeVB);
-	result = device_->CreateCommittedResource(
+	result = device->CreateCommittedResource(
 		&v1,
 		D3D12_HEAP_FLAG_NONE,
 		&v2,
@@ -49,7 +54,7 @@ void FbxModel::CreateBuffers(ID3D12Device* device_)
 	//インデックスバッファ生成
 	v1 = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 	v2 = CD3DX12_RESOURCE_DESC::Buffer(sizeIB);
-	result = device_->CreateCommittedResource(
+	result = device->CreateCommittedResource(
 		&v1,
 		D3D12_HEAP_FLAG_NONE,
 		&v2,
@@ -85,7 +90,7 @@ void FbxModel::CreateBuffers(ID3D12Device* device_)
 
 	//テクスチャ用バッファの生成
 	v1 = CD3DX12_HEAP_PROPERTIES(D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0);
-	result = device_->CreateCommittedResource(
+	result = device->CreateCommittedResource(
 		&v1,
 		D3D12_HEAP_FLAG_NONE,
 		&texresDesc,
@@ -107,7 +112,7 @@ void FbxModel::CreateBuffers(ID3D12Device* device_)
 	descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	descHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	descHeapDesc.NumDescriptors = 1;
-	result = device_->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&descHeapSRV));
+	result = device->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&descHeapSRV));
 
 	//シェーダリソースビュー作成
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
@@ -116,28 +121,28 @@ void FbxModel::CreateBuffers(ID3D12Device* device_)
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = 1;
-	device_->CreateShaderResourceView(
+	device->CreateShaderResourceView(
 		texBuff.Get(),
 		&srvDesc,
 		descHeapSRV->GetCPUDescriptorHandleForHeapStart()
 	);
 }
 
-void FbxModel::Draw(ID3D12GraphicsCommandList* cmdList_)
+void FbxModel::Draw(ID3D12GraphicsCommandList* cmdList)
 {
 
 	//頂点バッファをセット
-	cmdList_->IASetVertexBuffers(0, 1, &vbView_);
+	cmdList->IASetVertexBuffers(0, 1, &vbView_);
 	//インデックスバッファをセット
-	cmdList_->IASetIndexBuffer(&ibView_);
+	cmdList->IASetIndexBuffer(&ibView_);
 
 	//デスクリプタヒープのセット
 	ID3D12DescriptorHeap* ppHeaps[] = { descHeapSRV.Get() };
-	cmdList_->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 	//シェーダリソースビューをセット
-	cmdList_->SetGraphicsRootDescriptorTable(1, descHeapSRV->GetGPUDescriptorHandleForHeapStart());
+	cmdList->SetGraphicsRootDescriptorTable(1, descHeapSRV->GetGPUDescriptorHandleForHeapStart());
 
 	//描画コマンド
-	cmdList_->DrawIndexedInstanced((UINT)indices.size(), 1, 0, 0, 0);
+	cmdList->DrawIndexedInstanced((UINT)indices.size(), 1, 0, 0, 0);
 }
 

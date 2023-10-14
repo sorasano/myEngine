@@ -1,3 +1,8 @@
+/**
+* @file Skydome.cpp
+* @brief 天球の処理
+*/
+
 #include "Skydome.h"
 #define PI 3.1415
 

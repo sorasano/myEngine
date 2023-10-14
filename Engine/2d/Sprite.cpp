@@ -1,3 +1,8 @@
+/**
+* @file Sprite.cpp
+* @brief スプライトの処理
+*/
+
 #include "Sprite.h"
 #include "string.h"
 #include "WinApp.h"

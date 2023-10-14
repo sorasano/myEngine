@@ -1,3 +1,8 @@
+/**
+* @file object3D.h
+* @brief objã®å‡¦ç†
+*/
+
 #pragma once
 #include "Windows.h"
 #include "d3d12.h"
@@ -16,12 +21,12 @@
 using namespace DirectX;
 using namespace Microsoft::WRL;
 
-////’¸“_ƒf[ƒ^\‘¢‘Ì
+////é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“
 //struct Vertex
 //{
-//	XMFLOAT3 pos;	//À•W
-//	XMFLOAT3 normalize;	//–@üƒxƒNƒgƒ‹
-//	XMFLOAT2 uv;	//uvÀ•W
+//	XMFLOAT3 pos;	//åº§æ¨™
+//	XMFLOAT3 normalize;	//æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«
+//	XMFLOAT2 uv;	//uvåº§æ¨™
 //	Vertex* parent = nullptr;
 //};
 //
@@ -30,95 +35,154 @@ using namespace Microsoft::WRL;
 //	int num;
 //};
 
-//’è”ƒoƒbƒtƒ@—pƒf[ƒ^\‘¢‘Ì(ƒ}ƒeƒŠƒAƒ‹)
+//å®šæ•°ãƒãƒƒãƒ•ã‚¡ç”¨ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“(ãƒãƒ†ãƒªã‚¢ãƒ«)
 struct ConstBufferDataMaterial {
-	XMFLOAT4 color;	//F(RGBA)
+	XMFLOAT4 color;	//è‰²(RGBA)
 };
 
-//’è”ƒoƒbƒtƒ@—pƒf[ƒ^\‘¢‘Ìi3D•ÏŠ·s—ñj
+//å®šæ•°ãƒãƒƒãƒ•ã‚¡ç”¨ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“ï¼ˆ3Då¤‰æ›è¡Œåˆ—ï¼‰
 struct ConstBufferDataTransform
 {
 	XMMATRIX mat;
 };
 
-//3DƒIƒuƒWƒFƒNƒgŒ^
+//3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆå‹
 struct Object3d2
 {
-	//’è”ƒoƒbƒtƒ@
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡
 	ComPtr<ID3D12Resource> constBuffTransform_;
-	//’è”ƒoƒbƒtƒ@ƒ}ƒbƒv
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡ãƒãƒƒãƒ—
 	ConstBufferDataTransform* constMapTransform_;
-	//ƒAƒtƒBƒ“•ÏŠ·î•ñ
+	//ã‚¢ãƒ•ã‚£ãƒ³å¤‰æ›æƒ…å ±
 	XMFLOAT3 scale_ = { 1,1,1 };
 	XMFLOAT3 rotation_ = { 0,0,0 };
 	XMFLOAT3 position_ = { 0,0,0 };
-	//ƒ[ƒ‹ƒh•ÏŠ·s—ñ
+	//ãƒ¯ãƒ¼ãƒ«ãƒ‰å¤‰æ›è¡Œåˆ—
 	XMMATRIX matWorld_;
-	//eƒIƒuƒWƒFƒNƒg‚Ìƒ|ƒCƒ“ƒ^[
+	//è¦ªã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒã‚¤ãƒ³ã‚¿ãƒ¼
 	Object3d2* parent = nullptr;
 };
 
-//3ƒIƒuƒWƒFƒNƒgŠÖ˜A
-//3DƒIƒuƒWƒFƒNƒg‰Šú‰»
+//3ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆé–¢é€£
+/**
+* 3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆåˆæœŸåŒ–
+*
+* @param[in] object èª¬æ˜
+* @param[out] device èª¬æ˜
+*/
 void InitializeObject3d(Object3d2* object, ComPtr<ID3D12Device> device);
-//3DƒIƒuƒWƒFƒNƒgXV
+/**
+* 3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆæ›´æ–°
+*
+* @param[in] paramA èª¬æ˜
+* @param[out] paramB èª¬æ˜
+*/
 void UpdateObject3d(Object3d2* object, XMMATRIX& matView, XMMATRIX& matProjection);
-//ƒIƒuƒWƒFƒNƒg•`‰æˆ—
+/**
+* 3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆæç”»å‡¦ç†
+*
+* @param[in] paramA èª¬æ˜
+* @param[out] paramB èª¬æ˜
+*/
 void DrawObject3d(Object3d2* object, ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_VERTEX_BUFFER_VIEW& vbView,
 	D3D12_INDEX_BUFFER_VIEW& ibView, UINT numIndices);
 
 class Object3D
 {
 public:
-	//ƒVƒ“ƒOƒ‹ƒgƒ“ƒCƒ“ƒXƒ^ƒ“ƒX
+	/**
+	* ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
+	*/
 	Object3D* GetInstance();
+	/**
+	* ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	*/
 	Object3D();
+	/**
+	* ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	*/
 	~Object3D();
+	/**
+	* åˆæœŸåŒ–
+	*
+	* @param[in] dx dxCommon
+	* @param[in] model objãƒ¢ãƒ‡ãƒ«
+	*/
 	void Initialize(DirectXCommon* dx,Model* model);
+	/**
+	* æ›´æ–°
+	*
+	* @param[in] matView ãƒ“ãƒ¥ãƒ¼è¡Œåˆ—
+	* @param[in] matProjection ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒ¨ãƒ³è¡Œåˆ—
+	*/
 	void Update(XMMATRIX& matView, XMMATRIX& matProjection);
+	/**
+	* æç”»
+	*
+	* @param[in] vbView é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡
+	* @param[in] ibView ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡
+	*/
 	void Draw(D3D12_VERTEX_BUFFER_VIEW& vbView,D3D12_INDEX_BUFFER_VIEW& ibView);
-	//ƒQƒbƒ^[@ƒZƒbƒ^[@
+	//ã‚²ãƒƒã‚¿ãƒ¼ã€€ã‚»ãƒƒã‚¿ãƒ¼ã€€
+	/**
+	* @return XMFLOAT3 position_å–å¾—
+	*/
 	XMFLOAT3 GetPosition() { return position_; };
+	/**
+	* @return XMFLOAT3 rotation_å–å¾—
+	*/
 	XMFLOAT3 GetRotation() { return rotation_; };
+	/**
+	* @return XMFLOAT3 scale_å–å¾—
+	*/
 	XMFLOAT3 GetScale() { return scale_; };
+	/**
+	* posã‚»ãƒƒãƒˆ
+	*/
 	void setPosition(XMFLOAT3 pos);
+	/**
+	* rotã‚»ãƒƒãƒˆ
+	*/
 	void setRotation(XMFLOAT3 rot);
+	/**
+	* scaã‚»ãƒƒãƒˆ
+	*/
 	void setScale(XMFLOAT3 sca);
 public:
-	// ’è”ƒoƒbƒtƒ@—pƒf[ƒ^\‘¢‘ÌB0
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ç”¨ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“B0
 	struct ConstBufferDataB0
 	{
-		XMMATRIX mat;	// ‚R‚c•ÏŠ·s—ñ
+		XMMATRIX mat;	// ï¼“ï¼¤å¤‰æ›è¡Œåˆ—
 	};
-	// ’è”ƒoƒbƒtƒ@—pƒf[ƒ^\‘¢‘ÌB1
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ç”¨ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“B1
 	struct ConstBufferDataB1
 	{
-		XMFLOAT3 ambient;	//ƒAƒ“ƒrƒGƒ“ƒgŒW”
-		float pad1;			//ƒpƒfƒBƒ“ƒO
-		XMFLOAT3 diffuse;	//ƒfƒBƒtƒ…[ƒYŒW”
-		float pad2;			//ƒpƒfƒBƒ“ƒO
-		XMFLOAT3 specular;	//ƒXƒyƒLƒ…ƒ‰[ŒW”
-		float alpha;		//ƒAƒ‹ƒtƒ@
+		XMFLOAT3 ambient;	//ã‚¢ãƒ³ãƒ“ã‚¨ãƒ³ãƒˆä¿‚æ•°
+		float pad1;			//ãƒ‘ãƒ‡ã‚£ãƒ³ã‚°
+		XMFLOAT3 diffuse;	//ãƒ‡ã‚£ãƒ•ãƒ¥ãƒ¼ã‚ºä¿‚æ•°
+		float pad2;			//ãƒ‘ãƒ‡ã‚£ãƒ³ã‚°
+		XMFLOAT3 specular;	//ã‚¹ãƒšã‚­ãƒ¥ãƒ©ãƒ¼ä¿‚æ•°
+		float alpha;		//ã‚¢ãƒ«ãƒ•ã‚¡
 	};
 private:
-	//’è”ƒoƒbƒtƒ@
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡
 	ComPtr<ID3D12Resource> constBuffTransform_;
-	//’è”ƒoƒbƒtƒ@ƒ}ƒbƒv
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡ãƒãƒƒãƒ—
 	ConstBufferDataTransform* constMapTransform_;
-	//ƒ‚ƒfƒ‹
+	//ãƒ¢ãƒ‡ãƒ«
 	Model* model_ = nullptr;
-	//ƒfƒoƒCƒX
+	//ãƒ‡ãƒã‚¤ã‚¹
 	DirectXCommon* dx_ = nullptr;
-	//’è”ƒoƒbƒtƒ@
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡
 	ComPtr<ID3D12Resource> constBuffB0; 
 	ComPtr<ID3D12Resource> constBuffB1;
-	// ƒRƒ}ƒ“ƒhƒŠƒXƒg
+	// ã‚³ãƒãƒ³ãƒ‰ãƒªã‚¹ãƒˆ
 	ID3D12GraphicsCommandList* cmdList_;
 private:
-	//ƒAƒtƒBƒ“•ÏŠ·î•ñ
+	//ã‚¢ãƒ•ã‚£ãƒ³å¤‰æ›æƒ…å ±
 	XMFLOAT3 scale_ = { 1,1,1 };
 	XMFLOAT3 rotation_ = { 0,0,0};
 	XMFLOAT3 position_ = { 0,0,0 };
-	//ƒ[ƒ‹ƒh•ÏŠ·s—ñ
+	//ãƒ¯ãƒ¼ãƒ«ãƒ‰å¤‰æ›è¡Œåˆ—
 	XMMATRIX matWorld_;
 };

@@ -1,3 +1,8 @@
+/**
+* @file DirectXCommon.h
+* @brief DirectXCommon
+*/
+
 #pragma once
 #include <Windows.h>
 #include <cstdlib>
@@ -20,38 +25,112 @@ using namespace Microsoft::WRL;
 class DirectXCommon
 {
 public:
-	//シングルトンインスタンスを取得
+	/**
+	* シングルトンインスタンスを取得
+	*/
 	static DirectXCommon* GetInstance();
+	/**
+	* コンストラクタ
+	*/
 	DirectXCommon() = default;
+	/**
+	* デストラクタ
+	*/
 	~DirectXCommon();
-	//初期化処理
+
+	/**
+	* 初期化
+	*/
 	void Initialize(WinApp* winApp);
-	void InitializeDevice();			//デバイス関連
-	void InitializeCommand();			//コマンド関連
-	void InitializeSwapchain();			//スワップチェーン関連
-	void InitializeRenderTargetView();	//レンダーターゲット関連
-	void InitializeDepthBuffer();		//深度バッファ関連
-	void InitializeFence();				//フェンス関連
+	/**
+	* デバイス関連
+	*/
+	void InitializeDevice();
+	/**
+	* コマンド関連
+	*/
+	void InitializeCommand();
+	/**
+	* スワップチェーン関連
+	*/
+	void InitializeSwapchain();
+	/**
+	* レンダーターゲット関連
+	*/
+	void InitializeRenderTargetView();
+	/**
+	* 深度バッファ関連
+	*/
+	void InitializeDepthBuffer();
+	/**
+	* フェンス関連
+	*/
+	void InitializeFence();
+
 	//描画
-	void PreDraw();		//描画前
-	void PostDraw();	//描画後 
-	//imgui用のヒープ生成
+	/**
+	* 描画前
+	*/
+	void PreDraw();
+	/**
+	* 描画後 
+	*/
+	void PostDraw();
+
+	/**
+	* imgui用のヒープ生成
+	*/
 	ComPtr<ID3D12DescriptorHeap>CreateDescriptorForImgui();
+	/**
+	* imgui初期化
+	*/
 	void InitializeImgui();
 
 	//ゲッター
+	/**
+	* @return ID3D12Device device_取得
+	*/
 	ID3D12Device* GetDevice() { return device_.Get(); }
+	/**
+	* @return IDXGISwapChain4 swapChain取得
+	*/
 	IDXGISwapChain4* GetSwapChain() { return swapChain.Get(); }
+	/**
+	* @return ID3D12GraphicsCommandList commandList取得
+	*/
 	ID3D12GraphicsCommandList* GetCommandList() { return commandList.Get(); }
+	/**
+	* @return ID3D12Debug debugController取得
+	*/
 	ID3D12Debug* GetDebugController() { return debugController.Get(); }
+	/**
+	* @return IDXGIFactory7 dxgiFactory取得
+	*/
 	IDXGIFactory7* GetDxgiFactory() { return dxgiFactory.Get(); }
+	/**
+	* @return ID3D12CommandAllocator commandAllocator取得
+	*/
 	ID3D12CommandAllocator* GetCommandAllocator() { return commandAllocator.Get(); }
+	/**
+	* @return GetCommandQueue commandQueue取得
+	*/
 	ID3D12CommandQueue* GetCommandQueue() { return commandQueue.Get(); }
+	/**
+	* @return ID3D12DescriptorHeap rtvHeap取得
+	*/
 	ID3D12DescriptorHeap* GetRtvHeap() { return rtvHeap.Get(); }
+	/**
+	* @return ID3D12Fence fence取得
+	*/
 	ID3D12Fence* GetFence() { return fence.Get(); }
+	/**
+	* @return ID3D12DescriptorHeap _heapForImgui取得
+	*/
 	ComPtr<ID3D12DescriptorHeap>GetHeapForImgui() { return _heapForImgui; };
 
-	//バックバッファの数を取得
+	/**
+	* @return ID3D12Device バックバッファの数を取得
+	*/
 	size_t GetBackBufferCount() const { return backBuffers.size(); }
 public:
 	//メンバ変数

@@ -1,3 +1,8 @@
+/**
+* @file BackGround.cpp
+* @brief 背景の処理
+*/
+
 #include "BackGround.h"
 
 #include "Random.h"

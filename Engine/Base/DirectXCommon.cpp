@@ -1,3 +1,8 @@
+/**
+* @file DirectXCommon.cpp
+* @brief DirectXCommon
+*/
+
 #include "DirectXCommon.h"
 
 //シングルトンインスタンスを取得

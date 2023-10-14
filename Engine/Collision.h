@@ -1,3 +1,8 @@
+/**
+* @file Collision.h
+* @brief 当たり判定の処理
+*/
+
 #pragma once
 #include <DirectXMath.h>
 #include "wrl.h"
@@ -25,9 +30,21 @@ private:	//エイリアス
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public:
-	//矩形同士の当たり判定
+	/**
+	* 矩形同士の当たり判定
+	*
+	* @param[in] A 1つめの矩形
+	* @param[in] B 2つめの矩形
+	* @return bool 当たっていたらtrue
+	*/
 	bool CheckSquareToSquare(CollisionData A, CollisionData B);
-	//球同士の当たり判定
+	/**
+	* 球同士の当たり判定
+	*
+	* @param[in] A 1つめの球
+	* @param[in] B 2つめの球
+	* @return bool 当たっていたらtrue
+	*/
 	bool CheckSphereToSphere(CollisionData A, CollisionData B);
 };
 

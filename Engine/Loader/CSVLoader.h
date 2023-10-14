@@ -1,3 +1,8 @@
+/**
+* @file CSVLoader.h
+* @brief CSVから情報を読み取る
+*/
+
 #pragma once
 #include "array"
 #include "DirectXMath.h"
@@ -15,20 +20,39 @@ private:	//エイリアス
 
 	using string = std::string;	//std::を省略
 public:
-	//csvファイルを読み込んで変数に代入する
+	/**
+	* csvファイルを読み込んで変数に代入する
+	*
+	* @param[in] fileName ファイルの名前
+	*/
 	void LoadCSV(const std::string fileName);
 
-	void Draw();
-
 	//ゲッター
+	/**
+	* @return XMFLOAT3 position_取得
+	*/
 	XMFLOAT3 GetPosition(int num) { return position_[num]; }
+	/**
+	* @return XMFLOAT3 rotation_取得
+	*/
 	XMFLOAT3 GetRotation(int num) { return rotation_[num]; }
+	/**
+	* @return XMFLOAT3 scale_取得
+	*/
 	XMFLOAT3 GetScale(int num) { return scale_[num]; }
 
+	/**
+	* @return int type_取得
+	*/
 	int GetType(int num) { return type_[num]; }
+	/**
+	* @return bool stopInScreen_取得
+	*/
 	bool GetStopInScreen(int num) { return stopInScreen_[num]; }
-
 	//読み込んだオブジェクトの数
+	/**
+	* @return int position_取得
+	*/
 	int GetSize() { return static_cast<int>(position_.size()); }
 
 private:

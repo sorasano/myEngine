@@ -1,3 +1,8 @@
+/**
+* @file Easing.cpp
+* @brief イージング処理
+*/
+
 #include "Easing.h"
 #include<random>
 #include<time.h>

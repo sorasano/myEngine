@@ -1,3 +1,8 @@
+/**
+* @file GameScene.h
+* @brief ゲームシーン
+*/
+
 #pragma once
 #include "WinApp.h"
 #include "DirectXCommon.h"
@@ -38,56 +43,101 @@ enum Performance {
 class GameScene
 {
 public:
+	/**
+	* コンストラクタ
+	*/
 	GameScene();
+	/**
+	* デストラクタ
+	*/
 	~GameScene();
-
+	/**
+	* 初期化	
+	*
+	* @param[in] dxCommon dxCommon
+	* @param[in] input 入力
+	*/
 	void Initialize(DirectXCommon* dxCommon, Input* input);
-
+	/**
+	* 更新
+	*/
 	void Update();
-
+	/**
+	* 描画
+	*/
 	void Draw();
-
+	/**
+	* スプライト描画
+	*/
 	void DrawSprite();
 
-	//更新範囲
+
+	/**
+	* 更新範囲
+	*
+	* @param[in] cameraPos カメラ座標
+	* @param[in] pos 対象座標
+	* @return bool 更新範囲内ならtrue
+	*/
 	bool UpadateRange(XMFLOAT3 cameraPos, XMFLOAT3 pos);
-
-	//当たり判定
+	/**
+	* 当たり判定
+	*/
 	void Collition();
-
-	//敵生存確認
+	/**
+	* 敵生存確認
+	*/
 	void CheckEnemy();
-
-	//背景更新
+	/**
+	* 背景更新
+	*/
 	void UpdateBackGround();
-
-	//敵配置
+	/**
+	* 敵配置
+	*/
 	void SetEnemy();
-
-	//リセット
+	/**
+	* リセット
+	*/
 	void Reset();
-
-	//シーン切り替え
+	/**
+	* シーン切り替え
+	*/
 	void ChangeScene();
-
-	//プレイシーン初期化
+	/**
+	* プレイシーン初期化
+	*/
 	void PlaySceneInitialize();
-
-	//ボス戦
-	//初期化
+	/**
+	* ボス戦初期化
+	*/
 	void BossSceneInitialize();
-	//当たり判定
+	/**
+	* ボス戦当たり判定
+	*/
 	void BossSceneCollition();
 
+
 	//演出
+	/**
+	* 演出更新
+	*/
 	void UpdatePerformance();
-	//タイトル→プレイシーン遷移演出
+	/**
+	* タイトル→プレイシーン遷移演出
+	*/
 	void TitleToPlayPerformance();
-	//ボス戦導入演出
+	/**
+	* ボス戦導入演出
+	*/
 	void BossInPerformance();
-	//ボス撃破演出
+	/**
+	* ボス撃破演出
+	*/
 	void BossClearPerformance();
-	//ボス逃亡演出
+	/**
+	* ボス逃亡演出
+	*/
 	void BossGameoverPerformance();
 
 private:

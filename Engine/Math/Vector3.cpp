@@ -1,3 +1,8 @@
+/**
+* @file Vector3.cpp
+* @brief Vector3型と基礎的な計算
+*/
+
 #include "Vector3.h"
 #include<cmath>
 

@@ -1,3 +1,8 @@
+/**
+* @file BackGround.h
+* @brief 背景の処理
+*/
+
 #pragma once
 #include "JsonLoader.h"
 
@@ -9,25 +14,54 @@
 class BackGround
 {
 public:
-	//num = 何番の配置データを読み込みこむか,adjustPos = どのくらいずらすか
+	/**
+	* 初期化
+	*
+	* @param[in] adjustPos_ 発生させる位置
+	*/
 	void Initialize(float adjustPos_);
-
+	/**
+	* 更新
+	*/
 	void Update();
-
+	/**
+	* 描画
+	*
+	* @param[out] cmdList_ コマンドリスト
+	*/
 	void Draw(ID3D12GraphicsCommandList* cmdList_);
 
-	//オブジェクトの配置
+	/**
+	* ファイルを読み込みオブジェクトの配置
+	* 
+	* @param[in] adjustPos_ 発生させる位置
+	*/
 	void SetObject(float adjustPos_);
-	//配置データをロード num = 何番の配置データを読み込みこむか
+	/**
+	* 配置データをロード
+	*
+	* @param[in] num 何番の配置データを読み込みこむか
+	*/
 	void LoadJson(int num);
-	//オブジェクトの配置 adjustPos = どのくらいずらすか
+	/**
+	* オブジェクトの配置
+	*
+	* @param[in] adjustPos_ 発生させる位置
+	*/
 	void ArrangementObject(float adjustPos_);
-
-	//オブジェクトの削除
+	/**
+	* オブジェクトの削除
+	*/
 	void DeleteObject();
 
 	//ゲッター
+	/**
+	* @return float size取得
+	*/
 	float GetSize() { return size; }
+	/**
+	* @return XMFLOAT3 position_取得
+	*/
 	XMFLOAT3 GetPosition() { return position_; }
 
 private:

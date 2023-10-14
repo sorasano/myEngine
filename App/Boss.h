@@ -1,3 +1,8 @@
+/**
+* @file Boss.h
+* @brief ボスの処理
+*/
+
 #pragma once
 
 #include "FbxLoader.h"
@@ -44,59 +49,159 @@ enum BossMoveType {
 class Boss
 {
 public:
-	//シングルトンインスタンス
+	/**
+	* シングルトンインスタンス
+	*/
 	Boss* GetInstance();
+	/**
+	* コンストラクタ
+	*/
 	Boss();
+	/**
+	* デストラクタ
+	*/
 	~Boss();
+	/**
+	* 初期化
+	*/
 	void Initialize();
+	/**
+	* 更新
+	*
+	* @param[in] pPos プレイヤー座標
+	* @param[in] pSpeed プレイヤースピード
+	*/
 	void Update(XMFLOAT3 pPos, float pSpeed);
+	/**
+	* 描画
+	*
+	* @param[out] cmdList_ コマンドリスト
+	*/
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
-	//移動
+	/**
+	* 移動
+	*/
 	void Move();
+	/**
+	* X移動
+	*/
 	void MoveX();
+	/**
+	* Y移動
+	*/
 	void MoveY();
 
-	//パーティクル
+	/**
+	* パーティクル初期化
+	*/
 	void InitializeParticle();
+	/**
+	* パーティクル更新
+	*/
 	void UpdateParticle();
 
-	//弾
+	/**
+	* 弾発射
+	*/
 	void Shot();
+	/**
+	* 弾更新
+	*/
 	void BulletUpdate();
+	/**
+	* 弾生成
+	* 
+	* @param[in] velocity 発射ベクトル
+	*/
 	void MakeBullet(Vector3 velocity);
 
-	//リセット
+	/**
+	* リセット
+	*/
 	void Reset();
 
 	//ゲッター　セッター　
+	/**
+	* @return XMFLOAT3 position_取得
+	*/
 	XMFLOAT3 GetPosition() { return position_; };
+	/**
+	* @return XMFLOAT3 rotation_取得
+	*/
 	XMFLOAT3 GetRotation() { return rotation_; };
+	/**
+	* @return XMFLOAT3 scale_取得
+	*/
 	XMFLOAT3 GetScale() { return scale_; };
-	void SetPosition(XMFLOAT3 pos) { this->position_ = pos; }
-	void SetRotation(XMFLOAT3 rot) { this->rotation_ = rot; }
-	void SetScale(XMFLOAT3 sca) { this->scale_ = sca; }
-
-	void SetISDesd(bool isDead) { this->isDead_ = isDead; }
+	/**
+	* @return bool isDead_取得
+	*/
 	bool GetIsDead() { return isDead_; }
-	void SetIsParticle(bool isParticle) { this->isParticle_ = isParticle; }
+	/**
+	* @return bool isParticle_取得
+	*/
 	bool GetIsParticle() { return isParticle_; }
-
-	void SetNormalAction(int action);
-	void SetHardAction(int action);
-
-	void ChangeAction();
-
-	//当たり判定
-	CollisionData GetColData();
-
-	//自機の弾との当たり判定
-	void HitBullet();
-
-	//弾
+	/**
+	* @return int 弾の数取得
+	*/
 	int GetBulletSize() { return static_cast<int>(bullets_.size()); }
+	/**
+	* @return CollisionData 弾当たり判定情報取得
+	*/
 	CollisionData GetBulletColData(int i);
+
+
+
+	/**
+	* posセット
+	*/
+	void SetPosition(XMFLOAT3 pos) { this->position_ = pos; }
+	/**
+	* rotセット
+	*/
+	void SetRotation(XMFLOAT3 rot) { this->rotation_ = rot; }
+	/**
+	* scaセット
+	*/
+	void SetScale(XMFLOAT3 sca) { this->scale_ = sca; }
+	/**
+	* isDeadセット
+	*/
+	void SetISDesd(bool isDead) { this->isDead_ = isDead; }
+	/**
+	* isParticleセット
+	*/
+	void SetIsParticle(bool isParticle) { this->isParticle_ = isParticle; }
+	/**
+	* actionセット
+	*/
+	void SetNormalAction(int action);
+	/**
+	* actionセット
+	*/
+	void SetHardAction(int action);
+	/**
+	* 弾死亡情報セット
+	* 
+	* @param[in] isDead 死亡フラグ
+	* @param[in] i 何番の弾か
+	*/
 	void SetBulletIsDead(bool isDead, int i);
+
+
+	/**
+	* 行動変更
+	*/
+	void ChangeAction();
+	/**
+	* 当たり判定
+	*/
+	CollisionData GetColData();
+	/**
+	* 自機の弾との当たり判定
+	*/
+	void HitBullet();
 
 private:
 	//アフィン変換情報;

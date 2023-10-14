@@ -1,3 +1,8 @@
+/**
+* @file FPS.h
+* @brief FPSの設定
+*/
+
 #pragma once
 #include <fstream>
 #include <sstream>
@@ -19,26 +24,26 @@ private:
 	float fps;
 
 public:
-	/// <summary>
-	/// FPS制御初期化
-	/// </summary>
+	/**
+	* FPS制御初期化
+	*/
 	void FpsControlBegin();
 
-	/// <summary>
-	/// FPS制御
-	/// </summary>
+	/**
+	* FPS制御
+	*/
 	void FpsControlEnd();
 
-	/// <summary>
-	/// フレームレートを設定
-	/// </summary>
-	/// <param name="fps_">フレームレート</param>
+	/**
+	* フレームレートを設定
+	*
+	* @param[in] fps_ フレームレート
+	*/
 	void SetFrameRate(float fps_);
 
-	/// <summary>
-	/// フレームレートを取得
-	/// </summary>
-	/// <returns>フレームレート</returns>
+	/**
+	*  @return float フレームレート取得
+	*/
 	float GetFrameRate();
 };
 

@@ -1,4 +1,9 @@
-﻿#include <string>
+﻿/**
+* @file main.cpp
+* @brief ソース全体
+*/
+
+#include <string>
 #include <sstream>
 #include <iomanip>
 #include "GameScene.h"

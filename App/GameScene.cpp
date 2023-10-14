@@ -1,3 +1,8 @@
+/**
+* @file GameScene.cpp
+* @brief ゲームシーン
+*/
+
 #include "GameScene.h"
 #include "Random.h"
 

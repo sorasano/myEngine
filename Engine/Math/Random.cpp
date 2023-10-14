@@ -1,3 +1,8 @@
+/**
+* @file Random.cpp
+* @brief メルセンヌツイスターでの乱数生成
+*/
+
 #include "Random.h"
 #include<random>
 #include<time.h>

@@ -1,3 +1,8 @@
+/**
+* @file PlayerBullet.cpp
+* @brief プレイヤーの弾の処理
+*/
+
 #include "PlayerBullet.h"
 #include <cmath>
 #define PI 3.1415

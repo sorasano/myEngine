@@ -1,4 +1,9 @@
-﻿#pragma once
+﻿/**
+* @file FbxLoader.h
+* @brief Fbxの読み込み
+*/
+
+#pragma once
 
 #include "FbxModel.h"
 
@@ -18,43 +23,98 @@ public:
 	static const string baseDirectory;
 
 public:
-	/// <summary>
-	/// シングルトンインスタンスの取得
-	/// </summary>
-	/// <returns>インスタンス</returns>
+
+	/**
+	* シングルトンインスタンスの取得
+	* 
+	* @return FbxLoader インスタンス
+	*/
 	static FbxLoader* GetInstance();
 
+	/**
+	* 初期化
+	*/
 	void Initialize(ID3D12Device* device);
 
+	/**
+	* 終了
+	*/
 	void Finalize();
 
 public:
-	//FBXファイルの読み込み
+	/**
+	* FBXファイルの読み込み
+	*
+	* @param[in] modelName fbxモデルの名前
+	* @return FbxModel fbxモデル
+	*/
 	FbxModel* LoadModelFromFile(const string& modelName);
-	//再起敵にノード構成を解析
+	/**
+	* 	再起敵にノード構成を解析
+	*
+	* @param[in,out] model モデル
+	* @param[in] fbxNode FBXノード
+	* @param[in] parent 親ノード
+	*/
 	void ParseNodeRecursive(FbxModel* model, FbxNode* fbxNode, Node* parent = nullptr);
-	//メッシュ読み取り
-	void ParseMesh(FbxModel* model_, FbxNode* fbxNode);
-	//ディレクトリを含んだファイルパスからファイル名を抽出する
+	/**
+	* メッシュ読み取り
+	*
+	* @param[in] model モデル
+	* @param[in] fbxNode FBXノード
+	*/
+	void ParseMesh(FbxModel* model, FbxNode* fbxNode);
+	/**
+	* ディレクトリを含んだファイルパスからファイル名を抽出する
+	*
+	* @param[in,out] path ファイルパス
+	* @return std::string ファイル名
+	*/
 	std::string ExtractFileName(const std::string& path);
 
-	/// <summary>
-	/// FBXの行列をXMatrixiに変換
-	/// </summary>
-	/// <param name="dst">書き込み先</param>
-	/// <param name="src">元となるFBX行列</param>
+	/**
+	* FBXの行列をXMatrixiに変換
+	*
+	* @param[in] dst XMMATRIX型
+	* @param[in] src 元となるFBX行列
+	*/
 	static void ConvertMatrixFromFbx(DirectX::XMMATRIX* dst, const FbxAMatrix& src);
 
 public://メッシュサブ関数
-	//頂点座標読み取り
+	/**
+	* 頂点座標読み取り
+	*
+	* @param[in] model モデル
+	* @param[in] fbxMesh FBXメッシュ
+	*/
 	void ParseMeshVertices(FbxModel* model, FbxMesh* fbxMesh);
-	//面情報読み取り
+	/**
+	* 面情報読み取り
+	*
+	* @param[in] model モデル
+	* @param[in] fbxMesh FBXメッシュ
+	*/
 	void ParseMeshFaces(FbxModel* model, FbxMesh* fbxMesh);
-	//マテリアル読み取り
+	/**
+	* マテリアル読み取り
+	*
+	* @param[in] model モデル
+	* @param[in] fbxNode FBXノード
+	*/
 	void ParseMaterial(FbxModel* model, FbxNode* fbxNode);
-	//テクスチャ読み込み
+	/**
+	* テクスチャ読み込み
+	*
+	* @param[in] model モデル
+	* @param[in] fullpath フルパス
+	*/
 	void LoadTexture(FbxModel* model, const std::string& fullpath);
-	//スキニング情報の読み取り
+	/**
+	* スキニング情報の読み取り
+	*
+	* @param[in] model モデル
+	* @param[in] fbxMesh FBXメッシュ
+	*/
 	void ParseSkin(FbxModel* model,FbxMesh* fbxMesh);
 
 private:
@@ -70,13 +130,21 @@ private:
 	static const string defaultTextureFileName_;
 
 private:
-	// privateなコンストラクタ（シングルトンパターン）
+	/**
+	* privateなコンストラクタ（シングルトンパターン）
+	*/
 	FbxLoader() = default;
-	// privateなデストラクタ（シングルトンパターン）
+	/**
+	* privateなデストラクタ（シングルトンパターン）
+	*/
 	~FbxLoader() = default;
-	// コピーコンストラクタを禁止（シングルトンパターン）
+	/**
+	* コピーコンストラクタを禁止（シングルトンパターン）
+	*/
 	FbxLoader(const FbxLoader& obj) = delete;
-	// コピー代入演算子を禁止（シングルトンパターン）
+	/**
+	* コピー代入演算子を禁止（シングルトンパターン）
+	*/
 	void operator=(const FbxLoader& obj) = delete;
 
 };

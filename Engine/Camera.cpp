@@ -1,3 +1,8 @@
+/**
+* @file Camera.cpp
+* @brief カメラの処理
+*/
+
 #include "Camera.h"
 #include"Base/WinApp.h"
 #include "Imgui.h"

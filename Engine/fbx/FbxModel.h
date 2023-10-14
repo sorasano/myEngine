@@ -1,3 +1,8 @@
+/**
+* @file FbxModel.h
+* @brief Fbxモデル処理
+*/
+
 #pragma once
 
 #include <string>
@@ -88,26 +93,44 @@ private:	//エイリアス
 
 public:
 
-	//コンストラクタ
+	/**
+	* コンストラクタ
+	*/
 	FbxModel();
-	//デストラクタ
+	/**
+	* デストラクタ
+	*/
 	~FbxModel();
 
 public:
 
-	//バッファ生成
-	void CreateBuffers(ID3D12Device* device_);
+	/**
+	* バッファ生成
+	*
+	* @param[in] device_ デバイス
+	*/
+	void CreateBuffers(ID3D12Device* device);
 
-	//描画
-	void Draw(ID3D12GraphicsCommandList* cmdList_);
+	/**
+	* 描画
+	*
+	* @param[in] cmdList_ コマンドリスト
+	*/
+	void Draw(ID3D12GraphicsCommandList* cmdList);
 
 	//ゲッター
 	
-	//モデルの変形行列取得
+	/**
+	* @return const XMMATRIX モデルの変形行列取得取得
+	*/
 	const XMMATRIX& GetModelTransform() { return meshNode->globalTransform; }
-	//ボーン配列
+	/**
+	* @return std::vector<Bone> ボーン配列取得
+	*/
 	std::vector<Bone>& GetBones() { return bones; }
-	//FBXシーン
+	/**
+	* @return FbxScene FBXシーン取得
+	*/
 	FbxScene* GetFbxScene() { return fbxScene; }
 
 private:

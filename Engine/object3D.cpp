@@ -1,25 +1,30 @@
+/**
+* @file object3D.cpp
+* @brief objã®å‡¦ç†
+*/
+
 #include "object3D.h"
 
-//3DƒIƒuƒWƒFƒNƒg‰Šú‰»
-void InitializeObject3d(Object3d2* object, ComPtr<ID3D12Device> device_)
+//3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆåˆæœŸåŒ–
+void InitializeObject3d(Object3d2* object, ComPtr<ID3D12Device> device)
 {
 	HRESULT result;
 
-	//ƒq[ƒvİ’è
+	//ãƒ’ãƒ¼ãƒ—è¨­å®š
 	D3D12_HEAP_PROPERTIES cbHeapProp{};
 	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD;
-	//ƒŠƒ\[ƒXİ’è
+	//ãƒªã‚½ãƒ¼ã‚¹è¨­å®š
 	D3D12_RESOURCE_DESC cbResourceDesc{};
 	cbResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	cbResourceDesc.Width = (sizeof(ConstBufferDataTransform) + 0xff) & ~0xff;	//256ƒoƒCƒgƒAƒ‰ƒCƒ“ƒƒ“ƒg
+	cbResourceDesc.Width = (sizeof(ConstBufferDataTransform) + 0xff) & ~0xff;	//256ãƒã‚¤ãƒˆã‚¢ãƒ©ã‚¤ãƒ³ãƒ¡ãƒ³ãƒˆ
 	cbResourceDesc.Height = 1;
 	cbResourceDesc.DepthOrArraySize = 1;
 	cbResourceDesc.MipLevels = 1;
 	cbResourceDesc.SampleDesc.Count = 1;
 	cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
-	//’è”ƒoƒbƒtƒ@‚Ì¶¬
-	result = device_->CreateCommittedResource(
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ç”Ÿæˆ
+	result = device->CreateCommittedResource(
 		&cbHeapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&cbResourceDesc,
@@ -28,7 +33,7 @@ void InitializeObject3d(Object3d2* object, ComPtr<ID3D12Device> device_)
 		IID_PPV_ARGS(&object->constBuffTransform_)
 	);
 	assert(SUCCEEDED(result));
-	//’è”ƒoƒbƒtƒ@‚Ìƒ}ƒbƒsƒ“ƒO
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ãƒãƒƒãƒ”ãƒ³ã‚°
 	result = object->constBuffTransform_->Map(0, nullptr, (void**)&object->constMapTransform_);
 	assert(SUCCEEDED(result));
 }
@@ -45,34 +50,34 @@ void UpdateObject3d(Object3d2* object, XMMATRIX& matView_, XMMATRIX& matProjecti
 
 	matTrans = XMMatrixTranslation(object->position_.x, object->position_.y, object->position_.z);
 
-	//ƒ[ƒ‹ƒhs—ñ‚Ì‡¬
+	//ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã®åˆæˆ
 	object->matWorld_ = XMMatrixIdentity();
 	object->matWorld_ *= matScale;
 	object->matWorld_ *= matRot;
 	object->matWorld_ *= matTrans;
 
-	//eƒIƒuƒWƒFƒNƒg‚ª‚ ‚ê‚Î
+	//è¦ªã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒã‚ã‚Œã°
 	if (object->parent != nullptr)
 	{
 		object->matWorld_ *= object->parent->matWorld_;
 	}
 
-	//’è”ƒoƒbƒtƒ@‚Öƒf[ƒ^“]‘—
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡ã¸ãƒ‡ãƒ¼ã‚¿è»¢é€
 	object->constMapTransform_->mat = object->matWorld_ * matView_ * matProjection_;
 }
 
-//ƒIƒuƒWƒFƒNƒg•`‰æˆ—
+//ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆæç”»å‡¦ç†
 void DrawObject3d(Object3d2* object, ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_VERTEX_BUFFER_VIEW& vbView_,
 	D3D12_INDEX_BUFFER_VIEW& ibView_, UINT numIndices)
 {
-	//’¸“_ƒoƒbƒtƒ@‚Ìİ’è
+	//é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã®è¨­å®š
 	commandList->IASetVertexBuffers(0, 1, &vbView_);
-	//’è”ƒoƒbƒtƒ@ƒrƒ…[(CBV)‚Ìİ’èƒRƒ}ƒ“ƒh
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼(CBV)ã®è¨­å®šã‚³ãƒãƒ³ãƒ‰
 	commandList->SetGraphicsRootConstantBufferView(2, object->constBuffTransform_->GetGPUVirtualAddress());
-	//ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@ƒrƒ…[‚Ìİ’èƒRƒ}ƒ“ƒh
+	//ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼ã®è¨­å®šã‚³ãƒãƒ³ãƒ‰
 	commandList->IASetIndexBuffer(&ibView_);
-	//•`‰æƒRƒ}ƒ“ƒh
-	commandList->DrawIndexedInstanced(numIndices, 1, 0, 0, 0);	//‘S‚Ä‚Ì’¸“_‚ğg‚Á‚Ä•`‰æ
+	//æç”»ã‚³ãƒãƒ³ãƒ‰
+	commandList->DrawIndexedInstanced(numIndices, 1, 0, 0, 0);	//å…¨ã¦ã®é ‚ç‚¹ã‚’ä½¿ã£ã¦æç”»
 }
 
 void Object3D::Initialize(DirectXCommon* dx, Model* model)
@@ -80,28 +85,28 @@ void Object3D::Initialize(DirectXCommon* dx, Model* model)
 	this->dx_ = dx;
 	this->model_ = model;
 
-	// ƒq[ƒvƒvƒƒpƒeƒB
+	// ãƒ’ãƒ¼ãƒ—ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£
 	CD3DX12_HEAP_PROPERTIES heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
-	// ƒŠƒ\[ƒXİ’è
+	// ãƒªã‚½ãƒ¼ã‚¹è¨­å®š
 	CD3DX12_RESOURCE_DESC resourceDesc =
 		CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataB0) + 0xff) & ~0xff);
 
 	HRESULT result;
 
-	// ’è”ƒoƒbƒtƒ@‚Ì¶¬
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ç”Ÿæˆ
 	result = this->dx_->GetDevice()->CreateCommittedResource(
-		&heapProps, // ƒAƒbƒvƒ[ƒh‰Â”\
+		&heapProps, // ã‚¢ãƒƒãƒ—ãƒ­ãƒ¼ãƒ‰å¯èƒ½
 		D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
 		IID_PPV_ARGS(&constBuffB0));
 	assert(SUCCEEDED(result));
 
-	// ƒŠƒ\[ƒXİ’è
+	// ãƒªã‚½ãƒ¼ã‚¹è¨­å®š
 	resourceDesc =
 		CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataB1) + 0xff) & ~0xff);
 
-	// ’è”ƒoƒbƒtƒ@‚Ì¶¬
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ç”Ÿæˆ
 	result = this->dx_->GetDevice()->CreateCommittedResource(
-		&heapProps, // ƒAƒbƒvƒ[ƒh‰Â”\
+		&heapProps, // ã‚¢ãƒƒãƒ—ãƒ­ãƒ¼ãƒ‰å¯èƒ½
 		D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
 		IID_PPV_ARGS(&constBuffB1));
 	assert(SUCCEEDED(result));
@@ -112,7 +117,7 @@ void Object3D::Update(XMMATRIX& matView, XMMATRIX& matProjection)
 	HRESULT result;
 	XMMATRIX matScale, matRot, matTrans;
 
-	// ƒXƒP[ƒ‹A‰ñ“]A•½sˆÚ“®s—ñ‚ÌŒvZ
+	// ã‚¹ã‚±ãƒ¼ãƒ«ã€å›è»¢ã€å¹³è¡Œç§»å‹•è¡Œåˆ—ã®è¨ˆç®—
 	matScale = XMMatrixScaling(scale_.x, scale_.y, scale_.z);
 	matRot = XMMatrixIdentity();
 	matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation_.z));
@@ -120,25 +125,25 @@ void Object3D::Update(XMMATRIX& matView, XMMATRIX& matProjection)
 	matRot *= XMMatrixRotationY(XMConvertToRadians(rotation_.y));
 	matTrans = XMMatrixTranslation(position_.x, position_.y, position_.z);
 
-	// ƒ[ƒ‹ƒhs—ñ‚Ì‡¬
-	matWorld_ = XMMatrixIdentity(); // •ÏŒ`‚ğƒŠƒZƒbƒg
-	matWorld_ *= matScale; // ƒ[ƒ‹ƒhs—ñ‚ÉƒXƒP[ƒŠƒ“ƒO‚ğ”½‰f
-	matWorld_ *= matRot; // ƒ[ƒ‹ƒhs—ñ‚É‰ñ“]‚ğ”½‰f
-	matWorld_ *= matTrans; // ƒ[ƒ‹ƒhs—ñ‚É•½sˆÚ“®‚ğ”½‰f
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã®åˆæˆ
+	matWorld_ = XMMatrixIdentity(); // å¤‰å½¢ã‚’ãƒªã‚»ãƒƒãƒˆ
+	matWorld_ *= matScale; // ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã«ã‚¹ã‚±ãƒ¼ãƒªãƒ³ã‚°ã‚’åæ˜ 
+	matWorld_ *= matRot; // ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã«å›è»¢ã‚’åæ˜ 
+	matWorld_ *= matTrans; // ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã«å¹³è¡Œç§»å‹•ã‚’åæ˜ 
 
-	//// eƒIƒuƒWƒFƒNƒg‚ª‚ ‚ê‚Î
+	//// è¦ªã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒã‚ã‚Œã°
 	//if (parent != nullptr) {
-	//	// eƒIƒuƒWƒFƒNƒg‚Ìƒ[ƒ‹ƒhs—ñ‚ğŠ|‚¯‚é
+	//	// è¦ªã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã‚’æ›ã‘ã‚‹
 	//	matWorld *= parent->matWorld;
 	//}
 
-	// ’è”ƒoƒbƒtƒ@‚Öƒf[ƒ^“]‘—
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ã¸ãƒ‡ãƒ¼ã‚¿è»¢é€
 	ConstBufferDataB0* constMap0 = nullptr;
 	result = constBuffB0->Map(0, nullptr, (void**)&constMap0);
-	constMap0->mat = matWorld_ * matView * matProjection;	// s—ñ‚Ì‡¬
+	constMap0->mat = matWorld_ * matView * matProjection;	// è¡Œåˆ—ã®åˆæˆ
 	constBuffB0->Unmap(0, nullptr);
 
-	//’è”ƒoƒbƒtƒ@‚Öƒf[ƒ^“]‘—
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡ã¸ãƒ‡ãƒ¼ã‚¿è»¢é€
 	ConstBufferDataB1* constMap1 = nullptr;
 	result = constBuffB1->Map(0, nullptr, (void**)&constMap1);
 	constMap1->ambient = model_->GetMaterial().ambient;
@@ -151,31 +156,31 @@ void Object3D::Update(XMMATRIX& matView, XMMATRIX& matProjection)
 void Object3D::Draw(D3D12_VERTEX_BUFFER_VIEW& vbView,D3D12_INDEX_BUFFER_VIEW& ibView)
 {
 	this->cmdList_ = dx_->GetCommandList();
-	// ƒpƒCƒvƒ‰ƒCƒ“ƒXƒe[ƒg‚Ìİ’è
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã‚¹ãƒ†ãƒ¼ãƒˆã®è¨­å®š
 	cmdList_->SetPipelineState(model_->GetPipelinestate().Get());
-	// ƒ‹[ƒgƒVƒOƒlƒ`ƒƒ‚Ìİ’è
+	// ãƒ«ãƒ¼ãƒˆã‚·ã‚°ãƒãƒãƒ£ã®è¨­å®š
 	cmdList_->SetGraphicsRootSignature(model_->GetRootSignature().Get());
-	// ƒvƒŠƒ~ƒeƒBƒuŒ`ó‚ğİ’è
+	// ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–å½¢çŠ¶ã‚’è¨­å®š
 	cmdList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	// ’¸“_ƒoƒbƒtƒ@‚Ìİ’è
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã®è¨­å®š
 	cmdList_->IASetVertexBuffers(0, 1, &vbView);
-	// ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@‚Ìİ’è
+	// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ã®è¨­å®š
 	cmdList_->IASetIndexBuffer(&ibView);
 
-	// ƒfƒXƒNƒŠƒvƒ^ƒq[ƒv‚Ì”z—ñ
+	// ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—ã®é…åˆ—
 	ID3D12DescriptorHeap* ppHeaps[] = { model_->GetDescHeap().Get()};
 	cmdList_->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
-	// ’è”ƒoƒbƒtƒ@ƒrƒ…[‚ğƒZƒbƒg
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼ã‚’ã‚»ãƒƒãƒˆ
 	cmdList_->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
 	cmdList_->SetGraphicsRootConstantBufferView(1, constBuffB1->GetGPUVirtualAddress());
 	
 	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = model_->GetSrv();
 	UINT incrementSize = dx_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	srvGpuHandle.ptr += incrementSize * model_->textureIndex;
-	// ƒVƒF[ƒ_ƒŠƒ\[ƒXƒrƒ…[‚ğƒZƒbƒg
+	// ã‚·ã‚§ãƒ¼ãƒ€ãƒªã‚½ãƒ¼ã‚¹ãƒ“ãƒ¥ãƒ¼ã‚’ã‚»ãƒƒãƒˆ
 	cmdList_->SetGraphicsRootDescriptorTable(2, srvGpuHandle);
-	// •`‰æƒRƒ}ƒ“ƒh
+	// æç”»ã‚³ãƒãƒ³ãƒ‰
 	cmdList_->DrawIndexedInstanced(model_->GetIndicesSize(), 1, 0, 0, 0);
 }
 

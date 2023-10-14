@@ -1,0 +1,55 @@
+/**
+* @file doxygen_sample.cxx
+* @brief ファイルの説明
+* @author 作成者名
+* @date 作成日
+*
+* @details 詳細説明
+* @note 補足説明とかメモ
+*/
+
+/**
+* 関数の概要説明
+*
+* @param[in] paramA 第一引数の説明
+* @param[out] paramB 第一引数の説明
+* @return int 戻り値の説明
+*/
+
+
+
+/**
+* @file doxygen_sample.cxx
+* @brief ファイルの説明
+*/
+
+
+	/**
+	* AAAAA
+	*/
+	
+	/**
+	* 描画
+	*
+	* @param[out] cmdList_ コマンドリスト
+	*/
+
+	/**
+	* 説明
+	*
+	* @param[in] paramA 説明
+	* @param[out] paramB 説明
+	* @return int 説明
+	*/
+
+	/**
+	* @return int _AAAAA取得
+	*/
+
+	/**
+	* _AAAAAセット
+	*/
+
+in・・・その関数の中でその変数から値を取り出す。
+out・・・その関数の中でその変数に値を入れる。
+in out・・・取り出すし、入れる。

@@ -1,3 +1,8 @@
+/**
+* @file Input.cpp
+* @brief 入力処理
+*/
+
 #include "Input.h"
 
 void Input::Initialize(WinApp* winApp) {

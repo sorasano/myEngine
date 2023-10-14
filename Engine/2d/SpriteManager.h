@@ -1,3 +1,8 @@
+/**
+* @file SpriteManager.h
+* @brief スプライト共通部分の処理
+*/
+
 #pragma once
 #include "d3dx12.h"
 #include "DirectXMath.h"
@@ -23,15 +28,32 @@ public:	 //定数
 	static const size_t kMaxSrvCount = 2056;
 
 public:	//メンバ関数
+	/**
+	* 初期化
+	*/
 	void Initialize();
+	/**
+	* ファイル読み込み
+	*
+	* @param[in] number 何番に保存するか
+	* @param[in] fileName ファイルの名前
+	*/
 	void LoadFile(int number, const std::string fileName);
-	void SetTextureCommand(int number);
 
 public:	//ゲッター
+	/**
+	* @return ID3D12Resource textureBuff_取得
+	*/
 	ID3D12Resource* GetTextureBuff(int number) { return textureBuff_[number].Get(); }
+	/**
+	* @return ID3D12DescriptorHeap srvHeap_取得
+	*/
 	ID3D12DescriptorHeap* GetSrvHeap() { return srvHeap_.Get(); }
 
 public:
+	/**
+	* deviceセット
+	*/
 	static void SetDevice(ID3D12Device* device) { SpriteManager::device_ = device; }
 
 private:	//静的メンバ変数

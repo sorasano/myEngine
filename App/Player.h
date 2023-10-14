@@ -1,3 +1,8 @@
+/**
+* @file Player.cpp
+* @brief プレイヤーの処理
+*/
+
 #include "FbxLoader.h"
 #include "FbxObject3D.h"
 #include "DirectXCommon.h"
@@ -8,54 +13,141 @@
 class Player
 {
 public:
-	//シングルトンインスタンス
+	/**
+	* シングルトンインスタンス
+	*/
 	Player* GetInstance();
+	/**
+	* コンストラクタ
+	*/
 	Player();
+	/**
+	* デストラクタ
+	*/
 	~Player();
+	/**
+	* 初期化
+	*
+	* @param[in] input 入力
+	*/
 	void Initialize(Input* input);
+	/**
+	* 更新
+	*/
 	void Update();
+	/**
+	* 描画
+	*
+	* @param[out] cmdList コマンドリスト
+	*/
 	void Draw(ID3D12GraphicsCommandList* cmdList);
+	/**
+	* スプライト描画
+	*
+	* @param[out] cmdList コマンドリスト
+	*/
 	void DrawSprite(ID3D12GraphicsCommandList* cmdList);
 
-	//スピードアップ
-	void SpeedUpByEnemy();
-	//スピードダウン
-	void SpeedDownByEnemy();
 
-	//移動操作
+	/**
+	* スピードアップ
+	*/
+	void SpeedUpByEnemy();
+	/**
+	* スピードダウン
+	*/
+	void SpeedDownByEnemy();
+	/**
+	* 移動操作
+	*/
 	void Move();
 
-	//弾
+
+	/**
+	* 弾発射
+	*/
 	void Shot();
+	/**
+	* 弾更新
+	*/
 	void BulletUpdate();
+	/**
+	* 弾生成
+	*/
 	void MakeBullet();
 
-	//レティクル
+
+	/**
+	* レティクル初期化
+	*/
 	void UpdateRaticle();
+	/**
+	* レティクル更新
+	*/
 	void MoveRaticle();
-
-	//スピードUI
+	/**
+	* スプライト更新
+	*/
 	void UpdateSprite();
-
-	//リセット
+	/**
+	* リセット
+	*/
 	void Reset();
 
+
 	//ゲッター　セッター　
+		/**
+	* @return XMFLOAT3 position_取得
+	*/
 	XMFLOAT3 GetPosition() { return position_; }
+	/**
+	* @return XMFLOAT3 rotation_取得
+	*/
 	XMFLOAT3 GetRotation() { return rotation_; }
+	/**
+	* @return XMFLOAT3 scale_取得
+	*/
 	XMFLOAT3 GetScale() { return scale_; }
-	void SetPosition(XMFLOAT3 pos) { this->position_ = pos; }
-	void SetRotation(XMFLOAT3 rot) { this->rotation_ = rot; }
-	void SetScale(XMFLOAT3 sca) { this->scale_ = sca; }
-
+	/**
+	* @return float スピード取得
+	*/
 	float GetSpeed() { return speedZ_ + addSpeed_; }
+	/**
+	* @return CollisionData 当たり判定情報取得
+	*/
 	CollisionData GetColData();
-
-	void SetIsInvincible(bool isInvincible) { this->isInvincible_ = isInvincible; }
-
-	//弾
+	/**
+	* @return int 弾の数取得
+	*/
 	int GetBulletSize() { return static_cast<int>(bullets_.size()); }
+	/**
+	* @return CollisionData 弾当たり判定情報取得
+	*/
 	CollisionData GetBulletColData(int i);
+
+
+	/**
+	* posセット
+	*/
+	void SetPosition(XMFLOAT3 pos) { this->position_ = pos; }
+	/**
+	* rotセット
+	*/
+	void SetRotation(XMFLOAT3 rot) { this->rotation_ = rot; }
+	/**
+	* scaセット
+	*/
+	void SetScale(XMFLOAT3 sca) { this->scale_ = sca; }
+	/**
+	* isInvincibleセット
+	*/
+	void SetIsInvincible(bool isInvincible) { this->isInvincible_ = isInvincible; }
+	/**
+	* 弾死亡情報セット
+	*
+	* @param[in] isDead 死亡フラグ
+	* @param[in] i 何番の弾か
+	*/
 	void SetBulletIsDead(bool isDead,int i);
 
 private:

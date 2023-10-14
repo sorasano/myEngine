@@ -1,3 +1,8 @@
+/**
+* @file Collision.cpp
+* @brief 当たり判定の処理
+*/
+
 #include "Collision.h"
 
 bool Collision::CheckSquareToSquare(CollisionData A, CollisionData B)

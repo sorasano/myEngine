@@ -1,3 +1,8 @@
+/**
+* @file Camera.h
+* @brief カメラの処理
+*/
+
 #pragma once
 #include"Base/DirectXCommon.h"
 #include<DirectXMath.h>
@@ -23,6 +28,11 @@ class Camera
 public:
 	static ID3D12Device* device_;
 
+	/**
+	* 静的変数初期化
+	*
+	* @param[in] dev デバイス
+	*/
 	static void StaticInitialize(ID3D12Device* dev);
 
 	struct ConstBufferCamera {
@@ -47,34 +57,78 @@ private:
 
 public:
 
-
+	/**
+	* 初期化
+	*
+	* @param[in] input キー入力
+	*/
 	void Initialize(Input* input);
-
+	/**
+	* 更新
+	*/
+	void Update(XMFLOAT3 playerPos, XMFLOAT3 bossPos);
+	/**
+	* 行列更新
+	*/
 	void UpdateMatrix();
 
-	void Update(XMFLOAT3 playerPos, XMFLOAT3 bossPos);
-
-	//直線移動モード
-	void UpdateStraightMode();
-	//プレイヤー追従モード
-	void UpdatePlayerFollowMode();
-
-	//タイトルからプレイ遷移更新
-	void UpdateTitleToPlayMode();
-	//タイトルからプレイ遷移初期化
+	/**
+	* タイトルからプレイ遷移初期化
+	*/
 	void InitializeTitleToPlayMode();
 
-	//デバックモード
+	/**
+	* 直線移動モード更新
+	*/
+	void UpdateStraightMode();
+	/**
+	* プレイヤー追従モード更新
+	*/
+	void UpdatePlayerFollowMode();
+	/**
+	* タイトルからプレイ遷移更新
+	*/
+	void UpdateTitleToPlayMode();
+
+	/**
+	* デバックモード
+	*/
 	void DebugMode();
 
+
+	/**
+	* @return XMMATRIX ビュープロジェクション取得
+	*/
 	XMMATRIX GetViewProjection()const { return matView_ * matProjection_; }
+	/**
+	* @return XMFLOAT3 eye_取得
+	*/
 	XMFLOAT3 GetEye() { return eye_; }
+	/**
+	* @return XMFLOAT3 target_取得
+	*/
 	XMFLOAT3 GetTarget() { return target_; }
+	/**
+	* @return int mode_取得
+	*/
 	int GetMode() { return mode_; }
+	/**
+	* @return bool isPerformance_取得
+	*/
 	bool GetIsPerformance() { return isPerformance_; }
 
+
+	/**
+	* eye_セット
+	*/
 	void SetEye(XMFLOAT3 eye) { this->eye_ = eye; }
+	/**
+	* target_セット
+	*/
 	void SetTarget(XMFLOAT3 target) { this->target_ = target; }
+	/**
+	* modeセット
+	*/
 	void SetMode(int mode);
 
 private:

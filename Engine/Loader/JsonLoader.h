@@ -1,3 +1,8 @@
+/**
+* @file JsonLoader.h
+* @brief jsonから情報を読み取る
+*/
+
 #pragma once
 
 #include <string>
@@ -26,7 +31,12 @@ class JsonLoader
 {
 
 public:
-
+	/**
+	* jsonファイル読み込み
+	*
+	* @param[in] filename ファイルの名前
+	* @return LevelData 読み込んだデータ
+	*/
 	static LevelData* LoadFile(const std::string filename);
 
 public:

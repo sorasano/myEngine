@@ -1,3 +1,8 @@
+/**
+* @file Player.cpp
+* @brief プレイヤーの処理
+*/
+
 #include "Player.h"
 
 #include "Vector3.h"

@@ -1,3 +1,8 @@
+/**
+* @file PostEffect.h
+* @brief ポストエフェクトの処理
+*/
+
 #pragma once
 #include "d3dx12.h"
 #include "array"
@@ -40,33 +45,63 @@ public:	//サブクラス
 	};
 
 public:	//メンバ関数
-	//初期化
+	/**
+	* 初期化
+	*/
 	void Initialize();
-	//更新
+	/**
+	* 更新
+	*/
 	void Update();
-	//描画
+	/**
+	* 描画
+	*
+	* @param[out] cmdList_ コマンドリスト
+	*/
 	void Draw(ID3D12GraphicsCommandList* cmdList_);
-	//パイプライン設定、作成
+	/**
+	* パイプライン設定、作成
+	*/
 	void CreateGraphicsPipeLine();
-
-	//描画前処理
+	/**
+	* 描画前処理
+	*
+	* @param[out] cmdList_ コマンドリスト
+	*/
 	void PreDrawScene(ID3D12GraphicsCommandList* cmdList_);
-	//描画後処理
+	/**
+	* 描画後処理
+	*
+	* @param[out] cmdList_ コマンドリスト
+	*/
 	void PostDrawScene(ID3D12GraphicsCommandList* cmdList_);
 
 public:	//静的メンバ関数
+	/**
+	* deviceセット
+	*/
 	static void SetDevice(ID3D12Device* device) { PostEffect::device_ = device; }
 
 public:	//セッター
-	//アルファ値
+	/**
+	* アルファ値セット
+	*/
 	void SetAlpha(float alpha) { color.w = alpha; }
-	//色
+	/**
+	* 色セット
+	*/
 	void SetColor(XMFLOAT3 c) { color.x = c.x; color.y = c.y; color.z = c.z; }
-	//座標
+	/**
+	* 座標セット
+	*/
 	void SetPosition(XMFLOAT2 pos) { position_ = pos; }
-	//角度
+	/**
+	* 角度セット
+	*/
 	void SetRotation(float rot) { rotation_ = rot; }
-	//スケール
+	/**
+	* スケールセット
+	*/
 	void SetScale(XMFLOAT2 sca) { scale_ = sca; }
 
 private:	//静的メンバ変数

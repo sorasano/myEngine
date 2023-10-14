@@ -1,3 +1,8 @@
+/**
+* @file ParticleManager.h
+* @brief パーティクルの処理
+*/
+
 #pragma once
 
 #include <Windows.h>
@@ -64,72 +69,71 @@ private: // 定数
 public: // 静的メンバ関数
 
 
+	/**
+	* コンストラクタ
+	*/
 	ParticleManager();
-
+	/**
+	* デストラクタ
+	*/
 	~ParticleManager();
 
-	/// <summary>
-	/// 静的初期化
-	/// </summary>
-	/// <param name="device">デバイス</param>
-	/// <param name="window_width">画面幅</param>
-	/// <param name="window_height">画面高さ</param>
-	static void StaticInitialize(DirectXCommon* dx, int windowWidth, int windowHeight);
-
-	/// <summary>
-	/// 静的更新
-	/// </summary>
-	/// <param name="eye">視点座標</param>
-	/// <param name="target">視点方向座標</param>
+	/**
+	* 静的初期化
+	*
+	* @param[in,out] dx dxCommon
+	*/
+	static void StaticInitialize(DirectXCommon* dx);
+	/**
+	* 静的更新
+	* @param[in] eye 視点座標
+	* @param[in] target 視点方向座標
+	*
+	*/
 	static void StaticUpdate(XMFLOAT3 eye, XMFLOAT3 target);
 
-	/// <summary>
-	/// 描画前処理
-	/// </summary>
-	/// <param name="cmdList">描画コマンドリスト</param>
+	/**
+	* 描画前処理
+	*
+	* @param[out] cmdList コマンドリスト
+	*/
 	void PreDraw(ID3D12GraphicsCommandList* cmdList);
-
-	/// <summary>
-	/// 描画後処理
-	/// </summary>
+	/**
+	* 描画後処理
+	*/
 	void PostDraw();
 
-	/// <summary>
-	/// 3Dオブジェクト生成
-	/// </summary>
-	/// <returns></returns>
-	ParticleManager* Create(DirectXCommon* dx, const std::string& resourcename);
-
-	/// <summary>
-	/// 視点座標の取得
-	/// </summary>
-	/// <returns>座標</returns>
+	/**
+	* @return int 視点座標の取得取得
+	*/
 	const XMFLOAT3& GetEye() { return eye_; }
-
-	/// <summary>
-	/// 視点座標の設定
-	/// </summary>
-	/// <param name="position">座標</param>
-	void SetEye(XMFLOAT3 eye_);
-
-	/// <summary>
-	/// 注視点座標の取得
-	/// </summary>
-	/// <returns>座標</returns>
+	/**
+	* @return int 注視点座標の取得
+	*/
 	const XMFLOAT3& GetTarget() { return target_; }
 
-	/// <summary>
-	/// 注視点座標の設定
-	/// </summary>
-	/// <param name="position">座標</param>
+
+	/**
+	* 視点座標の設定
+	*/
+	void SetEye(XMFLOAT3 eye_);
+	/**
+	* 注視点座標の設定
+	*/
 	void SetTarget(XMFLOAT3 target);
 
-	/// <summary>
-	/// ベクトルによる移動
-	/// </summary>
-	/// <param name="move">移動量</param>
-	void CameraMoveVector(XMFLOAT3 move);
 
+	/**
+	* ベクトルによる視点移動
+	*
+	* @param[in] move 移動量
+	*/
+	void CameraMoveVector(XMFLOAT3 move);
+	/**
+	* ベクトルによる注視点移動
+	*
+	* @param[in] move 移動量
+	*/
 	void CameraMoveEyeVector(XMFLOAT3 move);
 
 private: // 静的メンバ変数
@@ -182,54 +186,58 @@ private: // 静的メンバ変数
 	static DirectXCommon* dx_;
 
 private:// 静的メンバ関数
-	/// <summary>
-	/// デスクリプタヒープの初期化
-	/// </summary>
+	/**
+	* デスクリプタヒープの初期化
+	*/
 	void InitializeDescriptorHeap();
-
-	/// <summary>
-	/// カメラ初期化
-	/// </summary>
-	/// <param name="window_width">画面横幅</param>
-	/// <param name="window_height">画面縦幅</param>
+	/**
+	* カメラ初期化
+	* @param[in] windowWidth 画面横幅
+	* @param[in] windowHeight 画面縦幅
+	*
+	*/
 	static void InitializeCamera(int windowWidth, int windowHeight);
-
-	/// <summary>
-	/// グラフィックパイプライン生成
-	/// </summary>
-	/// <returns>成否</returns>
+	/**
+	* グラフィックパイプライン生成
+	*/
 	static void InitializeGraphicsPipeline();
-
-	/// <summary>
-	/// テクスチャ読み込み
-	/// </summary>
-	void LoadTexture();
-
+	/**
+	* テクスチャ読み込み
+	* 
+	* @param[in] resourcename テクスチャ名
+	*/
 	void LoadTexture(const std::string& resourcename);
-
-	/// <summary>
-	/// モデル作成
-	/// </summary>
+	/**
+	* モデル作成
+	*/
 	void CreateModel();
-
-	/// <summary>
-	/// ビュー行列を更新
-	/// </summary>
+	/**
+	* ビュー行列を更新
+	*/
 	static void UpdateViewMatrix();
 
 public: // メンバ関数
+	/**
+	* 初期化
+	*
+	* @param[in] resourcename テクスチャ名
+	*/
 	bool Initialize(const std::string& resourcename);
-	/// <summary>
-	/// 毎フレーム処理
-	/// </summary>
+	/**
+	* 更新
+	*/
 	void Update();
-
-	/// <summary>
-	/// 描画
-	/// </summary>
+	/**
+	* 描画
+	*/
 	void Draw();
-
-	//パーティクルの追加
+	/**
+	* パーティクルの追加
+	*
+	* @param[in] position 発生座標
+	* @param[in] velocity 加速
+	* @param[in] accel 加速度
+	*/
 	void Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel);
 
 private: // メンバ変数

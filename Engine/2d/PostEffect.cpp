@@ -1,3 +1,8 @@
+/**
+* @file PostEffect.cpp
+* @brief ポストエフェクトの処理
+*/
+
 #include "PostEffect.h"
 #include "string.h"
 #include "WinApp.h"

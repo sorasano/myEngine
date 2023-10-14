@@ -1,3 +1,8 @@
+/**
+* @file JsonLoader.cpp
+* @brief jsonから情報を読み取る
+*/
+
 #include "JsonLoader.h"
 #include "json.hpp"
 

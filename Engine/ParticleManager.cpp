@@ -1,3 +1,8 @@
+/**
+* @file ParticleManager.cpp
+* @brief パーティクルの処理
+*/
+
 #include "ParticleManager.h"
 #include <d3dcompiler.h>
 #include <DirectXTex.h>
@@ -57,7 +62,7 @@ ParticleManager::~ParticleManager()
 {
 }
 
-void ParticleManager::StaticInitialize(DirectXCommon* dx, int windowWidth, int windowHeight)
+void ParticleManager::StaticInitialize(DirectXCommon* dx)
 {
 	// nullptrチェック
 	assert(dx);
@@ -66,7 +71,7 @@ void ParticleManager::StaticInitialize(DirectXCommon* dx, int windowWidth, int w
 	ParticleManager::device_ = dx->GetDevice();
 
 	// カメラ初期化
-	InitializeCamera(windowWidth, windowHeight);
+	InitializeCamera(window_width, window_height);
 
 	// パイプライン初期化
 	InitializeGraphicsPipeline();
@@ -107,28 +112,6 @@ void ParticleManager::PostDraw()
 	ParticleManager::cmdList_ = nullptr;
 }
 
-//ParticleManager* ParticleManager::Create(DirectXCommon* dx_, const std::string& resourcename)
-//{
-//
-//	device = dx_->GetDevice();
-//
-//	// 3Dオブジェクトのインスタンスを生成
-//	ParticleManager* particleManager = new ParticleManager();
-//	if (particleManager == nullptr) {
-//		return nullptr;
-//	}
-//	
-//	LoadTexture(resourcename);
-//
-//	// 初期化
-//	if (!particleManager->Initialize()) {
-//		delete particleManager;
-//		assert(0);
-//		return nullptr;
-//	}
-//
-//	return particleManager;
-//}
 void ParticleManager::SetEye(XMFLOAT3 eye)
 {
 	ParticleManager::eye_ = eye;

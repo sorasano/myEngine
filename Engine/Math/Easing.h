@@ -1,3 +1,8 @@
+/**
+* @file Easing.h
+* @brief イージング処理
+*/
+
 #pragma once
 #include"Vector3.h"
 #include<DirectXMath.h>
@@ -21,11 +26,19 @@ public:
 	float endTimer = 0;
 	float timeRate = 0;
 
-
+	/**
+	* 更新
+	*/
 	void Update();
-
+	/**
+	* イージングスタート
+	*
+	* @param[in] animationSecond イージング全体時間
+	*/
 	void Start(float animationSecond);
-
+	/**
+	* @return bool イーイング中か
+	*/
 	bool GetActive() { return (timeRate < 1.0f); }
 };
 

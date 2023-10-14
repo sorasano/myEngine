@@ -1,3 +1,8 @@
+/**
+* @file FbxObject3d.h
+* @brief Fbx処理
+*/
+
 #pragma once
 #include "FbxModel.h"
 #include "Camera.h"
@@ -40,10 +45,19 @@ private:	//エイリアス
 
 public:	//静的メンバ関数
 	//セッター
+
+	/**
+	* デバイスのセット
+	*/
 	static void SetDevice(ID3D12Device* device) { FbxObject3D::device_ = device; }
+	/**
+	* カメラのセット
+	*/
 	static void SetCamera(Camera* camera) { FbxObject3D::camera_ = camera; }
 
-	//グラフィックパイプラインの生成
+	/**
+	* グラフィックパイプラインの生成
+	*/
 	static void CreateGraphicsPipeline();
 
 private://静的メンバ変数
@@ -56,27 +70,55 @@ private://静的メンバ変数
 	static ComPtr<ID3D12PipelineState> pipelinestate_;
 
 public://メンバ関数
-	//初期化
+	/**
+	* 初期化
+	*/
 	void Initialize();
-	//更新
+	/**
+	* 更新
+	*/
 	void Update();
-	//描画
+	/**
+	* 描画
+	*/
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
-	//モデルのセット
+	/**
+	* モデルのセット
+	*/
 	void SetModel(FbxModel* model) { this->model_ = model; }
 
-	//アニメーション開始
+	/**
+	* アニメーション開始
+	*/
 	void PlayAnimation();
 
 	//セッター
+	/**
+	* positionセット
+	*/
 	void SetPosition(XMFLOAT3 position) { this->position_ = position; }
+	/**
+	* rotateセット
+	*/
 	void SetRotate(XMFLOAT3 rotate) { this->rotation_ = rotate; }
+	/**
+	* scaleセット
+	*/
 	void SetScale(XMFLOAT3 scale) { this->scale_ = scale; }
 
 	//ゲッター
+	/**
+	* @return XMFLOAT3 position_取得
+	*/
 	XMFLOAT3 GetPosition() { return this->position_; }
+	/**
+	* @return XMFLOAT3 rotation_取得
+	*/
 	XMFLOAT3 GetRotate() { return this->rotation_ ; }
+	/**
+	* @return XMFLOAT3 scale_取得
+	*/
 	XMFLOAT3 GetScale() { return this->scale_ ; }
 
 protected://メンバ変数

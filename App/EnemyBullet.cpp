@@ -1,3 +1,8 @@
+/**
+* @file EnemyBullet.cpp
+* @brief 敵の弾の処理
+*/
+
 #include "EnemyBullet.h"
 #include <cmath>
 #define PI 3.1415

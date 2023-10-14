@@ -1,3 +1,8 @@
+/**
+* @file Input.h
+* @brief 入力処理
+*/
+
 #include <cassert>
 
 #include <wrl.h>
@@ -18,19 +23,28 @@ class Input
 {
 public:
 
-	//namespace省略
+	/**
+	* namespace省略
+	*/
 	template <class T> using Comptr = Microsoft::WRL::ComPtr<T>;
 
 public:
 
+	/**
+	* 初期化
+	*/
 	void Initialize(WinApp* winApp);
-
+	/**
+	* 更新
+	*/
 	void Update();
-
-	//キーの押下をチェック
+	/**
+	* キーの押下をチェック
+	*/
 	bool PushKey(BYTE keyNumber);
-
-	//キーのトリガーをチェック
+	/**
+	* キーのトリガーをチェック
+	*/
 	bool TriggerKey(BYTE keyNumber);
 
 private:
