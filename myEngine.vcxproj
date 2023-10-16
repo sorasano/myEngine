@@ -158,6 +158,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="App\PerformanceManager.cpp" />
     <ClCompile Include="Engine\2d\PostEffect.cpp" />
     <ClCompile Include="Engine\2d\Sprite.cpp" />
     <ClCompile Include="Engine\2d\SpriteManager.cpp" />
@@ -185,10 +186,10 @@
     <ClCompile Include="Engine\Math\Vector3.cpp" />
     <ClCompile Include="Engine\Model.cpp" />
     <ClCompile Include="Engine\object3D.cpp" />
-    <ClCompile Include="Engine\ParticleManager.cpp" />
     <ClCompile Include="App\Player.cpp" />
     <ClCompile Include="App\PlayerBullet.cpp" />
     <ClCompile Include="App\Skydome.cpp" />
+    <ClCompile Include="Engine\ParticleManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\Basic.hlsli" />
@@ -279,6 +280,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="App\PerformanceManager.h" />
     <ClInclude Include="Engine\2d\PostEffect.h" />
     <ClInclude Include="Engine\2d\Sprite.h" />
     <ClInclude Include="Engine\2d\SpriteManager.h" />
@@ -306,10 +308,10 @@
     <ClInclude Include="Engine\Math\Vector3.h" />
     <ClInclude Include="Engine\Model.h" />
     <ClInclude Include="Engine\object3D.h" />
-    <ClInclude Include="Engine\ParticleManager.h" />
     <ClInclude Include="App\Player.h" />
     <ClInclude Include="App\PlayerBullet.h" />
     <ClInclude Include="App\Skydome.h" />
+    <ClInclude Include="Engine\ParticleManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="External\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

@@ -97,9 +97,9 @@ void Camera::Update(XMFLOAT3 playerPos, XMFLOAT3 bossPos)
 
 	UpdateMatrix();
 
-	ImGui::Begin("cameraPos");
-	ImGui::Text("%f",eye_.z);
-	ImGui::End();
+	//ImGui::Begin("cameraPos");
+	//ImGui::Text("%f",eye_.z);
+	//ImGui::End();
 }
 
 void Camera::UpdateStraightMode()

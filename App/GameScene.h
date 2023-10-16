@@ -16,6 +16,7 @@
 #include "CSVLoader.h"
 #include "JsonLoader.h"
 #include "Collision.h"
+#include "PerformanceManager.h"
 
 #include "Skydome.h"
 #include "BackGround.h"
@@ -31,13 +32,6 @@ enum Scene {
 	BOSSPLAY,
 	CLEAR,
 	GAMEOVER
-};
-
-enum Performance {
-	TITLETOPLAY,//タイトル→プレイシーン遷移
-	INBOSS,//ボス戦導入
-	CLEARBOSS,//ボス戦クリア
-	GAMEOVERBOSS//ボス戦ゲームオーバー
 };
 
 class GameScene
@@ -117,29 +111,6 @@ public:
 	*/
 	void BossSceneCollition();
 
-
-	//演出
-	/**
-	* 演出更新
-	*/
-	void UpdatePerformance();
-	/**
-	* タイトル→プレイシーン遷移演出
-	*/
-	void TitleToPlayPerformance();
-	/**
-	* ボス戦導入演出
-	*/
-	void BossInPerformance();
-	/**
-	* ボス撃破演出
-	*/
-	void BossClearPerformance();
-	/**
-	* ボス逃亡演出
-	*/
-	void BossGameoverPerformance();
-
 private:
 	//デバイスとinput
 	DirectXCommon* dxCommon_ = nullptr;
@@ -192,9 +163,8 @@ private:
 	//当たり判定
 	Collision* collisionManager_ = nullptr;
 
-	//演出フラグ
-	bool isPerformance_ = false;
-	//なんの演出か
-	int performanceNum_ = TITLETOPLAY;
+	//演出
+	PerformanceManager* performanceManager_ = nullptr;
+
 };
 

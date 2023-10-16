@@ -47,6 +47,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	spriteManager_->LoadFile(0, "title.png");
 	spriteManager_->LoadFile(1, "clear.png");
 	spriteManager_->LoadFile(2, "blue1x1.png");
+	spriteManager_->LoadFile(3, "generalPurpose.png");
 
 	//-----スプライト------
 	Sprite::SetDevice(dxCommon->GetDevice());
@@ -77,6 +78,10 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	FbxObject3D::SetCamera(camera_);
 	//グラフィックスパイプライン生成
 	FbxObject3D::CreateGraphicsPipeline();
+
+	//演出
+	performanceManager_ = new PerformanceManager();
+	performanceManager_->Initialize(camera_);
 
 	//----------背景----------
 
@@ -133,22 +138,11 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	Boss* newBoss = new Boss();
 	newBoss->Initialize();
 	boss_.reset(newBoss);
+
 }
 
 void GameScene::Update()
 {
-
-	//カメラ更新
-	camera_->Update(player_->GetPosition(), boss_->GetPosition());
-
-	//背景
-	UpdateBackGround();
-
-	//シーンの切り替わり
-	ChangeScene();
-
-	//パーティクルマネージャー静的更新
-	ParticleManager::StaticUpdate(camera_->GetEye(), camera_->GetTarget());
 
 	//シーン更新
 	switch (scene_)
@@ -203,10 +197,21 @@ void GameScene::Update()
 		break;
 	}
 
+	//カメラ更新
+	camera_->Update(player_->GetPosition(), boss_->GetPosition());
+
+	//背景
+	UpdateBackGround();
+
 	//演出
-	if (isPerformance_) {
-		UpdatePerformance();
-	}
+	performanceManager_->Update();
+
+	//シーンの切り替わり
+	ChangeScene();
+
+	//パーティクルマネージャー静的更新
+	ParticleManager::StaticUpdate(camera_->GetEye(), camera_->GetTarget());
+
 
 }
 
@@ -275,7 +280,7 @@ void GameScene::DrawSprite()
 	switch (scene_) {
 
 	case TITLE:
-		if (!isPerformance_) {
+		if (!performanceManager_->GetIsPerformance()) {
 			titleSprite_->Draw(dxCommon_->GetCommandList());
 		}
 		break;
@@ -290,8 +295,10 @@ void GameScene::DrawSprite()
 	case CLEAR:
 		clearSprite_->Draw(dxCommon_->GetCommandList());
 		break;
-
 	}
+
+	//演出
+	performanceManager_->DrawSprite(dxCommon_->GetCommandList());
 }
 
 bool GameScene::UpadateRange(XMFLOAT3 cameraPos, XMFLOAT3 pos)
@@ -504,13 +511,15 @@ void GameScene::SetEnemy()
 
 void GameScene::Reset()
 {
+	//リセットはタイトルシーンに戻る
+	scene_ = TITLE;
+	camera_->SetMode(STRAIGHTMODE);
+
 	//プレイヤー
 	player_->Reset();
 
 	//敵
 	enemys_.clear();
-	SetEnemy();
-	phase_ = 1;
 
 	//ボス
 	boss_->Reset();
@@ -519,13 +528,18 @@ void GameScene::Reset()
 	camera_->Update(player_->GetPosition(), boss_->GetPosition());
 
 	//背景
-	adjustPos_ = 0;
-	for (std::unique_ptr<BackGround>& backGround : backGrounds_) {
-		//オブジェクトを配置しなおす
-		backGround->SetObject(adjustPos_);
-		//現在の位置+1つ分のサイズで次のマップの位置にセット
-		adjustPos_ = backGround->GetPosition().z + backGround->GetSize();
-	}
+	//オブジェクトを全削除
+	//backGrounds_.clear();
+
+	////オブジェクトを配置しなおす
+	//adjustPos_ = 0;
+	//for (int i = 0; i < backGroundSize_; i++) {
+	//	std::unique_ptr<BackGround>newBackGround = std::make_unique<BackGround>();
+	//	newBackGround->Initialize(adjustPos_);
+	//	//現在の位置+1つ分のサイズで次のマップの位置にセット
+	//	adjustPos_ = newBackGround->GetPosition().z + newBackGround->GetSize();
+	//	backGrounds_.push_back(std::move(newBackGround));
+	//}
 
 }
 
@@ -536,10 +550,24 @@ void GameScene::ChangeScene()
 	{
 	case TITLE:
 
-		if (input_->TriggerKey(DIK_SPACE) && !isPerformance_) {
-			isPerformance_ = true;
-			performanceNum_ = TITLETOPLAY;
-			PlaySceneInitialize();
+		////スペースを押したら演出プラスシーンの初期化
+		//if (input_->TriggerKey(DIK_SPACE) && !performanceManager_->GetIsPerformance()) {
+		//	performanceManager_->SetPerformanceNum(TITLETOPLAY);
+		//	PlaySceneInitialize();
+		//}
+		////シーン切り替えフラグがたったらシーン切り替え
+		//if (performanceManager_->GetIsChangeScene()) {
+		//	scene_ = NORMALPLAY;
+		//	performanceManager_->SetIsChangeScene(false);
+		//}
+
+		//汎用演出ショートカット
+		if (input_->TriggerKey(DIK_RETURN) && !performanceManager_->GetIsPerformance()) {
+			performanceManager_->SetPerformanceNum(GENERALPURPOSE);
+		}
+		if (performanceManager_->GetIsChangeScene()) {
+			Reset();
+			performanceManager_->SetIsChangeScene(false);
 		}
 
 		break;
@@ -547,9 +575,9 @@ void GameScene::ChangeScene()
 	case NORMALPLAY:
 
 		//ボス戦ショートカット
-		if (input_->TriggerKey(DIK_RETURN)) {
-			BossSceneInitialize();
-		}
+		//if (input_->TriggerKey(DIK_RETURN)) {
+		//	BossSceneInitialize();
+		//}
 
 		//敵のリストから削除要件確認
 		CheckEnemy();
@@ -565,15 +593,19 @@ void GameScene::ChangeScene()
 		break;
 	case CLEAR:
 
-		if (input_->TriggerKey(DIK_SPACE)) {
-			scene_ = TITLE;
-			Reset();
 
-			camera_->SetMode(STRAIGHTMODE);
+		//汎用演出
+		if (input_->TriggerKey(DIK_SPACE) && !performanceManager_->GetIsPerformance()) {
+			performanceManager_->SetPerformanceNum(GENERALPURPOSE);
+		}
+		else if (performanceManager_->GetIsChangeScene()) {
+			Reset();
+			performanceManager_->SetIsChangeScene(false);
 		}
 
 		break;
 	}
+
 }
 
 void GameScene::PlaySceneInitialize()
@@ -591,46 +623,6 @@ void GameScene::PlaySceneInitialize()
 	camera_->Update(player_->GetPosition(), boss_->GetPosition());
 	camera_->SetMode(TITLETOPLAYMODE);
 
-}
-
-void GameScene::UpdatePerformance()
-{
-	switch (performanceNum_) {
-
-	case TITLETOPLAY:
-		TitleToPlayPerformance();
-		break;
-	case INBOSS:
-		BossInPerformance();
-		break;
-	case CLEARBOSS:
-		BossClearPerformance();
-		break;
-	case GAMEOVERBOSS:
-		BossGameoverPerformance();
-		break;
-	}
-}
-
-void GameScene::TitleToPlayPerformance()
-{
-	//カメラ演出が終わったらシーン移行
-	if (!camera_->GetIsPerformance()) {
-		scene_ = NORMALPLAY;
-		isPerformance_ = false;
-	}
-}
-
-void GameScene::BossInPerformance()
-{
-}
-
-void GameScene::BossClearPerformance()
-{
-}
-
-void GameScene::BossGameoverPerformance()
-{
 }
 
 void GameScene::BossSceneInitialize()
