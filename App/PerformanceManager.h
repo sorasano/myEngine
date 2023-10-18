@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include "Scene.h"
 #include "Camera.h"
 #include "Sprite.h"
 #include "Easing.h"
@@ -14,7 +15,7 @@ enum Performance {
 	INBOSS,//ボス戦導入
 	CLEARBOSS,//ボス戦クリア
 	GAMEOVERBOSS,//ボス戦ゲームオーバー
-	GENERALPURPOSE//汎用演出、タイトルに戻るときなど
+	RETURNTITLE//タイトルに戻るとき
 };
 
 class PerformanceManager
@@ -57,9 +58,9 @@ public:
 	*/
 	void BossGameoverPerformance();
 	/**
-	* 汎用演出
+	* タイトルに戻る演出
 	*/
-	void GeneralpurposePerformance();
+	void ReturnTitlePerformance();
 
 
 	//ゲッター　セッター　
@@ -68,9 +69,9 @@ public:
 	*/
 	bool GetIsPerformance() { return isPerformance_; };
 	/**
-	* @return bool isChangeScene取得
+	* @return int isChangeScene取得
 	*/
-	bool GetIsChangeScene() { return isChangeScene_; };
+	int GetIsChangeScene() { return isChangeScene_; };
 
 	/**
 	* performanceNumセット
@@ -108,15 +109,15 @@ private:
 	XMFLOAT2 generalPurposeSpritePosition2_ = {};
 
 	//イージング開始座標
-	XMFLOAT2 generalPurposeEaseStartPosition1_ = {0 - window_width,window_height / 2};
-	XMFLOAT2 generalPurposeEaseStartPosition2_ = {window_width + window_width,window_height / 2 };
+	XMFLOAT2 generalPurposeEaseStartPosition1_ = {0 - (window_width / 2),window_height / 2};
+	XMFLOAT2 generalPurposeEaseStartPosition2_ = {window_width + (window_width / 2),window_height / 2 };
 	//イージング終了位置
-	XMFLOAT2 generalPurposeEaseEndPosition1_ = { window_width + window_width,window_height / 2 };
-	XMFLOAT2 generalPurposeEaseEndPosition2_ = { 0 - window_width,window_height / 2 };
+	XMFLOAT2 generalPurposeEaseEndPosition1_ = { window_width + (window_width / 2),window_height / 2 };
+	XMFLOAT2 generalPurposeEaseEndPosition2_ = { 0 - (window_width / 2),window_height / 2 };
 	//イージング演出用データ
 	Easing generalPurposeEaseing1_;
 	Easing generalPurposeEaseing2_;
 	//イージング演出時間
-	float easeingTime_ = 3.0f;
+	float easeingTime_ = 6.0f;
 };
 

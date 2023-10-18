@@ -246,7 +246,7 @@ private:
 	//ボス2段階目フラグ
 	bool isBossHardMode_ = 0;
 	//hp
-	int hp_ = 50;
+	int hp_ = 1;
 	//2段階目になるhp
 	int changeHardHp_ = 25;
 

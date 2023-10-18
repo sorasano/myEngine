@@ -100,7 +100,7 @@ void BackGround::ArrangementObject(float adjustPos_)
 
 		// 回転角
 		DirectX::XMFLOAT3 rot;
-		DirectX::XMStoreFloat3(&rot, objectData.rotation_);
+		DirectX::XMStoreFloat3(&rot, objectData.rotation);
 		rot.x = static_cast<float>(90 * (PI / 180));
 		newObject->SetRotate(rot);
 

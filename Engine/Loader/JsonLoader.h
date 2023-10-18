@@ -16,7 +16,7 @@ struct LevelData {
 		// 平行移動
 		DirectX::XMVECTOR translation;
 		// 回転角
-		DirectX::XMVECTOR rotation_;
+		DirectX::XMVECTOR rotation;
 		// スケーリング
 		DirectX::XMVECTOR scaling;
 		// ファイル名

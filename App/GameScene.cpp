@@ -161,7 +161,7 @@ void GameScene::Update()
 
 		break;
 
-	case NORMALPLAY:
+	case PLAY:
 
 		//自機
 		player_->Update();
@@ -178,7 +178,7 @@ void GameScene::Update()
 		Collition();
 
 		break;
-	case BOSSPLAY:
+	case BOSS:
 
 		//自機
 		player_->Update();
@@ -245,7 +245,7 @@ void GameScene::Draw()
 
 		break;
 
-	case NORMALPLAY:
+	case PLAY:
 
 		//敵
 		for (std::unique_ptr<Enemy>& enemy : enemys_)
@@ -260,7 +260,7 @@ void GameScene::Draw()
 
 		break;
 
-	case BOSSPLAY:
+	case BOSS:
 
 		//自機
 		player_->Draw(dxCommon_->GetCommandList());
@@ -285,10 +285,10 @@ void GameScene::DrawSprite()
 		}
 		break;
 
-	case NORMALPLAY:
+	case PLAY:
 		player_->DrawSprite(dxCommon_->GetCommandList());
 		break;
-	case BOSSPLAY:
+	case BOSS:
 		player_->DrawSprite(dxCommon_->GetCommandList());
 		break;
 
@@ -427,6 +427,7 @@ void GameScene::Collition()
 
 void GameScene::CheckEnemy()
 {
+
 	for (std::unique_ptr<Enemy>& enemy : enemys_) {
 
 		//カメラより後ろに行ったら死亡
@@ -448,8 +449,8 @@ void GameScene::CheckEnemy()
 			phase_++;
 		}
 		else {
-			//フェーズが最終だったらシーン移行
-			BossSceneInitialize();
+			//フェーズが最終だったらボスシーンへ
+			performanceManager_->SetPerformanceNum(INBOSS);
 		}
 	}
 
@@ -493,7 +494,7 @@ void GameScene::SetEnemy()
 	//何番目のCSVをセットするか(ランダム)
 	int setNum = static_cast<int>(Random(0, enemyCSVSize_ - 0.001f));
 	auto it = enemyCsvs_.begin();
-	setNum = 2;
+	setNum = 1;
 	std::advance(it, setNum);
 
 	for (int i = 0; i < it->get()->GetSize(); i++)
@@ -511,20 +512,19 @@ void GameScene::SetEnemy()
 
 void GameScene::Reset()
 {
-	//リセットはタイトルシーンに戻る
-	scene_ = TITLE;
-	camera_->SetMode(STRAIGHTMODE);
 
 	//プレイヤー
 	player_->Reset();
 
 	//敵
 	enemys_.clear();
+	phase_ = 0;
 
 	//ボス
 	boss_->Reset();
 
 	//カメラ
+	camera_->SetMode(STRAIGHTMODE);
 	camera_->Update(player_->GetPosition(), boss_->GetPosition());
 
 	//背景
@@ -543,76 +543,102 @@ void GameScene::Reset()
 
 }
 
-void GameScene::ChangeScene()
+void GameScene::e()
 {
 	//シーンの切り替え、そのタイミングでの情報の更新
+
+
+	//-----シーン切り替え時演出の開始-----
 	switch (scene_)
 	{
 	case TITLE:
 
-		////スペースを押したら演出プラスシーンの初期化
-		//if (input_->TriggerKey(DIK_SPACE) && !performanceManager_->GetIsPerformance()) {
-		//	performanceManager_->SetPerformanceNum(TITLETOPLAY);
-		//	PlaySceneInitialize();
-		//}
-		////シーン切り替えフラグがたったらシーン切り替え
-		//if (performanceManager_->GetIsChangeScene()) {
-		//	scene_ = NORMALPLAY;
-		//	performanceManager_->SetIsChangeScene(false);
-		//}
+		//スペースを押したら演出プラスシーンの初期化
+		if (input_->TriggerKey(DIK_SPACE) && !performanceManager_->GetIsPerformance()) {
+			performanceManager_->SetPerformanceNum(TITLETOPLAY);
 
-		//汎用演出ショートカット
-		if (input_->TriggerKey(DIK_RETURN) && !performanceManager_->GetIsPerformance()) {
-			performanceManager_->SetPerformanceNum(GENERALPURPOSE);
-		}
-		if (performanceManager_->GetIsChangeScene()) {
-			Reset();
-			performanceManager_->SetIsChangeScene(false);
+			//プレイシーンは演出のため先に初期化をする
+			PlaySceneInitialize();
 		}
 
 		break;
 
-	case NORMALPLAY:
+	case PLAY:
 
 		//ボス戦ショートカット
-		//if (input_->TriggerKey(DIK_RETURN)) {
-		//	BossSceneInitialize();
-		//}
+		if (input_->TriggerKey(DIK_RETURN)) {
+			performanceManager_->SetPerformanceNum(INBOSS);
+		}
 
-		//敵のリストから削除要件確認
+		//敵のリストから削除要件確認、フェーズもしくはシーン移行
 		CheckEnemy();
 
 		break;
-	case BOSSPLAY:
+	case BOSS:
 
-		//ボスが死んだら次のシーンへ
+		//ボスが死んだらクリア
 		if (boss_->GetIsDead()) {
-			scene_ = CLEAR;
+			performanceManager_->SetPerformanceNum(CLEARBOSS);
+		}
+
+		//プレイヤーのスピードが0になったらゲームオーバー
+		if (!player_->GetSpeed()) {
+			performanceManager_->SetPerformanceNum(GAMEOVERBOSS);
 		}
 
 		break;
 	case CLEAR:
 
+		//タイトルに戻る演出
+		if (input_->TriggerKey(DIK_SPACE) && !performanceManager_->GetIsPerformance()) {
+			performanceManager_->SetPerformanceNum(RETURNTITLE);
+		}
+
+		break;
+
+	case GAMEOVER:
 
 		//汎用演出
 		if (input_->TriggerKey(DIK_SPACE) && !performanceManager_->GetIsPerformance()) {
-			performanceManager_->SetPerformanceNum(GENERALPURPOSE);
-		}
-		else if (performanceManager_->GetIsChangeScene()) {
-			Reset();
-			performanceManager_->SetIsChangeScene(false);
+			performanceManager_->SetPerformanceNum(RETURNTITLE);
 		}
 
 		break;
 	}
 
+	//-----演出終了でのシーン切り替え＋シーンの初期化-----
+	if (scene_ != performanceManager_->GetIsChangeScene()) {
+		scene_ = performanceManager_->GetIsChangeScene();
+		switch (scene_)
+		{
+		case TITLE:
+
+			Reset();
+			break;
+
+		case PLAY:
+
+			break;
+		case BOSS:
+
+			BossSceneInitialize();
+			break;
+		case CLEAR:
+
+			break;
+		case GAMEOVER:
+
+			break;
+		}
+
+	}
 }
 
 void GameScene::PlaySceneInitialize()
 {
 
 	//プレイヤー
-	player_->SetPosition(XMFLOAT3{ camera_->GetEye().x,camera_->GetEye().y  - 10,camera_->GetEye().z });
+	player_->SetPosition(XMFLOAT3{ camera_->GetEye().x,camera_->GetEye().y - 10,camera_->GetEye().z });
 	player_->Update();
 
 	//敵
@@ -621,14 +647,11 @@ void GameScene::PlaySceneInitialize()
 
 	//カメラ
 	camera_->Update(player_->GetPosition(), boss_->GetPosition());
-	camera_->SetMode(TITLETOPLAYMODE);
 
 }
 
 void GameScene::BossSceneInitialize()
 {
-	scene_ = BOSSPLAY;
-
 	boss_->SetPosition(XMFLOAT3{ 0,0,player_->GetPosition().z + 26.0f });
 }
 

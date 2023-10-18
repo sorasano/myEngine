@@ -281,6 +281,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\PerformanceManager.h" />
+    <ClInclude Include="App\Scene.h" />
     <ClInclude Include="Engine\2d\PostEffect.h" />
     <ClInclude Include="Engine\2d\Sprite.h" />
     <ClInclude Include="Engine\2d\SpriteManager.h" />

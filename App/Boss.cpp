@@ -356,7 +356,7 @@ void Boss::Reset()
 	isBossHardMode_ = false;
 
 	//hp
-	hp_ = 10;
+	hp_ = 1;
 
 	particleTimer_ = 0;
 }

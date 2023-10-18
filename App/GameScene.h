@@ -8,6 +8,7 @@
 #include "DirectXCommon.h"
 #include "Input.h"
 
+#include "Scene.h"
 #include "Camera.h"
 #include "Sprite.h"
 #include "ParticleManager.h"
@@ -25,14 +26,6 @@
 #include "Boss.h"
 
 #include <map>
-
-enum Scene {
-	TITLE,
-	NORMALPLAY,
-	BOSSPLAY,
-	CLEAR,
-	GAMEOVER
-};
 
 class GameScene
 {
@@ -125,7 +118,7 @@ private:
 
 	//フェーズ
 	int phase_ = 0;
-	const int MaxPhase_ = 3;
+	const int MaxPhase_ = 1;
 
 	//Fbx
 	FbxModel* enemyModel_ = nullptr;

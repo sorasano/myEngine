@@ -16,7 +16,8 @@ void PerformanceManager::Initialize(Camera* camera)
 		gPSprite->SetTextureNum(3);
 		gPSprite->Initialize();
 		gPSprite->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
-		gPSprite->SetScale(XMFLOAT2(window_width + 100, window_width));
+		gPSprite->SetScale(XMFLOAT2(window_width, window_height
+		));
 
 		generalPurposeSprites_.push_back(gPSprite);
 	}
@@ -51,8 +52,8 @@ void PerformanceManager::Update()
 		case GAMEOVERBOSS:
 			BossGameoverPerformance();
 			break;
-		case GENERALPURPOSE:
-			GeneralpurposePerformance();
+		case RETURNTITLE:
+			ReturnTitlePerformance();
 		}
 	}
 
@@ -78,7 +79,7 @@ void PerformanceManager::UpdateSprite()
 		case GAMEOVERBOSS:
 
 			break;
-		case GENERALPURPOSE:
+		case RETURNTITLE:
 			for (auto& gPSprite : generalPurposeSprites_) {
 				gPSprite->Update();
 			}
@@ -106,7 +107,7 @@ void PerformanceManager::DrawSprite(ID3D12GraphicsCommandList* cmdList)
 		case GAMEOVERBOSS:
 
 			break;
-		case GENERALPURPOSE:
+		case RETURNTITLE:
 			for (auto& gPSprite : generalPurposeSprites_) {
 				gPSprite->Draw(cmdList);
 			}
@@ -118,36 +119,52 @@ void PerformanceManager::TitleToPlayPerformance()
 {
 	//演出初期化
 	if (startPerformance_) {
-		//camera_->Update(player_->GetPosition(), boss_->GetPosition());
-		//camera_->SetMode(TITLETOPLAYMODE);
+		camera_->SetMode(TITLETOPLAYMODE);
 	}
 
 	//カメラ演出が終わったら演出終了
 	if (!camera_->GetIsPerformance()) {
 		isPerformance_ = false;
-		isChangeScene_ = true;
+		//シーンをプレイシーンへ
+		isChangeScene_ = PLAY;
 	}
 }
 
 void PerformanceManager::BossInPerformance()
 {
+	//シーンをボスシーンへ
+	isChangeScene_ = BOSS;
+	isPerformance_ = false;
+
 }
 
 void PerformanceManager::BossClearPerformance()
 {
+	//シーンをクリアーンへ
+	isChangeScene_ = CLEAR;
+	isPerformance_ = false;
+
 }
 
 void PerformanceManager::BossGameoverPerformance()
 {
+	//シーンをゲームオーバーシーンへ
+	isChangeScene_ = GAMEOVER;
+	isPerformance_ = false;
+
 }
 
-void PerformanceManager::GeneralpurposePerformance()
+void PerformanceManager::ReturnTitlePerformance()
 {
 	//演出初期化
 	if (startPerformance_) {
 		//イージング用のデータを設定
 		generalPurposeEaseing1_.Start(easeingTime_);
 		generalPurposeEaseing2_.Start(easeingTime_);
+
+
+		generalPurposeSpritePosition1_ = generalPurposeEaseStartPosition1_;
+		generalPurposeSpritePosition2_ = generalPurposeEaseStartPosition2_;
 
 	}
 
@@ -164,7 +181,7 @@ void PerformanceManager::GeneralpurposePerformance()
 
 	//スプライトが中心で重なった瞬間シーンチェンジ
 	if (generalPurposeSpritePosition1_.x - generalPurposeSpritePosition2_.x >= 10) {
-		isChangeScene_ = true;
+		isChangeScene_ = TITLE;
 	}
 
 	//終わったら演出終了
