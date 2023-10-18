@@ -543,7 +543,7 @@ void GameScene::Reset()
 
 }
 
-void GameScene::e()
+void GameScene::ChangeScene()
 {
 	//シーンの切り替え、そのタイミングでの情報の更新
 
