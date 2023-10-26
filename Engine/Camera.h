@@ -60,9 +60,8 @@ public:
 	/**
 	* 初期化
 	*
-	* @param[in] input キー入力
 	*/
-	void Initialize(Input* input);
+	void Initialize();
 	/**
 	* 更新
 	*/

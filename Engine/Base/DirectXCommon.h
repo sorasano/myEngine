@@ -22,13 +22,25 @@
 
 using namespace Microsoft::WRL;
 
-class DirectXCommon
+class DirectXCommon final
 {
 public:
 	/**
 	* シングルトンインスタンスを取得
 	*/
 	static DirectXCommon* GetInstance();
+
+	/**
+	* コピーコンストラクタの無効
+	*/
+	DirectXCommon(const DirectXCommon& obj) = delete;
+
+	/**
+	* 代入演算子の無効
+	*/
+	DirectXCommon& operator=(const DirectXCommon& obj) = delete;
+
+private:
 	/**
 	* コンストラクタ
 	*/
@@ -38,10 +50,12 @@ public:
 	*/
 	~DirectXCommon();
 
+public:
+
 	/**
 	* 初期化
 	*/
-	void Initialize(WinApp* winApp);
+	void Initialize();
 	/**
 	* デバイス関連
 	*/

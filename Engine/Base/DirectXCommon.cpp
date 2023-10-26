@@ -18,9 +18,9 @@ DirectXCommon::~DirectXCommon()
 }
 
 //初期化処理
-void DirectXCommon::Initialize(WinApp* winApp)
+void DirectXCommon::Initialize()
 {
-	winApp_ = winApp;
+	winApp_ = WinApp::GetInstance();
 
 	//デバイス初期化
 	InitializeDevice();

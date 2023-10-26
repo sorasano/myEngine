@@ -29,10 +29,10 @@ Player::~Player()
 	FBX_SAFE_DELETE(fReticleModel_);
 }
 
-void Player::Initialize(Input* input)
+void Player::Initialize()
 {
 	//入力のセット
-	this->input_ = input;
+	this->input_ = Input::GetInstance();
 
 	//モデル名を指定してファイル読み込み
 	playerModel_ = FbxLoader::GetInstance()->LoadModelFromFile("player");
@@ -181,7 +181,7 @@ void Player::Move()
 void Player::Shot()
 {
 	bulletCoolTimer_++;
-
+	//スペースで弾発射
 	if (input_->PushKey(DIK_SPACE)) {
 
 		if (BulletCoolTime_ < bulletCoolTimer_) {

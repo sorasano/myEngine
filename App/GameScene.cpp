@@ -21,25 +21,25 @@ GameScene::~GameScene()
 	//}
 }
 
-void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
+void GameScene::Initialize()
 {
 
-	this->dxCommon_ = dxCommon;
-	this->input_ = input;
+	this->dxCommon_ = DirectXCommon::GetInstance();;
+	this->input_ = Input::GetInstance();
 
 	//カメラ初期化
 	camera_ = new Camera;
-	camera_->StaticInitialize(dxCommon->GetDevice());
-	camera_->Initialize(input_);
+	camera_->StaticInitialize(dxCommon_->GetDevice());
+	camera_->Initialize();
 
 	//当たり判定
 	collisionManager_ = new Collision();
 
 	// パーティクル静的初期化
-	ParticleManager::StaticInitialize(dxCommon);
+	ParticleManager::StaticInitialize(dxCommon_);
 
 	//スプライトマネージャー
-	SpriteManager::SetDevice(dxCommon->GetDevice());
+	SpriteManager::SetDevice(dxCommon_->GetDevice());
 	spriteManager_ = new SpriteManager;
 	spriteManager_->Initialize();
 
@@ -50,7 +50,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	spriteManager_->LoadFile(3, "generalPurpose.png");
 
 	//-----スプライト------
-	Sprite::SetDevice(dxCommon->GetDevice());
+	Sprite::SetDevice(dxCommon_->GetDevice());
 	Sprite::SetSpriteManager(spriteManager_);
 	Sprite::CreateGraphicsPipeLine();
 
@@ -71,10 +71,10 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	//----------FBX----------
 
 	//fbxLoadr汎用初期化
-	FbxLoader::GetInstance()->Initialize(dxCommon->GetDevice());
+	FbxLoader::GetInstance()->Initialize(dxCommon_->GetDevice());
 
 	//デバイスをセット
-	FbxObject3D::SetDevice(dxCommon->GetDevice());
+	FbxObject3D::SetDevice(dxCommon_->GetDevice());
 	FbxObject3D::SetCamera(camera_);
 	//グラフィックスパイプライン生成
 	FbxObject3D::CreateGraphicsPipeline();
@@ -104,7 +104,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 
 	//プレイヤー初期化
 	Player* newPlayer = new Player();
-	newPlayer->Initialize(input_);
+	newPlayer->Initialize();
 	player_.reset(newPlayer);
 
 	//----------------敵--------------
@@ -494,7 +494,7 @@ void GameScene::SetEnemy()
 	//何番目のCSVをセットするか(ランダム)
 	int setNum = static_cast<int>(Random(0, enemyCSVSize_ - 0.001f));
 	auto it = enemyCsvs_.begin();
-	setNum = 1;
+	setNum = 2;
 	std::advance(it, setNum);
 
 	for (int i = 0; i < it->get()->GetSize(); i++)

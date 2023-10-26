@@ -13,7 +13,7 @@ public:
 	/**
 	* 初期化
 	*/
-	void Initialize(WinApp* winApp, DirectXCommon* dxCommon);
+	void Initialize();
 	/**
 	* 終了時呼び出し処理
 	*/

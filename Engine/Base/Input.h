@@ -19,9 +19,9 @@ using namespace Microsoft::WRL;
 #include <Windows.h>
 #include "WinApp.h"
 
-class Input
+class Input final
 {
-public:
+private:
 
 	/**
 	* namespace省略
@@ -29,11 +29,38 @@ public:
 	template <class T> using Comptr = Microsoft::WRL::ComPtr<T>;
 
 public:
+	/**
+	* シングルトンインスタンスを取得
+	*/
+	static Input* GetInstance();
+
+	/**
+	* コピーコンストラクタの無効
+	*/
+	Input(const Input& obj) = delete;
+
+	/**
+	* 代入演算子の無効
+	*/
+	Input& operator=(const Input& obj) = delete;
+
+private:
+
+	/**
+	* コンストラクタ
+	*/
+	Input() = default;;
+	/**
+	* デストラクタ
+	*/
+	~Input() = default;;
+
+public:
 
 	/**
 	* 初期化
 	*/
-	void Initialize(WinApp* winApp);
+	void Initialize();
 	/**
 	* 更新
 	*/

@@ -5,19 +5,26 @@
 
 #include "Input.h"
 
-void Input::Initialize(WinApp* winApp) {
+//シングルトンインスタンスを取得
+Input* Input::GetInstance()
+{
+	static Input instance;
+	return &instance;
+}
+
+void Input::Initialize() {
 	
 	HRESULT result;
 
 	//借りてきたWinAppのインスタンスを記録
-	this->winApp_ = winApp;
+	this->winApp_ = WinApp::GetInstance();
 
 	//キーボード処理
 
-// DirectInputの初期化
+	// DirectInputの初期化
 
 	result = DirectInput8Create(
-		winApp->GetHInstance(), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInput, nullptr);
+		winApp_->GetHInstance(), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInput, nullptr);
 	assert(SUCCEEDED(result));
 
 	// キーボードデバイスの生成
@@ -31,7 +38,7 @@ void Input::Initialize(WinApp* winApp) {
 
 	// 排他制御レベルのセット
 	result = keyboard->SetCooperativeLevel(
-		winApp->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
+		winApp_->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
 	assert(SUCCEEDED(result));
 
 }

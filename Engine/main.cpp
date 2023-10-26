@@ -30,31 +30,28 @@ LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 	//ポインタ
-	WinApp* winApp = nullptr;
+	WinApp* winApp = WinApp::GetInstance();
 	//WindowsAPIの初期化
-	winApp = new WinApp();
 	winApp->Initialize();
 	//WindowsAPIの終了処理
 	winApp->Finalize();
 
 	// DirectX初期化処理
-	//ポインタ
-	DirectXCommon* dxCommon = nullptr;
+	//インスタンスの取得
+	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
 	////DirectX初期化
-	dxCommon = new DirectXCommon();
-	dxCommon->Initialize(winApp);
+	dxCommon->Initialize();
 
 	////キーボード処理
-	//ポインタ
-	Input* input = nullptr;
+	//インスタンスの取得
+	Input* input = Input::GetInstance();
 	//入力の初期化
-	input = new Input();
-	input->Initialize(winApp);
+	input->Initialize();
 
 	//ImGuiManager
 	ImGuiManager* imGuiManager = nullptr;
 	imGuiManager = new ImGuiManager();
-	imGuiManager->Initialize(winApp, dxCommon);
+	imGuiManager->Initialize();
 
 	//ポストエフェクト
 	PostEffect* postEffect = nullptr;
@@ -66,7 +63,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	//ゲームシーン
 	GameScene* gameScene = nullptr;
 	gameScene = new GameScene();
-	gameScene->Initialize(dxCommon, input);
+	gameScene->Initialize();
 
 	//FPSを固定
 	FPS* fps = nullptr;
@@ -123,14 +120,13 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	}
 
 	//WindowsAPI解放
-	delete winApp;
-	winApp = nullptr;
+	//delete winApp;
 
 	//DirextX解放
-	delete dxCommon;
+	//delete dxCommon;
 
 	//入力開放
-	delete input;
+	//delete input;
 
 	//imgui解放
 	imGuiManager->Finalize();

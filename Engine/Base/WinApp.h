@@ -12,9 +12,36 @@ using namespace Microsoft::WRL;
 static const int window_width = 1280; // 横幅
 static const int window_height = 720; // 縦幅
 
-class WinApp
+class WinApp final
 {
 public:
+	/**
+	* シングルトンインスタンスを取得
+	*/
+	static WinApp* GetInstance();
+
+	/**
+	* コピーコンストラクタの無効
+	*/
+	WinApp(const WinApp& obj) = delete;
+
+	/**
+	* 代入演算子の無効
+	*/
+	WinApp& operator=(const WinApp& obj) = delete;
+
+private:
+	/**
+	* コンストラクタ
+	*/
+	WinApp() = default;
+	/**
+	* デストラクタ
+	*/
+	~WinApp() = default;
+
+public:
+
 	/**
 	* ウィンドウプロシージャ
 	*

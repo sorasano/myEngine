@@ -18,10 +18,10 @@ void Camera::StaticInitialize(ID3D12Device* dev)
 	device_ = dev;
 }
 
-void Camera::Initialize(Input* input)
+void Camera::Initialize()
 {
 	//引数をメンバに移して行列更新
-	this->input_ = input;
+	this->input_ = Input::GetInstance();
 
 	HRESULT result;
 	//ヒープ設定

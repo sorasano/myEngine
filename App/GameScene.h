@@ -41,10 +41,8 @@ public:
 	/**
 	* 初期化	
 	*
-	* @param[in] dxCommon dxCommon
-	* @param[in] input 入力
 	*/
-	void Initialize(DirectXCommon* dxCommon, Input* input);
+	void Initialize();
 	/**
 	* 更新
 	*/

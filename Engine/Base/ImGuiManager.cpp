@@ -7,10 +7,10 @@
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx12.h"
 
-void ImGuiManager::Initialize(WinApp* winApp, DirectXCommon* dxCommon)
+void ImGuiManager::Initialize()
 {
-	this->winApp_ = winApp;
-	this->dxCommon_ = dxCommon;
+	this->winApp_ = WinApp::GetInstance();;
+	this->dxCommon_ = DirectXCommon::GetInstance();
 
 	HRESULT result;
 
@@ -20,7 +20,7 @@ void ImGuiManager::Initialize(WinApp* winApp, DirectXCommon* dxCommon)
 	ImGui::StyleColorsDark();
 
 	//Win32用初期化関数
-	ImGui_ImplWin32_Init(winApp->GetHwnd());
+	ImGui_ImplWin32_Init(winApp_->GetHwnd());
 
 	//デスクリプタヒープ設定
 	D3D12_DESCRIPTOR_HEAP_DESC desc = {};

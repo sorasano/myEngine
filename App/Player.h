@@ -28,9 +28,8 @@ public:
 	/**
 	* 初期化
 	*
-	* @param[in] input 入力
 	*/
-	void Initialize(Input* input);
+	void Initialize();
 	/**
 	* 更新
 	*/
@@ -182,7 +181,7 @@ private:
 	float speedZ_ = 0.5f;
 
 	//基礎スピード以外の加速スピード
-	float addSpeed_ = 5.0f;
+	float addSpeed_ = 2.5f;
 	//敵を倒した時の加速量
 	float addSpeedByEnemy_ = 0.5f;
 	//敵に被弾した時の減速
