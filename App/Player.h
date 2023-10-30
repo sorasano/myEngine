@@ -138,6 +138,11 @@ public:
 	*/
 	void SetScale(XMFLOAT3 sca) { this->scale_ = sca; }
 	/**
+	/**
+	* スピードセット(基礎)
+	*/
+	void SetSpeed(float speed) { this->speedZ_ = speed; }
+	/**
 	* isInvincibleセット
 	*/
 	void SetIsInvincible(bool isInvincible) { this->isInvincible_ = isInvincible; }
@@ -181,7 +186,7 @@ private:
 	float speedZ_ = 0.5f;
 
 	//基礎スピード以外の加速スピード
-	float addSpeed_ = 2.5f;
+	float addSpeed_ = 0.0f;
 	//敵を倒した時の加速量
 	float addSpeedByEnemy_ = 0.5f;
 	//敵に被弾した時の減速

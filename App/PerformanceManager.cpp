@@ -5,15 +5,17 @@
 
 #include "PerformanceManager.h"
 
-void PerformanceManager::Initialize(Camera* camera)
+void PerformanceManager::Initialize(Camera* camera, Player* player)
 {
 	//カメラ
 	this->camera_ = camera;
+	//プレイヤー
+	this->player_ = player;
 
 	//スプライト
 	for (int i = 0; i < generalPurposeSpritesSize_;i++) {
 		Sprite *gPSprite = new Sprite();
-		gPSprite->SetTextureNum(3);
+		gPSprite->SetTextureNum(4);
 		gPSprite->Initialize();
 		gPSprite->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
 		gPSprite->SetScale(XMFLOAT2(window_width, window_height
@@ -135,7 +137,6 @@ void PerformanceManager::BossInPerformance()
 	//シーンをボスシーンへ
 	isChangeScene_ = BOSS;
 	isPerformance_ = false;
-
 }
 
 void PerformanceManager::BossClearPerformance()
@@ -148,9 +149,34 @@ void PerformanceManager::BossClearPerformance()
 
 void PerformanceManager::BossGameoverPerformance()
 {
-	//シーンをゲームオーバーシーンへ
-	isChangeScene_ = GAMEOVER;
-	isPerformance_ = false;
+
+	//プレイヤーの座用、スピードを取得
+	XMFLOAT3 playerPosition = player_->GetPosition();
+	float playerSpeed = player_->GetSpeed();
+
+	//降下終了地点まで降下したら終了
+	if (downPosition_ <= playerPosition.y) {
+		//降下させる
+		playerPosition.y -= downSpeed_;
+
+		//Zスピードの減少
+		if (playerSpeed - subSpeed_ >= 0) {
+			playerSpeed -= subSpeed_;
+		}
+		else {
+			playerSpeed = 0;
+		}
+
+	}
+	else {
+		//演出の終了
+		//シーンをゲームオーバーシーンへ
+		isChangeScene_ = GAMEOVER;
+		isPerformance_ = false;
+	}
+
+	player_->SetPosition(playerPosition);
+	player_->SetSpeed(playerSpeed);
 
 }
 

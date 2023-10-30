@@ -23,7 +23,7 @@ GameScene::~GameScene()
 
 void GameScene::Initialize()
 {
-
+	//インスタンスを取得
 	this->dxCommon_ = DirectXCommon::GetInstance();;
 	this->input_ = Input::GetInstance();
 
@@ -46,8 +46,9 @@ void GameScene::Initialize()
 	//------テクスチャ------
 	spriteManager_->LoadFile(0, "title.png");
 	spriteManager_->LoadFile(1, "clear.png");
-	spriteManager_->LoadFile(2, "blue1x1.png");
-	spriteManager_->LoadFile(3, "generalPurpose.png");
+	spriteManager_->LoadFile(2, "gameover.png");
+	spriteManager_->LoadFile(3, "blue1x1.png");
+	spriteManager_->LoadFile(4, "generalPurpose.png");
 
 	//-----スプライト------
 	Sprite::SetDevice(dxCommon_->GetDevice());
@@ -68,6 +69,13 @@ void GameScene::Initialize()
 	clearSprite_->SetScale(XMFLOAT2(1280, 720));
 	clearSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
 
+	gameoverSprite_ = new Sprite();
+	gameoverSprite_->SetTextureNum(2);
+	gameoverSprite_->Initialize();
+	gameoverSprite_->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
+	gameoverSprite_->SetScale(XMFLOAT2(1280, 720));
+	gameoverSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
+
 	//----------FBX----------
 
 	//fbxLoadr汎用初期化
@@ -78,10 +86,6 @@ void GameScene::Initialize()
 	FbxObject3D::SetCamera(camera_);
 	//グラフィックスパイプライン生成
 	FbxObject3D::CreateGraphicsPipeline();
-
-	//演出
-	performanceManager_ = new PerformanceManager();
-	performanceManager_->Initialize(camera_);
 
 	//----------背景----------
 
@@ -139,6 +143,10 @@ void GameScene::Initialize()
 	newBoss->Initialize();
 	boss_.reset(newBoss);
 
+	//演出
+	performanceManager_ = new PerformanceManager();
+	performanceManager_->Initialize(camera_, player_.get());
+
 }
 
 void GameScene::Update()
@@ -193,6 +201,11 @@ void GameScene::Update()
 	case CLEAR:
 
 		clearSprite_->Update();
+
+		break;
+
+	case GAMEOVER:
+		gameoverSprite_->Update();
 
 		break;
 	}
@@ -272,6 +285,21 @@ void GameScene::Draw()
 
 	case CLEAR:
 		break;
+
+	case GAMEOVER:
+
+		//敵
+		for (std::unique_ptr<Enemy>& enemy : enemys_)
+		{
+			if (UpadateRange(camera_->GetEye(), enemy->GetPosition())) {
+				enemy->Draw(dxCommon_->GetCommandList());
+			}
+		}
+
+		//自機
+		player_->Draw(dxCommon_->GetCommandList());
+
+		break;
 	}
 }
 
@@ -295,6 +323,9 @@ void GameScene::DrawSprite()
 	case CLEAR:
 		clearSprite_->Draw(dxCommon_->GetCommandList());
 		break;
+	case GAMEOVER:
+		gameoverSprite_->Draw(dxCommon_->GetCommandList());
+
 	}
 
 	//演出
@@ -494,7 +525,6 @@ void GameScene::SetEnemy()
 	//何番目のCSVをセットするか(ランダム)
 	int setNum = static_cast<int>(Random(0, enemyCSVSize_ - 0.001f));
 	auto it = enemyCsvs_.begin();
-	setNum = 2;
 	std::advance(it, setNum);
 
 	for (int i = 0; i < it->get()->GetSize(); i++)
@@ -561,6 +591,11 @@ void GameScene::ChangeScene()
 			PlaySceneInitialize();
 		}
 
+		////スペースを押したら演出
+		//if (input_->TriggerKey(DIK_SPACE) && !performanceManager_->GetIsPerformance()) {
+		//	performanceManager_->SetPerformanceNum(GAMEOVERBOSS);
+		//}
+
 		break;
 
 	case PLAY:
@@ -572,6 +607,12 @@ void GameScene::ChangeScene()
 
 		//敵のリストから削除要件確認、フェーズもしくはシーン移行
 		CheckEnemy();
+
+
+		//ゲームオーバー演出ショートカット
+		if (input_->TriggerKey(DIK_SPACE) && !performanceManager_->GetIsPerformance()) {
+			performanceManager_->SetPerformanceNum(GAMEOVERBOSS);
+		}
 
 		break;
 	case BOSS:

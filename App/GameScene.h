@@ -116,7 +116,7 @@ private:
 
 	//フェーズ
 	int phase_ = 0;
-	const int MaxPhase_ = 1;
+	const int MaxPhase_ = 3;
 
 	//Fbx
 	FbxModel* enemyModel_ = nullptr;
@@ -150,6 +150,7 @@ private:
 	//スプライト
 	Sprite* titleSprite_ = nullptr;
 	Sprite* clearSprite_ = nullptr;
+	Sprite* gameoverSprite_ = nullptr;
 
 	//当たり判定
 	Collision* collisionManager_ = nullptr;

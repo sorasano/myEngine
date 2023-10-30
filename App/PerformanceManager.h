@@ -9,6 +9,7 @@
 #include "Camera.h"
 #include "Sprite.h"
 #include "Easing.h"
+#include "Player.h"
 
 enum Performance {
 	TITLETOPLAY,//タイトル→プレイシーン遷移
@@ -24,7 +25,7 @@ public:
 	/**
 	* 初期化
 	*/
-	void Initialize(Camera* camera);
+	void Initialize(Camera* camera,Player* player);
 	/**
 	* 更新
 	*/
@@ -86,7 +87,10 @@ private:
 
 	//カメラ
 	Camera *camera_;
-	
+	//プレイヤー
+	Player* player_;
+	XMFLOAT3 playerPos;
+
 	//演出中か
 	bool isPerformance_ = false;
 	//演出中か前フレーム
@@ -97,6 +101,14 @@ private:
 	bool startPerformance_ = false;
 	//シーンの切りかえ用変数
 	int isChangeScene_ = false;
+
+	//-----ゲームオーバ演出ー-----
+	//どこまで降下させるか
+	float downPosition_ = -12.0f;
+	//降下スピード(Y)
+	float downSpeed_ = 0.01f;
+	//降下減速スピード(Z)
+	float subSpeed_ = 0.001f;
 
 	//-----汎用演出-----
 	//スプライト
