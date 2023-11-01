@@ -112,6 +112,10 @@ public:
 	*/
 	float GetSpeed() { return speedZ_ + addSpeed_; }
 	/**
+	* @return float 加速スピード取得
+	*/
+	float GetAddSpeed() { return addSpeed_; }
+	/**
 	* @return CollisionData 当たり判定情報取得
 	*/
 	CollisionData GetColData();
@@ -123,7 +127,10 @@ public:
 	* @return CollisionData 弾当たり判定情報取得
 	*/
 	CollisionData GetBulletColData(int i);
-
+	/**
+	* @return XMFLOAT3 弾の座標取得
+	*/
+	XMFLOAT3 GetBulletPosition(int i);
 
 	/**
 	* posセット

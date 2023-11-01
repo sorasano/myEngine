@@ -13,7 +13,14 @@
 #include <forward_list>
 #include "Base/DirectXCommon.h"
 
+#include "Random.h"
+
 using namespace Microsoft::WRL;
+
+enum Partile {
+	ENEMYDESTROY,//敵撃破演出
+	PLAYERBULLETLANDING,//プレイヤー弾着弾演出
+};
 
 class ParticleManager
 {
@@ -240,17 +247,45 @@ public: // メンバ関数
 	*/
 	void Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel);
 
+	/**
+	* パーティクル生成
+	*
+	* @param[in] particlename パーティクル種類名
+	*/
+	void MakeParticle(int particlename, XMFLOAT3 position);
+
+	/**
+	* 敵撃破パーティクル初期化
+	*/
+	void EnemyDestroyParticleInitialize(XMFLOAT3 position);
+
+	/**
+	* プレイヤー弾着弾パーティクル初期化
+	*/
+	void PlayerBulletLandingParticleInitialize(XMFLOAT3 position);
+
 private: // メンバ変数
 
 	ComPtr<ID3D12Resource> constBuff_; // 定数バッファ
-
 	// テクスチャバッファ
 	ComPtr<ID3D12Resource> texbuff_;
+	//画像データ用
+	//std::vector<DirectX::TexMetadata> metadata_;
+	//std::vector<DirectX::ScratchImage> scratchImg_;
 
 	// ローカルスケール
 	XMFLOAT3 scale_ = { 1,1,1 };
-
 	//パーティクル配列
 	std::forward_list<Particle> particles_;
+
+	//------パーティクル種類別変数------
+	//敵撃破パーティクル
+	//パーティクル時間
+	const int enemyDestroyParticleTime_ = 30;
+
+	//プレイヤー弾着弾パーティクル
+	//パーティクル時間
+	const int playerBulletLandingParticleTime_ = 30;
+
 };
 

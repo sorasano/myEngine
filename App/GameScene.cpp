@@ -145,7 +145,11 @@ void GameScene::Initialize()
 
 	//演出
 	performanceManager_ = new PerformanceManager();
-	performanceManager_->Initialize(camera_, player_.get());
+	performanceManager_->Initialize(camera_, player_.get(),boss_.get());
+
+	//パーティクルマネージャー
+	particleManager_ = new ParticleManager();
+	particleManager_->Initialize("Resources/effect/effect1.png");
 
 }
 
@@ -218,6 +222,9 @@ void GameScene::Update()
 
 	//演出
 	performanceManager_->Update();
+
+	//パーティクル更新
+	particleManager_->Update();
 
 	//シーンの切り替わり
 	ChangeScene();
@@ -330,6 +337,9 @@ void GameScene::DrawSprite()
 
 	//演出
 	performanceManager_->DrawSprite(dxCommon_->GetCommandList());
+
+	//パーティクル
+	particleManager_->Draw();
 }
 
 bool GameScene::UpadateRange(XMFLOAT3 cameraPos, XMFLOAT3 pos)
@@ -359,11 +369,13 @@ void GameScene::Collition()
 
 						//当たったら敵は消してパーティクル生成
 						enemy->SetISDesd(true);
-						enemy->InitializeParticle();
+						//敵撃破パーティクル生成
+						particleManager_->MakeParticle(ENEMYDESTROY, enemy->GetPosition());
 
 						//自機の弾を消し、自機のスピードを上げスコアを加算
 						player_->SetBulletIsDead(true, i);
 						player_->SpeedUpByEnemy();
+
 					}
 				}
 			}
@@ -382,7 +394,8 @@ void GameScene::Collition()
 
 				//当たったら敵は消してパーティクル生成
 				enemy->SetISDesd(true);
-				enemy->InitializeParticle();
+				//敵撃破パーティクル生成
+				particleManager_->MakeParticle(ENEMYDESTROY, enemy->GetPosition());
 
 				//自機のスピードを下げ,少し無敵時間に
 				player_->SpeedDownByEnemy();
@@ -468,8 +481,8 @@ void GameScene::CheckEnemy()
 
 	}
 
-	//デスフラグがtrueでパーティクル演出もなければリストから削除
-	enemys_.remove_if([](std::unique_ptr<Enemy>& enemy) {return enemy->GetIsDead() && !enemy->GetIsParticle(); });
+	//デスフラグがtrueであればリストから削除
+	enemys_.remove_if([](std::unique_ptr<Enemy>& enemy) {return enemy->GetIsDead(); });
 
 	//敵が0になったら
 	if (enemys_.size() == 0) {
@@ -481,7 +494,15 @@ void GameScene::CheckEnemy()
 		}
 		else {
 			//フェーズが最終だったらボスシーンへ
-			performanceManager_->SetPerformanceNum(INBOSS);
+			if (!player_->GetAddSpeed()) {
+				//加速スピードがない場合そのまま終了
+				performanceManager_->SetPerformanceNum(GAMEOVERBOSS);
+			}
+			else {
+				//加速スピードがある場合ボス戦へ
+				performanceManager_->SetPerformanceNum(INBOSS);
+			}
+
 		}
 	}
 
@@ -591,28 +612,12 @@ void GameScene::ChangeScene()
 			PlaySceneInitialize();
 		}
 
-		////スペースを押したら演出
-		//if (input_->TriggerKey(DIK_SPACE) && !performanceManager_->GetIsPerformance()) {
-		//	performanceManager_->SetPerformanceNum(GAMEOVERBOSS);
-		//}
-
 		break;
 
 	case PLAY:
 
-		//ボス戦ショートカット
-		if (input_->TriggerKey(DIK_RETURN)) {
-			performanceManager_->SetPerformanceNum(INBOSS);
-		}
-
 		//敵のリストから削除要件確認、フェーズもしくはシーン移行
 		CheckEnemy();
-
-
-		//ゲームオーバー演出ショートカット
-		if (input_->TriggerKey(DIK_SPACE) && !performanceManager_->GetIsPerformance()) {
-			performanceManager_->SetPerformanceNum(GAMEOVERBOSS);
-		}
 
 		break;
 	case BOSS:
@@ -623,7 +628,7 @@ void GameScene::ChangeScene()
 		}
 
 		//プレイヤーのスピードが0になったらゲームオーバー
-		if (!player_->GetSpeed()) {
+		if (!player_->GetAddSpeed()) {
 			performanceManager_->SetPerformanceNum(GAMEOVERBOSS);
 		}
 
@@ -709,14 +714,14 @@ void GameScene::BossSceneCollition()
 				//当たったか
 				if (collisionManager_->CheckSquareToSquare(boss_->GetColData(), player_->GetBulletColData(i))) {
 
-					//当たったらhpをへらしてパーティクル生成
+					//当たったらhpをへらす
 					boss_->HitBullet();
-					boss_->InitializeParticle();
-					boss_->SetIsParticle(true);
 
-					//自機の弾を消し、スコアを加算
+					//自機の弾を消し、パーティクル生成
 					player_->SetBulletIsDead(true, i);
+					particleManager_->MakeParticle(PLAYERBULLETLANDING,player_->GetBulletPosition(i));
 
+					//スコアを加算
 				}
 			}
 

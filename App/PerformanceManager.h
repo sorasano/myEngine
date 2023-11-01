@@ -10,6 +10,7 @@
 #include "Sprite.h"
 #include "Easing.h"
 #include "Player.h"
+#include "Boss.h"
 
 enum Performance {
 	TITLETOPLAY,//タイトル→プレイシーン遷移
@@ -25,7 +26,7 @@ public:
 	/**
 	* 初期化
 	*/
-	void Initialize(Camera* camera,Player* player);
+	void Initialize(Camera* camera,Player* player,Boss* boss);
 	/**
 	* 更新
 	*/
@@ -89,7 +90,8 @@ private:
 	Camera *camera_;
 	//プレイヤー
 	Player* player_;
-	XMFLOAT3 playerPos;
+	//ボス
+	Boss* boss_;
 
 	//演出中か
 	bool isPerformance_ = false;

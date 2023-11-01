@@ -51,6 +51,9 @@ void Boss::Update(XMFLOAT3 pPos, float pSpeed)
 		if (actionCollTimer_ > ActionCoolTime_) {
 			actionCollTimer_ = 0;
 			ChangeAction();
+
+			//行動変化時弾があったら削除
+			bullets_.clear();
 		}
 
 		//移動
@@ -65,11 +68,6 @@ void Boss::Update(XMFLOAT3 pPos, float pSpeed)
 			}
 		}
 
-	}
-
-	//パーティクル
-	if (isParticle_) {
-		UpdateParticle();
 	}
 
 	BossObject_->SetPosition(position_);
@@ -89,11 +87,6 @@ void Boss::Draw(ID3D12GraphicsCommandList* cmdList)
 			bullet->Draw(cmdList);
 		}
 	}
-	//----パーティクル----
-	if (isParticle_) {
-		particle_->Draw();
-	}
-
 }
 
 void Boss::Move()
@@ -165,62 +158,6 @@ void Boss::MoveY()
 		else {
 			moveY_ = true;
 		}
-	}
-}
-
-
-void Boss::InitializeParticle()
-{
-	//フラグをtrueに
-	isParticle_ = true;
-	//タイマーセット
-	particleTimer_ = ParticleTime_;
-
-	//パーティクル生成
-	particle_ = new ParticleManager();
-	particle_->Initialize("Resources/effect/effect1.png");
-
-	for (int i = 0; i < 100; i++) {
-		//X,Y,Zすべてpositionから[+1.0f,-1.0f]でランダムに分布
-
-		XMFLOAT3 pos{};
-		pos.x = Random(position_.x - 1.0f, position_.x + 1.0f);
-		pos.y = Random(position_.y - 1.0f, position_.y + 1.0f);
-		pos.z = Random(position_.z - 1.0f, position_.z + 1.0f);
-
-		//X,Y,Zすべて[-0.05f,+0.05f]でランダムに分布
-		const float md_vel = 0.05f;
-		XMFLOAT3 vel{};
-		vel.x = Random(-md_vel, md_vel);
-		vel.y = Random(-md_vel, md_vel);
-		vel.z = Random(-md_vel, md_vel);
-
-		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		XMFLOAT3 acc{};
-		const float md_acc = -0.001f;
-		acc.y = Random(md_acc, 0);
-
-		//追加
-		particle_->Add(ParticleTime_, pos, vel, acc);
-
-	}
-
-	particle_->Update();
-}
-
-void Boss::UpdateParticle()
-{
-
-	//particle有効時間が過ぎたらフラグをfalseに
-	if (particleTimer_ > 0) {
-		particleTimer_--;
-	}
-	else {
-		isParticle_ = false;
-	}
-
-	if (isParticle_) {
-		particle_->Update();
 	}
 }
 
@@ -358,7 +295,6 @@ void Boss::Reset()
 	//hp
 	hp_ = 1;
 
-	particleTimer_ = 0;
 }
 
 CollisionData Boss::GetColData()

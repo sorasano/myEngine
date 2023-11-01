@@ -90,22 +90,10 @@ public:
 	*/
 	void Reflection();
 
-
 	/**
 	* 画面内に停滞させる
 	*/
 	void StopInScreen();
-
-
-	/**
-	* パーティクル初期化
-	*/
-	void InitializeParticle();
-	/**
-	* パーティクル更新
-	*/
-	void UpdateParticle();
-
 
 	/**
 	* 弾発射
@@ -137,10 +125,6 @@ public:
 	* @return bool isDead_取得
 	*/
 	bool GetIsDead() { return isDead_; }
-	/**
-	* @return bool isParticle_取得
-	*/
-	bool GetIsParticle() { return isParticle_; }
 	/**
 	* @return CollisionData 当たり判定情報取得
 	*/
@@ -247,15 +231,6 @@ private:
 	const float ShotStart_ = 100.0f;
 	float shotStartPos_ = 100.0f;
 
-
-	//-----パーティクル-----
-	ParticleManager* particle_ = nullptr;
-	bool isParticle_ = false;
-
-	//パーティクル時間
-	const int ParticleTime_ = 30;
-	int particleTimer_ = 0;
-	
 	//------プレイヤー------
 	XMFLOAT3 playerPosition_ = {};
 	float playerSpeed_ = 0.0f;

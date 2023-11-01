@@ -63,7 +63,7 @@ void Player::Initialize()
 
 	//スプライト
 	speedSprite_ = new Sprite();
-	speedSprite_->SetTextureNum(2);
+	speedSprite_->SetTextureNum(3);
 	speedSprite_->Initialize();
 	speedSprite_->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
 }
@@ -343,6 +343,14 @@ CollisionData Player::GetBulletColData(int i)
 	return it->get()->GetColData();
 }
 
+XMFLOAT3 Player::GetBulletPosition(int i)
+{
+	auto it = bullets_.begin();
+	std::advance(it, i);
+
+	return it->get()->GetPosition();
+}
+
 void Player::SetBulletIsDead(bool isDead, int i)
 {
 	auto it = bullets_.begin();
@@ -350,5 +358,6 @@ void Player::SetBulletIsDead(bool isDead, int i)
 
 	it->get()->SetIsDead(isDead);
 }
+
 
 

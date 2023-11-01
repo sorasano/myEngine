@@ -93,15 +93,6 @@ public:
 	void MoveY();
 
 	/**
-	* パーティクル初期化
-	*/
-	void InitializeParticle();
-	/**
-	* パーティクル更新
-	*/
-	void UpdateParticle();
-
-	/**
 	* 弾発射
 	*/
 	void Shot();
@@ -139,10 +130,6 @@ public:
 	*/
 	bool GetIsDead() { return isDead_; }
 	/**
-	* @return bool isParticle_取得
-	*/
-	bool GetIsParticle() { return isParticle_; }
-	/**
 	* @return int 弾の数取得
 	*/
 	int GetBulletSize() { return static_cast<int>(bullets_.size()); }
@@ -169,10 +156,6 @@ public:
 	* isDeadセット
 	*/
 	void SetISDesd(bool isDead) { this->isDead_ = isDead; }
-	/**
-	* isParticleセット
-	*/
-	void SetIsParticle(bool isParticle) { this->isParticle_ = isParticle; }
 	/**
 	* actionセット
 	*/
@@ -274,15 +257,6 @@ private:
 	//弾を打ち始める範囲,プレイヤーから何進んだ距離からか
 	const float ShotStart_ = 100.0f;
 	float shotStartPos_ = 100.0f;
-
-
-	//-----パーティクル-----
-	ParticleManager* particle_ = nullptr;
-	bool isParticle_ = false;
-
-	//パーティクル時間
-	const int ParticleTime_ = 30;
-	int particleTimer_ = 0;
 
 	//------プレイヤー------
 	XMFLOAT3 playerPosition_ = {};

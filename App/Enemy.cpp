@@ -59,10 +59,6 @@ void Enemy::Update(XMFLOAT3 pPos, float pSpeed)
 			}
 		}
 	}
-	//パーティクル
-	else if (isParticle_) {
-		UpdateParticle();
-	}
 
 	enemyObject_->SetPosition(position_);
 	enemyObject_->SetScale(scale_);
@@ -80,10 +76,6 @@ void Enemy::Draw(ID3D12GraphicsCommandList* cmdList)
 		{
 			bullet->Draw(cmdList);
 		}
-	}
-	//----パーティクル----
-	else if (isParticle_) {
-		particle_->Draw();
 	}
 
 }
@@ -200,61 +192,6 @@ void Enemy::StopInScreen()
 		}
 	}
 
-}
-
-void Enemy::InitializeParticle()
-{
-	//フラグをtrueに
-	isParticle_ = true;
-	//タイマーセット
-	particleTimer_ = ParticleTime_;
-
-	//パーティクル生成
-	particle_ = new ParticleManager();
-	particle_->Initialize("Resources/effect/effect1.png");
-
-	for (int i = 0; i < 100; i++) {
-		//X,Y,Zすべてpositionから[+1.0f,-1.0f]でランダムに分布
-
-		XMFLOAT3 pos{};
-		pos.x = Random(position_.x - 1.0f, position_.x + 1.0f);
-		pos.y = Random(position_.y - 1.0f, position_.y + 1.0f);
-		pos.z = Random(position_.z - 1.0f, position_.z + 1.0f);
-
-		//X,Y,Zすべて[-0.05f,+0.05f]でランダムに分布
-		const float md_vel = 0.05f;
-		XMFLOAT3 vel{};
-		vel.x = Random(-md_vel, md_vel);
-		vel.y = Random(-md_vel, md_vel);
-		vel.z = Random(-md_vel, md_vel);
-
-		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		XMFLOAT3 acc{};
-		const float md_acc = -0.001f;
-		acc.y = Random(md_acc, 0);
-
-		//追加
-		particle_->Add(ParticleTime_, pos, vel, acc);
-
-	}
-
-	particle_->Update();
-}
-
-void Enemy::UpdateParticle()
-{
-
-	//particle有効時間が過ぎたらフラグをfalseに
-	if (particleTimer_ > 0) {
-		particleTimer_--;
-	}
-	else {
-		isParticle_ = false;
-	}
-
-	if (isParticle_) {
-		particle_->Update();
-	}
 }
 
 void Enemy::Shot()

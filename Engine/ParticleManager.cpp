@@ -725,3 +725,78 @@ void ParticleManager::Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOA
 	p.accel = accel;
 	p.num_flame = life;
 }
+
+void ParticleManager::MakeParticle(int particlename,XMFLOAT3 position)
+{
+	switch (particlename) {
+		//敵撃破演出
+	case ENEMYDESTROY:
+		EnemyDestroyParticleInitialize(position);
+		break;
+		//プレイヤー弾着弾演出
+	case PLAYERBULLETLANDING:
+		PlayerBulletLandingParticleInitialize(position);
+		break;
+
+	}
+
+}
+
+void ParticleManager::EnemyDestroyParticleInitialize(XMFLOAT3 position)
+{
+	for (int i = 0; i < 100; i++) {
+		//X,Y,Zすべてpositionから[+1.0f,-1.0f]でランダムに分布
+
+		XMFLOAT3 pos{};
+		pos.x = Random(position.x - 1.0f, position.x + 1.0f);
+		pos.y = Random(position.y - 1.0f, position.y + 1.0f);
+		pos.z = Random(position.z - 1.0f, position.z + 1.0f);
+
+		//X,Y,Zすべて[-0.05f,+0.05f]でランダムに分布
+		const float md_vel = 0.05f;
+		XMFLOAT3 vel{};
+		vel.x = Random(-md_vel, md_vel);
+		vel.y = Random(-md_vel, md_vel);
+		vel.z = Random(-md_vel, md_vel);
+
+		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
+		XMFLOAT3 acc{};
+		const float md_acc = -0.001f;
+		acc.y = Random(md_acc, 0);
+
+		//追加
+		Add(enemyDestroyParticleTime_, pos, vel, acc);
+
+	}
+}
+
+void ParticleManager::PlayerBulletLandingParticleInitialize(XMFLOAT3 position)
+{
+	for (int i = 0; i < 100; i++) {
+		//X,Y,Zすべてpositionから[+1.0f,-1.0f]でランダムに分布
+
+		XMFLOAT3 pos{};
+		pos.x = Random(position.x - 1.0f, position.x + 1.0f);
+		pos.y = Random(position.y - 1.0f, position.y + 1.0f);
+		pos.z = Random(position.z - 1.0f, position.z + 1.0f);
+
+		//X,Y,Zすべて[-0.05f,+0.05f]でランダムに分布
+		const float md_vel = 0.05f;
+		XMFLOAT3 vel{};
+		vel.x = Random(-md_vel, md_vel);
+		vel.y = Random(-md_vel, md_vel);
+		vel.z = Random(-md_vel, md_vel);
+
+		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
+		XMFLOAT3 acc{};
+		const float md_acc = -0.001f;
+		acc.y = Random(md_acc, 0);
+
+		//追加
+		Add(enemyDestroyParticleTime_, pos, vel, acc);
+
+	}
+}
+
+
+

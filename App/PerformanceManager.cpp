@@ -5,12 +5,14 @@
 
 #include "PerformanceManager.h"
 
-void PerformanceManager::Initialize(Camera* camera, Player* player)
+void PerformanceManager::Initialize(Camera* camera, Player* player,Boss* boss)
 {
 	//カメラ
 	this->camera_ = camera;
 	//プレイヤー
 	this->player_ = player;
+	//ボス
+	this->boss_ = boss;
 
 	//スプライト
 	for (int i = 0; i < generalPurposeSpritesSize_;i++) {
