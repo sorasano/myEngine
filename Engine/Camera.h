@@ -17,10 +17,7 @@ using namespace DirectX;
 enum CameraMode {
 	STRAIGHTMODE,//直線移動
 	PLAYERFOLLOWMODE,//自機に追従
-	TITLETOPLAYMODE,//タイトルからプレイ遷移
-	BOSSINMODE,//ボス出現演出
-	BOSSCLERAMODE,//ボス撃破演出
-	BOSSGAMEOVERAMODE,//ボス逃亡演出
+	PERFORMANCEMODE,//演出モード(パファーマンスマネージャーで操作)
 };
 
 class Camera
@@ -72,11 +69,6 @@ public:
 	void UpdateMatrix();
 
 	/**
-	* タイトルからプレイ遷移初期化
-	*/
-	void InitializeTitleToPlayMode();
-
-	/**
 	* 直線移動モード更新
 	*/
 	void UpdateStraightMode();
@@ -84,10 +76,6 @@ public:
 	* プレイヤー追従モード更新
 	*/
 	void UpdatePlayerFollowMode();
-	/**
-	* タイトルからプレイ遷移更新
-	*/
-	void UpdateTitleToPlayMode();
 
 	/**
 	* デバックモード
@@ -112,10 +100,13 @@ public:
 	*/
 	int GetMode() { return mode_; }
 	/**
-	* @return bool isPerformance_取得
+	* @return float farClip_取得
 	*/
-	bool GetIsPerformance() { return isPerformance_; }
-
+	float GetFarClip() { return farClip_; }
+	/**
+	* @return float playerRange_取得
+	*/
+	float GetplayerRange() { return playerRange_; }
 
 	/**
 	* eye_セット
@@ -128,7 +119,7 @@ public:
 	/**
 	* modeセット
 	*/
-	void SetMode(int mode);
+	void SetMode(int mode) { this->mode_ = mode; }
 
 private:
 
@@ -151,25 +142,4 @@ private:
 	//カメラ直線移動モードスピード
 	float straightModeSpeed_ = 1.0f;
 	 
-	//-----演出用-----
-	//現在座標
-	XMFLOAT3 startEye_ = {};
-	XMFLOAT3 startTarget_ = {};
-
-	//イージング終了位置
-	XMFLOAT3 endEye_ = {};
-	XMFLOAT3 endTarget_ = {};
-
-	//現在のデータ保存用
-	XMFLOAT3 holdEye_ = {};
-	XMFLOAT3 holdTarget_ = {};
-
-	//イージング演出用データ
-	Easing easeing_;
-	//演出時間
-	float easeingTime_ = 3.0f;
-	//演出中か
-	bool isPerformance_ = false;
-	//フェーズ
-	int phase_ = 0;
 };

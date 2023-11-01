@@ -121,15 +121,78 @@ void PerformanceManager::TitleToPlayPerformance()
 {
 	//演出初期化
 	if (startPerformance_) {
-		camera_->SetMode(TITLETOPLAYMODE);
+		//イージング用の開始位置と終了位置を取得
+
+		//現在の座標を開始位置に
+		titleToPlayStartEye_ = camera_->GetEye();
+		titleToPlayStartTarget_ = camera_->GetTarget();
+
+		//初期座標を保持
+		titleToPlayHoldEye_ = titleToPlayStartEye_;
+		titleToPlayHoldTarget_ = titleToPlayStartTarget_;
+
+		//現在の描画最大距離を終了位置に
+		titleToPlayEndEye_ = camera_->GetEye();
+		titleToPlayEndTarget_ = camera_->GetTarget();
+
+		titleToPlayEndEye_.z = camera_->GetEye().z + camera_->GetFarClip();
+		titleToPlayEndTarget_.z = camera_->GetEye().z + camera_->GetFarClip() + camera_->GetplayerRange();
+
+		//イージング用数値の初期化
+		titleToPlayEaseing_.Start(titleToPlayEaseingTime_);
+		titleToPlayPhase_ = 0;
+
+		//パフォーマンスフラグ
+		isPerformance_ = true;
+
+		//カメラのモードを演出モードに
+		camera_->SetMode(PERFORMANCEMODE);
 	}
 
-	//カメラ演出が終わったら演出終了
-	if (!camera_->GetIsPerformance()) {
-		isPerformance_ = false;
-		//シーンをプレイシーンへ
-		isChangeScene_ = PLAY;
+	if (titleToPlayPhase_ == 0) {
+
+		//取得したイージング用の開始位置と終了位置でイージングを行う
+		titleToPlayEye_ = EaseIn3D(titleToPlayStartEye_, titleToPlayEndEye_, titleToPlayEaseing_.timeRate);
+		titleToPlayTarget_ = EaseIn3D(titleToPlayStartTarget_, titleToPlayEndTarget_, titleToPlayEaseing_.timeRate);
+
+		if (!titleToPlayEaseing_.GetActive()) {
+			//演出が終わったら次のフェーズへ
+			titleToPlayPhase_++;
+
+			//イージング用のデータを設定しなおす
+			titleToPlayEaseing_.Start(titleToPlayEaseingTime_);
+
+			titleToPlayStartEye_ = camera_->GetEye();;
+			titleToPlayStartTarget_ = camera_->GetTarget();;
+
+			titleToPlayEndEye_ = titleToPlayHoldEye_;
+			titleToPlayEndTarget_ = titleToPlayHoldTarget_;
+		}
 	}
+	else if (titleToPlayPhase_ == 1) {
+
+		//取得したイージング用の開始位置と終了位置でイージングを行う
+		titleToPlayEye_ = EaseIn3D(titleToPlayStartEye_, titleToPlayEndEye_, titleToPlayEaseing_.timeRate);
+		titleToPlayTarget_ = EaseIn3D(titleToPlayStartTarget_, titleToPlayEndTarget_, titleToPlayEaseing_.timeRate);
+
+		//演出終了
+		if (!titleToPlayEaseing_.GetActive()) {
+			isPerformance_ = false;
+			//シーンをプレイシーンへ
+			isChangeScene_ = PLAY;
+
+			//カメラのモードを自機追従モードに
+			camera_->SetMode(PLAYERFOLLOWMODE);
+		}
+	}
+
+	//イージングの更新
+	titleToPlayEaseing_.Update();
+
+	//カメラに座標の引き渡し
+	camera_->SetEye(titleToPlayEye_);
+	camera_->SetTarget(titleToPlayTarget_);
+
 }
 
 void PerformanceManager::BossInPerformance()
@@ -185,8 +248,8 @@ void PerformanceManager::ReturnTitlePerformance()
 	//演出初期化
 	if (startPerformance_) {
 		//イージング用のデータを設定
-		generalPurposeEaseing1_.Start(easeingTime_);
-		generalPurposeEaseing2_.Start(easeingTime_);
+		generalPurposeEaseing1_.Start(titleToPlayEaseingTime_);
+		generalPurposeEaseing2_.Start(titleToPlayEaseingTime_);
 
 
 		generalPurposeSpritePosition1_ = generalPurposeEaseStartPosition1_;

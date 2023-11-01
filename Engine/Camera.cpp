@@ -86,14 +86,13 @@ void Camera::Update(XMFLOAT3 playerPos, XMFLOAT3 bossPos)
 
 	case PLAYERFOLLOWMODE:
 		UpdatePlayerFollowMode();
-		//DebugMode();
 		break;
 
-	case TITLETOPLAYMODE:
-		UpdateTitleToPlayMode();
+	case PERFORMANCEMODE:
 		break;
 	}
 
+	//DebugMode();
 
 	UpdateMatrix();
 
@@ -114,72 +113,6 @@ void Camera::UpdatePlayerFollowMode()
 	//プレイヤーの後ろからプレイヤーを追従する視点
 	eye_.z = playerPos_.z - playerRange_;
 	target_.z = playerPos_.z;
-}
-
-void Camera::UpdateTitleToPlayMode()
-{
-	if (phase_ == 0) {
-
-		//取得したイージング用の開始位置と終了位置でイージングを行う
-		eye_ = EaseIn3D(startEye_, endEye_, easeing_.timeRate);
-		target_ = EaseIn3D(startTarget_, endTarget_, easeing_.timeRate);
-
-		if (!easeing_.GetActive()) {
-			//演出が終わったら次のフェーズへ
-			phase_++;
-
-			//イージング用のデータを設定しなおす
-			easeing_.Start(easeingTime_);
-
-			startEye_ = eye_;
-			startTarget_ = target_;
-
-			endEye_ = holdEye_;
-			endTarget_ = holdTarget_;
-		}
-	}
-	else if (phase_ == 1) {
-
-		//取得したイージング用の開始位置と終了位置でイージングを行う
-		eye_ = EaseIn3D(startEye_, endEye_, easeing_.timeRate);
-		target_ = EaseIn3D(startTarget_, endTarget_, easeing_.timeRate);
-
-		if (!easeing_.GetActive()) {
-			//演出が終わったらモードの切り替え
-			mode_ = PLAYERFOLLOWMODE;
-			isPerformance_ = false;
-		}
-	}
-
-	easeing_.Update();
-}
-
-void Camera::InitializeTitleToPlayMode()
-{
-
-	//イージング用の開始位置と終了位置を取得
-
-	//現在の座標を開始位置に
-	startEye_ = eye_;
-	startTarget_ = target_;
-
-	//初期座標を保持
-	holdEye_ = startEye_;
-	holdTarget_ = startTarget_;
-
-	//現在の描画最大距離を終了位置に
-	endEye_ = eye_;
-	endTarget_ = target_;
-
-	endEye_.z = eye_.z + farClip_;
-	endTarget_.z = eye_.z + farClip_ + playerRange_;
-
-	//イージング用数値の初期化
-	easeing_.Start(easeingTime_);
-	phase_ = 0;
-
-	//パフォーマンスフラグ
-	isPerformance_ = true;
 }
 
 void Camera::DebugMode()
@@ -223,25 +156,5 @@ void Camera::DebugMode()
 			target_.x += speed;
 		}
 
-	}
-}
-
-void Camera::SetMode(int mode)
-{
-	this->mode_ = mode;
-
-	//モードごとに初期化が必要な場合は初期化
-	switch (mode_) {
-	case TITLETOPLAYMODE:
-		InitializeTitleToPlayMode();
-		break;
-	case STRAIGHTMODE:
-		break;
-	case BOSSINMODE:
-		break;
-	case BOSSCLERAMODE:
-		break;
-	case BOSSGAMEOVERAMODE:
-		break;
 	}
 }

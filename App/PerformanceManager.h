@@ -102,6 +102,30 @@ private:
 	//シーンの切りかえ用変数
 	int isChangeScene_ = false;
 
+	//-----タイトルからゲームシーン遷移演出用-----
+	//現在座標
+	XMFLOAT3 titleToPlayEye_ = {};
+	XMFLOAT3 titleToPlayTarget_ = {};
+
+	//イージング開始座標
+	XMFLOAT3 titleToPlayStartEye_ = {};
+	XMFLOAT3 titleToPlayStartTarget_ = {};
+
+	//イージング終了位置
+	XMFLOAT3 titleToPlayEndEye_ = {};
+	XMFLOAT3 titleToPlayEndTarget_ = {};
+
+	//現在のデータ保存用
+	XMFLOAT3 titleToPlayHoldEye_ = {};
+	XMFLOAT3 titleToPlayHoldTarget_ = {};
+
+	//イージング演出用データ
+	Easing titleToPlayEaseing_;
+	//演出時間
+	float titleToPlayEaseingTime_ = 3.0f;
+	//フェーズ
+	int titleToPlayPhase_ = 0;
+
 	//-----ゲームオーバ演出ー-----
 	//どこまで降下させるか
 	float downPosition_ = -12.0f;
@@ -121,8 +145,8 @@ private:
 	XMFLOAT2 generalPurposeSpritePosition2_ = {};
 
 	//イージング開始座標
-	XMFLOAT2 generalPurposeEaseStartPosition1_ = {0 - (window_width / 2),window_height / 2};
-	XMFLOAT2 generalPurposeEaseStartPosition2_ = {window_width + (window_width / 2),window_height / 2 };
+	XMFLOAT2 generalPurposeEaseStartPosition1_ = { 0 - (window_width / 2),window_height / 2 };
+	XMFLOAT2 generalPurposeEaseStartPosition2_ = { window_width + (window_width / 2),window_height / 2 };
 	//イージング終了位置
 	XMFLOAT2 generalPurposeEaseEndPosition1_ = { window_width + (window_width / 2),window_height / 2 };
 	XMFLOAT2 generalPurposeEaseEndPosition2_ = { 0 - (window_width / 2),window_height / 2 };
@@ -130,6 +154,6 @@ private:
 	Easing generalPurposeEaseing1_;
 	Easing generalPurposeEaseing2_;
 	//イージング演出時間
-	float easeingTime_ = 6.0f;
+	float generalPurposeEaseingTime_ = 3.0f;
 };
 
