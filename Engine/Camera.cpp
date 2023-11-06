@@ -87,7 +87,9 @@ void Camera::Update(XMFLOAT3 playerPos, XMFLOAT3 bossPos)
 	case PLAYERFOLLOWMODE:
 		UpdatePlayerFollowMode();
 		break;
-
+	case PLAYERTURNINGMODE:
+		UpdatePlayerTurningMode();
+		break;
 	case PERFORMANCEMODE:
 		break;
 	}
@@ -103,6 +105,12 @@ void Camera::Update(XMFLOAT3 playerPos, XMFLOAT3 bossPos)
 
 void Camera::UpdateStraightMode()
 {
+
+	eye_.x = initEye_.x;
+	eye_.y = initEye_.y;
+	target_.x = initTarget_.x;
+	target_.y = initTarget_.y;
+
 	//一定スピードで進み続ける
 	eye_.z += straightModeSpeed_;
 	target_.z = eye_.z + playerRange_;
@@ -110,9 +118,42 @@ void Camera::UpdateStraightMode()
 
 void Camera::UpdatePlayerFollowMode()
 {
+	eye_.x = initEye_.x;
+	eye_.y = initEye_.y;
+	target_.x = initTarget_.x;
+	target_.y = initTarget_.y;
+
 	//プレイヤーの後ろからプレイヤーを追従する視点
 	eye_.z = playerPos_.z - playerRange_;
 	target_.z = playerPos_.z;
+}
+
+void Camera::UpdatePlayerTurningMode()
+{
+
+	//視点は常にプレイやー
+	target_ = playerPos_;
+
+	//高さ(Y)は固定
+	eye_.y = playerPos_.y;
+
+	//XZは旋回
+	{
+		// 中心座標に角度と長さを使用した円の位置を加算する
+		// 度数法の角度を弧度法に変換
+		float radius = angle_ * 3.14f / 180.0f;
+
+		// 三角関数を使用し、円の位置を割り出す。
+		float addX = (float)(cos(radius) * turnLength_);
+		float addZ = (float)(sin(radius) * turnLength_);
+
+		// 結果ででた位置を中心位置に加算し、それを描画位置とする
+		eye_.x = playerPos_.x + addX;
+		eye_.z = playerPos_.z + addZ;
+
+		// 角度更新
+		angle_ += addAngle_;
+	}
 }
 
 void Camera::DebugMode()

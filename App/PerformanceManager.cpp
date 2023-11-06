@@ -4,6 +4,7 @@
 */
 
 #include "PerformanceManager.h"
+#include "Vector2.h"
 
 void PerformanceManager::Initialize(Camera* camera, Player* player,Boss* boss)
 {
@@ -206,9 +207,79 @@ void PerformanceManager::BossInPerformance()
 
 void PerformanceManager::BossClearPerformance()
 {
-	//シーンをクリアーンへ
-	isChangeScene_ = CLEAR;
-	isPerformance_ = false;
+
+	//プレイヤーの座用、スピードを取得
+	XMFLOAT3 playerPosition = player_->GetPosition();
+	float playerSpeed = player_->GetSpeed();
+	//ボスの座標を取得
+	XMFLOAT3 bossPosition = boss_->GetPosition();
+	//演出終了後プレイヤーの位置設定用
+	const XMFLOAT3 midPosition = {0.0f,0.0f,0.0f};
+
+	//演出初期化
+	if (startPerformance_) {
+		//カメラのモードを演出モードに
+		camera_->SetMode(PERFORMANCEMODE);
+
+		clearPhase_ = CP_BOSSMOVE;
+
+		//ボスの追従スピード
+		clearBossSpeed_ = playerSpeed;
+
+	}
+
+	switch (clearPhase_)
+	{
+	case CP_BOSSMOVE://ボス墜落
+
+		//降下終了地点まで降下したら終了
+		if (clearDownPosition_ <= bossPosition.y) {
+			//降下させる
+			bossPosition.y -= clearDownSpeed_;
+		}
+		else {
+			//フェーズの移行
+			clearPhase_ = CP_PLAYERMOVE;
+		}
+
+		//Zスピードの減少
+		if (clearBossSpeed_ - clearSubSpeed_ >= 0) {
+			clearBossSpeed_ -= clearSubSpeed_;
+		}
+		else {
+			clearBossSpeed_ = 0;
+		}
+
+		bossPosition.z += clearBossSpeed_;
+
+		boss_->SetPosition(bossPosition);
+
+		//カメラはボスを追従
+		camera_->SetEye(playerPosition);
+		camera_->SetTarget(bossPosition);
+
+		break;
+
+	case CP_PLAYERMOVE://プレイヤー中心移動
+
+		//プレイヤー中心移動
+		playerPosition.x = midPosition.x;
+		playerPosition.y = midPosition.y;
+
+		player_->SetPosition(playerPosition);
+		//カメラのモードを自機旋回モードに
+		camera_->SetMode(PLAYERTURNINGMODE);
+		//フェーズの移行
+		clearPhase_ = CP_END;
+
+		break;
+
+	case CP_END://演出終了
+		//シーンをクリアーンへ
+		isChangeScene_ = CLEAR;
+		isPerformance_ = false;
+		break;
+	}
 
 }
 
@@ -220,13 +291,13 @@ void PerformanceManager::BossGameoverPerformance()
 	float playerSpeed = player_->GetSpeed();
 
 	//降下終了地点まで降下したら終了
-	if (downPosition_ <= playerPosition.y) {
+	if (gemeoverDownPosition_ <= playerPosition.y) {
 		//降下させる
-		playerPosition.y -= downSpeed_;
+		playerPosition.y -= gemeoverDownSpeed_;
 
 		//Zスピードの減少
-		if (playerSpeed - subSpeed_ >= 0) {
-			playerSpeed -= subSpeed_;
+		if (playerSpeed - gemeoverSubSpeed_ >= 0) {
+			playerSpeed -= gemeoverSubSpeed_;
 		}
 		else {
 			playerSpeed = 0;

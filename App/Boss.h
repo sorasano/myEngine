@@ -73,6 +73,14 @@ public:
 	*/
 	void Update(XMFLOAT3 pPos, float pSpeed);
 	/**
+	* 行列更新
+	*/
+	void UpdateMatrix();
+	/**
+	* クリアシーン更新
+	*/
+	void UpdateClearScene();
+	/**
 	* 描画
 	*
 	* @param[out] cmdList_ コマンドリスト
@@ -229,9 +237,9 @@ private:
 	//ボス2段階目フラグ
 	bool isBossHardMode_ = 0;
 	//hp
-	int hp_ = 50;
+	int hp_ = 1;
 	//2段階目になるhp
-	int changeHardHp_ = 25;
+	int changeHardHp_ = 0;
 
 	//-------移動-------
 	//移動 trueが+に移動中でfalseが-に移動中

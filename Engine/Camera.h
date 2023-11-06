@@ -17,6 +17,7 @@ using namespace DirectX;
 enum CameraMode {
 	STRAIGHTMODE,//直線移動
 	PLAYERFOLLOWMODE,//自機に追従
+	PLAYERTURNINGMODE,//自機を旋回
 	PERFORMANCEMODE,//演出モード(パファーマンスマネージャーで操作)
 };
 
@@ -76,6 +77,10 @@ public:
 	* プレイヤー追従モード更新
 	*/
 	void UpdatePlayerFollowMode();
+	/**
+	* プレイヤー旋回モード更新
+	*/
+	void UpdatePlayerTurningMode();
 
 	/**
 	* デバックモード
@@ -126,8 +131,6 @@ private:
 	//入力
 	Input* input_ = nullptr;
 
-	float angle_ = 0.1f; // カメラの回転角
-
 	//プレイヤー座標
 	XMFLOAT3 playerPos_ = {};
 	//ボス座標
@@ -142,4 +145,15 @@ private:
 	//カメラ直線移動モードスピード
 	float straightModeSpeed_ = 1.0f;
 	 
+	//カメラ初期座標
+	XMFLOAT3 initEye_ = { 0.0f,0.0f,0.0f };
+	XMFLOAT3 initTarget_ = { 0.0f,0.0f,0.0f };
+
+	//カメラ円運動用角度
+	float angle_ = 0.1f; // カメラの回転角
+	//何度づつ足すか
+	float addAngle_ = 1.0f;
+	//回転半径の長さ
+	float turnLength_ = 10.0f;
+
 };

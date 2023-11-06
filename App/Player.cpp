@@ -92,15 +92,28 @@ void Player::Update()
 
 	//isInvincible_ = true;
 
-	playerObject_->SetPosition(position_);
-	playerObject_->SetScale(scale_);
-	playerObject_->SetRotate(rotation_);
-	playerObject_->Update();
+	UpdateMatrix();
 
 	//ImGui::Begin("position");
 	//ImGui::Text("%f,%f,%f",position_.x,position_.y,position_.z);
 	//ImGui::End();
 
+}
+
+void Player::UpdateMatrix()
+{
+	playerObject_->SetPosition(position_);
+	playerObject_->SetScale(scale_);
+	playerObject_->SetRotate(rotation_);
+	playerObject_->Update();
+}
+
+void Player::UpdateClearScene()
+{
+	//移動
+	position_.z += speedZ_ + addSpeed_;
+
+	UpdateMatrix();
 }
 
 

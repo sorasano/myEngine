@@ -161,8 +161,6 @@ void GameScene::Update()
 	{
 	case TITLE:
 
-		titleSprite_->Update();
-
 		//敵
 		for (std::unique_ptr<Enemy>& enemy : enemys_)
 		{
@@ -170,6 +168,9 @@ void GameScene::Update()
 				enemy->Update(player_->GetPosition(), player_->GetSpeed());
 			}
 		}
+
+		//スプライト
+		titleSprite_->Update();
 
 		break;
 
@@ -204,11 +205,20 @@ void GameScene::Update()
 		break;
 	case CLEAR:
 
+		//自機
+		player_->UpdateClearScene();
+
+		//ボス
+		boss_->UpdateClearScene();
+
+		//スプライト
 		clearSprite_->Update();
 
 		break;
 
 	case GAMEOVER:
+
+		//スプライト
 		gameoverSprite_->Update();
 
 		break;
@@ -291,6 +301,13 @@ void GameScene::Draw()
 		break;
 
 	case CLEAR:
+
+		//自機
+		player_->Draw(dxCommon_->GetCommandList());
+
+		//ボス
+		boss_->Draw(dxCommon_->GetCommandList());
+
 		break;
 
 	case GAMEOVER:

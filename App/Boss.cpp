@@ -44,6 +44,7 @@ void Boss::Update(XMFLOAT3 pPos, float pSpeed)
 	this->playerPosition_ = pPos;
 	this->playerSpeed_ = pSpeed;
 
+
 	if (!isDead_) {
 
 		//行動変化
@@ -70,17 +71,28 @@ void Boss::Update(XMFLOAT3 pPos, float pSpeed)
 
 	}
 
+	UpdateMatrix();
+}
+
+void Boss::UpdateMatrix()
+{
 	BossObject_->SetPosition(position_);
 	BossObject_->SetScale(scale_);
 	BossObject_->SetRotate(rotation_);
 	BossObject_->Update();
 }
 
+void Boss::UpdateClearScene()
+{
+	UpdateMatrix();
+}
+
 void Boss::Draw(ID3D12GraphicsCommandList* cmdList)
 {
-	if (!isDead_) {
-		BossObject_->Draw(cmdList);
 
+	BossObject_->Draw(cmdList);
+
+	if (!isDead_) {
 		//弾
 		for (std::unique_ptr<BossBullet>& bullet : bullets_)
 		{
@@ -93,6 +105,7 @@ void Boss::Move()
 {
 	//自機に追従
 	position_.z += playerSpeed_;
+
 
 	switch (moveType_)
 	{
@@ -323,8 +336,8 @@ void Boss::HitBullet()
 		isBossHardMode_ = true;
 		BossObject_->SetModel(hardBossModel_);
 	}
-	 
-	 
+
+
 }
 
 void Boss::SetNormalAction(int action)
@@ -415,7 +428,7 @@ void Boss::ChangeAction()
 		SetNormalAction(randNum);
 	}
 	else {
-	//2段階目モード
+		//2段階目モード
 		int randNum = static_cast<int>(Random(0, hardActionSize_ - 0.001f));
 		SetHardAction(randNum);
 	}

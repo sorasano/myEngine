@@ -20,6 +20,13 @@ enum Performance {
 	RETURNTITLE//タイトルに戻るとき
 };
 
+//クリア演出フェーズ
+enum ClearPhase {
+	CP_BOSSMOVE,//ボス墜落、カメラ追尾
+	CP_PLAYERMOVE,//自機中心移動、カメラ旋回
+	CP_END//演出終了
+};
+
 class PerformanceManager
 {
 public:
@@ -128,13 +135,25 @@ private:
 	//フェーズ
 	int titleToPlayPhase_ = 0;
 
+	//-----クリア演出ー-----
+	//フェーズ
+	int clearPhase_ = 0;
+	//どこまで降下させるか(ボス)
+	float clearDownPosition_ = -12.0f;
+	//降下スピード(Y,ボス)
+	float clearDownSpeed_ = 0.1f;
+	//降下減速スピード(Z、ボス)
+	float clearSubSpeed_ = 0.01f;
+	//ボスのスピード
+	float clearBossSpeed_ = 0.0f;
+
 	//-----ゲームオーバ演出ー-----
-	//どこまで降下させるか
-	float downPosition_ = -12.0f;
-	//降下スピード(Y)
-	float downSpeed_ = 0.01f;
-	//降下減速スピード(Z)
-	float subSpeed_ = 0.001f;
+	//どこまで降下させるか(プレイヤー)
+	float gemeoverDownPosition_ = -12.0f;
+	//降下スピード(Y、プレイヤー)
+	float gemeoverDownSpeed_ = 0.01f;
+	//降下減速スピード(Z、プレイヤー)
+	float gemeoverSubSpeed_ = 0.001f;
 
 	//-----汎用演出-----
 	//スプライト

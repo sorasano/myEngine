@@ -35,6 +35,14 @@ public:
 	*/
 	void Update();
 	/**
+	* 行列更新
+	*/
+	void UpdateMatrix();
+	/**
+	* クリアシーン更新
+	*/
+	void UpdateClearScene();
+	/**
 	* 描画
 	*
 	* @param[out] cmdList コマンドリスト
@@ -193,7 +201,7 @@ private:
 	float speedZ_ = 0.5f;
 
 	//基礎スピード以外の加速スピード
-	float addSpeed_ = 0.0f;
+	float addSpeed_ = 5.0f;
 	//敵を倒した時の加速量
 	float addSpeedByEnemy_ = 0.5f;
 	//敵に被弾した時の減速
