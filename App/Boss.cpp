@@ -207,7 +207,7 @@ void Boss::Shot()
 
 			//自機と敵のベクトルを取る
 			playerVec_ = { playerPosition_.x ,playerPosition_.y,playerPosition_.z };
-			BossVec = { position_.x,position_.y,position_.z };
+			BossVec = { position_.x,position_.y,position_.z + playerSpeed_ };
 
 			velocity = playerVec_ - BossVec;
 

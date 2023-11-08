@@ -105,7 +105,7 @@ private:
 	XMMATRIX matWorld_ = {};
 
 	//当たり判定用
-	XMFLOAT3 colSize_ = { 0.5f,0.5f,2.0f };
+	XMFLOAT3 colSize_ = { 0.5f,0.5f,0.5f };
 
 private:
 	//FBX

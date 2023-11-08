@@ -563,6 +563,8 @@ void GameScene::SetEnemy()
 	//何番目のCSVをセットするか(ランダム)
 	int setNum = static_cast<int>(Random(0, enemyCSVSize_ - 0.001f));
 	auto it = enemyCsvs_.begin();
+
+	setNum = 2;
 	std::advance(it, setNum);
 
 	for (int i = 0; i < it->get()->GetSize(); i++)

@@ -5,6 +5,7 @@
 
 #include "Enemy.h"
 #include "Random.h"
+#include "Imgui.h"
 
 Enemy* Enemy::GetInstance()
 {
@@ -225,6 +226,7 @@ void Enemy::BulletUpdate()
 
 void Enemy::MakeBullet()
 {
+	//射出ベクトル
 	Vector3 velocity = {};
 
 	switch (shotType_)
@@ -244,8 +246,8 @@ void Enemy::MakeBullet()
 	case HOMINGSHOT:
 
 		//自機と敵のベクトルを取る
-		Vector3 playerVec_ = { playerPosition_.x ,playerPosition_.y,playerPosition_.z };
-		Vector3 enemyVec = { position_.x,position_.y,position_.z };
+		Vector3 playerVec_ = { playerPosition_.x ,playerPosition_.y,playerPosition_.z};
+		Vector3 enemyVec = { position_.x,position_.y,position_.z + playerSpeed_ };
 
 		velocity = playerVec_ - enemyVec;
 
