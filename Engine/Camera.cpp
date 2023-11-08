@@ -124,7 +124,7 @@ void Camera::UpdatePlayerFollowMode()
 	target_.y = initTarget_.y;
 
 	//プレイヤーの後ろからプレイヤーを追従する視点
-	eye_.z = playerPos_.z - playerRange_;
+	eye_.z = playerPos_.z;
 	target_.z = playerPos_.z;
 }
 
