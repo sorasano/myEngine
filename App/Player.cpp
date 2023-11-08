@@ -94,9 +94,9 @@ void Player::Update()
 
 	UpdateMatrix();
 
-	ImGui::Begin("position");
-	ImGui::Text("%f,%f,%f",position_.x,position_.y,position_.z);
-	ImGui::End();
+	//ImGui::Begin("position");
+	//ImGui::Text("%f,%f,%f",position_.x,position_.y,position_.z);
+	//ImGui::End();
 
 }
 

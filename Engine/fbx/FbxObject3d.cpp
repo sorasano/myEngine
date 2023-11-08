@@ -190,8 +190,10 @@ void FbxObject3D::Initialize()
 	//定数バッファの生成
 	CD3DX12_HEAP_PROPERTIES heap = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 	CD3DX12_RESOURCE_DESC resource1 = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataTransform) + 0xff) & ~0xff);
-	CD3DX12_RESOURCE_DESC resource2 = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataSkin) + 0xff) & ~0xff);
+	CD3DX12_RESOURCE_DESC resource2 = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataCamera) + 0xff) & ~0xff);
+	CD3DX12_RESOURCE_DESC resource3 = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataSkin) + 0xff) & ~0xff);
 
+	//定数バッファの生成(ワールド座標)
 	result = device_->CreateCommittedResource(
 		&heap,
 		D3D12_HEAP_FLAG_NONE,
@@ -201,11 +203,21 @@ void FbxObject3D::Initialize()
 		IID_PPV_ARGS(&constBuffTransform_)
 	);
 
+	//定数バッファの生成(カメラ)
+	result = device_->CreateCommittedResource(
+		&heap,
+		D3D12_HEAP_FLAG_NONE,
+		&resource2,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&constBuffCamera_)
+	);
+
 	//定数バッファの生成(スキン)
 	result = device_->CreateCommittedResource(
 		&heap,	//アップロード可能
 		D3D12_HEAP_FLAG_NONE,
-		&resource2,
+		&resource3,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
 		IID_PPV_ARGS(&constBuffSkin_)
@@ -219,6 +231,8 @@ void FbxObject3D::Initialize()
 		constMapSkin->bones[i] = XMMatrixIdentity();
 	}
 	constBuffSkin_->Unmap(0, nullptr);
+
+
 }
 
 void FbxObject3D::Update()
@@ -254,6 +268,8 @@ void FbxObject3D::Update()
 	}
 	constBuffSkin_->Unmap(0, nullptr);
 
+	//ワールド座標
+
 	XMMATRIX matScale, matRot, matTrans;
 
 	//スケール、回転、平行移動行列の計算
@@ -270,6 +286,17 @@ void FbxObject3D::Update()
 	matWorld_ *= matRot;
 	matWorld_ *= matTrans;
 
+	//定数バッファへデータ転送
+	ConstBufferDataTransform* constMap = nullptr;
+	result = constBuffTransform_->Map(0, nullptr, (void**)&constMap);
+	if (SUCCEEDED(result))
+	{
+		constMap->world = matWorld_;
+		constBuffTransform_->Unmap(0, nullptr);
+	}
+
+	//カメラ
+
 	//ビュープロジェクション行列
 	const XMMATRIX& matViewProjection = camera_->GetViewProjection();
 	//モデルのメッシュトランスフォーム
@@ -278,16 +305,16 @@ void FbxObject3D::Update()
 	const XMFLOAT3& cameraPos = camera_->GetEye();
 
 	//定数バッファへデータ転送
-	ConstBufferDataTransform* constMap = nullptr;
-	result = constBuffTransform_->Map(0, nullptr, (void**)&constMap);
+	ConstBufferDataCamera* constMapCamera = nullptr;
+	result = constBuffCamera_->Map(0, nullptr, (void**)&constMapCamera);
 	if (SUCCEEDED(result))
 	{
-		constMap->viewproj = matViewProjection;
-		constMap->world = matWorld_;
-		constMap->cameraPos = cameraPos;
-		constBuffTransform_->Unmap(0, nullptr);
+		constMapCamera->viewproj = matViewProjection;
+		constMapCamera->cameraPos = cameraPos;
+		constBuffCamera_->Unmap(0, nullptr);
 	}
 }
+
 
 void FbxObject3D::Draw(ID3D12GraphicsCommandList* cmdList_)
 {
@@ -303,8 +330,10 @@ void FbxObject3D::Draw(ID3D12GraphicsCommandList* cmdList_)
 	cmdList_->SetGraphicsRootSignature(rootsignature_.Get());
 	//プリミティブ形状の設定
 	cmdList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	//定数バッファビューをセット
+	//定数バッファビューをセット(座標)
 	cmdList_->SetGraphicsRootConstantBufferView(0, constBuffTransform_->GetGPUVirtualAddress());
+	//定数バッファビューをセット(カメラ)
+	cmdList_->SetGraphicsRootConstantBufferView(1, constBuffCamera_->GetGPUVirtualAddress());
 	//定数バッファビューをセット(スキニング)
 	cmdList_->SetGraphicsRootConstantBufferView(2, constBuffSkin_->GetGPUVirtualAddress());
 

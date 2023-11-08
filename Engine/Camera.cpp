@@ -72,12 +72,10 @@ void Camera::UpdateMatrix()
 	constMap->projection = matProjection_;
 }
 
-void Camera::Update(XMFLOAT3 playerPos, XMFLOAT3 bossPos)
+void Camera::Update(XMFLOAT3 playerPos)
 {
 	//データ更新
 	this->playerPos_ = playerPos;
-	this->bossPos_ = bossPos;
-
 
 	switch (mode_) {
 	case STRAIGHTMODE:
@@ -98,9 +96,6 @@ void Camera::Update(XMFLOAT3 playerPos, XMFLOAT3 bossPos)
 
 	UpdateMatrix();
 
-	//ImGui::Begin("cameraPos");
-	//ImGui::Text("%f",eye_.z);
-	//ImGui::End();
 }
 
 void Camera::UpdateStraightMode()
@@ -118,13 +113,13 @@ void Camera::UpdateStraightMode()
 
 void Camera::UpdatePlayerFollowMode()
 {
-	eye_.x = initEye_.x;
+	eye_.x = 100;
 	eye_.y = initEye_.y;
 	target_.x = initTarget_.x;
 	target_.y = initTarget_.y;
 
 	//プレイヤーの後ろからプレイヤーを追従する視点
-	eye_.z = playerPos_.z - playerRange_;
+	eye_.z = playerPos_.z;
 	target_.z = playerPos_.z;
 }
 

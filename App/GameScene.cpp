@@ -225,7 +225,7 @@ void GameScene::Update()
 	}
 
 	//カメラ更新
-	camera_->Update(player_->GetPosition(), boss_->GetPosition());
+	camera_->Update(player_->GetPosition());
 
 	//背景
 	UpdateBackGround();
@@ -241,7 +241,6 @@ void GameScene::Update()
 
 	//パーティクルマネージャー静的更新
 	ParticleManager::StaticUpdate(camera_->GetEye(), camera_->GetTarget());
-
 
 }
 
@@ -595,7 +594,7 @@ void GameScene::Reset()
 
 	//カメラ
 	camera_->SetMode(STRAIGHTMODE);
-	camera_->Update(player_->GetPosition(), boss_->GetPosition());
+	//camera_->Update(player_->GetPosition(), boss_->GetPosition());
 
 	//背景
 	//オブジェクトを全削除
@@ -711,7 +710,7 @@ void GameScene::PlaySceneInitialize()
 	phase_ = 1;
 
 	//カメラ
-	camera_->Update(player_->GetPosition(), boss_->GetPosition());
+	//camera_->Update(player_->GetPosition(), boss_->GetPosition());
 
 }
 

@@ -324,7 +324,7 @@ CollisionData Boss::GetColData()
 void Boss::HitBullet()
 {
 	//hpがあるなら減らす、ないなら死亡
-	if (hp_) {
+	if (hp_ > 0) {
 		hp_--;
 	}
 	else {

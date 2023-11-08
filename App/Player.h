@@ -103,7 +103,7 @@ public:
 
 
 	//ゲッター　セッター　
-		/**
+	/**
 	* @return XMFLOAT3 position_取得
 	*/
 	XMFLOAT3 GetPosition() { return position_; }

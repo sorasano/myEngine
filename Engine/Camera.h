@@ -63,7 +63,7 @@ public:
 	/**
 	* 更新
 	*/
-	void Update(XMFLOAT3 playerPos, XMFLOAT3 bossPos);
+	void Update(XMFLOAT3 playerPos);
 	/**
 	* 行列更新
 	*/
@@ -133,8 +133,6 @@ private:
 
 	//プレイヤー座標
 	XMFLOAT3 playerPos_ = {};
-	//ボス座標
-	XMFLOAT3 bossPos_ = {};
 
 	//プレイヤーとカメラの距離
 	float playerRange_ = 30.0f;

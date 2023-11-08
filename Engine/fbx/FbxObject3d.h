@@ -24,8 +24,13 @@ public:
 	//定数バッファ用データ構造体
 	struct ConstBufferDataTransform
 	{
-		XMMATRIX viewproj;
 		XMMATRIX world;
+	};
+
+	//定数バッファ用データ構造体
+	struct ConstBufferDataCamera
+	{
+		XMMATRIX viewproj;
 		XMFLOAT3 cameraPos;
 	};
 
@@ -122,8 +127,10 @@ public://メンバ関数
 	XMFLOAT3 GetScale() { return this->scale_ ; }
 
 protected://メンバ変数
-	//定数バッファ
+	//定数バッファ(ワールド座標)
 	ComPtr<ID3D12Resource>constBuffTransform_;
+	//定数バッファ(カメラ)
+	ComPtr<ID3D12Resource>constBuffCamera_;
 	//定数バッファ(スキン)
 	ComPtr<ID3D12Resource> constBuffSkin_;
 
