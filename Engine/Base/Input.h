@@ -3,21 +3,37 @@
 * @brief 入力処理
 */
 
-#include <cassert>
-
-#include <wrl.h>
-
-using namespace Microsoft::WRL;
-
 #pragma once
-#define DIRECTINPUT_VERSION     0x0800   // DirectInputのバージョン指定
-#include <dinput.h>
-
-#pragma comment(lib, "dinput8.lib")
-#pragma comment(lib, "dxguid.lib")
 
 #include <Windows.h>
 #include "WinApp.h"
+#include <cassert>
+
+#define DIRECTINPUT_VERSION     0x0800   // DirectInputのバージョン指定
+#include <dinput.h>
+#pragma comment(lib, "dinput8.lib")
+#pragma comment(lib, "dxguid.lib")
+#include<wrl.h>
+#include<Xinput.h>
+#pragma comment(lib,"xinput.lib")
+
+//////////////////////////////////////////
+/////////////PADのボタン一覧////////////////
+/////////////////////////////////////////
+//XINPUT_GAMEPAD_DPAD_UP				スティック上
+//XINPUT_GAMEPAD_DPAD_DOWN				スティック下
+//XINPUT_GAMEPAD_DPAD_LEFT				スティック左
+//XINPUT_GAMEPAD_DPAD_RIGHT				スティック右
+//XINPUT_GAMEPAD_START					スタートボタン
+//XINPUT_GAMEPAD_BACK					セレクトボタン
+//XINPUT_GAMEPAD_LEFT_THUMB				左スティック押し込み
+//XINPUT_GAMEPAD_RIGHT_THUMB			右スティック押し込み
+//XINPUT_GAMEPAD_LEFT_SHOULDER			Lボタン(LBは別)
+//XINPUT_GAMEPAD_RIGHT_SHOULDER			Rボタン(RBは別)
+//XINPUT_GAMEPAD_A						Aボタン
+//XINPUT_GAMEPAD_B						Bボタン
+//XINPUT_GAMEPAD_X						Xボタン
+//XINPUT_GAMEPAD_Y						Yボタン
 
 class Input final
 {
@@ -44,6 +60,9 @@ public:
 	*/
 	Input& operator=(const Input& obj) = delete;
 
+	XINPUT_STATE padState;
+	XINPUT_STATE oldPadState;
+
 private:
 
 	/**
@@ -65,14 +84,65 @@ public:
 	* 更新
 	*/
 	void Update();
+
+
+	//入力情報
+
+
+	//キーボード押下情報
 	/**
-	* キーの押下をチェック
+	* キーの入力瞬間チェック
 	*/
-	bool PushKey(BYTE keyNumber);
+	bool IsKeyTrigger(BYTE key_);
 	/**
-	* キーのトリガーをチェック
+	* キーの押込みをチェック
 	*/
-	bool TriggerKey(BYTE keyNumber);
+	bool IsKeyPress(BYTE key_);
+	/**
+	* キーの離しをチェック
+	*/
+	bool IsKeyRelease(BYTE key_);
+
+
+	//パッド押下情報(ボタン)
+	/**
+	* ボタンの入力瞬間をチェック
+	*/
+	bool IsPadTrigger(WORD Button);
+	/**
+	* ボタンの押込みをチェック
+	*/
+	bool IsPadPress(WORD Button);
+	/**
+	* ボタンの離しをチェック
+	*/
+	bool IsPadRelease(WORD Button);
+
+
+	//パッド押下情報(左右スティック)
+	/**
+	* 左スティック
+	*/
+	bool IsDownLStickLeft(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+	bool IsTriggerLStickLeft(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+	bool IsDownLStickRight(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+	bool IsTriggerLStickRight(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+	bool IsDownLStickUp(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+	bool IsTriggerLStickUp(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+	bool IsDownLStickDown(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+	bool IsTriggerLStickDown(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+
+	/**
+	* 右スティック
+	*/
+	bool IsDownRStickLeft(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
+	bool IsTriggerRStickLeft(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
+	bool IsDownRStickRight(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
+	bool IsTriggerRStickRight(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
+	bool IsDownRStickUp(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
+	bool IsTriggerRStickUp(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
+	bool IsDownRStickDown(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
+	bool IsTriggerRStickDown(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
 
 private:
 
@@ -80,7 +150,7 @@ private:
 	ComPtr<IDirectInput8> directInput;
 
 	BYTE key[256] = {};
-	BYTE keyPre[256] = {};
+	BYTE oldkey[256] = {};
 
 	//WindowsAPI
 	WinApp* winApp_ = nullptr;

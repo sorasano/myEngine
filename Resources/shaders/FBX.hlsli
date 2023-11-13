@@ -3,7 +3,7 @@ cbuffer cbuff0 : register(b0)
 	matrix world;	//ワールド行列
 }
 
-cbuffer cameraData : register(b1)
+cbuffer cameraData : register(b2)
 {
     matrix viewproj; //ビュープロジェクション行列
     float3 cameraPos; //カメラ座標

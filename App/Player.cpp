@@ -167,21 +167,41 @@ void Player::SpeedDownByEnemy()
 
 void Player::Move()
 {
-
-	if (input_->PushKey(DIK_W) || input_->PushKey(DIK_S) || input_->PushKey(DIK_D) || input_->PushKey(DIK_A)) {
+	//キーボード操作
+	if (input_->IsKeyPress(DIK_W) || input_->IsKeyPress(DIK_S) || input_->IsKeyPress(DIK_D) || input_->IsKeyPress(DIK_A)) {
 
 		//座標を移動する処理
-		if (input_->PushKey(DIK_W)) {
+		if (input_->IsKeyPress(DIK_W)) {
 			if (MoveMax_.y > position_.y) { position_.y += speedXY_; }
 		}
-		else if (input_->PushKey(DIK_S)) {
+		else if (input_->IsKeyPress(DIK_S)) {
 			if (-MoveMax_.y < position_.y) { position_.y -= speedXY_; }
 		}
 
-		if (input_->PushKey(DIK_A)) {
+		if (input_->IsKeyPress(DIK_A)) {
 			if (-MoveMax_.x < position_.x) { position_.x -= speedXY_; }
 		}
-		else if (input_->PushKey(DIK_D)) {
+		else if (input_->IsKeyPress(DIK_D)) {
+			if (MoveMax_.x > position_.x) { position_.x += speedXY_; }
+		}
+
+	}
+
+	//パッド操作
+	else if (input_->IsDownLStickUp() || input_->IsDownLStickDown() || input_->IsDownLStickRight() || input_->IsDownLStickLeft()) {
+
+		//座標を移動する処理
+		if (input_->IsDownLStickUp()) {
+			if (MoveMax_.y > position_.y) { position_.y += speedXY_; }
+		}
+		else if (input_->IsDownLStickDown()) {
+			if (-MoveMax_.y < position_.y) { position_.y -= speedXY_; }
+		}
+
+		if (input_->IsDownLStickLeft()) {
+			if (-MoveMax_.x < position_.x) { position_.x -= speedXY_; }
+		}
+		else if (input_->IsDownLStickRight()) {
 			if (MoveMax_.x > position_.x) { position_.x += speedXY_; }
 		}
 
@@ -194,8 +214,8 @@ void Player::Move()
 void Player::Shot()
 {
 	bulletCoolTimer_++;
-	//スペースで弾発射
-	if (input_->PushKey(DIK_SPACE)) {
+	//スペース、で弾発射
+	if (input_->IsKeyPress(DIK_SPACE) || input_->IsPadPress(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
 
 		if (BulletCoolTime_ < bulletCoolTimer_) {
 			MakeBullet();
@@ -282,20 +302,40 @@ void Player::MoveRaticle()
 	reticlePosition_.z = position_.z + kDistancePlayerTo3DFrontReticle_;
 
 	//入力で移動
-	if (input_->PushKey(DIK_UP) || input_->PushKey(DIK_DOWN) || input_->PushKey(DIK_RIGHT) || input_->PushKey(DIK_LEFT)) {
+	if (input_->IsKeyPress(DIK_UP) || input_->IsKeyPress(DIK_DOWN) || input_->IsKeyPress(DIK_RIGHT) || input_->IsKeyPress(DIK_LEFT)) {
 
 		//座標を移動する処理
-		if (input_->PushKey(DIK_UP)) {
+		if (input_->IsKeyPress(DIK_UP)) {
 			if (ReticleMoveMax_.y > reticlePosition_.y) { reticlePosition_.y += reticleSpeedXY_; }
 		}
-		else if (input_->PushKey(DIK_DOWN)) {
+		else if (input_->IsKeyPress(DIK_DOWN)) {
 			if (-ReticleMoveMax_.y < reticlePosition_.y) { reticlePosition_.y -= reticleSpeedXY_; }
 		}
 
-		if (input_->PushKey(DIK_LEFT)) {
+		if (input_->IsKeyPress(DIK_LEFT)) {
 			if (-ReticleMoveMax_.x < reticlePosition_.x) { reticlePosition_.x -= reticleSpeedXY_; }
 		}
-		else if (input_->PushKey(DIK_RIGHT)) {
+		else if (input_->IsKeyPress(DIK_RIGHT)) {
+			if (ReticleMoveMax_.x > reticlePosition_.x) { reticlePosition_.x += reticleSpeedXY_; }
+		}
+
+	}
+
+	//入力で移動(コントローラー)
+	else if (input_->IsDownRStickUp() || input_->IsDownRStickDown() || input_->IsDownRStickRight() || input_->IsDownRStickLeft()) {
+
+		//座標を移動する処理
+		if (input_->IsDownRStickUp()) {
+			if (ReticleMoveMax_.y > reticlePosition_.y) { reticlePosition_.y += reticleSpeedXY_; }
+		}
+		else if (input_->IsDownRStickDown()) {
+			if (-ReticleMoveMax_.y < reticlePosition_.y) { reticlePosition_.y -= reticleSpeedXY_; }
+		}
+
+		if (input_->IsDownRStickLeft()) {
+			if (-ReticleMoveMax_.x < reticlePosition_.x) { reticlePosition_.x -= reticleSpeedXY_; }
+		}
+		else if (input_->IsDownRStickRight()) {
 			if (ReticleMoveMax_.x > reticlePosition_.x) { reticlePosition_.x += reticleSpeedXY_; }
 		}
 

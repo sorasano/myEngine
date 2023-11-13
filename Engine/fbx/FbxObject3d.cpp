@@ -150,13 +150,15 @@ void FbxObject3D::CreateGraphicsPipeline()
 	descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0); // t0 レジスタ
 
 	// ルートパラメータ
-	CD3DX12_ROOT_PARAMETER rootparams[3] = {};
+	CD3DX12_ROOT_PARAMETER rootparams[4] = {};
 	// CBV（座標変換行列用）
 	rootparams[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
 	// SRV（テクスチャ）
 	rootparams[1].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);
+	// CBV（カメラ座標用）
+	rootparams[2].InitAsConstantBufferView(2, 0, D3D12_SHADER_VISIBILITY_ALL);
 	//CBV(スキニング用)
-	rootparams[2].InitAsConstantBufferView(3,0,D3D12_SHADER_VISIBILITY_ALL);
+	rootparams[3].InitAsConstantBufferView(3,0,D3D12_SHADER_VISIBILITY_ALL);
 
 	// スタティックサンプラー
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0);
@@ -299,8 +301,6 @@ void FbxObject3D::Update()
 
 	//ビュープロジェクション行列
 	const XMMATRIX& matViewProjection = camera_->GetViewProjection();
-	//モデルのメッシュトランスフォーム
-	//const XMMATRIX& modelTransform = model_->GetModelTransform();
 	//カメラ座標
 	const XMFLOAT3& cameraPos = camera_->GetEye();
 
@@ -333,9 +333,9 @@ void FbxObject3D::Draw(ID3D12GraphicsCommandList* cmdList_)
 	//定数バッファビューをセット(座標)
 	cmdList_->SetGraphicsRootConstantBufferView(0, constBuffTransform_->GetGPUVirtualAddress());
 	//定数バッファビューをセット(カメラ)
-	cmdList_->SetGraphicsRootConstantBufferView(1, constBuffCamera_->GetGPUVirtualAddress());
+	cmdList_->SetGraphicsRootConstantBufferView(2, constBuffCamera_->GetGPUVirtualAddress());
 	//定数バッファビューをセット(スキニング)
-	cmdList_->SetGraphicsRootConstantBufferView(2, constBuffSkin_->GetGPUVirtualAddress());
+	cmdList_->SetGraphicsRootConstantBufferView(3, constBuffSkin_->GetGPUVirtualAddress());
 
 	//モデル描画
 	model_->Draw(cmdList_);

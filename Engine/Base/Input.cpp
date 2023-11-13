@@ -48,36 +48,145 @@ void Input::Update() {
 	// キーボード情報の取得開始
 	keyboard->Acquire();
 
-	//// 最新のキーボード情報だったものは1フレーム前のキーボード情報として保存
-	//for (int i = 0; i < 256; i++) {
-	//	oldkey[i] = key[i];
-	//}
-
 	//前回のキー入力を保存
-	memcpy(keyPre, key, sizeof(key));
+	memcpy(oldkey, key, sizeof(key));
 
 	// 全キーの入力状態を取得する
 	keyboard->GetDeviceState(sizeof(key), key);
 
+	//パッドの接続確認
+	oldPadState = padState;
+	DWORD flag;
+	flag = XInputGetState(0, &padState);
 }
 
-bool Input::PushKey(BYTE keyNumber)
-{
-	//指定のキーを押していればtrueを返す
-	if (key[keyNumber]) {
-		return true;
-	}
+//bool Input::PushKey(BYTE keyNumber)
+//{
+//	//指定のキーを押していればtrueを返す
+//	if (key[keyNumber]) {
+//		return true;
+//	}
+//
+//	//そうでなけえればfalseを返す
+//	return false;
+//}
+//
+//bool Input::TriggerKey(BYTE keyNumber)
+//{
+//	//指定のキーを押していればtrueを返す
+//	if (key[keyNumber] && keyPre[keyNumber] == false) {
+//		return true;
+//	}
+//
+//	return false;
+//}
 
-	//そうでなけえればfalseを返す
-	return false;
+bool Input::IsKeyTrigger(BYTE key_)
+{
+	return (key[key_] && !oldkey[key_]);
 }
 
-bool Input::TriggerKey(BYTE keyNumber)
+bool Input::IsKeyPress(BYTE key_)
 {
-	//指定のキーを押していればtrueを返す
-	if (key[keyNumber] && keyPre[keyNumber] == false) {
-		return true;
-	}
+	return key[key_];
+}
 
-	return false;
+bool Input::IsKeyRelease(BYTE key_)
+{
+	return (!key[key_] && oldkey[key_]);
+}
+
+bool Input::IsPadTrigger(WORD Button)
+{
+	return (padState.Gamepad.wButtons & Button) && ((oldPadState.Gamepad.wButtons & Button) != Button);
+}
+
+bool Input::IsPadPress(WORD Button)
+{
+	return padState.Gamepad.wButtons & Button;
+}
+
+bool Input::IsPadRelease(WORD Button)
+{
+	return (oldPadState.Gamepad.wButtons & Button) && ((padState.Gamepad.wButtons & Button) != Button);
+}
+
+bool Input::IsDownLStickLeft(int deadZone)
+{
+	return padState.Gamepad.sThumbLX < -deadZone;
+}
+
+bool Input::IsTriggerLStickLeft(int deadZone)
+{
+	return (padState.Gamepad.sThumbLX < -deadZone) && (oldPadState.Gamepad.sThumbLX >= -deadZone);
+}
+
+bool Input::IsDownLStickRight(int deadZone)
+{
+	return padState.Gamepad.sThumbLX > deadZone;
+}
+
+bool Input::IsTriggerLStickRight(int deadZone)
+{
+	return (padState.Gamepad.sThumbLX > deadZone) && (oldPadState.Gamepad.sThumbLX <= deadZone);
+}
+
+bool Input::IsDownLStickUp(int deadZone)
+{
+	return padState.Gamepad.sThumbLY > deadZone;
+}
+
+bool Input::IsTriggerLStickUp(int deadZone)
+{
+	return (padState.Gamepad.sThumbLY > deadZone) && (oldPadState.Gamepad.sThumbLY <= deadZone);
+}
+
+bool Input::IsDownLStickDown(int deadZone)
+{
+	return padState.Gamepad.sThumbLY < -deadZone;
+}
+
+bool Input::IsTriggerLStickDown(int deadZone)
+{
+	return (padState.Gamepad.sThumbLY < -deadZone) && (oldPadState.Gamepad.sThumbLY >= -deadZone);
+}
+
+bool Input::IsDownRStickLeft(int deadZone)
+{
+	return padState.Gamepad.sThumbRX < -deadZone;
+}
+
+bool Input::IsTriggerRStickLeft(int deadZone)
+{
+	return (padState.Gamepad.sThumbRX < -deadZone) && (oldPadState.Gamepad.sThumbRX >= -deadZone);
+}
+
+bool Input::IsDownRStickRight(int deadZone)
+{
+	return padState.Gamepad.sThumbRX > deadZone;
+}
+
+bool Input::IsTriggerRStickRight(int deadZone)
+{
+	return (padState.Gamepad.sThumbRX > deadZone) && (oldPadState.Gamepad.sThumbRX <= deadZone);
+}
+
+bool Input::IsDownRStickUp(int deadZone)
+{
+	return padState.Gamepad.sThumbRY > deadZone;
+}
+
+bool Input::IsTriggerRStickUp(int deadZone)
+{
+	return (padState.Gamepad.sThumbRY > deadZone) && (oldPadState.Gamepad.sThumbRY <= deadZone);
+}
+
+bool Input::IsDownRStickDown(int deadZone)
+{
+	return padState.Gamepad.sThumbRY < -deadZone;
+}
+
+bool Input::IsTriggerRStickDown(int deadZone)
+{
+	return (padState.Gamepad.sThumbRY < -deadZone) && (oldPadState.Gamepad.sThumbRY >= -deadZone);
 }

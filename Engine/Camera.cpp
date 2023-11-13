@@ -113,13 +113,13 @@ void Camera::UpdateStraightMode()
 
 void Camera::UpdatePlayerFollowMode()
 {
-	eye_.x = 100;
+	eye_.x = initEye_.x;
 	eye_.y = initEye_.y;
 	target_.x = initTarget_.x;
 	target_.y = initTarget_.y;
 
 	//プレイヤーの後ろからプレイヤーを追従する視点
-	eye_.z = playerPos_.z;
+	eye_.z = playerPos_.z - playerRange_;
 	target_.z = playerPos_.z;
 }
 
@@ -156,39 +156,39 @@ void Camera::DebugMode()
 	//カメラ操作
 	float speed = 1.0f;
 
-	if (input_->PushKey(DIK_W) || input_->PushKey(DIK_S) || input_->PushKey(DIK_D) || input_->PushKey(DIK_A)) {
+	if (input_->IsKeyPress(DIK_W) || input_->IsKeyPress(DIK_S) || input_->IsKeyPress(DIK_D) || input_->IsKeyPress(DIK_A)) {
 
 		//座標を移動する処理
-		if (input_->PushKey(DIK_W)) {
+		if (input_->IsKeyPress(DIK_W)) {
 			eye_.z += speed;
 		}
-		else if (input_->PushKey(DIK_S)) {
+		else if (input_->IsKeyPress(DIK_S)) {
 			eye_.z -= speed;
 		}
 
-		if (input_->PushKey(DIK_A)) {
+		if (input_->IsKeyPress(DIK_A)) {
 			eye_.x -= speed;
 		}
-		else if (input_->PushKey(DIK_D)) {
+		else if (input_->IsKeyPress(DIK_D)) {
 			eye_.x += speed;
 		}
 
 	}
 
-	if (input_->PushKey(DIK_UP) || input_->PushKey(DIK_DOWN) || input_->PushKey(DIK_RIGHT) || input_->PushKey(DIK_LEFT)) {
+	if (input_->IsKeyPress(DIK_UP) || input_->IsKeyPress(DIK_DOWN) || input_->IsKeyPress(DIK_RIGHT) || input_->IsKeyPress(DIK_LEFT)) {
 
 		//座標を移動する処理
-		if (input_->PushKey(DIK_UP)) {
+		if (input_->IsKeyPress(DIK_UP)) {
 			target_.y += speed;
 		}
-		else if (input_->PushKey(DIK_DOWN)) {
+		else if (input_->IsKeyPress(DIK_DOWN)) {
 			target_.y -= speed;
 		}
 
-		if (input_->PushKey(DIK_RIGHT)) {
+		if (input_->IsKeyPress(DIK_RIGHT)) {
 			target_.x -= speed;
 		}
-		else if (input_->PushKey(DIK_LEFT)) {
+		else if (input_->IsKeyPress(DIK_LEFT)) {
 			target_.x += speed;
 		}
 

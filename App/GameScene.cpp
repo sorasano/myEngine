@@ -340,7 +340,9 @@ void GameScene::DrawSprite()
 		player_->DrawSprite(dxCommon_->GetCommandList());
 		break;
 	case BOSS:
-		player_->DrawSprite(dxCommon_->GetCommandList());
+		if (!boss_->GetIsDead()) {
+			player_->DrawSprite(dxCommon_->GetCommandList());
+		}
 		break;
 
 	case CLEAR:
@@ -623,7 +625,7 @@ void GameScene::ChangeScene()
 	case TITLE:
 
 		//スペースを押したら演出プラスシーンの初期化
-		if (input_->TriggerKey(DIK_SPACE) && !performanceManager_->GetIsPerformance()) {
+		if (input_->IsKeyTrigger(DIK_SPACE) || input_->IsPadTrigger(XINPUT_GAMEPAD_A) && !performanceManager_->GetIsPerformance()) {
 			performanceManager_->SetPerformanceNum(TITLETOPLAY);
 
 			//プレイシーンは演出のため先に初期化をする
@@ -654,7 +656,7 @@ void GameScene::ChangeScene()
 	case CLEAR:
 
 		//タイトルに戻る演出
-		if (input_->TriggerKey(DIK_SPACE) && !performanceManager_->GetIsPerformance()) {
+		if (input_->IsKeyTrigger(DIK_SPACE) || input_->IsPadTrigger(XINPUT_GAMEPAD_A) && !performanceManager_->GetIsPerformance()) {
 			performanceManager_->SetPerformanceNum(RETURNTITLE);
 		}
 
@@ -663,7 +665,7 @@ void GameScene::ChangeScene()
 	case GAMEOVER:
 
 		//汎用演出
-		if (input_->TriggerKey(DIK_SPACE) && !performanceManager_->GetIsPerformance()) {
+		if (input_->IsKeyTrigger(DIK_SPACE) || input_->IsPadTrigger(XINPUT_GAMEPAD_A) && !performanceManager_->GetIsPerformance()) {
 			performanceManager_->SetPerformanceNum(RETURNTITLE);
 		}
 
