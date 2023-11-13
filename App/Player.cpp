@@ -127,10 +127,17 @@ void Player::Draw(ID3D12GraphicsCommandList* cmdList)
 	}
 
 	//弾
+
 	for (std::unique_ptr<PlayerBullet>& bullet : bullets_)
 	{
 		bullet->Draw(cmdList);
 	}
+
+}
+
+void Player::DrawClearScene(ID3D12GraphicsCommandList* cmdList)
+{
+	playerObject_->Draw(cmdList);
 }
 
 void Player::DrawSprite(ID3D12GraphicsCommandList* cmdList)

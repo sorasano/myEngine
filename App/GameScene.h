@@ -116,7 +116,7 @@ private:
 
 	//フェーズ
 	int phase_ = 0;
-	const int MaxPhase_ = 10;
+	const int MaxPhase_ = 3;
 
 	//Fbx
 	FbxModel* enemyModel_ = nullptr;

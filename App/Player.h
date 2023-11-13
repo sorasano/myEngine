@@ -49,6 +49,12 @@ public:
 	*/
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 	/**
+	* クリアシーン描画
+	*
+	* @param[out] cmdList コマンドリスト
+	*/
+	void DrawClearScene(ID3D12GraphicsCommandList* cmdList);
+	/**
 	* スプライト描画
 	*
 	* @param[out] cmdList コマンドリスト
@@ -201,7 +207,7 @@ private:
 	float speedZ_ = 0.5f;
 
 	//基礎スピード以外の加速スピード
-	float addSpeed_ = 5.0f;
+	float addSpeed_ = 0.0f;
 	//敵を倒した時の加速量
 	float addSpeedByEnemy_ = 0.5f;
 	//敵に被弾した時の減速
