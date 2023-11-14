@@ -34,12 +34,12 @@ public:
 	static void StaticInitialize(ID3D12Device* dev);
 
 	struct ConstBufferCamera {
-		XMMATRIX view;
-		XMMATRIX projection;
+		XMMATRIX viewproj;
+		XMFLOAT3 cameraPos;
 	};
 
 	ConstBufferCamera* constMap = nullptr;
-	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff_;
+	ComPtr<ID3D12Resource> constBuff_;
 
 private:
 

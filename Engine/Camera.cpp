@@ -36,6 +36,7 @@ void Camera::Initialize()
 	cbResourceDesc.MipLevels = 1;
 	cbResourceDesc.SampleDesc.Count = 1;
 	cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+
 	//定数バッファの生成
 	result = device_->CreateCommittedResource(
 		&cbHeapProp,//ヒープ設定
@@ -68,8 +69,17 @@ void Camera::UpdateMatrix()
 		nearClip_, farClip								//前橋、奥橋
 	);
 
-	constMap->view = matView_;
-	constMap->projection = matProjection_;
+	HRESULT result;
+
+	//定数バッファへデータ転送
+	ConstBufferCamera* constMapCamera = nullptr;
+	result = constBuff_->Map(0, nullptr, (void**)&constMapCamera);
+	if (SUCCEEDED(result))
+	{
+		constMap->viewproj = matView_ * matProjection_;
+		constMap->cameraPos = eye_;
+		constBuff_->Unmap(0, nullptr);
+	}
 }
 
 void Camera::Update(XMFLOAT3 playerPos)
