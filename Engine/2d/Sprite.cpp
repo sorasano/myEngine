@@ -135,6 +135,9 @@ void Sprite::Initialize()
 	result = constBuffTransform_->Map(0, nullptr, (void**)&constMapTransform_);
 	assert(SUCCEEDED(result));
 	constMapTransform_->mat = DirectX::XMMatrixIdentity();
+
+	//アンカーポイントを中点に
+	anchorPoint_ = XMFLOAT2(0.5f, 0.5f);
 }
 
 void Sprite::Update()

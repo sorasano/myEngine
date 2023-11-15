@@ -181,7 +181,9 @@
     <ClCompile Include="Engine\Loader\CSVLoader.cpp" />
     <ClCompile Include="Engine\Loader\JsonLoader.cpp" />
     <ClCompile Include="Engine\main.cpp" />
+    <ClCompile Include="Engine\Math\Affine.cpp" />
     <ClCompile Include="Engine\Math\Easing.cpp" />
+    <ClCompile Include="Engine\Math\Matrix4.cpp" />
     <ClCompile Include="Engine\Math\Random.cpp" />
     <ClCompile Include="Engine\Math\Vector2.cpp" />
     <ClCompile Include="Engine\Math\Vector3.cpp" />
@@ -305,7 +307,10 @@
     <ClInclude Include="Engine\Loader\CSVLoader.h" />
     <ClInclude Include="Engine\Loader\json.hpp" />
     <ClInclude Include="Engine\Loader\JsonLoader.h" />
+    <ClInclude Include="Engine\Math\Affine.h" />
     <ClInclude Include="Engine\Math\Easing.h" />
+    <ClInclude Include="Engine\Math\MathManager.h" />
+    <ClInclude Include="Engine\Math\Matrix4.h" />
     <ClInclude Include="Engine\Math\Random.h" />
     <ClInclude Include="Engine\Math\Vector2.h" />
     <ClInclude Include="Engine\Math\Vector3.h" />

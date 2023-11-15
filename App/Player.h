@@ -9,6 +9,8 @@
 #include "PlayerBullet.h"
 #include "Sprite.h"
 
+#include "MathManager.h"
+
 #pragma once
 class Player
 {
@@ -217,31 +219,18 @@ private:
 
 	//--------レティクル--------
 
-	//レティクル座標
-	XMFLOAT3 reticlePosition_ = { 0,0,0 };
+	//レティクル座標(ワールド)
+	XMFLOAT3 reticle3DPosition_ = { 0,0,0 };
 	//移動範囲
 	const XMFLOAT2 ReticleMoveMax_ = { 40.0f,15.0f };
 	//移動スピード(xy)
 	float reticleSpeedXY_ = 1.0f;
 
-	//前(奥)のレティクル
-	FbxObject3D* frontReticleObject_ = nullptr;
-
-	//後ろ(手前)のレティクル
-	FbxObject3D* backReticleObject_ = nullptr;
+	//レティクルスプライト
+	Sprite* reticleSprite_ = nullptr;
 
 	//自機からの距離
-	const float kDistancePlayerTo3DFrontReticle_ = 25.0f;
-	const float kDistancePlayerTo3DBackReticle_ = kDistancePlayerTo3DFrontReticle_ / 2;
-
-	XMFLOAT3 fRPosition_ = { 0,0,0 };
-	XMFLOAT3 fRRotation_ = { 0,0,0 };
-	XMFLOAT3 fRScale_ = { 1,1,1 };
-
-
-	XMFLOAT3 bRPosition_ = { 0,0,0 };
-	XMFLOAT3 bRRotation_ = { 0,0,0 };
-	XMFLOAT3 bRScale_ = { 1,1,1 };
+	const float kDistancePlayerToReticle_ = 25.0f;
 
 	//ベクトル
 	Vector3 playerVec_ = {};

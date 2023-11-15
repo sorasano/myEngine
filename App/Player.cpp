@@ -4,10 +4,6 @@
 */
 
 #include "Player.h"
-
-#include "Vector3.h"
-#define PI 3.1415
-
 #include "Imgui.h"
 
 Player* Player::GetInstance()
@@ -25,8 +21,6 @@ Player::~Player()
 	FBX_SAFE_DELETE(playerObject_);
 	FBX_SAFE_DELETE(playerModel_);
 	FBX_SAFE_DELETE(playerBulletModel_);
-	FBX_SAFE_DELETE(bReticleModel_);
-	FBX_SAFE_DELETE(fReticleModel_);
 }
 
 void Player::Initialize()
@@ -48,20 +42,19 @@ void Player::Initialize()
 	//弾モデルセット
 	this->bulletModel_ = playerBulletModel_;
 
-	//レティクルモデルセット
-	frontReticleObject_ = new FbxObject3D;
-	frontReticleObject_->Initialize();
-	frontReticleObject_->SetModel(fReticleModel_);
-
-	backReticleObject_ = new FbxObject3D;
-	backReticleObject_->Initialize();
-	backReticleObject_->SetModel(bReticleModel_);
-
-	//ラジアン変換
-	fRRotation_.y = static_cast<float>(90 * (PI / 180));
-	bRRotation_.y = static_cast<float>(90 * (PI / 180));
+	////ラジアン変換
+	//fRRotation_.y = static_cast<float>(90 * (PI / 180));
+	//bRRotation_.y = static_cast<float>(90 * (PI / 180));
 
 	//スプライト
+
+	//レティクル
+	reticleSprite_ = new Sprite();
+	reticleSprite_->SetTextureNum(5);
+	reticleSprite_->Initialize();
+	reticleSprite_->SetScale(XMFLOAT2(64, 64));
+
+	//スピードUI
 	speedSprite_ = new Sprite();
 	speedSprite_->SetTextureNum(3);
 	speedSprite_->Initialize();
@@ -136,9 +129,7 @@ void Player::Draw(ID3D12GraphicsCommandList* cmdList)
 void Player::DrawSprite(ID3D12GraphicsCommandList* cmdList)
 {
 	//レティクル
-	frontReticleObject_->Draw(cmdList);
-	backReticleObject_->Draw(cmdList);
-
+	reticleSprite_->Draw(cmdList);
 	//スピードUI
 	speedSprite_->Draw(cmdList);
 }
@@ -262,36 +253,31 @@ void Player::UpdateRaticle()
 {
 	MoveRaticle();
 
-	//自機のワールド座標から3Dレティクルのワールド座標を計算
+	//自機とレティクルのベクトルを算出
 	{
-		//奥のレティクルはレティクル座標をそのまま入れる
-		fRPosition_ = reticlePosition_;
-
-		//中央のレティクルは自機と,レティクル座標のベクトルから座標を算出
 		playerVec_ = { position_.x,position_.y,position_.z };
-		reticleVec_ = { reticlePosition_.x, reticlePosition_.y, reticlePosition_.z };
+		reticleVec_ = { reticle3DPosition_.x, reticle3DPosition_.y, reticle3DPosition_.z };
 		playerToReticleVec_ = reticleVec_ - playerVec_;
-
-		//自機からのベクトルを求める
-		playerToReticleVec_ = playerToReticleVec_ / (kDistancePlayerTo3DFrontReticle_ / kDistancePlayerTo3DBackReticle_);
-
-		//自機からのベクトルと自機の座標を足す
-		bRPosition_ = position_;
-		bRPosition_.x += playerToReticleVec_.x;
-		bRPosition_.y += playerToReticleVec_.y;
-		bRPosition_.z += playerToReticleVec_.z;
 	}
 
-	//オブジェクトの更新
-	frontReticleObject_->SetPosition(fRPosition_);
-	frontReticleObject_->SetRotate(fRRotation_);
-	frontReticleObject_->SetScale(fRScale_);
-	frontReticleObject_->Update();
+	//ワールド→スクリーン座標変換	
+	{
+		//ビューポート行列(スクリーン行列)
+		Matrix4 matViewport = {
+			ReticleMoveMax_.x / 2,						0,											0,0,
+			0,											-ReticleMoveMax_.y / 2,						0,0,
+			0,											0,											1,0,
+			ReticleMoveMax_.x / 2 + window_width / 2,	ReticleMoveMax_.y / 2 + window_height / 2,	0,1
+		};
 
-	backReticleObject_->SetPosition(bRPosition_);
-	backReticleObject_->SetRotate(bRRotation_);
-	backReticleObject_->SetScale(bRScale_);
-	backReticleObject_->Update();
+		//ワールド→スクリーン座標変換
+		reticleVec_ = Transform(reticleVec_, matViewport);
+
+	}
+
+	////オブジェクトの更新
+	reticleSprite_->SetPosition(XMFLOAT2(reticleVec_.x, reticleVec_.y));
+	reticleSprite_->Update();
 }
 
 void Player::MoveRaticle()
@@ -299,24 +285,24 @@ void Player::MoveRaticle()
 	//レティクルの移動
 
 	//自機から設定した距離進んだところに座標を設定
-	reticlePosition_.z = position_.z + kDistancePlayerTo3DFrontReticle_;
+	reticle3DPosition_.z = position_.z + kDistancePlayerToReticle_;
 
 	//入力で移動
 	if (input_->IsKeyPress(DIK_UP) || input_->IsKeyPress(DIK_DOWN) || input_->IsKeyPress(DIK_RIGHT) || input_->IsKeyPress(DIK_LEFT)) {
 
 		//座標を移動する処理
 		if (input_->IsKeyPress(DIK_UP)) {
-			if (ReticleMoveMax_.y > reticlePosition_.y) { reticlePosition_.y += reticleSpeedXY_; }
+			if (ReticleMoveMax_.y > reticle3DPosition_.y) { reticle3DPosition_.y += reticleSpeedXY_; }
 		}
 		else if (input_->IsKeyPress(DIK_DOWN)) {
-			if (-ReticleMoveMax_.y < reticlePosition_.y) { reticlePosition_.y -= reticleSpeedXY_; }
+			if (-ReticleMoveMax_.y < reticle3DPosition_.y) { reticle3DPosition_.y -= reticleSpeedXY_; }
 		}
 
 		if (input_->IsKeyPress(DIK_LEFT)) {
-			if (-ReticleMoveMax_.x < reticlePosition_.x) { reticlePosition_.x -= reticleSpeedXY_; }
+			if (-ReticleMoveMax_.x < reticle3DPosition_.x) { reticle3DPosition_.x -= reticleSpeedXY_; }
 		}
 		else if (input_->IsKeyPress(DIK_RIGHT)) {
-			if (ReticleMoveMax_.x > reticlePosition_.x) { reticlePosition_.x += reticleSpeedXY_; }
+			if (ReticleMoveMax_.x > reticle3DPosition_.x) { reticle3DPosition_.x += reticleSpeedXY_; }
 		}
 
 	}
@@ -326,17 +312,17 @@ void Player::MoveRaticle()
 
 		//座標を移動する処理
 		if (input_->IsDownRStickUp()) {
-			if (ReticleMoveMax_.y > reticlePosition_.y) { reticlePosition_.y += reticleSpeedXY_; }
+			if (ReticleMoveMax_.y > reticle3DPosition_.y) { reticle3DPosition_.y += reticleSpeedXY_; }
 		}
 		else if (input_->IsDownRStickDown()) {
-			if (-ReticleMoveMax_.y < reticlePosition_.y) { reticlePosition_.y -= reticleSpeedXY_; }
+			if (-ReticleMoveMax_.y < reticle3DPosition_.y) { reticle3DPosition_.y -= reticleSpeedXY_; }
 		}
 
 		if (input_->IsDownRStickLeft()) {
-			if (-ReticleMoveMax_.x < reticlePosition_.x) { reticlePosition_.x -= reticleSpeedXY_; }
+			if (-ReticleMoveMax_.x < reticle3DPosition_.x) { reticle3DPosition_.x -= reticleSpeedXY_; }
 		}
 		else if (input_->IsDownRStickRight()) {
-			if (ReticleMoveMax_.x > reticlePosition_.x) { reticlePosition_.x += reticleSpeedXY_; }
+			if (ReticleMoveMax_.x > reticle3DPosition_.x) { reticle3DPosition_.x += reticleSpeedXY_; }
 		}
 
 	}
@@ -369,9 +355,7 @@ void Player::Reset()
 	addSpeed_ = 0.0f;
 
 	//レティクル
-	reticlePosition_ = { 0,0,0 };
-	fRPosition_ = { 0,0,0 };
-	bRPosition_ = { 0,0,0 };
+	reticle3DPosition_ = { 0,0,0 };
 
 	//弾
 	bullets_.clear();

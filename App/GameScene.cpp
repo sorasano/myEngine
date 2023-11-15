@@ -4,7 +4,7 @@
 */
 
 #include "GameScene.h"
-#include "MathManager.h"
+#include "Random.h"
 
 GameScene::GameScene()
 {
@@ -49,6 +49,7 @@ void GameScene::Initialize()
 	spriteManager_->LoadFile(2, "gameover.png");
 	spriteManager_->LoadFile(3, "blue1x1.png");
 	spriteManager_->LoadFile(4, "generalPurpose.png");
+	spriteManager_->LoadFile(5, "reticle.png");
 
 	//-----スプライト------
 	Sprite::SetDevice(dxCommon_->GetDevice());
@@ -58,21 +59,18 @@ void GameScene::Initialize()
 	titleSprite_ = new Sprite();
 	titleSprite_->SetTextureNum(0);
 	titleSprite_->Initialize();
-	titleSprite_->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
 	titleSprite_->SetScale(XMFLOAT2(1280, 720));
 	titleSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
 
 	clearSprite_ = new Sprite();
 	clearSprite_->SetTextureNum(1);
 	clearSprite_->Initialize();
-	clearSprite_->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
 	clearSprite_->SetScale(XMFLOAT2(1280, 720));
 	clearSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
 
 	gameoverSprite_ = new Sprite();
 	gameoverSprite_->SetTextureNum(2);
 	gameoverSprite_->Initialize();
-	gameoverSprite_->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
 	gameoverSprite_->SetScale(XMFLOAT2(1280, 720));
 	gameoverSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
 

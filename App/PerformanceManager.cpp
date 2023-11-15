@@ -20,7 +20,6 @@ void PerformanceManager::Initialize(Camera* camera, Player* player,Boss* boss)
 		Sprite *gPSprite = new Sprite();
 		gPSprite->SetTextureNum(4);
 		gPSprite->Initialize();
-		gPSprite->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
 		gPSprite->SetScale(XMFLOAT2(window_width, window_height
 		));
 
