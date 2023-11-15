@@ -4,7 +4,7 @@
 */
 
 #include "GameScene.h"
-#include "Random.h"
+#include "MathManager.h"
 
 GameScene::GameScene()
 {
