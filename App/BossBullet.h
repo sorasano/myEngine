@@ -8,7 +8,7 @@
 #include "DirectXCommon.h"
 
 #include "Collision.h"
-#include "Vector3.h"
+#include "MathManager.h"
 
 #pragma once
 class BossBullet

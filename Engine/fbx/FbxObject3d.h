@@ -128,9 +128,7 @@ public://メンバ関数
 
 protected://メンバ変数
 	//定数バッファ(ワールド座標)
-	ComPtr<ID3D12Resource>constBuffTransform_;
-	//定数バッファ(カメラ)
-	ComPtr<ID3D12Resource>constBuffCamera_;
+	ComPtr<ID3D12Resource> constBuffTransform_;
 	//定数バッファ(スキン)
 	ComPtr<ID3D12Resource> constBuffSkin_;
 

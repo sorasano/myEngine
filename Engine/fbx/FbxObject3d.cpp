@@ -192,8 +192,7 @@ void FbxObject3D::Initialize()
 	//定数バッファの生成
 	CD3DX12_HEAP_PROPERTIES heap = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 	CD3DX12_RESOURCE_DESC resource1 = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataTransform) + 0xff) & ~0xff);
-	CD3DX12_RESOURCE_DESC resource2 = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataCamera) + 0xff) & ~0xff);
-	CD3DX12_RESOURCE_DESC resource3 = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataSkin) + 0xff) & ~0xff);
+	CD3DX12_RESOURCE_DESC resource2 = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataSkin) + 0xff) & ~0xff);
 
 	//定数バッファの生成(ワールド座標)
 	result = device_->CreateCommittedResource(
@@ -205,21 +204,11 @@ void FbxObject3D::Initialize()
 		IID_PPV_ARGS(&constBuffTransform_)
 	);
 
-	//定数バッファの生成(カメラ)
-	result = device_->CreateCommittedResource(
-		&heap,
-		D3D12_HEAP_FLAG_NONE,
-		&resource2,
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&constBuffCamera_)
-	);
-
 	//定数バッファの生成(スキン)
 	result = device_->CreateCommittedResource(
 		&heap,	//アップロード可能
 		D3D12_HEAP_FLAG_NONE,
-		&resource3,
+		&resource2,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
 		IID_PPV_ARGS(&constBuffSkin_)
@@ -297,22 +286,6 @@ void FbxObject3D::Update()
 		constBuffTransform_->Unmap(0, nullptr);
 	}
 
-	//カメラ
-
-	//ビュープロジェクション行列
-	const XMMATRIX& matViewProjection = camera_->GetViewProjection();
-	//カメラ座標
-	const XMFLOAT3& cameraPos = camera_->GetEye();
-
-	//定数バッファへデータ転送
-	ConstBufferDataCamera* constMapCamera = nullptr;
-	result = constBuffCamera_->Map(0, nullptr, (void**)&constMapCamera);
-	if (SUCCEEDED(result))
-	{
-		constMapCamera->viewproj = matViewProjection;
-		constMapCamera->cameraPos = cameraPos;
-		constBuffCamera_->Unmap(0, nullptr);
-	}
 }
 
 
@@ -333,7 +306,7 @@ void FbxObject3D::Draw(ID3D12GraphicsCommandList* cmdList_)
 	//定数バッファビューをセット(座標)
 	cmdList_->SetGraphicsRootConstantBufferView(0, constBuffTransform_->GetGPUVirtualAddress());
 	//定数バッファビューをセット(カメラ)
-	cmdList_->SetGraphicsRootConstantBufferView(2, constBuffCamera_->GetGPUVirtualAddress());
+	cmdList_->SetGraphicsRootConstantBufferView(2, camera_->constBuff_->GetGPUVirtualAddress());
 	//定数バッファビューをセット(スキニング)
 	cmdList_->SetGraphicsRootConstantBufferView(3, constBuffSkin_->GetGPUVirtualAddress());
 

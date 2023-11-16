@@ -5,7 +5,6 @@
 
 #include "EnemyBullet.h"
 #include <cmath>
-#define PI 3.1415
 
 EnemyBullet* EnemyBullet::GetInstance()
 {

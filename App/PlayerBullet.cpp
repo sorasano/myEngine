@@ -5,7 +5,6 @@
 
 #include "PlayerBullet.h"
 #include <cmath>
-#define PI 3.1415
 
 PlayerBullet* PlayerBullet::GetInstance()
 {

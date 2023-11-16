@@ -5,7 +5,6 @@
 
 #include "BossBullet.h"
 #include <cmath>
-#define PI 3.1415
 
 BossBullet* BossBullet::GetInstance()
 {
