@@ -41,6 +41,20 @@ void Input::Initialize() {
 		winApp_->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
 	assert(SUCCEEDED(result));
 
+
+	// マウスデバイスの生成
+
+	result = directInput->CreateDevice(GUID_SysMouse, &mouse, NULL);
+	assert(SUCCEEDED(result));
+
+	// 入力データ形式のセットmouse
+	result = mouse->SetDataFormat(& c_dfDIMouse); // 標準形式
+	assert(SUCCEEDED(result));
+
+	// 排他制御レベルのセット
+	result = mouse->SetCooperativeLevel(
+		winApp_->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
+	assert(SUCCEEDED(result));
 }
 
 void Input::Update() {
@@ -54,10 +68,24 @@ void Input::Update() {
 	// 全キーの入力状態を取得する
 	keyboard->GetDeviceState(sizeof(key), key);
 
+	//マウスの状態を更新
+
+	// 更新前に最新マウス情報を保存する
+	oldMouseState = mouseState;
+
+	// 最新のマウスの状態を更新
+	HRESULT	hr = mouse->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState);
+	if (FAILED(hr))
+	{
+		mouse->Acquire();
+		hr = mouse->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState);
+	}
+
 	//パッドの接続確認
 	oldPadState = padState;
 	DWORD flag;
 	flag = XInputGetState(0, &padState);
+
 }
 
 //bool Input::PushKey(BYTE keyNumber)
@@ -96,6 +124,37 @@ bool Input::IsKeyRelease(BYTE key_)
 	return (!key[key_] && oldkey[key_]);
 }
 
+XMFLOAT2 Input::GetMousePosition()
+{
+	//マウス座標取得
+	POINT p;
+	GetCursorPos(&p);
+
+	//スクリーン座標をクライアント座標に変換
+	HWND hwnd = WinApp::GetInstance()->GetHwnd();
+	ScreenToClient(hwnd,&p);
+
+	return XMFLOAT2((float)p.x,(float)p.y);
+}
+
+bool Input::IsMouseTrigger(MouseButton buttonType)
+{
+	return (!(oldMouseState.rgbButtons[LEFT_CLICK] != buttonType) &&
+		mouseState.rgbButtons[LEFT_CLICK] != buttonType);
+}
+
+bool Input::IsMousePress(MouseButton buttonType)
+{
+	return mouseState.rgbButtons[LEFT_CLICK] != buttonType;
+}
+
+bool Input::IsMouseRelease(MouseButton buttonType)
+{
+	return (oldMouseState.rgbButtons[LEFT_CLICK] != buttonType &&
+		!(mouseState.rgbButtons[LEFT_CLICK] != buttonType));
+}
+
+
 bool Input::IsPadTrigger(WORD Button)
 {
 	return (padState.Gamepad.wButtons & Button) && ((oldPadState.Gamepad.wButtons & Button) != Button);
@@ -103,7 +162,7 @@ bool Input::IsPadTrigger(WORD Button)
 
 bool Input::IsPadPress(WORD Button)
 {
-	return padState.Gamepad.wButtons & Button;
+	return padState.Gamepad.wButtons == Button;
 }
 
 bool Input::IsPadRelease(WORD Button)

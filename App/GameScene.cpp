@@ -622,8 +622,8 @@ void GameScene::ChangeScene()
 	{
 	case TITLE:
 
-		//スペースを押したら演出プラスシーンの初期化
-		if (input_->IsKeyTrigger(DIK_SPACE) || input_->IsPadTrigger(XINPUT_GAMEPAD_A) && !performanceManager_->GetIsPerformance()) {
+		//左クリックしたら演出プラスシーンの初期化
+		if (input_->IsMouseTrigger(LEFT_CLICK) && !performanceManager_->GetIsPerformance()) {
 			performanceManager_->SetPerformanceNum(TITLETOPLAY);
 
 			//プレイシーンは演出のため先に初期化をする
@@ -654,7 +654,7 @@ void GameScene::ChangeScene()
 	case CLEAR:
 
 		//タイトルに戻る演出
-		if (input_->IsKeyTrigger(DIK_SPACE) || input_->IsPadTrigger(XINPUT_GAMEPAD_A) && !performanceManager_->GetIsPerformance()) {
+		if (input_->IsMouseTrigger(LEFT_CLICK) && !performanceManager_->GetIsPerformance()) {
 			performanceManager_->SetPerformanceNum(RETURNTITLE);
 		}
 
@@ -663,7 +663,7 @@ void GameScene::ChangeScene()
 	case GAMEOVER:
 
 		//汎用演出
-		if (input_->IsKeyTrigger(DIK_SPACE) || input_->IsPadTrigger(XINPUT_GAMEPAD_A) && !performanceManager_->GetIsPerformance()) {
+		if (input_->IsMouseTrigger(LEFT_CLICK) && !performanceManager_->GetIsPerformance()) {
 			performanceManager_->SetPerformanceNum(RETURNTITLE);
 		}
 

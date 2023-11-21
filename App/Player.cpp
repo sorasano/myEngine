@@ -69,12 +69,10 @@ void Player::Update()
 	//レティクルの更新
 	UpdateRaticle();
 
-	//スプライトの更新
-	UpdateSprite();
-
 	//弾の更新
 	BulletUpdate();
 
+	//無敵時間更新
 	if (isInvincible_) {
 		invincibleTimer_++;
 		if (invincibleTimer_ > InvincibleTime_) {
@@ -83,13 +81,10 @@ void Player::Update()
 		}
 	}
 
-	//isInvincible_ = true;
+	//スプライトの更新
+	UpdateSprite();
 
 	UpdateMatrix();
-
-	//ImGui::Begin("position");
-	//ImGui::Text("%f,%f,%f",position_.x,position_.y,position_.z);
-	//ImGui::End();
 
 }
 
@@ -205,8 +200,8 @@ void Player::Move()
 void Player::Shot()
 {
 	bulletCoolTimer_++;
-	//スペース、で弾発射
-	if (input_->IsKeyPress(DIK_SPACE) || input_->IsPadPress(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
+	//クリックで弾発射
+	if (input_->IsMousePress(LEFT_CLICK)) {
 
 		if (BulletCoolTime_ < bulletCoolTimer_) {
 			MakeBullet();
@@ -278,6 +273,13 @@ void Player::UpdateRaticle()
 	////オブジェクトの更新
 	reticleSprite_->SetPosition(XMFLOAT2(reticleVec_.x, reticleVec_.y));
 	reticleSprite_->Update();
+
+	XMFLOAT2 mousePosition;
+	mousePosition = input_->GetMousePosition();
+
+	ImGui::Begin("mouseposition");
+	ImGui::Text("%f,%f", mousePosition.x, mousePosition.y);
+	ImGui::End();
 }
 
 void Player::MoveRaticle()

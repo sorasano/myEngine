@@ -17,6 +17,8 @@
 #include<Xinput.h>
 #pragma comment(lib,"xinput.lib")
 
+#include <DirectXMath.h>
+
 //////////////////////////////////////////
 /////////////PADのボタン一覧////////////////
 /////////////////////////////////////////
@@ -34,6 +36,14 @@
 //XINPUT_GAMEPAD_B						Bボタン
 //XINPUT_GAMEPAD_X						Xボタン
 //XINPUT_GAMEPAD_Y						Yボタン
+
+using XMFLOAT2 = DirectX::XMFLOAT2;
+
+enum MouseButton {
+	LEFT_CLICK,
+	RIGHT_CLICK,
+	MID_CLICK
+};
 
 class Input final
 {
@@ -60,9 +70,6 @@ public:
 	*/
 	Input& operator=(const Input& obj) = delete;
 
-	XINPUT_STATE padState;
-	XINPUT_STATE oldPadState;
-
 private:
 
 	/**
@@ -88,7 +95,6 @@ public:
 
 	//入力情報
 
-
 	//キーボード押下情報
 	/**
 	* キーの入力瞬間チェック
@@ -102,6 +108,27 @@ public:
 	* キーの離しをチェック
 	*/
 	bool IsKeyRelease(BYTE key_);
+
+	//マウス
+
+	/**
+	* 座標取得
+	*/
+	XMFLOAT2 GetMousePosition();
+
+	//マウス押下情報
+	/**
+	* キーの入力瞬間チェック
+	*/
+	bool IsMouseTrigger(MouseButton buttonType);
+	/**
+	* キーの押込みをチェック
+	*/
+	bool IsMousePress(MouseButton keybuttonType_);
+	/**
+	* キーの離しをチェック
+	*/
+	bool IsMouseRelease(MouseButton buttonType);
 
 
 	//パッド押下情報(ボタン)
@@ -149,8 +176,19 @@ private:
 	ComPtr<IDirectInputDevice8> keyboard;
 	ComPtr<IDirectInput8> directInput;
 
+	ComPtr<IDirectInputDevice8> mouse;
+
+	//キーボード
 	BYTE key[256] = {};
 	BYTE oldkey[256] = {};
+
+	//パッド
+	XINPUT_STATE padState;
+	XINPUT_STATE oldPadState;
+
+	//マウス
+	DIMOUSESTATE mouseState;
+	DIMOUSESTATE oldMouseState;
 
 	//WindowsAPI
 	WinApp* winApp_ = nullptr;

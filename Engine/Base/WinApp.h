@@ -12,6 +12,8 @@ using namespace Microsoft::WRL;
 static const int window_width = 1280; // 横幅
 static const int window_height = 720; // 縦幅
 
+#define WINDOW_CLASS_NAME TEXT("SPEED")
+
 class WinApp final
 {
 public:
