@@ -175,7 +175,7 @@ void GameScene::Update()
 	case PLAY:
 
 		//自機
-		player_->Update();
+		player_->Update(camera_->GetViewProjection());
 
 		//敵
 		for (std::unique_ptr<Enemy>& enemy : enemys_)
@@ -192,7 +192,7 @@ void GameScene::Update()
 	case BOSS:
 
 		//自機
-		player_->Update();
+		player_->Update(camera_->GetViewProjection());
 
 		//ボス
 		boss_->Update(player_->GetPosition(), player_->GetSpeed());
@@ -701,7 +701,7 @@ void GameScene::PlaySceneInitialize()
 
 	//プレイヤー
 	player_->SetPosition(XMFLOAT3{ camera_->GetEye().x,camera_->GetEye().y - 10,camera_->GetEye().z });
-	player_->Update();
+	//player_->Update();
 
 	//敵
 	SetEnemy();

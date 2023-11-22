@@ -14,6 +14,7 @@
 #pragma once
 class Player
 {
+
 public:
 	/**
 	* シングルトンインスタンス
@@ -35,7 +36,7 @@ public:
 	/**
 	* 更新
 	*/
-	void Update();
+	void Update(XMMATRIX matVPV);
 	/**
 	* 行列更新
 	*/
@@ -93,13 +94,9 @@ public:
 
 
 	/**
-	* レティクル初期化
-	*/
-	void UpdateRaticle();
-	/**
 	* レティクル更新
 	*/
-	void MoveRaticle();
+	void UpdateRaticle(XMMATRIX matVPV);
 	/**
 	* スプライト更新
 	*/
@@ -175,7 +172,7 @@ public:
 	* @param[in] isDead 死亡フラグ
 	* @param[in] i 何番の弾か
 	*/
-	void SetBulletIsDead(bool isDead,int i);
+	void SetBulletIsDead(bool isDead, int i);
 
 private:
 	//アフィン変換情報
@@ -187,7 +184,7 @@ private:
 	XMMATRIX matWorld_ = {};
 
 	//当たり判定用
-	XMFLOAT3 colSize_ = {1.0f,1.0f,1.0f};
+	XMFLOAT3 colSize_ = { 1.0f,1.0f,1.0f };
 
 private:
 	//FBX
@@ -225,30 +222,22 @@ private:
 
 	//--------レティクル--------
 
-	//レティクル座標(ワールド)
-	XMFLOAT3 reticle3DPosition_ = { 0,0,0 };
-	//移動範囲
-	const XMFLOAT2 ReticleMoveMax_ = { 40.0f,15.0f };
-	//移動スピード(xy)
-	float reticleSpeedXY_ = 1.0f;
-
+	//レティクル座標(2D)
+	XMFLOAT2 reticle2DPosition_ = { 0,0 };
+	//レティクル座標(3D)
+	Vector3 reticle3DPosition_ = { 0,0,0 };
 	//レティクルスプライト
 	Sprite* reticleSprite_ = nullptr;
 
 	//自機からの距離
-	const float kDistancePlayerToReticle_ = 25.0f;
-
-	//ベクトル
-	Vector3 playerVec_ = {};
-	Vector3 reticleVec_ = {};
-	Vector3 playerToReticleVec_ = {};
-
+	const float reticleDirection = 25.0f;
+	
 	//-----スプライト------
 	Sprite* speedSprite_ = nullptr;
 
 	//スケールはxが変動、yが固定
-	XMFLOAT2 speedSpriteScale_ = {0,32};
-	XMFLOAT2 speedSpritePosition_ = { window_width / 2,window_height - 64};
+	XMFLOAT2 speedSpriteScale_ = { 0,32 };
+	XMFLOAT2 speedSpritePosition_ = { window_width / 2,window_height - 64 };
 
 	//スプライトの左右両端をどのくらい開けるか
 	float speedSpriteXSpace_ = 64;

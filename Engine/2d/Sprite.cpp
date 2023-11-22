@@ -156,14 +156,6 @@ void Sprite::Update()
 	vertices_[4] = { {   left,  top, 0.0f },{ 0.0f,0.0f } };	//左上
 	vertices_[5] = { { right,  top, 0.0f },{ 1.0f,0.0f } };	//右上
 
-	////頂点データ
-	//vertices[0] = { {    0.0f, scale.y, 0.0f },{ 0.0f,1.0f } };	//左下
-	//vertices[1] = { {    0.0f,    0.0f, 0.0f },{ 0.0f,0.0f } };	//左上
-	//vertices[2] = { { scale.x, scale.y, 0.0f },{ 1.0f,1.0f } };	//右下
-	//vertices[3] = { { scale.x, scale.y, 0.0f },{ 1.0f,1.0f } };	//右下
-	//vertices[4] = { {    0.0f,    0.0f, 0.0f },{ 0.0f,0.0f } };	//左上
-	//vertices[5] = { { scale.x,    0.0f, 0.0f },{ 1.0f,0.0f } };	//右上
-
 	std::copy(std::begin(vertices_), std::end(vertices_), vertMap_);
 
 	//マテリアル
@@ -183,13 +175,23 @@ void Sprite::Update()
 	matTrans = DirectX::XMMatrixTranslation(position_.x, position_.y, 0.0f);
 	matWorld_ *= matTrans;
 
-	//合成
+	//2D座標に変換(ビューポート変換)
+	viewPort_ = DirectX::XMMatrixIdentity();
+	viewPort_.r[0].m128_f32[0] = 2.0f / window_width;
+	viewPort_.r[1].m128_f32[1] = -2.0f / window_height;
+	viewPort_.r[3].m128_f32[0] = -1.0f + (position_.x / window_width) * 2;
+	viewPort_.r[3].m128_f32[1] = 1.0f - (position_.y / window_height) * 2;
+
+	matWorld_ *= viewPort_;
+
+	//matWorld_.r[0].m128_f32[0] = 2.0f / window_width;
+	//matWorld_.r[1].m128_f32[1] = -2.0f / window_height;
+	//matWorld_.r[3].m128_f32[0] = -1.0f + (position_.x / window_width) * 2;
+	//matWorld_.r[3].m128_f32[1] = 1.0f - (position_.y / window_height) * 2;
+
+	//代入
 	constMapTransform_->mat = matWorld_;
-	//2D座標に変換
-	constMapTransform_->mat.r[0].m128_f32[0] = 2.0f / window_width;
-	constMapTransform_->mat.r[1].m128_f32[1] = -2.0f / window_height;
-	constMapTransform_->mat.r[3].m128_f32[0] = -1.0f + (position_.x / window_width) * 2;
-	constMapTransform_->mat.r[3].m128_f32[1] = 1.0f - (position_.y / window_height) * 2;
+
 }
 
 void Sprite::Draw(ID3D12GraphicsCommandList* cmdList_)

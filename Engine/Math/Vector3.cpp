@@ -123,3 +123,16 @@ const Vector3 lerp(Vector3 start, Vector3 end, float t) {
 
 	return result;
 }
+
+Vector3 XMMATRIXTransform(const Vector3& v, const XMMATRIX& m)
+{
+	float w = v.x * m.r[0].m128_f32[3] + v.y * m.r[1].m128_f32[3] + v.z * m.r[2].m128_f32[3] + m.r[3].m128_f32[3];
+
+	Vector3 result{
+		(v.x * m.r[0].m128_f32[0] + v.y * m.r[1].m128_f32[0] + v.z * m.r[2].m128_f32[0] + m.r[3].m128_f32[0]) / w,
+		(v.x * m.r[0].m128_f32[1] + v.y * m.r[1].m128_f32[1] + v.z * m.r[2].m128_f32[1] + m.r[3].m128_f32[1]) / w,
+		(v.x * m.r[0].m128_f32[2] + v.y * m.r[1].m128_f32[2] + v.z * m.r[2].m128_f32[2] + m.r[3].m128_f32[2]) / w,
+	};
+
+	return result;
+}

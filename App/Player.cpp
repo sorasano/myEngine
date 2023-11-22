@@ -61,13 +61,13 @@ void Player::Initialize()
 	speedSprite_->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
 }
 
-void Player::Update()
+void Player::Update(XMMATRIX matVPV)
 {
 	//移動
 	Move();
 
 	//レティクルの更新
-	UpdateRaticle();
+	UpdateRaticle(matVPV);
 
 	//弾の更新
 	BulletUpdate();
@@ -234,7 +234,10 @@ void Player::BulletUpdate()
 void Player::MakeBullet()
 {
 	//自機とレティクルのベクトルを取る
-	Vector3 velocity = playerToReticleVec_;
+	Vector3 playerVec = {position_.x,position_.y,position_.z};
+	Vector3 reticleToPlayerVec_ =  reticle3DPosition_ - playerVec;
+
+	Vector3 velocity = reticleToPlayerVec_;
 
 	//正規化をして速度をかける
 	velocity.normalize();
@@ -251,94 +254,46 @@ void Player::MakeBullet()
 	bullets_.push_back(std::move(newBullet));
 }
 
-void Player::UpdateRaticle()
+void Player::UpdateRaticle(XMMATRIX matVPV)
 {
-	MoveRaticle();
-
-	//自機とレティクルのベクトルを算出
-	{
-		playerVec_ = { position_.x,position_.y,position_.z };
-		reticleVec_ = { reticle3DPosition_.x, reticle3DPosition_.y, reticle3DPosition_.z };
-		playerToReticleVec_ = reticleVec_ - playerVec_;
-	}
-
-	//ワールド→スクリーン座標変換	
-	{
-		//ビューポート行列(スクリーン行列)
-		Matrix4 matViewport = {
-			ReticleMoveMax_.x / 2,						0,											0,0,
-			0,											-ReticleMoveMax_.y / 2,						0,0,
-			0,											0,											1,0,
-			ReticleMoveMax_.x / 2 + window_width / 2,	ReticleMoveMax_.y / 2 + window_height / 2,	0,1
-		};
-
-		//ワールド→スクリーン座標変換
-		reticleVec_ = Transform(reticleVec_, matViewport);
-
-	}
-
-	////オブジェクトの更新
-	reticleSprite_->SetPosition(XMFLOAT2(reticleVec_.x, reticleVec_.y));
-	reticleSprite_->Update();
-
-	XMFLOAT2 mousePosition;
-	mousePosition = input_->GetMousePosition();
+	//マウス座標の取得、代入
+	reticle2DPosition_ = input_->GetMousePosition();
 
 	ImGui::Begin("mouseposition");
-	ImGui::Text("%f,%f", mousePosition.x, mousePosition.y);
+	ImGui::Text("%f,%f", input_->GetMousePosition().x, input_->GetMousePosition().y);
 	ImGui::End();
-}
 
-void Player::MoveRaticle()
-{
-	//レティクルの移動
+	//レティクルスプライト
+	reticleSprite_->SetPosition(XMFLOAT2(reticle2DPosition_.x, reticle2DPosition_.y));
+	reticleSprite_->Update();
 
-	//自機から設定した距離進んだところに座標を設定
-	reticle3DPosition_.z = position_.z + kDistancePlayerToReticle_;
+	//スクリーン→ワールド座標変換	
+	{
 
-	//入力で移動
-	if (input_->IsKeyPress(DIK_UP) || input_->IsKeyPress(DIK_DOWN) || input_->IsKeyPress(DIK_RIGHT) || input_->IsKeyPress(DIK_LEFT)) {
+		XMMATRIX matVPV_ = matVPV;
 
-		//座標を移動する処理
-		if (input_->IsKeyPress(DIK_UP)) {
-			if (ReticleMoveMax_.y > reticle3DPosition_.y) { reticle3DPosition_.y += reticleSpeedXY_; }
-		}
-		else if (input_->IsKeyPress(DIK_DOWN)) {
-			if (-ReticleMoveMax_.y < reticle3DPosition_.y) { reticle3DPosition_.y -= reticleSpeedXY_; }
-		}
+		//ビュープロジェクションの逆行列を取得
+		XMMATRIX matInverseVPV = XMMatrixInverse(nullptr, reticleSprite_->GetMatWorld());
 
-		if (input_->IsKeyPress(DIK_LEFT)) {
-			if (-ReticleMoveMax_.x < reticle3DPosition_.x) { reticle3DPosition_.x -= reticleSpeedXY_; }
-		}
-		else if (input_->IsKeyPress(DIK_RIGHT)) {
-			if (ReticleMoveMax_.x > reticle3DPosition_.x) { reticle3DPosition_.x += reticleSpeedXY_; }
-		}
+		//スクリーン→ワールド座標変換
+		reticle3DPosition_ = { reticle2DPosition_.x , reticle2DPosition_.y ,0 };
+		reticle3DPosition_ = XMMATRIXTransform(reticle3DPosition_, matInverseVPV);
 
+		//Z座標設定
+		reticle3DPosition_.z = position_.z + reticleDirection;
+
+		ImGui::Begin("reticle3DPosition");
+		ImGui::Text("%f,%f,%f", reticle3DPosition_.x, reticle3DPosition_.y, reticle3DPosition_.z);
+		ImGui::End();
 	}
 
-	//入力で移動(コントローラー)
-	else if (input_->IsDownRStickUp() || input_->IsDownRStickDown() || input_->IsDownRStickRight() || input_->IsDownRStickLeft()) {
-
-		//座標を移動する処理
-		if (input_->IsDownRStickUp()) {
-			if (ReticleMoveMax_.y > reticle3DPosition_.y) { reticle3DPosition_.y += reticleSpeedXY_; }
-		}
-		else if (input_->IsDownRStickDown()) {
-			if (-ReticleMoveMax_.y < reticle3DPosition_.y) { reticle3DPosition_.y -= reticleSpeedXY_; }
-		}
-
-		if (input_->IsDownRStickLeft()) {
-			if (-ReticleMoveMax_.x < reticle3DPosition_.x) { reticle3DPosition_.x -= reticleSpeedXY_; }
-		}
-		else if (input_->IsDownRStickRight()) {
-			if (ReticleMoveMax_.x > reticle3DPosition_.x) { reticle3DPosition_.x += reticleSpeedXY_; }
-		}
-
-	}
 }
 
 void Player::UpdateSprite()
 {
+
+	//スピードUIスプライト
+
 	//今のスピードが最大スピードの何割か計算しスケールをそれに合わせる
 
 	//今のスピード(基礎スピードはのぞく)が何割か
@@ -353,6 +308,7 @@ void Player::UpdateSprite()
 	speedSprite_->SetScale(speedSpriteScale_);
 	speedSprite_->SetPosition(speedSpritePosition_);
 	speedSprite_->Update();
+
 }
 
 void Player::Reset()
@@ -364,7 +320,7 @@ void Player::Reset()
 	addSpeed_ = 0.0f;
 
 	//レティクル
-	reticle3DPosition_ = { 0,0,0 };
+	//reticlePosition_ = { 0,0 };
 
 	//弾
 	bullets_.clear();

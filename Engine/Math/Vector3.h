@@ -2,6 +2,9 @@
 * @file Vector3.h
 * @brief Vector3型と基礎的な計算
 */
+#include <DirectXMath.h>
+
+using XMMATRIX = DirectX::XMMATRIX;
 
 #pragma once
 class Vector3
@@ -83,3 +86,11 @@ const Vector3 operator/(const Vector3& v, float s);
 * @return Vector3 補間数値
 */
 const Vector3 lerp(Vector3 start, Vector3 end, float t);
+
+//XMMATRIX
+
+/**
+* 合成
+*
+*/
+Vector3 XMMATRIXTransform(const Vector3& v, const XMMATRIX& m);
