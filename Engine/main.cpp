@@ -117,6 +117,11 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 		fps->FpsControlEnd();
 
+		//escキーで終了
+		if (input->IsKeyPress(DIK_ESCAPE)) {
+			break;
+		}
+
 	}
 
 	//WindowsAPI解放

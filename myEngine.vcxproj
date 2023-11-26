@@ -193,6 +193,7 @@
     <ClCompile Include="App\PlayerBullet.cpp" />
     <ClCompile Include="App\Skydome.cpp" />
     <ClCompile Include="Engine\ParticleManager.cpp" />
+    <ClCompile Include="Menu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\Basic.hlsli" />
@@ -320,6 +321,7 @@
     <ClInclude Include="App\PlayerBullet.h" />
     <ClInclude Include="App\Skydome.h" />
     <ClInclude Include="Engine\ParticleManager.h" />
+    <ClInclude Include="Menu.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="External\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

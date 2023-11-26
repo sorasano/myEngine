@@ -75,11 +75,11 @@ private:
 	/**
 	* コンストラクタ
 	*/
-	Input() = default;;
+	Input() = default;
 	/**
 	* デストラクタ
 	*/
-	~Input() = default;;
+	~Input() = default;
 
 public:
 
@@ -92,6 +92,22 @@ public:
 	*/
 	void Update();
 
+	/**
+	* ウィンドウ外制限
+	*/	
+	void WindowLock();
+
+	/**
+	* 	ウィンドウ外制限解除
+	*/
+	void WindowUnLock();
+
+	/**
+	* 	ウィンドウ内かチェック
+	* 
+	* @return false = ウィンドウ外 true ウィンドウ内
+	*/
+	bool CheckInWindow();
 
 	//入力情報
 

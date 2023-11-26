@@ -55,6 +55,9 @@ void Input::Initialize() {
 	result = mouse->SetCooperativeLevel(
 		winApp_->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
 	assert(SUCCEEDED(result));
+
+	//マウスをウィンドウ外に出ないように
+	WindowLock();
 }
 
 void Input::Update() {
@@ -86,6 +89,44 @@ void Input::Update() {
 	DWORD flag;
 	flag = XInputGetState(0, &padState);
 
+}
+
+void Input::WindowLock()
+{
+	//マウスをウィンドウ外に出ないように
+
+	// Get the window client area.
+	RECT rc;
+	GetClientRect(winApp_->GetHwnd(), &rc);
+
+	// Convert the client area to screen coordinates.
+	POINT pt = { rc.left, rc.top };
+	POINT pt2 = { rc.right, rc.bottom };
+	ClientToScreen(winApp_->GetHwnd(), &pt);
+	ClientToScreen(winApp_->GetHwnd(), &pt2);
+	SetRect(&rc, pt.x, pt.y, pt2.x, pt2.y);
+
+	// Confine the cursor.
+	ClipCursor(&rc);
+}
+
+void Input::WindowUnLock()
+{
+	ClipCursor(NULL);
+}
+
+bool Input::CheckInWindow()
+{
+	//ウィンドウ内外判定
+	XMFLOAT2 pos = GetMousePosition();
+
+	if (pos.x > 0 && pos.x < window_width) {
+		if (pos.y > 0 && pos.y < window_height) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 //bool Input::PushKey(BYTE keyNumber)
@@ -126,6 +167,7 @@ bool Input::IsKeyRelease(BYTE key_)
 
 XMFLOAT2 Input::GetMousePosition()
 {
+
 	//マウス座標取得
 	POINT p;
 	GetCursorPos(&p);
@@ -139,17 +181,32 @@ XMFLOAT2 Input::GetMousePosition()
 
 bool Input::IsMouseTrigger(MouseButton buttonType)
 {
+	//ウィンドウ外の場合取得しない
+	if (!CheckInWindow()) {
+		return false;
+	}
+
 	return (!(oldMouseState.rgbButtons[LEFT_CLICK] != buttonType) &&
 		mouseState.rgbButtons[LEFT_CLICK] != buttonType);
 }
 
 bool Input::IsMousePress(MouseButton buttonType)
 {
+	//ウィンドウ外の場合取得しない
+	if (!CheckInWindow()) {
+		return false;
+	}
+
 	return mouseState.rgbButtons[LEFT_CLICK] != buttonType;
 }
 
 bool Input::IsMouseRelease(MouseButton buttonType)
 {
+	//ウィンドウ外の場合取得しない
+	if (!CheckInWindow()) {
+		return false;
+	}
+
 	return (oldMouseState.rgbButtons[LEFT_CLICK] != buttonType &&
 		!(mouseState.rgbButtons[LEFT_CLICK] != buttonType));
 }

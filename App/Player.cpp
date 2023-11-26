@@ -257,7 +257,10 @@ void Player::MakeBullet()
 void Player::UpdateRaticle(XMMATRIX matVP)
 {
 	//マウス座標の取得、代入
-	reticle2DPosition_ = input_->GetMousePosition();
+
+	if (input_->CheckInWindow()) {
+		reticle2DPosition_ = input_->GetMousePosition();
+	}
 
 	//ImGui::Begin("mouseposition");
 	//ImGui::Text("%f,%f", input_->GetMousePosition().x, input_->GetMousePosition().y);

@@ -154,6 +154,13 @@ void GameScene::Initialize()
 void GameScene::Update()
 {
 
+	if (input_->IsKeyPress(DIK_1)) {
+		input_->WindowLock();
+	}
+	else if (input_->IsKeyPress(DIK_2)) {
+		input_->WindowUnLock();
+	}
+
 	//シーン更新
 	switch (scene_)
 	{
