@@ -52,7 +52,7 @@ LevelData* JsonLoader::LoadFile(const std::string filename)
 	//-----オブジェクトの走査-----
 	LevelData* levelData = new LevelData();
 
-	//"objects"の全オブジェクトをさおさ
+	//"objects"の全オブジェクトを走査
 	for (nlohmann::json& object : deserialized["objects"]) {
 		assert(object.contains("type"));
 

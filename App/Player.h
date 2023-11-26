@@ -186,6 +186,9 @@ private:
 	//当たり判定用
 	XMFLOAT3 colSize_ = { 1.0f,1.0f,1.0f };
 
+	//2D座標
+	XMFLOAT2 position2D_ = {0,0};
+
 private:
 	//FBX
 	FbxObject3D* playerObject_ = nullptr;
@@ -220,18 +223,23 @@ private:
 
 	//--------レティクル--------
 
+	//レティクルスプライト
+	std::vector<Sprite*> reticleSprites_;
+	//レティクルスプライト数
+	int reticleSpriteSize_ = 3;
+	//一番手前のサイズ
+	XMFLOAT2 reticleScale_ = { 64,64 };
+
 	//レティクル座標(2D)
 	XMFLOAT2 reticle2DPosition_ = { 0,0 };
 	//レティクル座標(3D)
 	Vector3 reticle3DPosition_ = { 0,0,0 };
-	//レティクルスプライト
-	Sprite* reticleSprite_ = nullptr;
 
-	//自機からの距離
-	const float reticleDirection = 25.0f;
+	//レティクルまでの距離(カメラからプレイヤーの距離+プレイヤーからレティクルの距離)
+	const float reticleDirection_ = 30.0f + 26.0f;
 	
 	//-----スプライト------
-	Sprite* speedSprite_ = nullptr;
+	Sprite* speedSprite_;
 
 	//スケールはxが変動、yが固定
 	XMFLOAT2 speedSpriteScale_ = { 0,32 };
@@ -251,6 +259,6 @@ private:
 	int bulletCoolTimer_ = 0;
 
 	//弾の速度
-	float bulletSpeed_ = 1000;
+	float bulletSpeed_ = 2;
 };
 

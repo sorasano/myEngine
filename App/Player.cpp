@@ -43,12 +43,17 @@ void Player::Initialize()
 	//スプライト
 
 	//レティクル
-	reticleSprite_ = new Sprite();
-	reticleSprite_->SetTextureNum(5);
-	reticleSprite_->Initialize();
-	reticleSprite_->SetScale(XMFLOAT2(64, 64));
+	for (int i = 0; i < reticleSpriteSize_; i++) {
+		Sprite* newReticleSprite = new Sprite();
+		newReticleSprite->SetTextureNum(5);
+		newReticleSprite->Initialize();
+		newReticleSprite->SetScale(reticleScale_);
+
+		reticleSprites_.push_back(newReticleSprite);
+	}
 
 	//スピードUI
+
 	speedSprite_ = new Sprite();
 	speedSprite_->SetTextureNum(3);
 	speedSprite_->Initialize();
@@ -125,7 +130,10 @@ void Player::DrawClearScene(ID3D12GraphicsCommandList* cmdList)
 void Player::DrawSprite(ID3D12GraphicsCommandList* cmdList)
 {
 	//レティクル
-	reticleSprite_->Draw(cmdList);
+	for (Sprite*& reticleSprite : reticleSprites_) {
+		reticleSprite->Draw(cmdList);
+	}
+
 	//スピードUI
 	speedSprite_->Draw(cmdList);
 }
@@ -228,14 +236,14 @@ void Player::BulletUpdate()
 void Player::MakeBullet()
 {
 	//自機とレティクルのベクトルを取る
-	Vector3 playerVec = {position_.x,position_.y,position_.z};
-	Vector3 reticleToPlayerVec_ =  reticle3DPosition_ - playerVec;
+	Vector3 playerVec = { position_.x,position_.y,position_.z };
+	Vector3 reticleToPlayerVec_ = reticle3DPosition_ - playerVec;
 
 	Vector3 velocity = reticleToPlayerVec_;
 
 	//正規化をして速度をかける
 	velocity.normalize();
-	velocity * (bulletSpeed_ + (speedZ_ + addSpeed_));
+	velocity *= bulletSpeed_;
 
 	//z軸は自機も動いているためそのスピードも足す
 	velocity.z += (speedZ_ + addSpeed_);
@@ -251,9 +259,9 @@ void Player::UpdateRaticle(XMMATRIX matVP)
 	//マウス座標の取得、代入
 	reticle2DPosition_ = input_->GetMousePosition();
 
-	ImGui::Begin("mouseposition");
-	ImGui::Text("%f,%f", input_->GetMousePosition().x, input_->GetMousePosition().y);
-	ImGui::End();
+	//ImGui::Begin("mouseposition");
+	//ImGui::Text("%f,%f", input_->GetMousePosition().x, input_->GetMousePosition().y);
+	//ImGui::End();
 
 	//スクリーン→ワールド座標変換	
 	{
@@ -283,12 +291,14 @@ void Player::UpdateRaticle(XMMATRIX matVP)
 		Vector3 mouseDirection = farClip - nearClip;
 		mouseDirection.normalize();
 
-		//ニアクリップ面上からマウスレイベクトルの方向にreticleDirection(+プレイヤー座標)進んだ距離
-		reticle3DPosition_ = nearClip + (mouseDirection * (position_.z + reticleDirection));
+		//ニアクリップ面上からマウスレイベクトルの方向にreticleDirection進んだ距離
+		reticle3DPosition_ = nearClip + (mouseDirection * reticleDirection_);
 
-		//ImGui::Begin("reticle3DPosition");
-		//ImGui::Text("%f,%f,%f", reticle3DPosition_.x, reticle3DPosition_.y, reticle3DPosition_.z);
-		//ImGui::End();
+		//プレイヤーの2d座標の算出(ワールド→スクリーン座標計算)
+		Vector3 playerPosition = { position_.x,position_.y,position_.z };
+		playerPosition = XMMATRIXTransform(playerPosition, matViewProjectionViewPort);
+		position2D_ = { playerPosition.x,playerPosition.y};
+
 	}
 
 }
@@ -297,25 +307,44 @@ void Player::UpdateSprite()
 {
 
 	//スピードUIスプライト
+	{
+		//今のスピードが最大スピードの何割か計算しスケールをそれに合わせる
 
-	//今のスピードが最大スピードの何割か計算しスケールをそれに合わせる
+		//今のスピード(基礎スピードはのぞく)が何割か
+		float speedRate = addSpeed_ / MaxSpeed_;
+		//スプライトの最大サイズ
+		float speedSpriteMaxSize = window_width - (speedSpriteXSpace_ * 2);
 
-	//今のスピード(基礎スピードはのぞく)が何割か
-	float speedRate = addSpeed_ / MaxSpeed_;
-	//スプライトの最大サイズ
-	float speedSpriteMaxSize = window_width - (speedSpriteXSpace_ * 2);
+		//最大サイズと今のスピードの割合をかける
+		speedSpriteScale_.x = speedSpriteMaxSize * speedRate;
 
-	//最大サイズと今のスピードの割合をかける
-	speedSpriteScale_.x = speedSpriteMaxSize * speedRate;
-
-	//更新
-	speedSprite_->SetScale(speedSpriteScale_);
-	speedSprite_->SetPosition(speedSpritePosition_);
-	speedSprite_->Update();
+		//更新
+		speedSprite_->SetScale(speedSpriteScale_);
+		speedSprite_->SetPosition(speedSpritePosition_);
+		speedSprite_->Update();
+	}
 
 	//レティクルスプライト
-	reticleSprite_->SetPosition(XMFLOAT2(reticle2DPosition_.x, reticle2DPosition_.y));
-	reticleSprite_->Update();
+	{
+		//プレイヤーとレティクルの2Dベクトル
+		XMFLOAT2 plyerToReticle2D = { reticle2DPosition_.x - position2D_.x , reticle2DPosition_.y - position2D_.y };
+
+		//レティクルの間隔(等分)
+		XMFLOAT2 reticleSplitPos = { plyerToReticle2D.x / reticleSpriteSize_, plyerToReticle2D.y / reticleSpriteSize_ };
+
+		//レティクルのサイズ減少値
+		float reticleSplitSize = 15.0f;
+
+		for (int i = 0; i < reticleSpriteSize_; i++) {
+			//プレイヤーの座標から等分に配置
+			reticleSprites_[i]->SetPosition({ position2D_.x + reticleSplitPos.x * (i + 1), position2D_.y + reticleSplitPos.y * (i + 1) });
+			//手前は大きく奥はちいさく
+			reticleSprites_[i]->SetScale({reticleScale_.x - (reticleSplitSize * (i + 1)) ,reticleScale_.y - (reticleSplitSize * (i + 1)) });
+
+			reticleSprites_[i]->Update();
+		}
+	}
+
 }
 
 void Player::Reset()
