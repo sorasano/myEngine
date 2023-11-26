@@ -36,7 +36,7 @@ public:
 	/**
 	* 更新
 	*/
-	void Update(XMMATRIX matVPV);
+	void Update(XMMATRIX matVP);
 	/**
 	* 行列更新
 	*/
@@ -96,7 +96,7 @@ public:
 	/**
 	* レティクル更新
 	*/
-	void UpdateRaticle(XMMATRIX matVPV);
+	void UpdateRaticle(XMMATRIX matVP);
 	/**
 	* スプライト更新
 	*/
@@ -192,8 +192,6 @@ private:
 	//モデル
 	FbxModel* playerModel_ = nullptr;
 	FbxModel* playerBulletModel_ = nullptr;
-	FbxModel* fReticleModel_ = nullptr;
-	FbxModel* bReticleModel_ = nullptr;
 
 	//入力
 	Input* input_ = nullptr;
@@ -253,6 +251,6 @@ private:
 	int bulletCoolTimer_ = 0;
 
 	//弾の速度
-	float bulletSpeed_ = 0;
+	float bulletSpeed_ = 1000;
 };
 

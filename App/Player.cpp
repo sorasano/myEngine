@@ -31,8 +31,6 @@ void Player::Initialize()
 	//モデル名を指定してファイル読み込み
 	playerModel_ = FbxLoader::GetInstance()->LoadModelFromFile("player");
 	playerBulletModel_ = FbxLoader::GetInstance()->LoadModelFromFile("playerBullet");
-	bReticleModel_ = FbxLoader::GetInstance()->LoadModelFromFile("backReticle");
-	fReticleModel_ = FbxLoader::GetInstance()->LoadModelFromFile("frontReticle");
 
 	//3dオブジェクト生成とモデルのセット
 	playerObject_ = new FbxObject3D;
@@ -41,10 +39,6 @@ void Player::Initialize()
 
 	//弾モデルセット
 	this->bulletModel_ = playerBulletModel_;
-
-	////ラジアン変換
-	//fRRotation_.y = static_cast<float>(90 * (PI / 180));
-	//bRRotation_.y = static_cast<float>(90 * (PI / 180));
 
 	//スプライト
 
@@ -61,13 +55,13 @@ void Player::Initialize()
 	speedSprite_->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
 }
 
-void Player::Update(XMMATRIX matVPV)
+void Player::Update(XMMATRIX matVP)
 {
 	//移動
 	Move();
 
 	//レティクルの更新
-	UpdateRaticle(matVPV);
+	UpdateRaticle(matVP);
 
 	//弾の更新
 	BulletUpdate();
@@ -241,9 +235,7 @@ void Player::MakeBullet()
 
 	//正規化をして速度をかける
 	velocity.normalize();
-
-	bulletSpeed_ = (speedZ_ + addSpeed_);
-	velocity* bulletSpeed_;
+	velocity * (bulletSpeed_ + (speedZ_ + addSpeed_));
 
 	//z軸は自機も動いているためそのスピードも足す
 	velocity.z += (speedZ_ + addSpeed_);
@@ -254,7 +246,7 @@ void Player::MakeBullet()
 	bullets_.push_back(std::move(newBullet));
 }
 
-void Player::UpdateRaticle(XMMATRIX matVPV)
+void Player::UpdateRaticle(XMMATRIX matVP)
 {
 	//マウス座標の取得、代入
 	reticle2DPosition_ = input_->GetMousePosition();
@@ -263,28 +255,40 @@ void Player::UpdateRaticle(XMMATRIX matVPV)
 	ImGui::Text("%f,%f", input_->GetMousePosition().x, input_->GetMousePosition().y);
 	ImGui::End();
 
-	//レティクルスプライト
-	reticleSprite_->SetPosition(XMFLOAT2(reticle2DPosition_.x, reticle2DPosition_.y));
-	reticleSprite_->Update();
-
 	//スクリーン→ワールド座標変換	
 	{
 
-		XMMATRIX matVPV_ = matVPV;
+		//ビューポート行列
+		XMMATRIX viewPort;
+		viewPort = DirectX::XMMatrixIdentity();
+		viewPort.r[0].m128_f32[0] = window_width / 2;
+		viewPort.r[1].m128_f32[1] = -window_height / 2;
+		viewPort.r[3].m128_f32[0] = window_width / 2;
+		viewPort.r[3].m128_f32[1] = window_height / 2;
 
-		//ビュープロジェクションの逆行列を取得
-		XMMATRIX matInverseVPV = XMMatrixInverse(nullptr, reticleSprite_->GetMatWorld());
+		//ビュープロジェクションビュー行列
+		XMMATRIX matViewProjectionViewPort = matVP * viewPort;
+
+		//ビュープロジェクションビュー行列の逆行列を取得
+		XMMATRIX matInverseVPV = XMMatrixInverse(nullptr, matViewProjectionViewPort);
 
 		//スクリーン→ワールド座標変換
-		reticle3DPosition_ = { reticle2DPosition_.x , reticle2DPosition_.y ,0 };
-		reticle3DPosition_ = XMMATRIXTransform(reticle3DPosition_, matInverseVPV);
+		Vector3 nearClip = { reticle2DPosition_.x , reticle2DPosition_.y ,0 };
+		Vector3 farClip = { reticle2DPosition_.x , reticle2DPosition_.y ,1 };
 
-		//Z座標設定
-		reticle3DPosition_.z = position_.z + reticleDirection;
+		nearClip = XMMATRIXTransform(nearClip, matInverseVPV);
+		farClip = XMMATRIXTransform(farClip, matInverseVPV);
 
-		ImGui::Begin("reticle3DPosition");
-		ImGui::Text("%f,%f,%f", reticle3DPosition_.x, reticle3DPosition_.y, reticle3DPosition_.z);
-		ImGui::End();
+		//マウスレイベクトル
+		Vector3 mouseDirection = farClip - nearClip;
+		mouseDirection.normalize();
+
+		//ニアクリップ面上からマウスレイベクトルの方向にreticleDirection(+プレイヤー座標)進んだ距離
+		reticle3DPosition_ = nearClip + (mouseDirection * (position_.z + reticleDirection));
+
+		//ImGui::Begin("reticle3DPosition");
+		//ImGui::Text("%f,%f,%f", reticle3DPosition_.x, reticle3DPosition_.y, reticle3DPosition_.z);
+		//ImGui::End();
 	}
 
 }
@@ -309,6 +313,9 @@ void Player::UpdateSprite()
 	speedSprite_->SetPosition(speedSpritePosition_);
 	speedSprite_->Update();
 
+	//レティクルスプライト
+	reticleSprite_->SetPosition(XMFLOAT2(reticle2DPosition_.x, reticle2DPosition_.y));
+	reticleSprite_->Update();
 }
 
 void Player::Reset()

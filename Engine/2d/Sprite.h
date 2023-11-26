@@ -114,11 +114,6 @@ public:	//ゲッター
 	* @return XMFLOAT2 スケール取得
 	*/
 	XMFLOAT2 GetScale() { return scale_; }
-	/**
-	* @return XMMATRIX ワールド変換行列取得
-	*/
-	XMMATRIX GetMatWorld() { return viewPort_; }
-
 
 private:
 	//デバイス
@@ -151,7 +146,6 @@ public:
 	XMFLOAT4 color = { 1,1,1,1 };
 
 private:
-	XMMATRIX viewPort_;
 	float rotation_ = 0;
 	XMFLOAT2 position_ = { 0,0 };
 	XMFLOAT2 scale_ = { 100.0f,100.0f };

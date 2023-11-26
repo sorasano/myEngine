@@ -176,18 +176,11 @@ void Sprite::Update()
 	matWorld_ *= matTrans;
 
 	//2D座標に変換(ビューポート変換)
-	viewPort_ = DirectX::XMMatrixIdentity();
-	viewPort_.r[0].m128_f32[0] = 2.0f / window_width;
-	viewPort_.r[1].m128_f32[1] = -2.0f / window_height;
-	viewPort_.r[3].m128_f32[0] = -1.0f + (position_.x / window_width) * 2;
-	viewPort_.r[3].m128_f32[1] = 1.0f - (position_.y / window_height) * 2;
-
-	matWorld_ *= viewPort_;
-
-	//matWorld_.r[0].m128_f32[0] = 2.0f / window_width;
-	//matWorld_.r[1].m128_f32[1] = -2.0f / window_height;
-	//matWorld_.r[3].m128_f32[0] = -1.0f + (position_.x / window_width) * 2;
-	//matWorld_.r[3].m128_f32[1] = 1.0f - (position_.y / window_height) * 2;
+	matWorld_ = DirectX::XMMatrixIdentity();
+	matWorld_.r[0].m128_f32[0] = 2.0f / window_width;
+	matWorld_.r[1].m128_f32[1] = -2.0f / window_height;
+	matWorld_.r[3].m128_f32[0] = -1.0f + (position_.x / window_width) * 2;
+	matWorld_.r[3].m128_f32[1] = 1.0f - (position_.y / window_height) * 2;
 
 	//代入
 	constMapTransform_->mat = matWorld_;
