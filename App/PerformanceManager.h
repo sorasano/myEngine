@@ -17,7 +17,9 @@ enum Performance {
 	INBOSS,//ボス戦導入
 	CLEARBOSS,//ボス戦クリア
 	GAMEOVERBOSS,//ボス戦ゲームオーバー
-	RETURNTITLE//タイトルに戻るとき
+	RETURNTITLE,//タイトルに戻るとき
+	OPENMENU,//メニューを開く
+	CLOSEMENU,//メニューを閉じる
 };
 
 //クリア演出フェーズ
@@ -70,7 +72,20 @@ public:
 	* タイトルに戻る演出
 	*/
 	void ReturnTitlePerformance();
-
+	/**
+	* メニューを開く演出
+	*/
+	void OpenMenuPerformance();
+	/**
+	* メニューを閉じる演出
+	*/
+	void CloseMenuPerformance();
+	/**
+	* メニューUI回転演出
+	* 
+	* @return 回転後座標
+	*/
+	void MenuUIRotPerformance(Sprite* menuUI);
 
 	//ゲッター　セッター　
 	/**
@@ -90,6 +105,10 @@ public:
 	* isChangeSceneセット
 	*/
 	void SetIsChangeScene(int isChangeScene) { this->isChangeScene_ = isChangeScene; }
+	/**
+	* oldSceneセット
+	*/
+	void SetIsOldScene(int isOldScene) { this->oldScene_ = isOldScene; }
 
 private:
 
@@ -176,5 +195,15 @@ private:
 	Easing generalPurposeEaseing2_;
 	//イージング演出時間
 	float generalPurposeEaseingTime_ = 3.0f;
+
+	//-----メニュー-----
+	//メニュー開いた時のシーン
+	int oldScene_;
+
+	//メニューUI回転
+	float menuUIRot = 0.0f;
+	//メニューUI回転度数
+	float menuUIAddRot = 1.0f;
+
 };
 

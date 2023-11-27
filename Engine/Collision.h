@@ -6,6 +6,7 @@
 #pragma once
 #include <DirectXMath.h>
 #include "wrl.h"
+#include "Sprite.h"
 
 enum CollType {
 	SQUARE,//矩形
@@ -13,12 +14,12 @@ enum CollType {
 };
 
 struct CollisionData {
-	DirectX::XMFLOAT3 position_ = {};
+	DirectX::XMFLOAT3 position = {};
 	DirectX::XMFLOAT3 size = {};
 	float radius = 0.0f;
 };
 
-class Collision
+class Collision final
 {
 private:	//エイリアス
 	//Microsoft::WRL::を省略
@@ -28,6 +29,34 @@ private:	//エイリアス
 	using XMFLOAT3 = DirectX::XMFLOAT3;
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
+
+public:
+	/**
+	* シングルトンインスタンスを取得
+	*/
+	static Collision* GetInstance();
+
+	/**
+	* コピーコンストラクタの無効
+	*/
+	Collision(const Collision& obj) = delete;
+
+	/**
+	* 代入演算子の無効
+	*/
+	Collision& operator=(const Collision& obj) = delete;
+
+private:
+
+	/**
+	* コンストラクタ
+	*/
+	Collision() = default;
+	/**
+	* デストラクタ
+	*/
+	~Collision() = default;
+
 
 public:
 	/**
@@ -46,5 +75,15 @@ public:
 	* @return bool 当たっていたらtrue
 	*/
 	bool CheckSphereToSphere(CollisionData A, CollisionData B);
+
+	/**
+	* スプライトとの当たり判定(座標がスプライトの中心点の場合)
+	*
+	* @param[in] A スプライト
+	* @param[in] B 2d座標
+	* @return bool 当たっていたらtrue
+	*/
+	bool CheckSpriteTo2Dpos(Sprite* sprite, XMFLOAT2 pos);
+
 };
 

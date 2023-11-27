@@ -5,5 +5,6 @@ enum Scene {
 	PLAY,
 	BOSS,
 	CLEAR,
-	GAMEOVER
+	GAMEOVER,
+	MENU
 };

@@ -18,6 +18,7 @@
 #include "JsonLoader.h"
 #include "Collision.h"
 #include "PerformanceManager.h"
+#include "Menu.h"
 
 #include "Skydome.h"
 #include "BackGround.h"
@@ -90,6 +91,12 @@ public:
 	*/
 	void ChangeScene();
 	/**
+	* メニューUI判定
+	* 
+	* @return true = UIが押された
+	*/
+	bool MenuUIColision();
+	/**
 	* プレイシーン初期化
 	*/
 	void PlaySceneInitialize();
@@ -102,14 +109,22 @@ public:
 	*/
 	void BossSceneCollition();
 
+	
+
 private:
 	//デバイスとinput
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	ID3D12GraphicsCommandList* commandList = nullptr;
+	//当たり判定
+	Collision* collisionManager_ = nullptr;
 
 	//カメラ
 	Camera* camera_{};
+
+	//メニュー
+	Menu* menu_;
+	Sprite* menuUISprite_;
 
 	//シーン
 	int scene_ = TITLE;
@@ -151,9 +166,6 @@ private:
 	Sprite* titleSprite_ = nullptr;
 	Sprite* clearSprite_ = nullptr;
 	Sprite* gameoverSprite_ = nullptr;
-
-	//当たり判定
-	Collision* collisionManager_ = nullptr;
 
 	//演出
 	PerformanceManager* performanceManager_ = nullptr;

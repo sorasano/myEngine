@@ -165,17 +165,20 @@ void Sprite::Update()
 	//ワールド変換行列
 	XMMATRIX matWorld_;
 	matWorld_ = DirectX::XMMatrixIdentity();
-	//回転
-	XMMATRIX matRot;
-	matRot = DirectX::XMMatrixIdentity();
-	matRot *= DirectX::XMMatrixRotationZ(rotation_);
-	matWorld_ *= matRot;
-	//平行移動
-	XMMATRIX matTrans;
-	matTrans = DirectX::XMMatrixTranslation(position_.x, position_.y, 0.0f);
-	matWorld_ *= matTrans;
 
-	//2D座標に変換(ビューポート変換)
+	////回転
+	//XMMATRIX matRot;
+	//matRot = DirectX::XMMatrixIdentity();
+	////matRot *= DirectX::XMMatrixRotationX(rotation_);
+	////matRot *= DirectX::XMMatrixRotationY(rotation_);
+	////matRot *= DirectX::XMMatrixRotationZ(rotation_);
+	//matWorld_ *= matRot;
+	////平行移動
+	//XMMATRIX matTrans;
+	//matTrans = DirectX::XMMatrixTranslation(position_.x, position_.y, 0.0f);
+	//matWorld_ *= matTrans;
+
+	//2D座標に変換
 	matWorld_ = DirectX::XMMatrixIdentity();
 	matWorld_.r[0].m128_f32[0] = 2.0f / window_width;
 	matWorld_.r[1].m128_f32[1] = -2.0f / window_height;

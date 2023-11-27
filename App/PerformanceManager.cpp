@@ -6,7 +6,7 @@
 #include "PerformanceManager.h"
 #include "Vector2.h"
 
-void PerformanceManager::Initialize(Camera* camera, Player* player,Boss* boss)
+void PerformanceManager::Initialize(Camera* camera, Player* player, Boss* boss)
 {
 	//カメラ
 	this->camera_ = camera;
@@ -16,8 +16,8 @@ void PerformanceManager::Initialize(Camera* camera, Player* player,Boss* boss)
 	this->boss_ = boss;
 
 	//スプライト
-	for (int i = 0; i < generalPurposeSpritesSize_;i++) {
-		Sprite *gPSprite = new Sprite();
+	for (int i = 0; i < generalPurposeSpritesSize_; i++) {
+		Sprite* gPSprite = new Sprite();
 		gPSprite->SetTextureNum(4);
 		gPSprite->Initialize();
 		gPSprite->SetScale(XMFLOAT2(window_width, window_height
@@ -58,6 +58,14 @@ void PerformanceManager::Update()
 			break;
 		case RETURNTITLE:
 			ReturnTitlePerformance();
+			break;
+		case OPENMENU:
+			OpenMenuPerformance();
+			break;
+
+		case CLOSEMENU:
+			CloseMenuPerformance();
+			break;
 		}
 	}
 
@@ -87,7 +95,14 @@ void PerformanceManager::UpdateSprite()
 			for (auto& gPSprite : generalPurposeSprites_) {
 				gPSprite->Update();
 			}
+			break;
+		case OPENMENU:
+			break;
+
+		case CLOSEMENU:
+			break;
 		}
+
 	}
 
 }
@@ -115,6 +130,12 @@ void PerformanceManager::DrawSprite(ID3D12GraphicsCommandList* cmdList)
 			for (auto& gPSprite : generalPurposeSprites_) {
 				gPSprite->Draw(cmdList);
 			}
+			break;
+		case OPENMENU:
+			break;
+
+		case CLOSEMENU:
+			break;
 		}
 	}
 }
@@ -213,7 +234,7 @@ void PerformanceManager::BossClearPerformance()
 	//ボスの座標を取得
 	XMFLOAT3 bossPosition = boss_->GetPosition();
 	//演出終了後プレイヤーの位置設定用
-	const XMFLOAT3 midPosition = {0.0f,0.0f,0.0f};
+	const XMFLOAT3 midPosition = { 0.0f,0.0f,0.0f };
 
 	//演出初期化
 	if (startPerformance_) {
@@ -349,4 +370,29 @@ void PerformanceManager::ReturnTitlePerformance()
 	if (!generalPurposeEaseing1_.GetActive() && !generalPurposeEaseing2_.GetActive()) {
 		isPerformance_ = false;
 	}
+}
+
+void PerformanceManager::OpenMenuPerformance()
+{
+	//シーンをメニューシーンへ
+	isChangeScene_ = MENU;
+	isPerformance_ = false;
+}
+
+void PerformanceManager::CloseMenuPerformance()
+{
+	//シーンを開いた時のシーンへ
+	isChangeScene_ = oldScene_;
+	isPerformance_ = false;
+}
+
+void PerformanceManager::MenuUIRotPerformance(Sprite* menuUI)
+{
+	//度数の加算
+	menuUIRot += menuUIAddRot;
+	if (menuUIRot >= 360.0f) {
+		menuUIRot = 0.0f;
+	}
+
+	menuUI->SetRotation(static_cast<float>(menuUIRot * (PI / 180)));
 }

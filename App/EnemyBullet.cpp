@@ -84,7 +84,7 @@ CollisionData EnemyBullet::GetColData()
 {
 	CollisionData colData;
 
-	colData.position_ = this->position_;
+	colData.position = this->position_;
 	colData.size = this->colSize_;
 
 	return colData;

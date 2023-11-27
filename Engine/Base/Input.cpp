@@ -57,7 +57,7 @@ void Input::Initialize() {
 	assert(SUCCEEDED(result));
 
 	//マウスをウィンドウ外に出ないように
-	WindowLock();
+	//WindowLock();
 }
 
 void Input::Update() {
@@ -108,11 +108,15 @@ void Input::WindowLock()
 
 	// Confine the cursor.
 	ClipCursor(&rc);
+
+	isLockInWindow = true;
 }
 
 void Input::WindowUnLock()
 {
 	ClipCursor(NULL);
+
+	isLockInWindow = false;
 }
 
 bool Input::CheckInWindow()
@@ -120,8 +124,8 @@ bool Input::CheckInWindow()
 	//ウィンドウ内外判定
 	XMFLOAT2 pos = GetMousePosition();
 
-	if (pos.x > 0 && pos.x < window_width) {
-		if (pos.y > 0 && pos.y < window_height) {
+	if (pos.x >= 0 && pos.x <= window_width) {
+		if (pos.y >= 0 && pos.y <= window_height) {
 			return true;
 		}
 	}

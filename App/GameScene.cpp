@@ -5,6 +5,7 @@
 
 #include "GameScene.h"
 #include "Random.h"
+#include "imgui.h"
 
 GameScene::GameScene()
 {
@@ -26,14 +27,13 @@ void GameScene::Initialize()
 	//インスタンスを取得
 	this->dxCommon_ = DirectXCommon::GetInstance();;
 	this->input_ = Input::GetInstance();
+	this->collisionManager_ = Collision::GetInstance();
+
 
 	//カメラ初期化
 	camera_ = new Camera;
 	camera_->StaticInitialize(dxCommon_->GetDevice());
 	camera_->Initialize();
-
-	//当たり判定
-	collisionManager_ = new Collision();
 
 	// パーティクル静的初期化
 	ParticleManager::StaticInitialize(dxCommon_);
@@ -50,6 +50,18 @@ void GameScene::Initialize()
 	spriteManager_->LoadFile(3, "blue1x1.png");
 	spriteManager_->LoadFile(4, "generalPurpose.png");
 	spriteManager_->LoadFile(5, "reticle.png");
+
+	//メニュー用
+	spriteManager_->LoadFile(6, "UI/menuUI.png");
+	spriteManager_->LoadFile(7, "menu/menuBase.png");
+	spriteManager_->LoadFile(8, "menu/menuSetting.png");
+	spriteManager_->LoadFile(9, "menu/menuTitle.png");
+	spriteManager_->LoadFile(10, "menu/menuClose.png");
+	//メニュー設定画面
+	spriteManager_->LoadFile(11, "menu/setting/settingBase.png");
+	spriteManager_->LoadFile(12, "menu/setting/ON.png");
+	spriteManager_->LoadFile(13, "menu/setting/OFF.png");
+	spriteManager_->LoadFile(14, "menu/setting/settingMouse.png");
 
 	//-----スプライト------
 	Sprite::SetDevice(dxCommon_->GetDevice());
@@ -73,6 +85,12 @@ void GameScene::Initialize()
 	gameoverSprite_->Initialize();
 	gameoverSprite_->SetScale(XMFLOAT2(1280, 720));
 	gameoverSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
+
+	menuUISprite_ = new Sprite();
+	menuUISprite_->SetTextureNum(6);
+	menuUISprite_->Initialize();
+	menuUISprite_->SetScale(XMFLOAT2(100, 100));
+	menuUISprite_->SetPosition(XMFLOAT2(window_width - 50, window_height - 50));
 
 	//----------FBX----------
 
@@ -149,6 +167,10 @@ void GameScene::Initialize()
 	particleManager_ = new ParticleManager();
 	particleManager_->Initialize("Resources/effect/effect1.png");
 
+	//メニュー
+	menu_ = new Menu;
+	menu_->Initialize();
+
 }
 
 void GameScene::Update()
@@ -195,6 +217,8 @@ void GameScene::Update()
 		//当たり判定
 		Collition();
 
+		//スプライト
+		menuUISprite_->Update();
 		break;
 	case BOSS:
 
@@ -207,6 +231,8 @@ void GameScene::Update()
 		//当たり判定
 		BossSceneCollition();
 
+		//スプライト
+		menuUISprite_->Update();
 		break;
 	case CLEAR:
 
@@ -225,6 +251,11 @@ void GameScene::Update()
 
 		//スプライト
 		gameoverSprite_->Update();
+		break;
+
+	case MENU:
+
+		menu_->Update();
 
 		break;
 	}
@@ -328,6 +359,25 @@ void GameScene::Draw()
 		player_->Draw(dxCommon_->GetCommandList());
 
 		break;
+
+	case MENU:
+
+		//自機
+		player_->Draw(dxCommon_->GetCommandList());
+
+		//敵
+		for (std::unique_ptr<Enemy>& enemy : enemys_)
+		{
+			if (UpadateRange(camera_->GetEye(), enemy->GetPosition())) {
+				enemy->Draw(dxCommon_->GetCommandList());
+			}
+		}
+
+		//ボス
+		boss_->Draw(dxCommon_->GetCommandList());
+
+		break;
+
 	}
 }
 
@@ -343,11 +393,17 @@ void GameScene::DrawSprite()
 
 	case PLAY:
 		player_->DrawSprite(dxCommon_->GetCommandList());
+
+		menuUISprite_->Draw(dxCommon_->GetCommandList());
+
 		break;
 	case BOSS:
 		if (!boss_->GetIsDead()) {
 			player_->DrawSprite(dxCommon_->GetCommandList());
 		}
+
+		menuUISprite_->Draw(dxCommon_->GetCommandList());
+
 		break;
 
 	case CLEAR:
@@ -355,7 +411,12 @@ void GameScene::DrawSprite()
 		break;
 	case GAMEOVER:
 		gameoverSprite_->Draw(dxCommon_->GetCommandList());
+		break;
 
+	case MENU:
+		menu_->Draw(dxCommon_->GetCommandList());
+
+		break;
 	}
 
 	//演出
@@ -569,6 +630,7 @@ void GameScene::SetEnemy()
 	//何番目のCSVをセットするか(ランダム)
 	int setNum = static_cast<int>(Random(0, enemyCSVSize_ - 0.001f));
 	auto it = enemyCsvs_.begin();
+	setNum = 2;
 	std::advance(it, setNum);
 
 	for (int i = 0; i < it->get()->GetSize(); i++)
@@ -642,6 +704,12 @@ void GameScene::ChangeScene()
 		//敵のリストから削除要件確認、フェーズもしくはシーン移行
 		CheckEnemy();
 
+		//メニュー
+		if (MenuUIColision()) {
+			performanceManager_->SetIsOldScene(PLAY);
+			performanceManager_->SetPerformanceNum(OPENMENU);
+		}
+
 		break;
 	case BOSS:
 
@@ -651,8 +719,14 @@ void GameScene::ChangeScene()
 		}
 
 		//プレイヤーのスピードが0になったらゲームオーバー
-		if (!player_->GetAddSpeed()) {
+		else if (!player_->GetAddSpeed()) {
 			performanceManager_->SetPerformanceNum(GAMEOVERBOSS);
+		}
+
+		//メニュー
+		if (MenuUIColision()) {
+			performanceManager_->SetIsOldScene(BOSS);
+			performanceManager_->SetPerformanceNum(OPENMENU);
 		}
 
 		break;
@@ -670,6 +744,25 @@ void GameScene::ChangeScene()
 		//汎用演出
 		if (input_->IsMouseTrigger(LEFT_CLICK) && !performanceManager_->GetIsPerformance()) {
 			performanceManager_->SetPerformanceNum(RETURNTITLE);
+		}
+
+		break;
+
+	case MENU:
+
+		//メニューでシーン切り替えフラグがたったら
+		if (menu_->GetIsSerect() && !performanceManager_->GetIsPerformance()) {
+
+			//選択中の物を参照してシーン遷移
+			if (menu_->GetSerect() == MENUTITLE) {
+				//タイトルに戻る演出
+				performanceManager_->SetPerformanceNum(RETURNTITLE);
+			}else if (menu_->GetSerect() == MENUCLOSE) {
+				//メニューを閉じる
+				performanceManager_->SetPerformanceNum(CLOSEMENU);
+			}
+
+			menu_->Reset();
 		}
 
 		break;
@@ -698,9 +791,37 @@ void GameScene::ChangeScene()
 		case GAMEOVER:
 
 			break;
+
+		case MENU:
+
+			break;
 		}
 
 	}
+
+	//ImGui::Begin("scene");
+	//ImGui::Text("%d,", scene);
+	//ImGui::End();
+
+
+}
+
+bool GameScene::MenuUIColision()
+{
+	XMFLOAT2 mousePos = input_->GetMousePosition();
+
+	if (collisionManager_->CheckSpriteTo2Dpos(menuUISprite_,mousePos)) {
+
+		performanceManager_->MenuUIRotPerformance(menuUISprite_);
+
+		if (input_->IsMouseTrigger(LEFT_CLICK)){
+
+			return true;
+		}
+	}
+
+	return false;
+
 }
 
 void GameScene::PlaySceneInitialize()

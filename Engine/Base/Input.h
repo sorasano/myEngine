@@ -109,6 +109,12 @@ public:
 	*/
 	bool CheckInWindow();
 
+	/**
+	* @return bool isLockInWindow取得
+	*/
+	bool GetIsLockInWindow() { return isLockInWindow; }
+
+
 	//入力情報
 
 	//キーボード押下情報
@@ -205,6 +211,9 @@ private:
 	//マウス
 	DIMOUSESTATE mouseState;
 	DIMOUSESTATE oldMouseState;
+
+	//マウスウィンドウズ画面内に固定されているか
+	bool isLockInWindow = true;
 
 	//WindowsAPI
 	WinApp* winApp_ = nullptr;
