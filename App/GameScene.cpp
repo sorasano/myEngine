@@ -409,7 +409,8 @@ void GameScene::DrawSprite()
 
 		break;
 	case BOSS:
-		if (performanceManager_->GetIsPerformance()) {
+
+		if (!performanceManager_->GetIsPerformance()) {
 			player_->DrawSprite(dxCommon_->GetCommandList());
 		}
 
@@ -642,7 +643,6 @@ void GameScene::SetEnemy()
 	//何番目のCSVをセットするか(ランダム)
 	int setNum = static_cast<int>(Random(0, enemyCSVSize_ - 0.001f));
 	auto it = enemyCsvs_.begin();
-	setNum = 2;
 	std::advance(it, setNum);
 
 	for (int i = 0; i < it->get()->GetSize(); i++)
@@ -787,6 +787,7 @@ void GameScene::ChangeScene()
 	//-----演出終了でのシーン切り替え＋シーンの初期化-----
 	if (scene_ != performanceManager_->GetIsChangeScene()) {
 		scene_ = performanceManager_->GetIsChangeScene();
+
 		switch (scene_)
 		{
 		case TITLE:

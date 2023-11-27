@@ -320,6 +320,7 @@ void Boss::Reset()
 
 	//2段階目移行フラグ
 	isBossHardMode_ = false;
+	BossObject_->SetModel(normalBossModel_);
 
 	//hp
 	hp_ = initHp_;
