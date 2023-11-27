@@ -249,6 +249,12 @@ void GameScene::Update()
 
 	case GAMEOVER:
 
+		//自機
+		player_->UpdateGameoverScene();
+
+		//ボス
+		boss_->UpdateGameoverScene();
+
 		//スプライト
 		gameoverSprite_->Update();
 		break;
@@ -358,6 +364,9 @@ void GameScene::Draw()
 		//自機
 		player_->Draw(dxCommon_->GetCommandList());
 
+		//ボス
+		boss_->Draw(dxCommon_->GetCommandList());
+
 		break;
 
 	case MENU:
@@ -392,13 +401,15 @@ void GameScene::DrawSprite()
 		break;
 
 	case PLAY:
-		player_->DrawSprite(dxCommon_->GetCommandList());
+		if (!performanceManager_->GetIsPerformance()) {
+			player_->DrawSprite(dxCommon_->GetCommandList());
+		}
 
 		menuUISprite_->Draw(dxCommon_->GetCommandList());
 
 		break;
 	case BOSS:
-		if (!boss_->GetIsDead()) {
+		if (performanceManager_->GetIsPerformance()) {
 			player_->DrawSprite(dxCommon_->GetCommandList());
 		}
 
@@ -420,6 +431,7 @@ void GameScene::DrawSprite()
 	}
 
 	//演出
+
 	performanceManager_->DrawSprite(dxCommon_->GetCommandList());
 
 	//パーティクル
@@ -661,6 +673,9 @@ void GameScene::Reset()
 
 	//カメラ
 	camera_->SetMode(STRAIGHTMODE);
+
+	menu_->Reset();
+
 	//camera_->Update(player_->GetPosition(), boss_->GetPosition());
 
 	//背景
@@ -762,7 +777,8 @@ void GameScene::ChangeScene()
 				performanceManager_->SetPerformanceNum(CLOSEMENU);
 			}
 
-			menu_->Reset();
+			menu_->CloseReset();
+
 		}
 
 		break;

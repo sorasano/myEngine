@@ -86,4 +86,5 @@ void Easing::Start(float animationSecond)
 	maxTime = animationSecond;
 
 	timeRate = 0.0f;
+
 }

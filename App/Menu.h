@@ -64,6 +64,11 @@ public:
 	* positionセット
 	*/
 	void SetPosition(XMFLOAT2 position);
+	/**
+	* isLockOperation_セット
+	*/
+	void SetIsLockOperation(bool isLockOperation) { this->isLockOperation_ = isLockOperation; };
+
 
 	/**
 	* @return int serect_取得
@@ -75,9 +80,17 @@ public:
 	bool GetIsSerect() { return isSerect_; }
 
 	/**
-	* リセット
+	* リセット(メニューを閉じる度)
+	*/
+	void CloseReset();
+	/**
+	* リセット(ゲームループ一周後)
 	*/
 	void Reset();
+	/**
+	* リセット(設定など全要素)
+	*/
+	void AllReset();
 
 private:
 
@@ -85,6 +98,9 @@ private:
 	Input* input_;
 	//当たり判定
 	Collision* collisionManager_ = nullptr;
+
+	//操作ロック
+	bool isLockOperation_ = false;
 
 	//全体の基本位置
 	XMFLOAT2 position_ = {};

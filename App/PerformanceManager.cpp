@@ -75,6 +75,8 @@ void PerformanceManager::Update()
 
 void PerformanceManager::UpdateSprite()
 {
+
+
 	if (isPerformance_) {
 
 		switch (performanceNum_) {
@@ -306,33 +308,156 @@ void PerformanceManager::BossClearPerformance()
 void PerformanceManager::BossGameoverPerformance()
 {
 
-	//プレイヤーの座用、スピードを取得
-	XMFLOAT3 playerPosition = player_->GetPosition();
-	float playerSpeed = player_->GetSpeed();
+	//演出初期化
+	if (startPerformance_) {
+		//プレイヤーの操作をロック
+		player_->SetIsLockOperation(true);
+		//プレイヤーの座標、スピードを取得
+		gameoverPlayerPosition = player_->GetPosition();
+		gameoverPlayerSpeed = player_->GetSpeed();
 
-	//降下終了地点まで降下したら終了
-	if (gemeoverDownPosition_ <= playerPosition.y) {
-		//降下させる
-		playerPosition.y -= gemeoverDownSpeed_;
+		//イージング用のデータを設定
+		gemeoverDownEaseing_.Start(gemeoverEaseingTime_);
+		gemeoverDownEaseStartPosition_ = player_->GetPosition();
+		gemeoverDownEaseEndPosition_ = player_->GetPosition();
+		gemeoverDownEaseEndPosition_.y = gemeoverDownPosition_;
 
-		//Zスピードの減少
-		if (playerSpeed - gemeoverSubSpeed_ >= 0) {
-			playerSpeed -= gemeoverSubSpeed_;
-		}
-		else {
-			playerSpeed = 0;
-		}
-
+		gameoverPhase_ = GP_PLAYERMOVE;
 	}
-	else {
+
+
+	switch (gameoverPhase_) {
+	case GP_PLAYERMOVE:
+
+		//降下させる
+		gameoverPlayerPosition = EaseIn3D(gemeoverDownEaseStartPosition_, gemeoverDownEaseEndPosition_, gemeoverDownEaseing_.timeRate);
+		gemeoverDownEaseing_.Update();
+
+		//スピードダウンさせる
+		gameoverPlayerSpeed -= gameoverPlayerDownSpeed;
+
+		//座標とスピードのセット
+		player_->SetPosition(gameoverPlayerPosition);
+		player_->SetSpeed(gameoverPlayerSpeed);
+
+		//降下終了地点まで降下したらフェーズ移行
+		if (!gemeoverDownEaseing_.GetActive()) {
+			gameoverPhase_ = GP_CAMERAMOVE;
+
+			//ぷれいやーのスピードを0に
+			player_->SetSpeed(0.0f);
+
+			//-----スプライン用のデータを設定(eye)-----
+			gemeoverEyeSpline_.Start(gemeoverEyeSplineTime_);
+
+
+			//始点と終点
+			Vector3 start = { camera_->GetEye().x,camera_->GetEye().y,camera_->GetEye().z };
+			Vector3 end = { player_->GetPosition().x,player_->GetPosition().y - 0.5f,player_->GetPosition().z + 15 };
+
+			//中継点
+			Vector3 p2;
+			Vector3 p3;
+
+			//カメラが壁にめり込まないようにプレイヤーの位置で右回り、左回りの変更
+			if (player_->GetPosition().x > window_width / 2) {
+				//左回り
+				p2 = { start.x + 5,start.y - 4,start.z + 15 };
+				p3 = { start.x + 8,start.y - 8,start.z + 30 };
+
+				end.x -= 10;
+
+			}
+			else {
+				//右周り
+				p2 = { start.x - 5,start.y - 4,start.z + 15 };
+				p3 = { start.x - 8,start.y - 8,start.z + 30 };
+
+				end.x -= 10;
+			}
+
+			//配列に格納
+			gemeoverEyeSplinePoints_ = { start,start,p2,p3,end,end };
+
+			//1からスタートする
+			gemeoverEyeStartIndex_ = 1;
+
+			//-----スプライン用のデータを設定(target)-----
+			gemeoverTargetSpline_.Start(gemeoverTargetSplineTime_);
+
+
+			//始点と終点
+			start = { camera_->GetTarget().x,camera_->GetTarget().y,camera_->GetTarget().z };
+			end = { player_->GetPosition().x,player_->GetPosition().y,player_->GetPosition().z };
+
+			//配列に格納
+			gemeoverTargetSplinePoints_ = { start,start,end,end };
+
+			//1からスタートする
+			gemeoverTargetStartIndex_ = 1;
+
+			//カメラのモードを演出モードに
+			camera_->SetMode(PERFORMANCEMODE);
+
+		}
+
+		break;
+
+	case GP_CAMERAMOVE:
+
+		//-------スプライン(eye)-------
+
+		//移動させる
+		gemeoverSplineEye_ = Spline3D(gemeoverEyeSplinePoints_, gemeoverEyeStartIndex_, gemeoverEyeSpline_.timeRate);
+		gameoverCameraEye = { gemeoverSplineEye_.x,gemeoverSplineEye_.y,gemeoverSplineEye_.z };
+
+		//スプライン更新
+		gemeoverEyeSpline_.Update();
+
+		//カメラeyeセット
+		camera_->SetEye(gameoverCameraEye);
+
+		//-------スプライン(target)-------
+
+
+		gemeoverSplineTarget_ = Spline3D(gemeoverTargetSplinePoints_, gemeoverTargetStartIndex_, gemeoverTargetSpline_.timeRate);
+		gameoverCameraTarget = { gemeoverSplineTarget_.x,gemeoverSplineTarget_.y,gemeoverSplineTarget_.z };
+
+		//スプライン更新
+		gemeoverTargetSpline_.Update();
+
+		//カメラtargetセット
+		camera_->SetTarget(gameoverCameraTarget);
+
+
+
+		if (!gemeoverEyeSpline_.GetActive()) {
+
+			//startIndexが指定したポイントに移動しきるまでポイント移動
+			if (gemeoverEyeStartIndex_ < gemeoverEyeSplinePoints_.size() - 3) {
+				//移動終了で次ポイント移行
+				gemeoverEyeStartIndex_++;
+				//timerateリセット
+				gemeoverEyeSpline_.Start(gemeoverEyeSplineTime_);
+			}
+			else {
+				//移動終了でフェーズ移行
+				gameoverPhase_ = GP_END;
+			}
+		}
+
+
+		break;
+
+	case GP_END:
 		//演出の終了
 		//シーンをゲームオーバーシーンへ
 		isChangeScene_ = GAMEOVER;
 		isPerformance_ = false;
-	}
 
-	player_->SetPosition(playerPosition);
-	player_->SetSpeed(playerSpeed);
+		//プレイヤーの操作をロック解除
+		player_->SetIsLockOperation(false);
+	}
 
 }
 
@@ -343,11 +468,6 @@ void PerformanceManager::ReturnTitlePerformance()
 		//イージング用のデータを設定
 		generalPurposeEaseing1_.Start(titleToPlayEaseingTime_);
 		generalPurposeEaseing2_.Start(titleToPlayEaseingTime_);
-
-
-		generalPurposeSpritePosition1_ = generalPurposeEaseStartPosition1_;
-		generalPurposeSpritePosition2_ = generalPurposeEaseStartPosition2_;
-
 	}
 
 	//取得したイージング用の開始位置と終了位置でイージングを行う
@@ -365,11 +485,12 @@ void PerformanceManager::ReturnTitlePerformance()
 	if (generalPurposeSpritePosition1_.x - generalPurposeSpritePosition2_.x >= 10) {
 		isChangeScene_ = TITLE;
 	}
-
 	//終わったら演出終了
 	if (!generalPurposeEaseing1_.GetActive() && !generalPurposeEaseing2_.GetActive()) {
 		isPerformance_ = false;
 	}
+
+
 }
 
 void PerformanceManager::OpenMenuPerformance()

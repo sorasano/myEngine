@@ -9,6 +9,7 @@
 #include "Camera.h"
 #include "Sprite.h"
 #include "Easing.h"
+#include "SplineCurve.h"
 #include "Player.h"
 #include "Boss.h"
 
@@ -27,6 +28,13 @@ enum ClearPhase {
 	CP_BOSSMOVE,//ボス墜落、カメラ追尾
 	CP_PLAYERMOVE,//自機中心移動、カメラ旋回
 	CP_END//演出終了
+};
+
+//ゲームオーバー演出フェーズ
+enum GameoverPhase {
+	GP_PLAYERMOVE,//自機墜落
+	GP_CAMERAMOVE,//カメラ旋回
+	GP_END//演出終了
 };
 
 class PerformanceManager
@@ -167,12 +175,47 @@ private:
 	float clearBossSpeed_ = 0.0f;
 
 	//-----ゲームオーバ演出ー-----
+
+	//ゲームオーバー演出用データS
+	XMFLOAT3 gameoverPlayerPosition = {};
+	float gameoverPlayerSpeed = {};
+
+	XMFLOAT3 gameoverCameraEye = {};
+	XMFLOAT3 gameoverCameraTarget = {};
+
+	//フェーズ
+	int gameoverPhase_ = 0;
 	//どこまで降下させるか(プレイヤー)
-	float gemeoverDownPosition_ = -12.0f;
-	//降下スピード(Y、プレイヤー)
-	float gemeoverDownSpeed_ = 0.01f;
-	//降下減速スピード(Z、プレイヤー)
-	float gemeoverSubSpeed_ = 0.001f;
+	float gemeoverDownPosition_ = -11.0f;
+	//どれだけ減速させていくか
+	float gameoverPlayerDownSpeed = 0.01f;
+
+	//イージング用変数
+	Easing gemeoverDownEaseing_;
+	XMFLOAT3 gemeoverDownEaseStartPosition_ = {};
+	XMFLOAT3 gemeoverDownEaseEndPosition_ = {};
+
+	//イージング全体時間
+	float gemeoverEaseingTime_ = 3.0f;
+
+	//スプライン用変数
+	//cameraEye
+	SplineCurve gemeoverEyeSpline_;
+	std::vector<Vector3> gemeoverEyeSplinePoints_ = {};
+	Vector3 gemeoverSplineEye_ = {};
+	//スプライン1ポイント時間
+	float gemeoverEyeSplineTime_ = 1.0f;
+	//今のスタートポイント
+	size_t gemeoverEyeStartIndex_ = 0;
+
+	//cameraTarget
+	SplineCurve gemeoverTargetSpline_;
+	std::vector<Vector3> gemeoverTargetSplinePoints_ = {};
+	Vector3 gemeoverSplineTarget_ = {};
+	//スプライン1ポイント時間
+	float gemeoverTargetSplineTime_ = gemeoverEyeSplineTime_ * 3;
+	//今のスタートポイント
+	size_t gemeoverTargetStartIndex_ = 0;
 
 	//-----汎用演出-----
 	//スプライト
@@ -188,8 +231,8 @@ private:
 	XMFLOAT2 generalPurposeEaseStartPosition1_ = { 0 - (window_width / 2),window_height / 2 };
 	XMFLOAT2 generalPurposeEaseStartPosition2_ = { window_width + (window_width / 2),window_height / 2 };
 	//イージング終了位置
-	XMFLOAT2 generalPurposeEaseEndPosition1_ = { window_width + (window_width / 2),window_height / 2 };
-	XMFLOAT2 generalPurposeEaseEndPosition2_ = { 0 - (window_width / 2),window_height / 2 };
+	XMFLOAT2 generalPurposeEaseEndPosition1_ = { window_width + (window_width / 2) + 100,window_height / 2 };
+	XMFLOAT2 generalPurposeEaseEndPosition2_ = { 0 - (window_width / 2) - 100,window_height / 2 };
 	//イージング演出用データ
 	Easing generalPurposeEaseing1_;
 	Easing generalPurposeEaseing2_;

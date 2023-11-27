@@ -81,6 +81,10 @@ public:
 	*/
 	void UpdateClearScene();
 	/**
+	* ゲームオーバーシーン更新
+	*/
+	void UpdateGameoverScene();
+	/**
 	* 描画
 	*
 	* @param[out] cmdList_ コマンドリスト
@@ -195,7 +199,8 @@ public:
 	void HitBullet();
 
 private:
-	//アフィン変換情報;
+
+	//変換情報;
 	XMFLOAT3 position_ = { 0,0,0 };
 	XMFLOAT3 rotation_ = { 0,0,0 };
 	XMFLOAT3 scale_ = { 1,1,1 };
@@ -269,5 +274,13 @@ private:
 	//------プレイヤー------
 	XMFLOAT3 playerPosition_ = {};
 	float playerSpeed_ = 0.0f;
+
+	//初期情報(リセット用)
+	XMFLOAT3 initPosition_ = { 0,0,0 };
+	XMFLOAT3 initRotation_ = { 0,0,0 };
+	XMFLOAT3 initScale_ = { 1,1,1 };
+
+	//hp
+	int initHp_ = 50;
 };
 

@@ -186,6 +186,7 @@
     <ClCompile Include="Engine\Math\Easing.cpp" />
     <ClCompile Include="Engine\Math\Matrix4.cpp" />
     <ClCompile Include="Engine\Math\Random.cpp" />
+    <ClCompile Include="Engine\Math\SplineCurve.cpp" />
     <ClCompile Include="Engine\Math\Vector2.cpp" />
     <ClCompile Include="Engine\Math\Vector3.cpp" />
     <ClCompile Include="Engine\Model.cpp" />
@@ -314,6 +315,7 @@
     <ClInclude Include="Engine\Math\MathManager.h" />
     <ClInclude Include="Engine\Math\Matrix4.h" />
     <ClInclude Include="Engine\Math\Random.h" />
+    <ClInclude Include="Engine\Math\SplineCurve.h" />
     <ClInclude Include="Engine\Math\Vector2.h" />
     <ClInclude Include="Engine\Math\Vector3.h" />
     <ClInclude Include="Engine\Model.h" />

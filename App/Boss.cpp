@@ -36,6 +36,7 @@ void Boss::Initialize()
 
 	this->bulletModel_ = bossBulletModel_;
 
+	Reset();
 }
 
 void Boss::Update(XMFLOAT3 pPos, float pSpeed)
@@ -85,6 +86,21 @@ void Boss::UpdateMatrix()
 void Boss::UpdateClearScene()
 {
 	UpdateMatrix();
+}
+
+void Boss::UpdateGameoverScene()
+{
+	//移動
+	const float speed = -1.0f;
+
+	position_.z += speed;
+
+	UpdateMatrix();
+
+	//弾があったら削除
+	if (bullets_.size()) {
+		bullets_.clear();
+	}
 }
 
 void Boss::Draw(ID3D12GraphicsCommandList* cmdList)
@@ -294,7 +310,7 @@ void Boss::MakeBullet(Vector3 velocity)
 
 void Boss::Reset()
 {
-	position_ = { 0,0,0 };
+	position_ = initPosition_;
 
 	//弾
 	bullets_.clear();
@@ -306,7 +322,7 @@ void Boss::Reset()
 	isBossHardMode_ = false;
 
 	//hp
-	hp_ = 1;
+	hp_ = initHp_;
 
 }
 

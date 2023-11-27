@@ -1,4 +1,5 @@
 #include "Menu.h"
+#include "Imgui.h"
 
 void Menu::Initialize()
 {
@@ -119,6 +120,12 @@ void Menu::SerectCollision()
 {
 	XMFLOAT2 mousePos = input_->GetMousePosition();
 
+	//操作制限の場合マウス位置を画面外に
+	if (isLockOperation_) {
+		mousePos = { -1,-1 };
+	}
+
+
 	if (!isSetting_) {
 
 		if (collisionManager_->CheckSpriteTo2Dpos(settingSprite_, mousePos)) {
@@ -215,6 +222,16 @@ void Menu::SerectEmphasis()
 
 	}
 
+	//何も選択していないときはすべて基本色
+	if (serect_ == NONE) {
+		settingSprite_->color				= { 1,1,1,1 };
+		titleSprite_->color					= { 1,1,1,1 };
+		closeSprite_->color					= { 1,1,1,1 };
+		settingMouseLockOnSprite_->color	= { 1,1,1,1 };
+		closeSettingSprite_->color			= { 1,1,1,1 };
+		settingMouseLockOffSprite_->color	= { 1,1,1,1 };
+	}
+
 }
 
 void Menu::SerectConfirm()
@@ -232,6 +249,10 @@ void Menu::SerectConfirm()
 					break;
 				case MENUTITLE:
 					isSerect_ = true;
+
+					//メニュー操作ロック
+					isLockOperation_ = true;
+
 					break;
 				case MENUCLOSE:
 					isSerect_ = true;
@@ -296,9 +317,17 @@ void Menu::SetPosition(XMFLOAT2 position)
 	closeSprite_->SetPosition(closePosition);
 }
 
-void Menu::Reset()
+void Menu::CloseReset()
 {
 	serect_ = NONE;
 	isSerect_ = false;
 	isSetting_ = false;
+
+}
+
+void Menu::Reset()
+{
+	CloseReset();
+
+	isLockOperation_ = false;
 }

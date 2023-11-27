@@ -58,6 +58,8 @@ void Player::Initialize()
 	speedSprite_->SetTextureNum(3);
 	speedSprite_->Initialize();
 	speedSprite_->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
+
+	Reset();
 }
 
 void Player::Update(XMMATRIX matVP)
@@ -101,6 +103,19 @@ void Player::UpdateClearScene()
 	position_.z += speedZ_ + addSpeed_;
 
 	UpdateMatrix();
+}
+
+void Player::UpdateGameoverScene()
+{
+	//移動
+	position_.z += speedZ_;
+
+	UpdateMatrix();
+
+	//弾があったら削除
+	if (bullets_.size()) {
+		bullets_.clear();
+	}
 }
 
 
@@ -163,43 +178,26 @@ void Player::SpeedDownByEnemy()
 void Player::Move()
 {
 	//キーボード操作
-	if (input_->IsKeyPress(DIK_W) || input_->IsKeyPress(DIK_S) || input_->IsKeyPress(DIK_D) || input_->IsKeyPress(DIK_A)) {
+	if (!isLockOperation_) {
 
-		//座標を移動する処理
-		if (input_->IsKeyPress(DIK_W)) {
-			if (MoveMax_.y > position_.y) { position_.y += speedXY_; }
-		}
-		else if (input_->IsKeyPress(DIK_S)) {
-			if (-MoveMax_.y < position_.y) { position_.y -= speedXY_; }
-		}
+		if (input_->IsKeyPress(DIK_W) || input_->IsKeyPress(DIK_S) || input_->IsKeyPress(DIK_D) || input_->IsKeyPress(DIK_A)) {
 
-		if (input_->IsKeyPress(DIK_A)) {
-			if (-MoveMax_.x < position_.x) { position_.x -= speedXY_; }
-		}
-		else if (input_->IsKeyPress(DIK_D)) {
-			if (MoveMax_.x > position_.x) { position_.x += speedXY_; }
-		}
+			//座標を移動する処理
+			if (input_->IsKeyPress(DIK_W)) {
+				if (MoveMax_.y > position_.y) { position_.y += speedXY_; }
+			}
+			else if (input_->IsKeyPress(DIK_S)) {
+				if (-MoveMax_.y < position_.y) { position_.y -= speedXY_; }
+			}
 
-	}
+			if (input_->IsKeyPress(DIK_A)) {
+				if (-MoveMax_.x < position_.x) { position_.x -= speedXY_; }
+			}
+			else if (input_->IsKeyPress(DIK_D)) {
+				if (MoveMax_.x > position_.x) { position_.x += speedXY_; }
+			}
 
-	//パッド操作
-	else if (input_->IsDownLStickUp() || input_->IsDownLStickDown() || input_->IsDownLStickRight() || input_->IsDownLStickLeft()) {
-
-		//座標を移動する処理
-		if (input_->IsDownLStickUp()) {
-			if (MoveMax_.y > position_.y) { position_.y += speedXY_; }
 		}
-		else if (input_->IsDownLStickDown()) {
-			if (-MoveMax_.y < position_.y) { position_.y -= speedXY_; }
-		}
-
-		if (input_->IsDownLStickLeft()) {
-			if (-MoveMax_.x < position_.x) { position_.x -= speedXY_; }
-		}
-		else if (input_->IsDownLStickRight()) {
-			if (MoveMax_.x > position_.x) { position_.x += speedXY_; }
-		}
-
 	}
 
 	position_.z += speedZ_ + addSpeed_;
@@ -210,7 +208,7 @@ void Player::Shot()
 {
 	bulletCoolTimer_++;
 	//クリックで弾発射
-	if (input_->IsMousePress(LEFT_CLICK)) {
+	if (input_->IsMousePress(LEFT_CLICK) && !isLockOperation_) {
 
 		if (BulletCoolTime_ < bulletCoolTimer_) {
 			MakeBullet();
@@ -300,7 +298,7 @@ void Player::UpdateRaticle(XMMATRIX matVP)
 		//プレイヤーの2d座標の算出(ワールド→スクリーン座標計算)
 		Vector3 playerPosition = { position_.x,position_.y,position_.z };
 		playerPosition = XMMATRIXTransform(playerPosition, matViewProjectionViewPort);
-		position2D_ = { playerPosition.x,playerPosition.y};
+		position2D_ = { playerPosition.x,playerPosition.y };
 
 	}
 
@@ -342,7 +340,7 @@ void Player::UpdateSprite()
 			//プレイヤーの座標から等分に配置
 			reticleSprites_[i]->SetPosition({ position2D_.x + reticleSplitPos.x * (i + 1), position2D_.y + reticleSplitPos.y * (i + 1) });
 			//手前は大きく奥はちいさく
-			reticleSprites_[i]->SetScale({reticleScale_.x - (reticleSplitSize * (i + 1)) ,reticleScale_.y - (reticleSplitSize * (i + 1)) });
+			reticleSprites_[i]->SetScale({ reticleScale_.x - (reticleSplitSize * (i + 1)) ,reticleScale_.y - (reticleSplitSize * (i + 1)) });
 
 			reticleSprites_[i]->Update();
 		}
@@ -353,10 +351,10 @@ void Player::UpdateSprite()
 void Player::Reset()
 {
 	//座標
-	position_ = { 0,0,0 };
+	position_ = initPosition_;
 	//速度
-	speedZ_ = 0.5f;
-	addSpeed_ = 0.0f;
+	speedZ_ = initSpeedZ_;
+	addSpeed_ = initAddSpeed_;
 
 	//レティクル
 	//reticlePosition_ = { 0,0 };

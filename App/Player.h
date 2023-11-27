@@ -46,6 +46,10 @@ public:
 	*/
 	void UpdateClearScene();
 	/**
+	* ゲームオーバーシーン更新
+	*/
+	void UpdateGameoverScene();
+	/**
 	* 描画
 	*
 	* @param[out] cmdList コマンドリスト
@@ -167,13 +171,17 @@ public:
 	*/
 	void SetIsInvincible(bool isInvincible) { this->isInvincible_ = isInvincible; }
 	/**
+	* isLockOperation_セット
+	*/
+	void SetIsLockOperation(bool isLockOperation) { this->isLockOperation_ = isLockOperation; };
+
+	/**
 	* 弾死亡情報セット
 	*
 	* @param[in] isDead 死亡フラグ
 	* @param[in] i 何番の弾か
 	*/
 	void SetBulletIsDead(bool isDead, int i);
-
 private:
 	//アフィン変換情報
 	XMFLOAT3 position_ = { 0,0,0 };
@@ -198,6 +206,9 @@ private:
 
 	//入力
 	Input* input_ = nullptr;
+
+	//操作ロック
+	bool isLockOperation_ = false;
 
 	//移動範囲
 	const XMFLOAT2 MoveMax_ = { 20.0f,10.0f };
@@ -260,5 +271,16 @@ private:
 
 	//弾の速度
 	float bulletSpeed_ = 2;
+
+	//初期情報(リセット用)
+	XMFLOAT3 initPosition_ = { 0,0,0 };
+	XMFLOAT3 initRotation_ = { 0,0,0 };
+	XMFLOAT3 initScale_ = { 1,1,1 };
+
+	//基礎スピード
+	float initSpeedZ_ = 0.5f;
+	//追加スピード
+	float initAddSpeed_ = 0.0f;
+
 };
 
