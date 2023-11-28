@@ -279,7 +279,7 @@ void Player::UpdateRaticle(XMMATRIX matVP)
 		XMMATRIX matViewProjectionViewPort = matVP * viewPort;
 
 		//ビュープロジェクションビュー行列の逆行列を取得
-		XMMATRIX matInverseVPV = XMMatrixInverse(nullptr, matViewProjectionViewPort);
+		XMMATRIX matInverseVPV = MatrixInverse(matViewProjectionViewPort);
 
 		//スクリーン→ワールド座標変換
 		Vector3 nearClip = { reticle2DPosition_.x , reticle2DPosition_.y ,0 };
@@ -300,6 +300,14 @@ void Player::UpdateRaticle(XMMATRIX matVP)
 		playerPosition = XMMATRIXTransform(playerPosition, matViewProjectionViewPort);
 		position2D_ = { playerPosition.x,playerPosition.y };
 
+		XMMATRIX a = matViewProjectionViewPort;
+		ImGui::Begin("a");
+		ImGui::Text("%f,%f,%f,%f\n%f,%f,%f,%f\n%f,%f,%f,%f\n%f,%f,%f,%f\n",
+			a.r[0].m128_f32[0], a.r[0].m128_f32[1],a.r[0].m128_f32[2], a.r[0].m128_f32[3],
+			a.r[1].m128_f32[0], a.r[1].m128_f32[1], a.r[1].m128_f32[2], a.r[1].m128_f32[3],
+			a.r[2].m128_f32[0], a.r[2].m128_f32[1], a.r[2].m128_f32[2], a.r[2].m128_f32[3],
+			a.r[3].m128_f32[0], a.r[3].m128_f32[1], a.r[3].m128_f32[2], a.r[3].m128_f32[3]);
+		ImGui::End();
 	}
 
 }

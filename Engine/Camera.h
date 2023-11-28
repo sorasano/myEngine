@@ -45,7 +45,7 @@ private:
 
 	XMMATRIX matView_ = {};
 	XMMATRIX matProjection_ = {};
-	XMFLOAT3 eye_ = { 0, 1, 30 };
+	XMFLOAT3 eye_ = { 0, 1, 20000 };
 	XMFLOAT3 target_ = { 0, 0, 0 };
 	XMFLOAT3 up_ = { 0, 1, 0 };;
 	//描画最小距離
