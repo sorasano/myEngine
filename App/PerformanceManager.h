@@ -228,7 +228,7 @@ private:
 	//スプライト
 	std::vector<Sprite*> titleReturnSprites_ = {};
 	//スプライト大きさ
-	XMFLOAT2 titleReturnSpriteSize = { window_width  + 100, window_height };
+	XMFLOAT2 titleReturnSpriteSize = { window_width  + 200, window_height };
 	
 	//スプライト数
 	int titleReturnSpritesSize_ = 2;

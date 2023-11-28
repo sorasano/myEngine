@@ -130,7 +130,7 @@ private:
 	int scene_ = TITLE;
 
 	//フェーズ
-	int phase_ = 3;
+	int phase_ = 0;
 	const int MaxPhase_ = 1;
 
 	//Fbx
