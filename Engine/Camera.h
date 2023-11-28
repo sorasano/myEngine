@@ -86,6 +86,10 @@ public:
 	* デバックモード
 	*/
 	void DebugMode();
+	/**
+	* リセット
+	*/
+	void Reset();
 
 
 	/**
@@ -145,7 +149,7 @@ private:
 	 
 	//カメラ初期座標
 	XMFLOAT3 initEye_ = { 0.0f,0.0f,0.0f };
-	XMFLOAT3 initTarget_ = { 0.0f,0.0f,0.0f };
+	XMFLOAT3 initTarget_ = { 0.0f,0.0f,1.0f };
 
 	//カメラ円運動用角度
 	float angle_ = 0.1f; // カメラの回転角

@@ -37,6 +37,13 @@ enum GameoverPhase {
 	GP_END//演出終了
 };
 
+//タイトル戻る演出フェーズ
+enum TitleReturnPhase {
+	TP_CLOSE,//閉じる
+	TP_OPEN,//開く
+	TP_END//演出終了
+};
+
 class PerformanceManager
 {
 public:
@@ -217,27 +224,50 @@ private:
 	//今のスタートポイント
 	size_t gemeoverTargetStartIndex_ = 0;
 
-	//-----汎用演出-----
+	//-----演出-----
 	//スプライト
-	std::vector<Sprite*> generalPurposeSprites_ = {};
+	std::vector<Sprite*> titleReturnSprites_ = {};
+	//スプライト大きさ
+	XMFLOAT2 titleReturnSpriteSize = { window_width  + 100, window_height };
+	
 	//スプライト数
-	int generalPurposeSpritesSize_ = 2;
-
+	int titleReturnSpritesSize_ = 2;
 	//座標
-	XMFLOAT2 generalPurposeSpritePosition1_ = {};
-	XMFLOAT2 generalPurposeSpritePosition2_ = {};
+	XMFLOAT2 titleReturnSpritePosition1_ = {};
+	XMFLOAT2 titleReturnSpritePosition2_ = {};
+
+	//フェーズ
+	int titleReturnPhase_ = 0;
+	//ロード遅延用
+	int isTitleReturnOpen = 0;
+
+	//-----閉じるイージング-----
 
 	//イージング開始座標
-	XMFLOAT2 generalPurposeEaseStartPosition1_ = { 0 - (window_width / 2),window_height / 2 };
-	XMFLOAT2 generalPurposeEaseStartPosition2_ = { window_width + (window_width / 2),window_height / 2 };
+	XMFLOAT2 titleReturnCloseEaseStartPosition1_ = { 0 - (titleReturnSpriteSize.x / 2),window_height / 2 };
+	XMFLOAT2 titleReturnCloseEaseStartPosition2_ = { window_width + (titleReturnSpriteSize.x / 2),window_height / 2 };
 	//イージング終了位置
-	XMFLOAT2 generalPurposeEaseEndPosition1_ = { window_width + (window_width / 2) + 100,window_height / 2 };
-	XMFLOAT2 generalPurposeEaseEndPosition2_ = { 0 - (window_width / 2) - 100,window_height / 2 };
+	XMFLOAT2 titleReturnCloseEaseEndPosition1_ = { window_width / 2,window_height / 2 };
+	XMFLOAT2 titleReturnCloseEaseEndPosition2_ = { window_width / 2,window_height / 2 };
 	//イージング演出用データ
-	Easing generalPurposeEaseing1_;
-	Easing generalPurposeEaseing2_;
+	Easing titleReturnCloseEaseing1_;
+	Easing titleReturnCloseEaseing2_;
 	//イージング演出時間
-	float generalPurposeEaseingTime_ = 3.0f;
+	float titleReturnCloseEaseingTime_ = 1.5f;
+
+	//-----開くイージング-----
+
+	//イージング開始座標
+	XMFLOAT2 titleReturnOpenEaseStartPosition1_ = titleReturnCloseEaseEndPosition1_;
+	XMFLOAT2 titleReturnOpenEaseStartPosition2_ = titleReturnCloseEaseEndPosition2_;
+	//イージング終了位置
+	XMFLOAT2 titleReturnOpenEaseEndPosition1_ = { window_width + (titleReturnSpriteSize.x / 2) + 100,window_height / 2 };
+	XMFLOAT2 titleReturnOpenEaseEndPosition2_ = { 0 - (titleReturnSpriteSize.x / 2) - 100,window_height / 2 };
+	//イージング演出用データ
+	Easing titleReturnOpenEaseing1_;
+	Easing titleReturnOpenEaseing2_;
+	//イージング演出時間
+	float titleReturnOpenEaseingTime_ = 1.5f;
 
 	//-----メニュー-----
 	//メニュー開いた時のシーン

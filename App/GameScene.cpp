@@ -284,6 +284,13 @@ void GameScene::Update()
 	//パーティクルマネージャー静的更新
 	ParticleManager::StaticUpdate(camera_->GetEye(), camera_->GetTarget());
 
+	//ImGui::Begin("camerapos");
+	//ImGui::Text("%f,", camera_->GetEye().z);
+	//ImGui::End();
+
+	//ImGui::Begin("playerpos");
+	//ImGui::Text("%f,", player_->GetPosition().z);
+	//ImGui::End();
 }
 
 void GameScene::Draw()
@@ -672,25 +679,24 @@ void GameScene::Reset()
 	boss_->Reset();
 
 	//カメラ
-	camera_->SetMode(STRAIGHTMODE);
+	camera_->Reset();
 
 	menu_->Reset();
 
-	//camera_->Update(player_->GetPosition(), boss_->GetPosition());
 
 	//背景
 	//オブジェクトを全削除
-	//backGrounds_.clear();
+	backGrounds_.clear();
 
-	////オブジェクトを配置しなおす
-	//adjustPos_ = 0;
-	//for (int i = 0; i < backGroundSize_; i++) {
-	//	std::unique_ptr<BackGround>newBackGround = std::make_unique<BackGround>();
-	//	newBackGround->Initialize(adjustPos_);
-	//	//現在の位置+1つ分のサイズで次のマップの位置にセット
-	//	adjustPos_ = newBackGround->GetPosition().z + newBackGround->GetSize();
-	//	backGrounds_.push_back(std::move(newBackGround));
-	//}
+	//オブジェクトを配置しなおす
+	adjustPos_ = 0;
+	for (int i = 0; i < backGroundSize_; i++) {
+		std::unique_ptr<BackGround>newBackGround = std::make_unique<BackGround>();
+		newBackGround->Initialize(adjustPos_);
+		//現在の位置+1つ分のサイズで次のマップの位置にセット
+		adjustPos_ = newBackGround->GetPosition().z + newBackGround->GetSize();
+		backGrounds_.push_back(std::move(newBackGround));
+	}
 
 }
 
@@ -777,6 +783,7 @@ void GameScene::ChangeScene()
 				performanceManager_->SetPerformanceNum(CLOSEMENU);
 			}
 
+			//メニューを閉じたとき用リセット
 			menu_->CloseReset();
 
 		}
@@ -786,6 +793,14 @@ void GameScene::ChangeScene()
 
 	//-----演出終了でのシーン切り替え＋シーンの初期化-----
 	if (scene_ != performanceManager_->GetIsChangeScene()) {
+
+		//前シーンがメニューシーンか
+		bool oldSceneMenu = false;
+		if (scene_ == MENU) {
+			oldSceneMenu = true;
+		}
+
+		//シーンを切り替え
 		scene_ = performanceManager_->GetIsChangeScene();
 
 		switch (scene_)
@@ -800,7 +815,11 @@ void GameScene::ChangeScene()
 			break;
 		case BOSS:
 
-			BossSceneInitialize();
+			//メニューシーンからの切り替えは初期化しない
+			if (!oldSceneMenu) {
+				BossSceneInitialize();
+			}
+
 			break;
 		case CLEAR:
 

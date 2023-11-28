@@ -204,3 +204,11 @@ void Camera::DebugMode()
 
 	}
 }
+
+void Camera::Reset()
+{
+	eye_ = initEye_;
+	target_ = initTarget_;
+
+	mode_ = STRAIGHTMODE;
+}

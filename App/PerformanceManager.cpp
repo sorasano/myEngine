@@ -16,14 +16,13 @@ void PerformanceManager::Initialize(Camera* camera, Player* player, Boss* boss)
 	this->boss_ = boss;
 
 	//スプライト
-	for (int i = 0; i < generalPurposeSpritesSize_; i++) {
+	for (int i = 0; i < titleReturnSpritesSize_; i++) {
 		Sprite* gPSprite = new Sprite();
 		gPSprite->SetTextureNum(4);
 		gPSprite->Initialize();
-		gPSprite->SetScale(XMFLOAT2(window_width, window_height
-		));
+		gPSprite->SetScale(titleReturnSpriteSize);
 
-		generalPurposeSprites_.push_back(gPSprite);
+		titleReturnSprites_.push_back(gPSprite);
 	}
 }
 
@@ -94,7 +93,7 @@ void PerformanceManager::UpdateSprite()
 
 			break;
 		case RETURNTITLE:
-			for (auto& gPSprite : generalPurposeSprites_) {
+			for (auto& gPSprite : titleReturnSprites_) {
 				gPSprite->Update();
 			}
 			break;
@@ -129,7 +128,7 @@ void PerformanceManager::DrawSprite(ID3D12GraphicsCommandList* cmdList)
 
 			break;
 		case RETURNTITLE:
-			for (auto& gPSprite : generalPurposeSprites_) {
+			for (auto& gPSprite : titleReturnSprites_) {
 				gPSprite->Draw(cmdList);
 			}
 			break;
@@ -466,30 +465,72 @@ void PerformanceManager::ReturnTitlePerformance()
 	//演出初期化
 	if (startPerformance_) {
 		//イージング用のデータを設定
-		generalPurposeEaseing1_.Start(titleToPlayEaseingTime_);
-		generalPurposeEaseing2_.Start(titleToPlayEaseingTime_);
+		titleReturnCloseEaseing1_.Start(titleReturnCloseEaseingTime_);
+		titleReturnCloseEaseing2_.Start(titleReturnCloseEaseingTime_);
+
+		titleReturnPhase_ = TP_CLOSE;
 	}
 
-	//取得したイージング用の開始位置と終了位置でイージングを行う
-	generalPurposeSpritePosition1_ = EaseIn2D(generalPurposeEaseStartPosition1_, generalPurposeEaseEndPosition1_, generalPurposeEaseing1_.timeRate);
-	generalPurposeSpritePosition2_ = EaseIn2D(generalPurposeEaseStartPosition2_, generalPurposeEaseEndPosition2_, generalPurposeEaseing2_.timeRate);
+	switch (titleReturnPhase_) {
 
-	//座標をセット
-	generalPurposeSprites_[0]->SetPosition(generalPurposeSpritePosition1_);
-	generalPurposeSprites_[1]->SetPosition(generalPurposeSpritePosition2_);
+	case TP_CLOSE:
 
-	generalPurposeEaseing1_.Update();
-	generalPurposeEaseing2_.Update();
+		//取得したイージング用の開始位置と終了位置でイージングを行う
+		titleReturnSpritePosition1_ = EaseIn2D(titleReturnCloseEaseStartPosition1_, titleReturnCloseEaseEndPosition1_, titleReturnCloseEaseing1_.timeRate);
+		titleReturnSpritePosition2_ = EaseIn2D(titleReturnCloseEaseStartPosition2_, titleReturnCloseEaseEndPosition2_, titleReturnCloseEaseing2_.timeRate);
 
-	//スプライトが中心で重なった瞬間シーンチェンジ
-	if (generalPurposeSpritePosition1_.x - generalPurposeSpritePosition2_.x >= 10) {
-		isChangeScene_ = TITLE;
-	}
-	//終わったら演出終了
-	if (!generalPurposeEaseing1_.GetActive() && !generalPurposeEaseing2_.GetActive()) {
+		//座標をセット
+		titleReturnSprites_[0]->SetPosition(titleReturnSpritePosition1_);
+		titleReturnSprites_[1]->SetPosition(titleReturnSpritePosition2_);
+
+		titleReturnCloseEaseing1_.Update();
+		titleReturnCloseEaseing2_.Update();
+
+		//移動終了で次フェーズ、タイトルシーンへ
+		if (!titleReturnCloseEaseing1_.GetActive() && !titleReturnCloseEaseing2_.GetActive()) {
+			isChangeScene_ = TITLE;
+			titleReturnPhase_ = TP_OPEN;
+
+			isTitleReturnOpen = true;
+		}
+
+		break;
+
+	case TP_OPEN:
+
+		if (isTitleReturnOpen) {
+
+			//イージング用のデータを再設定
+			titleReturnOpenEaseing1_.Start(titleReturnOpenEaseingTime_);
+			titleReturnOpenEaseing2_.Start(titleReturnOpenEaseingTime_);
+
+			isTitleReturnOpen = false;
+		}
+
+		//取得したイージング用の開始位置と終了位置でイージングを行う
+		titleReturnSpritePosition1_ = EaseIn2D(titleReturnOpenEaseStartPosition1_, titleReturnOpenEaseEndPosition1_, titleReturnOpenEaseing1_.timeRate);
+		titleReturnSpritePosition2_ = EaseIn2D(titleReturnOpenEaseStartPosition2_, titleReturnOpenEaseEndPosition2_, titleReturnOpenEaseing2_.timeRate);
+
+		//座標をセット
+		titleReturnSprites_[0]->SetPosition(titleReturnSpritePosition1_);
+		titleReturnSprites_[1]->SetPosition(titleReturnSpritePosition2_);
+
+		titleReturnOpenEaseing1_.Update();
+		titleReturnOpenEaseing2_.Update();
+
+		//移動終了で次フェーズ
+		if (!titleReturnOpenEaseing1_.GetActive() && !titleReturnOpenEaseing2_.GetActive()) {
+			titleReturnPhase_ = TP_END;
+		}
+
+		break;
+
+	case TP_END:
+
 		isPerformance_ = false;
-	}
 
+		break;
+	}
 
 }
 
