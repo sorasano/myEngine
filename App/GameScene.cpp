@@ -137,7 +137,9 @@ void GameScene::Initialize()
 	enemyCsvsName_ = {
 	"enemy1",
 	"enemy2",
-	"enemy3"
+	"enemy3",
+	"enemy4",
+	"enemy5"
 	};
 
 	enemyCSVSize_ = static_cast<int>(enemyCsvsName_.size());
@@ -284,13 +286,13 @@ void GameScene::Update()
 	//パーティクルマネージャー静的更新
 	ParticleManager::StaticUpdate(camera_->GetEye(), camera_->GetTarget());
 
-	ImGui::Begin("cameraposZ");
-	ImGui::Text("%f,", camera_->GetEye().z);
-	ImGui::End();
+	//ImGui::Begin("cameraposZ");
+	//ImGui::Text("%f,", camera_->GetEye().z);
+	//ImGui::End();
 
-	ImGui::Begin("playerposZ");
-	ImGui::Text("%f,", player_->GetPosition().z);
-	ImGui::End();
+	//ImGui::Begin("playerposZ");
+	//ImGui::Text("%f,", player_->GetPosition().z);
+	//ImGui::End();
 }
 
 void GameScene::Draw()
