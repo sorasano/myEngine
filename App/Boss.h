@@ -242,9 +242,9 @@ private:
 	//ボス2段階目フラグ
 	bool isBossHardMode_ = 0;
 	//hp
-	int hp_ = 50;
+	int hp_ = 100;
 	//2段階目になるhp
-	int changeHardHp_ = 25;
+	int changeHardHp_ = 50;
 
 	//-------移動-------
 	//移動 trueが+に移動中でfalseが-に移動中
@@ -281,6 +281,6 @@ private:
 	XMFLOAT3 initScale_ = { 1,1,1 };
 
 	//hp
-	int initHp_ = 50;
+	int initHp_ = 100;
 };
 
