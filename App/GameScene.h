@@ -40,7 +40,7 @@ public:
 	*/
 	~GameScene();
 	/**
-	* 初期化	
+	* 初期化
 	*
 	*/
 	void Initialize();
@@ -92,7 +92,7 @@ public:
 	void ChangeScene();
 	/**
 	* メニューUI判定
-	* 
+	*
 	* @return true = UIが押された
 	*/
 	bool MenuUIColision();
@@ -109,7 +109,7 @@ public:
 	*/
 	void BossSceneCollition();
 
-	
+
 
 private:
 	//デバイスとinput
@@ -120,32 +120,16 @@ private:
 	Collision* collisionManager_ = nullptr;
 
 	//カメラ
-	Camera* camera_{};
+	std::unique_ptr<Camera> camera_{};
+
+	//演出
+	std::unique_ptr<PerformanceManager> performanceManager_ = nullptr;
+
+	//パーティクル
+	std::unique_ptr<ParticleManager> particleManager_ = nullptr;
 
 	//メニュー
-	Menu* menu_;
-	Sprite* menuUISprite_;
-
-	//シーン
-	int scene_ = TITLE;
-
-	//フェーズ
-	int phase_ = 0;
-	const int MaxPhase_ = 1;
-
-	//Fbx
-	FbxModel* enemyModel_ = nullptr;
-	FbxModel* enemyBulletModel_ = nullptr;
-
-	//スカイドーム
-	std::unique_ptr<Skydome> skydome_;
-
-	//背景
-	std::list<std::unique_ptr<BackGround>> backGrounds_;
-	size_t backGroundSize_ = 5;
-	//調整用の座標
-	float adjustPos_ = 0;
-
+	std::unique_ptr<Menu> menu_;
 	//プレイヤー
 	std::unique_ptr<Player> player_;
 
@@ -160,18 +144,37 @@ private:
 	//ボス
 	std::unique_ptr<Boss> boss_;
 
+	//-----リソース-----
+
+	//Fbx
+	std::unique_ptr<FbxModel> enemyModel_ = nullptr;
+	std::unique_ptr<FbxModel> enemyBulletModel_ = nullptr;
+
+	//スカイドーム
+	std::unique_ptr<Skydome> skydome_;
+
+	//背景
+	std::list<std::unique_ptr<BackGround>> backGrounds_;
+	size_t backGroundSize_ = 5;
+	//調整用の座標
+	float adjustPos_ = 0;
+
+
 	//スプライトマネージャー
-	SpriteManager* spriteManager_ = nullptr;
+	std::unique_ptr <SpriteManager> spriteManager_ = nullptr;
 	//スプライト
-	Sprite* titleSprite_ = nullptr;
-	Sprite* clearSprite_ = nullptr;
-	Sprite* gameoverSprite_ = nullptr;
+	std::unique_ptr<Sprite> titleSprite_ = nullptr;
+	std::unique_ptr<Sprite> clearSprite_ = nullptr;
+	std::unique_ptr<Sprite> gameoverSprite_ = nullptr;
+	std::unique_ptr<Sprite> menuUISprite_;
 
-	//演出
-	PerformanceManager* performanceManager_ = nullptr;
+private:
+	//シーン
+	int scene_ = TITLE;
 
-	//-----パーティクル-----
-	ParticleManager* particleManager_ = nullptr;
+	//フェーズ
+	int phase_ = 0;
+	const int MaxPhase_ = 1;
 
 };
 

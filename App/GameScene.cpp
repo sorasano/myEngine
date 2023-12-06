@@ -13,13 +13,6 @@ GameScene::GameScene()
 
 GameScene::~GameScene()
 {
-	delete camera_;
-	delete titleSprite_;
-	delete clearSprite_;
-	//for (int i = 0; i < enemySize; i++)
-	//{
-	//	FBX_SAFE_DELETE(enemyModel);
-	//}
 }
 
 void GameScene::Initialize()
@@ -31,17 +24,19 @@ void GameScene::Initialize()
 
 
 	//カメラ初期化
-	camera_ = new Camera;
-	camera_->StaticInitialize(dxCommon_->GetDevice());
-	camera_->Initialize();
+	Camera* newCamera = new Camera();
+	newCamera->StaticInitialize(dxCommon_->GetDevice());
+	newCamera->Initialize();
+	camera_.reset(newCamera);
 
 	// パーティクル静的初期化
 	ParticleManager::StaticInitialize(dxCommon_);
 
 	//スプライトマネージャー
 	SpriteManager::SetDevice(dxCommon_->GetDevice());
-	spriteManager_ = new SpriteManager;
-	spriteManager_->Initialize();
+	SpriteManager* newSpriteManager = new SpriteManager();
+	newSpriteManager->Initialize();
+	spriteManager_.reset(newSpriteManager);
 
 	//------テクスチャ------
 	spriteManager_->LoadFile(0, "title.png");
@@ -65,32 +60,36 @@ void GameScene::Initialize()
 
 	//-----スプライト------
 	Sprite::SetDevice(dxCommon_->GetDevice());
-	Sprite::SetSpriteManager(spriteManager_);
+	Sprite::SetSpriteManager(spriteManager_.get());
 	Sprite::CreateGraphicsPipeLine();
 
-	titleSprite_ = new Sprite();
-	titleSprite_->SetTextureNum(0);
-	titleSprite_->Initialize();
-	titleSprite_->SetScale(XMFLOAT2(1280, 720));
-	titleSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
+	Sprite* newTitleSprite = new Sprite();
+	newTitleSprite->SetTextureNum(0);
+	newTitleSprite->Initialize();
+	newTitleSprite->SetScale(XMFLOAT2(1280, 720));
+	newTitleSprite->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
+	titleSprite_.reset(newTitleSprite);
 
-	clearSprite_ = new Sprite();
-	clearSprite_->SetTextureNum(1);
-	clearSprite_->Initialize();
-	clearSprite_->SetScale(XMFLOAT2(1280, 720));
-	clearSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
+	Sprite* newClearSprite_ = new Sprite();
+	newClearSprite_->SetTextureNum(1);
+	newClearSprite_->Initialize();
+	newClearSprite_->SetScale(XMFLOAT2(1280, 720));
+	newClearSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
+	clearSprite_.reset(newClearSprite_);
 
-	gameoverSprite_ = new Sprite();
-	gameoverSprite_->SetTextureNum(2);
-	gameoverSprite_->Initialize();
-	gameoverSprite_->SetScale(XMFLOAT2(1280, 720));
-	gameoverSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
+	Sprite* newGameoverSprite_ = new Sprite();
+	newGameoverSprite_->SetTextureNum(2);
+	newGameoverSprite_->Initialize();
+	newGameoverSprite_->SetScale(XMFLOAT2(1280, 720));
+	newGameoverSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
+	gameoverSprite_.reset(newGameoverSprite_);
 
-	menuUISprite_ = new Sprite();
-	menuUISprite_->SetTextureNum(6);
-	menuUISprite_->Initialize();
-	menuUISprite_->SetScale(XMFLOAT2(100, 100));
-	menuUISprite_->SetPosition(XMFLOAT2(window_width - 50, window_height - 50));
+	Sprite* newMenuUISprite_ = new Sprite();
+	newMenuUISprite_->SetTextureNum(6);
+	newMenuUISprite_->Initialize();
+	newMenuUISprite_->SetScale(XMFLOAT2(100, 100));
+	newMenuUISprite_->SetPosition(XMFLOAT2(window_width - 50, window_height - 50));
+	menuUISprite_.reset(newMenuUISprite_);
 
 	//----------FBX----------
 
@@ -99,7 +98,7 @@ void GameScene::Initialize()
 
 	//デバイスをセット
 	FbxObject3D::SetDevice(dxCommon_->GetDevice());
-	FbxObject3D::SetCamera(camera_);
+	FbxObject3D::SetCamera(camera_.get());
 	//グラフィックスパイプライン生成
 	FbxObject3D::CreateGraphicsPipeline();
 
@@ -130,8 +129,8 @@ void GameScene::Initialize()
 	//----------------敵--------------
 
 	//モデル名を指定してファイル読み込み
-	enemyModel_ = FbxLoader::GetInstance()->LoadModelFromFile("enemy");
-	enemyBulletModel_ = FbxLoader::GetInstance()->LoadModelFromFile("enemyBullet");
+	enemyModel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("enemy"));
+	enemyBulletModel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("enemyBullet"));
 
 	//csvファイル名前
 	enemyCsvsName_ = {
@@ -162,16 +161,19 @@ void GameScene::Initialize()
 	boss_.reset(newBoss);
 
 	//演出
-	performanceManager_ = new PerformanceManager();
-	performanceManager_->Initialize(camera_, player_.get(), boss_.get());
+	PerformanceManager* newPerformanceManager = new PerformanceManager();
+	newPerformanceManager->Initialize(camera_.get(), player_.get(), boss_.get());
+	performanceManager_.reset(newPerformanceManager);
 
 	//パーティクルマネージャー
-	particleManager_ = new ParticleManager();
-	particleManager_->Initialize("Resources/effect/effect1.png");
+	ParticleManager* newParticleManager = new ParticleManager();
+	newParticleManager->Initialize("Resources/effect/effect1.png");
+	particleManager_.reset(newParticleManager);
 
 	//メニュー
-	menu_ = new Menu;
-	menu_->Initialize();
+	Menu* newMenu = new Menu();
+	newMenu->Initialize();
+	menu_.reset(newMenu);
 
 }
 
@@ -657,7 +659,7 @@ void GameScene::SetEnemy()
 	for (int i = 0; i < it->get()->GetSize(); i++)
 	{
 		std::unique_ptr<Enemy>newObject = std::make_unique<Enemy>();
-		newObject->Initialize(enemyModel_, enemyBulletModel_);
+		newObject->Initialize(enemyModel_.get(), enemyBulletModel_.get());
 
 		newObject->SetPosition(XMFLOAT3(it->get()->GetPosition(i).x, it->get()->GetPosition(i).y, it->get()->GetPosition(i).z + makePos));
 		newObject->SetType(it->get()->GetType(i));
@@ -849,9 +851,9 @@ bool GameScene::MenuUIColision()
 {
 	XMFLOAT2 mousePos = input_->GetMousePosition();
 
-	if (collisionManager_->CheckSpriteTo2Dpos(menuUISprite_, mousePos)) {
+	if (collisionManager_->CheckSpriteTo2Dpos(menuUISprite_.get(), mousePos)) {
 
-		performanceManager_->MenuUIRotPerformance(menuUISprite_);
+		performanceManager_->MenuUIRotPerformance(menuUISprite_.get());
 
 		if (input_->IsMouseTrigger(LEFT_CLICK)) {
 
