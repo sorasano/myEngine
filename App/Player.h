@@ -36,7 +36,7 @@ public:
 	/**
 	* 更新
 	*/
-	void Update(XMMATRIX matVP);
+	void Update(const XMMATRIX& matVP);
 	/**
 	* 行列更新
 	*/
@@ -100,7 +100,7 @@ public:
 	/**
 	* レティクル更新
 	*/
-	void UpdateRaticle(XMMATRIX matVP);
+	void UpdateRaticle(const XMMATRIX& matVP);
 	/**
 	* スプライト更新
 	*/
@@ -115,52 +115,52 @@ public:
 	/**
 	* @return XMFLOAT3 position_取得
 	*/
-	XMFLOAT3 GetPosition() { return position_; }
+	XMFLOAT3 GetPosition() const { return position_; }
 	/**
 	* @return XMFLOAT3 rotation_取得
 	*/
-	XMFLOAT3 GetRotation() { return rotation_; }
+	XMFLOAT3 GetRotation()const { return rotation_; }
 	/**
 	* @return XMFLOAT3 scale_取得
 	*/
-	XMFLOAT3 GetScale() { return scale_; }
+	XMFLOAT3 GetScale()const { return scale_; }
 	/**
 	* @return float スピード取得
 	*/
-	float GetSpeed() { return speedZ_ + addSpeed_; }
+	float GetSpeed() const { return speedZ_ + addSpeed_; }
 	/**
 	* @return float 加速スピード取得
 	*/
-	float GetAddSpeed() { return addSpeed_; }
+	float GetAddSpeed() const { return addSpeed_; }
 	/**
 	* @return CollisionData 当たり判定情報取得
 	*/
-	CollisionData GetColData();
+	CollisionData GetColData()const;
 	/**
 	* @return int 弾の数取得
 	*/
-	int GetBulletSize() { return static_cast<int>(bullets_.size()); }
+	int GetBulletSize()const { return static_cast<int>(bullets_.size()); }
 	/**
 	* @return CollisionData 弾当たり判定情報取得
 	*/
-	CollisionData GetBulletColData(int i);
+	CollisionData GetBulletColData(int i)const;
 	/**
 	* @return XMFLOAT3 弾の座標取得
 	*/
-	XMFLOAT3 GetBulletPosition(int i);
+	XMFLOAT3 GetBulletPosition(int i)const;
 
 	/**
 	* posセット
 	*/
-	void SetPosition(XMFLOAT3 pos) { this->position_ = pos; }
+	void SetPosition(const XMFLOAT3& pos) { this->position_ = pos; }
 	/**
 	* rotセット
 	*/
-	void SetRotation(XMFLOAT3 rot) { this->rotation_ = rot; }
+	void SetRotation(const XMFLOAT3& rot) { this->rotation_ = rot; }
 	/**
 	* scaセット
 	*/
-	void SetScale(XMFLOAT3 sca) { this->scale_ = sca; }
+	void SetScale(const XMFLOAT3& sca) { this->scale_ = sca; }
 	/**
 	/**
 	* スピードセット(基礎)

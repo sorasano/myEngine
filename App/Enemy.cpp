@@ -22,7 +22,7 @@ Enemy::~Enemy()
 	FBX_SAFE_DELETE(enemyObject_);
 }
 
-void Enemy::Initialize(FbxModel* EnemyModel, FbxModel* enemyBulletModel)
+void Enemy::Initialize(FbxModel* EnemyModel,FbxModel* enemyBulletModel)
 {
 
 	//3dオブジェクト生成とモデルのセット
@@ -34,7 +34,7 @@ void Enemy::Initialize(FbxModel* EnemyModel, FbxModel* enemyBulletModel)
 
 }
 
-void Enemy::Update(XMFLOAT3 pPos, float pSpeed)
+void Enemy::Update(const XMFLOAT3& pPos, float pSpeed)
 {
 	//プレイヤー情報更新
 	this->playerPosition_ = pPos;
@@ -266,7 +266,7 @@ void Enemy::MakeBullet()
 	bullets_.push_back(std::move(newBullet));
 }
 
-CollisionData Enemy::GetColData()
+CollisionData Enemy::GetColData() const
 {
 
 	CollisionData colData;
@@ -316,7 +316,7 @@ void Enemy::SetType(int type)
 	}
 }
 
-CollisionData Enemy::GetBulletColData(int i)
+CollisionData Enemy::GetBulletColData(int i) const
 {
 	auto it = bullets_.begin();
 	std::advance(it, i);

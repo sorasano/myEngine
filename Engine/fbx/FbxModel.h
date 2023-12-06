@@ -123,15 +123,15 @@ public:
 	/**
 	* @return const XMMATRIX モデルの変形行列取得取得
 	*/
-	const XMMATRIX& GetModelTransform() { return meshNode->globalTransform; }
+	const XMMATRIX& GetModelTransform(){ return meshNode->globalTransform; }
 	/**
 	* @return std::vector<Bone> ボーン配列取得
 	*/
-	std::vector<Bone>& GetBones() { return bones; }
+	std::vector<Bone>& GetBones(){ return bones; }
 	/**
 	* @return FbxScene FBXシーン取得
 	*/
-	FbxScene* GetFbxScene() { return fbxScene; }
+	FbxScene* GetFbxScene(){ return fbxScene; }
 
 private:
 	//頂点バッファ

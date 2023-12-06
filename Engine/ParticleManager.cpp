@@ -713,7 +713,7 @@ void ParticleManager::Draw()
 
 }
 
-void ParticleManager::Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel)
+void ParticleManager::Add(int life, const XMFLOAT3& position, const XMFLOAT3& velocity, const XMFLOAT3& accel)
 {
 	//リストに要素を追加
 	particles_.emplace_front();
@@ -726,7 +726,7 @@ void ParticleManager::Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOA
 	p.num_flame = life;
 }
 
-void ParticleManager::MakeParticle(int particlename,XMFLOAT3 position)
+void ParticleManager::MakeParticle(int particlename, const XMFLOAT3& position)
 {
 	switch (particlename) {
 		//敵撃破演出
@@ -742,7 +742,7 @@ void ParticleManager::MakeParticle(int particlename,XMFLOAT3 position)
 
 }
 
-void ParticleManager::EnemyDestroyParticleInitialize(XMFLOAT3 position)
+void ParticleManager::EnemyDestroyParticleInitialize(const XMFLOAT3& position)
 {
 	for (int i = 0; i < 100; i++) {
 		//X,Y,Zすべてpositionから[+1.0f,-1.0f]でランダムに分布
@@ -770,7 +770,7 @@ void ParticleManager::EnemyDestroyParticleInitialize(XMFLOAT3 position)
 	}
 }
 
-void ParticleManager::PlayerBulletLandingParticleInitialize(XMFLOAT3 position)
+void ParticleManager::PlayerBulletLandingParticleInitialize(const XMFLOAT3& position)
 {
 	for (int i = 0; i < 100; i++) {
 		//X,Y,Zすべてpositionから[+1.0f,-1.0f]でランダムに分布

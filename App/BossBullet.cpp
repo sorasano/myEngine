@@ -21,7 +21,7 @@ BossBullet::~BossBullet()
 	FBX_SAFE_DELETE(BossBulletObject_);
 }
 
-void BossBullet::Initialize(FbxModel* model, XMFLOAT3 position, Vector3 velocity, float playerSpeed)
+void BossBullet::Initialize(FbxModel* model, const XMFLOAT3& position, const Vector3& velocity, float playerSpeed)
 {
 
 	//3dオブジェクト生成とモデルのセット
@@ -80,7 +80,7 @@ void BossBullet::OnCollision()
 	isDead_ = true;
 }
 
-CollisionData BossBullet::GetColData()
+CollisionData BossBullet::GetColData() const
 {
 	CollisionData colData;
 

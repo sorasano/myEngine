@@ -163,7 +163,7 @@ void GameScene::Initialize()
 
 	//演出
 	performanceManager_ = new PerformanceManager();
-	performanceManager_->Initialize(camera_, player_.get(),boss_.get());
+	performanceManager_->Initialize(camera_, player_.get(), boss_.get());
 
 	//パーティクルマネージャー
 	particleManager_ = new ParticleManager();
@@ -448,7 +448,7 @@ void GameScene::DrawSprite()
 	particleManager_->Draw();
 }
 
-bool GameScene::UpadateRange(XMFLOAT3 cameraPos, XMFLOAT3 pos)
+bool GameScene::UpadateRange(const XMFLOAT3& cameraPos, const XMFLOAT3& pos)
 {
 
 	if (cameraPos.x - pos.x < 20.0f && cameraPos.x - pos.x > -20.0f) { return true; }
@@ -780,7 +780,8 @@ void GameScene::ChangeScene()
 			if (menu_->GetSerect() == MENUTITLE) {
 				//タイトルに戻る演出
 				performanceManager_->SetPerformanceNum(RETURNTITLE);
-			}else if (menu_->GetSerect() == MENUCLOSE) {
+			}
+			else if (menu_->GetSerect() == MENUCLOSE) {
 				//メニューを閉じる
 				performanceManager_->SetPerformanceNum(CLOSEMENU);
 			}
@@ -848,11 +849,11 @@ bool GameScene::MenuUIColision()
 {
 	XMFLOAT2 mousePos = input_->GetMousePosition();
 
-	if (collisionManager_->CheckSpriteTo2Dpos(menuUISprite_,mousePos)) {
+	if (collisionManager_->CheckSpriteTo2Dpos(menuUISprite_, mousePos)) {
 
 		performanceManager_->MenuUIRotPerformance(menuUISprite_);
 
-		if (input_->IsMouseTrigger(LEFT_CLICK)){
+		if (input_->IsMouseTrigger(LEFT_CLICK)) {
 
 			return true;
 		}
@@ -901,7 +902,7 @@ void GameScene::BossSceneCollition()
 
 					//自機の弾を消し、パーティクル生成
 					player_->SetBulletIsDead(true, i);
-					particleManager_->MakeParticle(PLAYERBULLETLANDING,player_->GetBulletPosition(i));
+					particleManager_->MakeParticle(PLAYERBULLETLANDING, player_->GetBulletPosition(i));
 
 					//スコアを加算
 				}

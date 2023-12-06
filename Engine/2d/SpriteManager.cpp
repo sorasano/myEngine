@@ -28,7 +28,7 @@ void SpriteManager::Initialize()
 	assert(SUCCEEDED(result));
 }
 
-void SpriteManager::LoadFile(int number, const std::string fileName)
+void SpriteManager::LoadFile(int number, const std::string& fileName)
 {
 	HRESULT result;
 

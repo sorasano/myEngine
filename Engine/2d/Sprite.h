@@ -79,7 +79,7 @@ public:	//セッター
 	/**
 	* 色セット
 	*/
-	void SetColor(XMFLOAT3 c) { color.x = c.x; color.y = c.y; color.z = c.z; }
+	void SetColor(const XMFLOAT3& c) { color.x = c.x; color.y = c.y; color.z = c.z; }
 	/**
 	* テクスチャの番号セット
 	*/
@@ -87,7 +87,7 @@ public:	//セッター
 	/**
 	* 座標セット
 	*/
-	void SetPosition(XMFLOAT2 pos) { position_ = pos; }
+	void SetPosition(const XMFLOAT2& pos) { position_ = pos; }
 	/**
 	* 角度セット
 	*/
@@ -95,7 +95,7 @@ public:	//セッター
 	/**
 	* スケールセット
 	*/
-	void SetScale(XMFLOAT2 sca) { scale_ = sca; }
+	void SetScale(const XMFLOAT2& sca) { scale_ = sca; }
 	/**
 	* アンカーポイントセット
 	*/
@@ -105,15 +105,15 @@ public:	//ゲッター
 	/**
 	* @return XMFLOAT2 座標取得
 	*/
-	XMFLOAT2 GetPosition() { return position_; }
+	XMFLOAT2 GetPosition() const { return position_; }
 	/**
 	* @return float 角度取得
 	*/
-	float GetRotation() { return rotation_; }
+	float GetRotation() const { return rotation_; }
 	/**
 	* @return XMFLOAT2 スケール取得
 	*/
-	XMFLOAT2 GetScale() { return scale_; }
+	XMFLOAT2 GetScale() const { return scale_; }
 
 private:
 	//デバイス

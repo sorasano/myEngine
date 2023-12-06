@@ -62,7 +62,7 @@ void Player::Initialize()
 	Reset();
 }
 
-void Player::Update(XMMATRIX matVP)
+void Player::Update(const XMMATRIX& matVP)
 {
 	//移動
 	Move();
@@ -252,7 +252,7 @@ void Player::MakeBullet()
 	bullets_.push_back(std::move(newBullet));
 }
 
-void Player::UpdateRaticle(XMMATRIX matVP)
+void Player::UpdateRaticle(const XMMATRIX& matVP)
 {
 	//マウス座標の取得、代入
 
@@ -371,7 +371,7 @@ void Player::Reset()
 	bullets_.clear();
 }
 
-CollisionData Player::GetColData()
+CollisionData Player::GetColData() const
 {
 
 	CollisionData colData;
@@ -382,7 +382,7 @@ CollisionData Player::GetColData()
 	return colData;
 }
 
-CollisionData Player::GetBulletColData(int i)
+CollisionData Player::GetBulletColData(int i) const
 {
 	auto it = bullets_.begin();
 	std::advance(it, i);
@@ -390,7 +390,7 @@ CollisionData Player::GetBulletColData(int i)
 	return it->get()->GetColData();
 }
 
-XMFLOAT3 Player::GetBulletPosition(int i)
+XMFLOAT3 Player::GetBulletPosition(int i) const
 {
 	auto it = bullets_.begin();
 	std::advance(it, i);

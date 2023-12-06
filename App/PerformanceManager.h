@@ -106,11 +106,11 @@ public:
 	/**
 	* @return bool isPerformance_取得
 	*/
-	bool GetIsPerformance() { return isPerformance_; };
+	bool GetIsPerformance() const { return isPerformance_; };
 	/**
 	* @return int isChangeScene取得
 	*/
-	int GetIsChangeScene() { return isChangeScene_; };
+	int GetIsChangeScene() const { return isChangeScene_; };
 
 	/**
 	* performanceNumセット

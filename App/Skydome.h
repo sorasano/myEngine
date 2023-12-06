@@ -31,7 +31,7 @@ public:
 	*
 	* @return float スカイドームの端
 	*/
-	float GetEdge() { return scale_.z / 2; }
+	float GetEdge() const { return scale_.z / 2; }
 
 private:
 	XMFLOAT3 position_ = { 0,0,0 };

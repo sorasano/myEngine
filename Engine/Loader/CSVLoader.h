@@ -31,29 +31,29 @@ public:
 	/**
 	* @return XMFLOAT3 position_取得
 	*/
-	XMFLOAT3 GetPosition(int num) { return position_[num]; }
+	XMFLOAT3 GetPosition(int num) const { return position_[num]; }
 	/**
 	* @return XMFLOAT3 rotation_取得
 	*/
-	XMFLOAT3 GetRotation(int num) { return rotation_[num]; }
+	XMFLOAT3 GetRotation(int num) const { return rotation_[num]; }
 	/**
 	* @return XMFLOAT3 scale_取得
 	*/
-	XMFLOAT3 GetScale(int num) { return scale_[num]; }
+	XMFLOAT3 GetScale(int num) const { return scale_[num]; }
 
 	/**
 	* @return int type_取得
 	*/
-	int GetType(int num) { return type_[num]; }
+	int GetType(int num) const { return type_[num]; }
 	/**
 	* @return bool stopInScreen_取得
 	*/
-	bool GetStopInScreen(int num) { return stopInScreen_[num]; }
+	bool GetStopInScreen(int num) const { return stopInScreen_[num]; }
 	//読み込んだオブジェクトの数
 	/**
 	* @return int position_取得
 	*/
-	int GetSize() { return static_cast<int>(position_.size()); }
+	int GetSize() const { return static_cast<int>(position_.size()); }
 
 private:
 

@@ -113,23 +113,23 @@ public:
 	/**
 	* @return int material取得
 	*/
-	Material GetMaterial() { return material; };
+	Material GetMaterial() const { return material; };
 	/**
 	* @return int descHeap_取得
 	*/
-	ComPtr<ID3D12DescriptorHeap> GetDescHeap() { return descHeap_; };
+	ComPtr<ID3D12DescriptorHeap> GetDescHeap() const { return descHeap_; };
 	/**
 	* @return int pipelinestate_取得
 	*/
-	ComPtr<ID3D12PipelineState> GetPipelinestate() { return pipelinestate_; };
+	ComPtr<ID3D12PipelineState> GetPipelinestate() const { return pipelinestate_; };
 	/**
 	* @return int rootsignature_取得
 	*/
-	ComPtr<ID3D12RootSignature> GetRootSignature() { return rootsignature_; };
+	ComPtr<ID3D12RootSignature> GetRootSignature() const { return rootsignature_; };
 	/**
 	* @return int gpuDescHandleSRV_取得
 	*/
-	CD3DX12_GPU_DESCRIPTOR_HANDLE GetSrv() { return gpuDescHandleSRV_; };
+	CD3DX12_GPU_DESCRIPTOR_HANDLE GetSrv() const { return gpuDescHandleSRV_; };
 	/**
 	* @return int indicesのサイズ取得
 	*/

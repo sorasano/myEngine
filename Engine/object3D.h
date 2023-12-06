@@ -127,15 +127,15 @@ public:
 	/**
 	* @return XMFLOAT3 position_取得
 	*/
-	XMFLOAT3 GetPosition() { return position_; };
+	XMFLOAT3 GetPosition() const { return position_; };
 	/**
 	* @return XMFLOAT3 rotation_取得
 	*/
-	XMFLOAT3 GetRotation() { return rotation_; };
+	XMFLOAT3 GetRotation() const { return rotation_; };
 	/**
 	* @return XMFLOAT3 scale_取得
 	*/
-	XMFLOAT3 GetScale() { return scale_; };
+	XMFLOAT3 GetScale() const { return scale_; };
 	/**
 	* posセット
 	*/

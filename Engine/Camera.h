@@ -63,7 +63,7 @@ public:
 	/**
 	* 更新
 	*/
-	void Update(XMFLOAT3 playerPos);
+	void Update(const XMFLOAT3& playerPos);
 	/**
 	* 行列更新
 	*/
@@ -107,24 +107,24 @@ public:
 	/**
 	* @return int mode_取得
 	*/
-	int GetMode() { return mode_; }
+	int GetMode()const { return mode_; }
 	/**
 	* @return float farClip_取得
 	*/
-	float GetFarClip() { return farClip_; }
+	float GetFarClip() const { return farClip_; }
 	/**
 	* @return float playerRange_取得
 	*/
-	float GetplayerRange() { return playerRange_; }
+	float GetplayerRange()const { return playerRange_; }
 
 	/**
 	* eye_セット
 	*/
-	void SetEye(XMFLOAT3 eye) { this->eye_ = eye; }
+	void SetEye(const XMFLOAT3& eye) { this->eye_ = eye; }
 	/**
 	* target_セット
 	*/
-	void SetTarget(XMFLOAT3 target) { this->target_ = target; }
+	void SetTarget(const XMFLOAT3& target) { this->target_ = target; }
 	/**
 	* modeセット
 	*/

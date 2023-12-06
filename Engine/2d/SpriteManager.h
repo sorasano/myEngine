@@ -38,7 +38,7 @@ public:	//メンバ関数
 	* @param[in] number 何番に保存するか
 	* @param[in] fileName ファイルの名前
 	*/
-	void LoadFile(int number, const std::string fileName);
+	void LoadFile(int number, const std::string& fileName);
 
 public:	//ゲッター
 	/**

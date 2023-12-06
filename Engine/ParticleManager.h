@@ -245,24 +245,24 @@ public: // メンバ関数
 	* @param[in] velocity 加速
 	* @param[in] accel 加速度
 	*/
-	void Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel);
+	void Add(int life, const XMFLOAT3& position, const  XMFLOAT3& velocity, const XMFLOAT3& accel);
 
 	/**
 	* パーティクル生成
 	*
 	* @param[in] particlename パーティクル種類名
 	*/
-	void MakeParticle(int particlename, XMFLOAT3 position);
+	void MakeParticle(int particlename, const XMFLOAT3& position);
 
 	/**
 	* 敵撃破パーティクル初期化
 	*/
-	void EnemyDestroyParticleInitialize(XMFLOAT3 position);
+	void EnemyDestroyParticleInitialize(const XMFLOAT3& position);
 
 	/**
 	* プレイヤー弾着弾パーティクル初期化
 	*/
-	void PlayerBulletLandingParticleInitialize(XMFLOAT3 position);
+	void PlayerBulletLandingParticleInitialize(const XMFLOAT3& position);
 
 private: // メンバ変数
 

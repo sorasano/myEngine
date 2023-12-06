@@ -65,7 +65,7 @@ public:
 	* @param[in] pos 対象座標
 	* @return bool 更新範囲内ならtrue
 	*/
-	bool UpadateRange(XMFLOAT3 cameraPos, XMFLOAT3 pos);
+	bool UpadateRange(const XMFLOAT3& cameraPos, const XMFLOAT3& pos);
 	/**
 	* 当たり判定
 	*/
@@ -131,7 +131,7 @@ private:
 
 	//フェーズ
 	int phase_ = 0;
-	const int MaxPhase_ = 5;
+	const int MaxPhase_ = 1;
 
 	//Fbx
 	FbxModel* enemyModel_ = nullptr;

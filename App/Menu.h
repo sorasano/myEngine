@@ -63,7 +63,7 @@ public:
 	/**
 	* positionセット
 	*/
-	void SetPosition(XMFLOAT2 position);
+	void SetPosition(const XMFLOAT2& position);
 	/**
 	* isLockOperation_セット
 	*/
@@ -73,11 +73,11 @@ public:
 	/**
 	* @return int serect_取得
 	*/
-	int GetSerect() { return serect_; }
+	int GetSerect()const { return serect_; }
 	/**
 	* @return bool isSerect_取得
 	*/
-	bool GetIsSerect() { return isSerect_; }
+	bool GetIsSerect()const { return isSerect_; }
 
 	/**
 	* リセット(メニューを閉じる度)

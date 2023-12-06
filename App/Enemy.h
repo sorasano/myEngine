@@ -64,7 +64,7 @@ public:
 	* @param[in] pPos プレイヤー座標
 	* @param[in] pSpeed プレイヤースピード
 	*/
-	void Update(XMFLOAT3 pPos,float pSpeed);
+	void Update(const XMFLOAT3& pPos,float pSpeed);
 	/**
 	* 描画
 	*
@@ -112,45 +112,45 @@ public:
 	/**
 	* @return XMFLOAT3 position_取得
 	*/
-	XMFLOAT3 GetPosition() { return position_; };
+	XMFLOAT3 GetPosition()const { return position_; };
 	/**
 	* @return XMFLOAT3 rotation_取得
 	*/
-	XMFLOAT3 GetRotation() { return rotation_; };
+	XMFLOAT3 GetRotation() const { return rotation_; };
 	/**
 	* @return XMFLOAT3 scale_取得
 	*/
-	XMFLOAT3 GetScale() { return scale_; };
+	XMFLOAT3 GetScale() const { return scale_; };
 	/**
 	* @return bool isDead_取得
 	*/
-	bool GetIsDead() { return isDead_; }
+	bool GetIsDead()const { return isDead_; }
 	/**
 	* @return CollisionData 当たり判定情報取得
 	*/
-	CollisionData GetColData();
+	CollisionData GetColData()const;
 	/**
 	* @return int 弾の数取得
 	*/
-	int GetBulletSize() { return static_cast<int>(bullets_.size()); }
+	int GetBulletSize()const { return static_cast<int>(bullets_.size()); }
 	/**
 	* @return CollisionData 弾当たり判定情報取得
 	*/
-	CollisionData GetBulletColData(int i);
+	CollisionData GetBulletColData(int i) const;
 
 
 	/**
 	* posセット
 	*/
-	void SetPosition(XMFLOAT3 pos) { this->position_ = pos; }
+	void SetPosition(const XMFLOAT3& pos) { this->position_ = pos; }
 	/**
 	* rotセット
 	*/
-	void SetRotation(XMFLOAT3 rot) { this->rotation_ = rot; }
+	void SetRotation(const XMFLOAT3& rot) { this->rotation_ = rot; }
 	/**
 	* scaセット
 	*/
-	void SetScale(XMFLOAT3 sca) { this->scale_ = sca; }
+	void SetScale(const XMFLOAT3& sca) { this->scale_ = sca; }
 	/**
 	* isDeadセット
 	*/

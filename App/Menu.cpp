@@ -299,7 +299,7 @@ void Menu::SerectDecided()
 	}
 }
 
-void Menu::SetPosition(XMFLOAT2 position)
+void Menu::SetPosition(const XMFLOAT2& position)
 {
 	//ベースを移動
 	baseSprite_->SetPosition(position);

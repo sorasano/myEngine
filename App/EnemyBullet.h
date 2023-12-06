@@ -34,7 +34,7 @@ public:
 	* @param[in] velocity 発射ベクトル
 	* @param[in] playerSpeed プレイヤーのスピード
 	*/
-	void Initialize(FbxModel* model, XMFLOAT3 position, Vector3 velocity, float playerSpeed);
+	void Initialize(FbxModel* model, const XMFLOAT3& position, const Vector3& velocity, float playerSpeed);
 	/**
 	* 更新
 	*/
@@ -58,15 +58,15 @@ public:
 	/**
 	* @return XMFLOAT3 position_取得
 	*/
-	XMFLOAT3 GetPosition() { return position_; };
+	XMFLOAT3 GetPosition()const { return position_; };
 	/**
 	* @return XMFLOAT3 rotation_取得
 	*/
-	XMFLOAT3 GetRotation() { return rotation_; };
+	XMFLOAT3 GetRotation() const { return rotation_; };
 	/**
 	* @return XMFLOAT3 _AAAAAscale_
 	*/
-	XMFLOAT3 GetScale() { return scale_; };
+	XMFLOAT3 GetScale() const { return scale_; };
 	/**
 	* @return bool isDead_取得
 	*/
@@ -74,21 +74,21 @@ public:
 	/**
 	* @return CollisionData 当たり判定情報取得
 	*/
-	CollisionData GetColData();
+	CollisionData GetColData()const;
 
 
 	/**
 	* position_セット
 	*/
-	void SetPosition(XMFLOAT3 pos) { this->position_ = pos; }
+	void SetPosition(const XMFLOAT3& pos) { this->position_ = pos; }
 	/**
 	* rotation_セット
 	*/
-	void SetRotation(XMFLOAT3 rot) { this->rotation_ = rot; }
+	void SetRotation(const XMFLOAT3& rot) { this->rotation_ = rot; }
 	/**
 	* scale_セット
 	*/
-	void SetScale(XMFLOAT3 sca) { this->scale_ = sca; }
+	void SetScale(const XMFLOAT3& sca) { this->scale_ = sca; }
 	/**
 	* isDead_セット
 	*/

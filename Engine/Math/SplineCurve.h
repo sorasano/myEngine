@@ -44,6 +44,6 @@ public:
 	/**
 	* @return bool スプライン中か
 	*/
-	bool GetActive() { return (timeRate < 1.0f); }
+	bool GetActive() const { return (timeRate < 1.0f); }
 };
 

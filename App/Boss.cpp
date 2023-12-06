@@ -39,7 +39,7 @@ void Boss::Initialize()
 	Reset();
 }
 
-void Boss::Update(XMFLOAT3 pPos, float pSpeed)
+void Boss::Update(const XMFLOAT3& pPos, float pSpeed)
 {
 	//プレイヤー情報更新
 	this->playerPosition_ = pPos;
@@ -299,7 +299,7 @@ void Boss::BulletUpdate()
 	bullets_.remove_if([](std::unique_ptr<BossBullet>& bullet) {return bullet->GetIsDead(); });
 }
 
-void Boss::MakeBullet(Vector3 velocity)
+void Boss::MakeBullet(const Vector3& velocity)
 {
 	//弾の生成
 	std::unique_ptr<BossBullet> newBullet = std::make_unique<BossBullet>();
@@ -451,7 +451,7 @@ void Boss::ChangeAction()
 	}
 }
 
-CollisionData Boss::GetBulletColData(int i)
+CollisionData Boss::GetBulletColData(int i) const
 {
 	auto it = bullets_.begin();
 	std::advance(it, i);

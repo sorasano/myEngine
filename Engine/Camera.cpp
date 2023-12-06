@@ -82,7 +82,7 @@ void Camera::UpdateMatrix()
 	}
 }
 
-void Camera::Update(XMFLOAT3 playerPos)
+void Camera::Update(const XMFLOAT3& playerPos)
 {
 	//データ更新
 	this->playerPos_ = playerPos;

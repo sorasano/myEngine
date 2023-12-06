@@ -1,7 +1,9 @@
 #include "MathManager.h"
 
-XMMATRIX MatrixInverse(XMMATRIX mat)
+XMMATRIX MatrixInverse(const XMMATRIX& mat)
 {
+	//元行列
+	XMMATRIX matrix = mat;
 	//ここに逆行列が入る
 	XMMATRIX result;
 	result = DirectX::XMMatrixIdentity();
@@ -13,16 +15,16 @@ XMMATRIX MatrixInverse(XMMATRIX mat)
 
 	//掃き出し法
 	for (i = 0; i < n; i++) {
-		buf = 1 / mat.r[i].m128_f32[i];
+		buf = 1 / matrix.r[i].m128_f32[i];
 		for (j = 0; j < n; j++) {
-			mat.r[i].m128_f32[j] *= buf;
+			matrix.r[i].m128_f32[j] *= buf;
 			result.r[i].m128_f32[j] *= buf;
 		}
 		for (j = 0; j < n; j++) {
 			if (i != j) {
-				buf = mat.r[j].m128_f32[i];
+				buf = matrix.r[j].m128_f32[i];
 				for (k = 0; k < n; k++) {
-					mat.r[j].m128_f32[k] -= mat.r[i].m128_f32[k] * buf;
+					matrix.r[j].m128_f32[k] -= matrix.r[i].m128_f32[k] * buf;
 					result.r[j].m128_f32[k] -= result.r[i].m128_f32[k] * buf;
 				}
 			}

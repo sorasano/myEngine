@@ -21,7 +21,7 @@ EnemyBullet::~EnemyBullet()
 	FBX_SAFE_DELETE(EnemyBulletObject_);
 }
 
-void EnemyBullet::Initialize(FbxModel* model, XMFLOAT3 position, Vector3 velocity,float playerSpeed)
+void EnemyBullet::Initialize(FbxModel* model, const XMFLOAT3& position, const Vector3& velocity, float playerSpeed)
 {
 
 	//3dオブジェクト生成とモデルのセット
@@ -80,7 +80,7 @@ void EnemyBullet::OnCollision()
 	isDead_ = true;
 }
 
-CollisionData EnemyBullet::GetColData()
+CollisionData EnemyBullet::GetColData() const
 {
 	CollisionData colData;
 
