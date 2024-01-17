@@ -57,6 +57,9 @@ void GameScene::Initialize()
 	spriteManager_->LoadFile(12, "menu/setting/ON.png");
 	spriteManager_->LoadFile(13, "menu/setting/OFF.png");
 	spriteManager_->LoadFile(14, "menu/setting/settingMouse.png");
+	//ガイド
+	spriteManager_->LoadFile(15, "menu/guide.png");
+
 
 	//-----スプライト------
 	Sprite::SetDevice(dxCommon_->GetDevice());
@@ -613,7 +616,6 @@ void GameScene::CheckEnemy()
 
 		}
 	}
-
 }
 
 void GameScene::UpdateBackGround()

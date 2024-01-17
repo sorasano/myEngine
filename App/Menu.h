@@ -131,4 +131,7 @@ private:
 	Sprite* settingMouseLockOffSprite_;
 	//"セッティングを閉じる"
 	Sprite* closeSettingSprite_;
+
+	//操作ガイドの画像
+	Sprite* gideSprite_;
 };

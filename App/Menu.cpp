@@ -62,6 +62,12 @@ void Menu::Initialize()
 	closeSettingSprite_->SetScale(XMFLOAT2(400, 100));
 	closeSettingSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2 + 150));
 
+	gideSprite_ = new Sprite();
+	gideSprite_->SetTextureNum(15);
+	gideSprite_->Initialize();
+	gideSprite_->SetScale(XMFLOAT2(400, 500));
+	gideSprite_->SetPosition(XMFLOAT2(window_width / 2 + 425, window_height / 2));
+
 	this->position_ = baseSprite_->GetPosition();
 
 }
@@ -86,6 +92,8 @@ void Menu::Update()
 		settingSprite_->Update();
 		titleSprite_->Update();
 		closeSprite_->Update();
+		gideSprite_->Update();
+
 	}
 	else {
 		baseSettingSprite->Update();
@@ -104,6 +112,8 @@ void Menu::Draw(ID3D12GraphicsCommandList* cmdList)
 		settingSprite_->Draw(cmdList);
 		titleSprite_->Draw(cmdList);
 		closeSprite_->Draw(cmdList);
+		gideSprite_->Draw(cmdList);
+
 	}
 	else {
 		baseSettingSprite->Draw(cmdList);
