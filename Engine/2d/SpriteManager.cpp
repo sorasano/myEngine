@@ -32,6 +32,17 @@ void SpriteManager::LoadFile(int number, const std::string fileName)
 {
 	HRESULT result;
 
+	//ファイル拡張子識別
+	std::string fileExt_;
+	size_t pos1;
+	pos1 = fileName.rfind('.');
+	if (pos1 != std::string::npos) {
+		fileExt_ = fileName.substr(pos1 + 1, fileName.size() - pos1 - 1);
+	}
+	else {
+		fileExt_ = "";
+	}
+
 	//連結してフルパスを得る
 	std::string fullpath = kDefaultbaseDirectory_ + fileName;
 
@@ -41,13 +52,24 @@ void SpriteManager::LoadFile(int number, const std::string fileName)
 	wchar_t* wcstring = new wchar_t[newsizew];
 	mbstowcs_s(&convertedChars, wcstring, newsizew, fullpath.c_str(), _TRUNCATE);
 
-	//WICテクスチャのロード
-	result = DirectX::LoadFromWICFile(
-		wcstring,
-		DirectX::WIC_FLAGS_NONE,
-		&metadata_[number],
-		scratchImg_[number]
-	);
+	if (fileExt_ == "dds") {
+		//DDSテクスチャのロード
+		result = DirectX::LoadFromDDSFile(
+			wcstring,
+			DirectX::DDS_FLAGS_NONE,
+			&metadata_[number],
+			scratchImg_[number]
+		);
+	}
+	else {
+		//WICテクスチャのロード
+		result = DirectX::LoadFromWICFile(
+			wcstring,
+			DirectX::WIC_FLAGS_NONE,
+			&metadata_[number],
+			scratchImg_[number]
+		);
+	}
 
 	delete[]wcstring;
 
