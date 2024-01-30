@@ -32,9 +32,6 @@ void Enemy::Initialize(FbxModel* EnemyModel,FbxModel* enemyBulletModel)
 
 	this->bulletModel_.reset(enemyBulletModel);
 
-	rotation_.x = static_cast<float>(90 * (PI / 180));
-	rotation_.y = static_cast<float>(90 * (PI / 180));
-
 }
 
 void Enemy::Update(const XMFLOAT3& pPos, float pSpeed)
