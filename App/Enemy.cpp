@@ -19,18 +19,18 @@ Enemy::Enemy()
 
 Enemy::~Enemy()
 {
-	FBX_SAFE_DELETE(enemyObject_);
 }
 
 void Enemy::Initialize(FbxModel* EnemyModel,FbxModel* enemyBulletModel)
 {
 
 	//3dオブジェクト生成とモデルのセット
-	enemyObject_ = new FbxObject3D;
-	enemyObject_->Initialize();
-	enemyObject_->SetModel(EnemyModel);
+	FbxObject3D* newEnemyObject_ = new FbxObject3D;
+	newEnemyObject_->Initialize();
+	newEnemyObject_->SetModel(EnemyModel);
+	enemyObject_.reset(newEnemyObject_);
 
-	this->bulletModel_ = enemyBulletModel;
+	this->bulletModel_.reset(enemyBulletModel);
 
 	rotation_.x = static_cast<float>(90 * (PI / 180));
 	rotation_.y = static_cast<float>(90 * (PI / 180));
@@ -265,7 +265,7 @@ void Enemy::MakeBullet()
 
 	//弾の生成
 	std::unique_ptr<EnemyBullet> newBullet = std::make_unique<EnemyBullet>();
-	newBullet->Initialize(bulletModel_, position_, velocity, playerSpeed_);
+	newBullet->Initialize(bulletModel_.get(), position_, velocity, playerSpeed_);
 	bullets_.push_back(std::move(newBullet));
 }
 

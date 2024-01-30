@@ -18,23 +18,20 @@ Boss::Boss()
 
 Boss::~Boss()
 {
-	FBX_SAFE_DELETE(BossObject_);
 }
 
 void Boss::Initialize()
 {
 	//モデル名を指定してファイル読み込み
-	normalBossModel_ = FbxLoader::GetInstance()->LoadModelFromFile("normalBoss");
-	hardBossModel_ = FbxLoader::GetInstance()->LoadModelFromFile("hardBoss");
-
-	bossBulletModel_ = FbxLoader::GetInstance()->LoadModelFromFile("bossBullet");
+	normalBossModel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("normalBoss"));
+	hardBossModel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("hardBoss"));
+	bulletModel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("bossBullet"));
 
 	//3dオブジェクト生成とモデルのセット
-	BossObject_ = new FbxObject3D;
-	BossObject_->Initialize();
-	BossObject_->SetModel(normalBossModel_);
-
-	this->bulletModel_ = bossBulletModel_;
+	FbxObject3D* newBossObject_ = new FbxObject3D;
+	newBossObject_->Initialize();
+	newBossObject_->SetModel(normalBossModel_.get());
+	bossObject_.reset(newBossObject_);
 
 	Reset();
 }
@@ -77,10 +74,10 @@ void Boss::Update(const XMFLOAT3& pPos, float pSpeed)
 
 void Boss::UpdateMatrix()
 {
-	BossObject_->SetPosition(position_);
-	BossObject_->SetScale(scale_);
-	BossObject_->SetRotate(rotation_);
-	BossObject_->Update();
+	bossObject_->SetPosition(position_);
+	bossObject_->SetScale(scale_);
+	bossObject_->SetRotate(rotation_);
+	bossObject_->Update();
 }
 
 void Boss::UpdateClearScene()
@@ -106,7 +103,7 @@ void Boss::UpdateGameoverScene()
 void Boss::Draw(ID3D12GraphicsCommandList* cmdList)
 {
 
-	BossObject_->Draw(cmdList);
+	bossObject_->Draw(cmdList);
 
 	if (!isDead_) {
 		//弾
@@ -303,7 +300,7 @@ void Boss::MakeBullet(const Vector3& velocity)
 {
 	//弾の生成
 	std::unique_ptr<BossBullet> newBullet = std::make_unique<BossBullet>();
-	newBullet->Initialize(bulletModel_, position_, velocity, playerSpeed_);
+	newBullet->Initialize(bulletModel_.get(), position_, velocity, playerSpeed_);
 	bullets_.push_back(std::move(newBullet));
 
 }
@@ -320,7 +317,7 @@ void Boss::Reset()
 
 	//2段階目移行フラグ
 	isBossHardMode_ = false;
-	BossObject_->SetModel(normalBossModel_);
+	bossObject_->SetModel(normalBossModel_.get());
 
 	//hp
 	hp_ = initHp_;
@@ -351,7 +348,7 @@ void Boss::HitBullet()
 	//hpが2段階目移行タイミングになったら2段階目へ
 	if (hp_ <= changeHardHp_) {
 		isBossHardMode_ = true;
-		BossObject_->SetModel(hardBossModel_);
+		bossObject_->SetModel(hardBossModel_.get());
 	}
 
 

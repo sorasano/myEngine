@@ -199,10 +199,10 @@ private:
 
 private:
 	//FBX
-	FbxObject3D* playerObject_ = nullptr;
+	std::unique_ptr<FbxObject3D> playerObject_ = nullptr;
 	//モデル
-	FbxModel* playerModel_ = nullptr;
-	FbxModel* playerBulletModel_ = nullptr;
+	std::unique_ptr<FbxModel> playerModel_ = nullptr;
+	std::unique_ptr<FbxModel> bulletModel_ = nullptr;
 
 	//入力
 	Input* input_ = nullptr;
@@ -250,7 +250,7 @@ private:
 	const float reticleDirection_ = 30.0f + 26.0f;
 	
 	//-----スプライト------
-	Sprite* speedSprite_;
+	std::unique_ptr<Sprite> speedSprite_;
 
 	//スケールはxが変動、yが固定
 	XMFLOAT2 speedSpriteScale_ = { 0,32 };
@@ -262,7 +262,6 @@ private:
 private:
 
 	//弾
-	FbxModel* bulletModel_ = nullptr;
 	std::list<std::unique_ptr<PlayerBullet>> bullets_;
 
 	//弾の発射クールタイム

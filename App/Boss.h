@@ -114,7 +114,7 @@ public:
 	void BulletUpdate();
 	/**
 	* 弾生成
-	* 
+	*
 	* @param[in] velocity 発射ベクトル
 	*/
 	void MakeBullet(const Vector3& velocity);
@@ -178,7 +178,7 @@ public:
 	void SetHardAction(int action);
 	/**
 	* 弾死亡情報セット
-	* 
+	*
 	* @param[in] isDead 死亡フラグ
 	* @param[in] i 何番の弾か
 	*/
@@ -212,12 +212,11 @@ private:
 	XMFLOAT3 colSize_ = { 2.0f,2.0f,1.0f };
 private:
 	//FBX
-	FbxObject3D* BossObject_ = nullptr;
+	std::unique_ptr<FbxObject3D> bossObject_ = nullptr;
 	//モデル
-	FbxModel* normalBossModel_ = nullptr;
-	FbxModel* hardBossModel_ = nullptr;
-
-	FbxModel* bossBulletModel_ = nullptr;
+	std::unique_ptr<FbxModel> normalBossModel_ = nullptr;
+	std::unique_ptr<FbxModel> hardBossModel_ = nullptr;
+	std::unique_ptr<FbxModel> bulletModel_ = nullptr;
 
 	//死亡フラグ
 	bool isDead_ = false;
@@ -257,7 +256,6 @@ private:
 	float moveSpeed_ = 0.1f;
 
 	//----------弾----------
-	FbxModel* bulletModel_ = nullptr;
 	std::list<std::unique_ptr<BossBullet>> bullets_;
 
 	//弾の発射クールタイム

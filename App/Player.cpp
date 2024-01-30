@@ -18,9 +18,6 @@ Player::Player()
 
 Player::~Player()
 {
-	FBX_SAFE_DELETE(playerObject_);
-	FBX_SAFE_DELETE(playerModel_);
-	FBX_SAFE_DELETE(playerBulletModel_);
 }
 
 void Player::Initialize()
@@ -29,16 +26,14 @@ void Player::Initialize()
 	this->input_ = Input::GetInstance();
 
 	//モデル名を指定してファイル読み込み
-	playerModel_ = FbxLoader::GetInstance()->LoadModelFromFile("player");
-	playerBulletModel_ = FbxLoader::GetInstance()->LoadModelFromFile("playerBullet");
+	playerModel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("player"));
+	bulletModel_.reset( FbxLoader::GetInstance()->LoadModelFromFile("playerBullet"));
 
 	//3dオブジェクト生成とモデルのセット
-	playerObject_ = new FbxObject3D;
-	playerObject_->Initialize();
-	playerObject_->SetModel(playerModel_);
-
-	//弾モデルセット
-	this->bulletModel_ = playerBulletModel_;
+	FbxObject3D* newPlayerObject_ = new FbxObject3D;
+	newPlayerObject_->Initialize();
+	newPlayerObject_->SetModel(playerModel_.get());
+	playerObject_.reset(newPlayerObject_);
 
 	//スプライト
 
@@ -49,15 +44,17 @@ void Player::Initialize()
 		newReticleSprite->Initialize();
 		newReticleSprite->SetScale(reticleScale_);
 
+
 		reticleSprites_.push_back(newReticleSprite);
 	}
 
 	//スピードUI
 
-	speedSprite_ = new Sprite();
-	speedSprite_->SetTextureNum(3);
-	speedSprite_->Initialize();
-	speedSprite_->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
+	Sprite* newSpeedSprite_ = new Sprite();
+	newSpeedSprite_->SetTextureNum(3);
+	newSpeedSprite_->Initialize();
+	newSpeedSprite_->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
+	speedSprite_.reset(newSpeedSprite_);
 
 	Reset();
 }
@@ -248,7 +245,7 @@ void Player::MakeBullet()
 
 	//弾の生成
 	std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
-	newBullet->Initialize(bulletModel_, position_, velocity);
+	newBullet->Initialize(bulletModel_.get(), position_, velocity);
 	bullets_.push_back(std::move(newBullet));
 }
 

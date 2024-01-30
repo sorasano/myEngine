@@ -113,25 +113,25 @@ private:
 	bool isSetting_ = false;
 
 	//ベースの画像
-	Sprite* baseSprite_;
+	std::unique_ptr <Sprite> baseSprite_;
 	//"設定画面を開く"
-	Sprite* settingSprite_;
+	std::unique_ptr <Sprite> settingSprite_;
 	//"タイトルに戻る"
-	Sprite* titleSprite_;
+	std::unique_ptr <Sprite> titleSprite_;
 	//"メニューを閉じる"
-	Sprite* closeSprite_;
+	std::unique_ptr <Sprite> closeSprite_;
 
 	//セッティングベース画像
-	Sprite* baseSettingSprite;
+	std::unique_ptr <Sprite> baseSettingSprite;
 	//"マウスロック"
-	Sprite* settingMouseLockSprite_;
+	std::unique_ptr <Sprite> settingMouseLockSprite_;
 	//"マウスロックオン"
-	Sprite* settingMouseLockOnSprite_;
+	std::unique_ptr <Sprite> settingMouseLockOnSprite_;
 	//"マウスロックオフ"
-	Sprite* settingMouseLockOffSprite_;
+	std::unique_ptr <Sprite> settingMouseLockOffSprite_;
 	//"セッティングを閉じる"
-	Sprite* closeSettingSprite_;
+	std::unique_ptr <Sprite> closeSettingSprite_;
 
 	//操作ガイドの画像
-	Sprite* gideSprite_;
+	std::unique_ptr <Sprite> gideSprite_;
 };
