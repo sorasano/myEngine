@@ -30,7 +30,7 @@ void Enemy::Initialize(FbxModel* EnemyModel,FbxModel* enemyBulletModel)
 	newEnemyObject_->SetModel(EnemyModel);
 	enemyObject_.reset(newEnemyObject_);
 
-	this->bulletModel_.reset(enemyBulletModel);
+	this->bulletModel_ = enemyBulletModel;
 
 }
 
@@ -262,7 +262,7 @@ void Enemy::MakeBullet()
 
 	//弾の生成
 	std::unique_ptr<EnemyBullet> newBullet = std::make_unique<EnemyBullet>();
-	newBullet->Initialize(bulletModel_.get(), position_, velocity, playerSpeed_);
+	newBullet->Initialize(bulletModel_, position_, velocity, playerSpeed_);
 	bullets_.push_back(std::move(newBullet));
 }
 

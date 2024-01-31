@@ -217,7 +217,7 @@ private:
 	float moveSpeed_ = 0.1f;
 
 	//----------弾----------
-	std::unique_ptr <FbxModel> bulletModel_ = nullptr;
+	FbxModel* bulletModel_ = nullptr;
 	std::list<std::unique_ptr<EnemyBullet>> bullets_;
 
 	//弾の発射クールタイム

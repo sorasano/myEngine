@@ -8,11 +8,13 @@
 
 void Skydome::Initialize()
 {
-	skydomeModel = FbxLoader::GetInstance()->LoadModelFromFile("skydome");
+	skydomeModel.reset(FbxLoader::GetInstance()->LoadModelFromFile("skydome"));
+
 	//3dオブジェクト生成とモデルのセット
-	skydomeObject = new FbxObject3D;
-	skydomeObject->Initialize();
-	skydomeObject->SetModel(skydomeModel);
+	FbxObject3D*  newSkydomeObject = new FbxObject3D;
+	newSkydomeObject->Initialize();
+	newSkydomeObject->SetModel(skydomeModel.get());
+	skydomeObject.reset(newSkydomeObject);
 
 	//ラジアン変換
 	rotation_.x = static_cast<float>(90 * (PI / 180));
