@@ -7,66 +7,76 @@ void Menu::Initialize()
 	input_ = Input::GetInstance();
 	collisionManager_ = Collision::GetInstance();
 
-	baseSprite_ = new Sprite();
-	baseSprite_->SetTextureNum(7);
-	baseSprite_->Initialize();
-	baseSprite_->SetScale(XMFLOAT2(400, 500));
-	baseSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
+	Sprite* newBaseSprite_ = new Sprite();
+	newBaseSprite_->SetTextureNum(7);
+	newBaseSprite_->Initialize();
+	newBaseSprite_->SetScale(XMFLOAT2(400, 500));
+	newBaseSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
+	baseSprite_.reset(newBaseSprite_);
 
-	settingSprite_ = new Sprite();
-	settingSprite_->SetTextureNum(8);
-	settingSprite_->Initialize();
-	settingSprite_->SetScale(XMFLOAT2(400, 100));
-	settingSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2 - 50));
+	Sprite* newSettingSprite_ = new Sprite();
+	newSettingSprite_->SetTextureNum(8);
+	newSettingSprite_->Initialize();
+	newSettingSprite_->SetScale(XMFLOAT2(400, 100));
+	newSettingSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2 - 50));
+	settingSprite_.reset(newSettingSprite_);
 
-	titleSprite_ = new Sprite();
-	titleSprite_->SetTextureNum(9);
-	titleSprite_->Initialize();
-	titleSprite_->SetScale(XMFLOAT2(400, 100));
-	titleSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2 + 50));
+	Sprite* newTitleSprite_ = new Sprite();
+	newTitleSprite_->SetTextureNum(9);
+	newTitleSprite_->Initialize();
+	newTitleSprite_->SetScale(XMFLOAT2(400, 100));
+	newTitleSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2 + 50));
+	titleSprite_.reset(newTitleSprite_);
 
-	closeSprite_ = new Sprite();
-	closeSprite_->SetTextureNum(10);
-	closeSprite_->Initialize();
-	closeSprite_->SetScale(XMFLOAT2(400, 100));
-	closeSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2 + 150));
+	Sprite* newCloseSprite_ = new Sprite();
+	newCloseSprite_->SetTextureNum(10);
+	newCloseSprite_->Initialize();
+	newCloseSprite_->SetScale(XMFLOAT2(400, 100));
+	newCloseSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2 + 150));
+	closeSprite_.reset(newCloseSprite_);
 
 	//-----セッティング------
-	baseSettingSprite = new Sprite();
-	baseSettingSprite->SetTextureNum(11);
-	baseSettingSprite->Initialize();
-	baseSettingSprite->SetScale(XMFLOAT2(800, 500));
-	baseSettingSprite->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
+	Sprite* newBaseSettingSprite = new Sprite();
+	newBaseSettingSprite->SetTextureNum(11);
+	newBaseSettingSprite->Initialize();
+	newBaseSettingSprite->SetScale(XMFLOAT2(800, 500));
+	newBaseSettingSprite->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
+	baseSettingSprite.reset(newBaseSettingSprite);
 
-	settingMouseLockSprite_ = new Sprite();
-	settingMouseLockSprite_->SetTextureNum(14);
-	settingMouseLockSprite_->Initialize();
-	settingMouseLockSprite_->SetScale(XMFLOAT2(800, 100));
-	settingMouseLockSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2 - 50));
+	Sprite* newSettingMouseLockSprite_ = new Sprite();
+	newSettingMouseLockSprite_->SetTextureNum(14);
+	newSettingMouseLockSprite_->Initialize();
+	newSettingMouseLockSprite_->SetScale(XMFLOAT2(800, 100));
+	newSettingMouseLockSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2 - 50));
+	settingMouseLockSprite_.reset(newSettingMouseLockSprite_);
 
-	settingMouseLockOnSprite_ = new Sprite();
-	settingMouseLockOnSprite_->SetTextureNum(12);
-	settingMouseLockOnSprite_->Initialize();
-	settingMouseLockOnSprite_->SetScale(XMFLOAT2(200, 100));
-	settingMouseLockOnSprite_->SetPosition(XMFLOAT2(window_width / 2 - 100, window_height / 2 + 50));
+	Sprite* newSettingMouseLockOnSprite_ = new Sprite();
+	newSettingMouseLockOnSprite_->SetTextureNum(12);
+	newSettingMouseLockOnSprite_->Initialize();
+	newSettingMouseLockOnSprite_->SetScale(XMFLOAT2(200, 100));
+	newSettingMouseLockOnSprite_->SetPosition(XMFLOAT2(window_width / 2 - 100, window_height / 2 + 50));
+	settingMouseLockOnSprite_.reset(newSettingMouseLockOnSprite_);
 
-	settingMouseLockOffSprite_ = new Sprite();
-	settingMouseLockOffSprite_->SetTextureNum(13);
-	settingMouseLockOffSprite_->Initialize();
-	settingMouseLockOffSprite_->SetScale(XMFLOAT2(200, 100));
-	settingMouseLockOffSprite_->SetPosition(XMFLOAT2(window_width / 2 + 100, window_height / 2 + 50));
+	Sprite* newSettingMouseLockOffSprite_ = new Sprite();
+	newSettingMouseLockOffSprite_->SetTextureNum(13);
+	newSettingMouseLockOffSprite_->Initialize();
+	newSettingMouseLockOffSprite_->SetScale(XMFLOAT2(200, 100));
+	newSettingMouseLockOffSprite_->SetPosition(XMFLOAT2(window_width / 2 + 100, window_height / 2 + 50));
+	settingMouseLockOffSprite_.reset(newSettingMouseLockOffSprite_);
 
-	closeSettingSprite_ = new Sprite();
-	closeSettingSprite_->SetTextureNum(10);
-	closeSettingSprite_->Initialize();
-	closeSettingSprite_->SetScale(XMFLOAT2(400, 100));
-	closeSettingSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2 + 150));
+	Sprite* newCloseSettingSprite_ = new Sprite();
+	newCloseSettingSprite_->SetTextureNum(10);
+	newCloseSettingSprite_->Initialize();
+	newCloseSettingSprite_->SetScale(XMFLOAT2(400, 100));
+	newCloseSettingSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2 + 150));
+	closeSettingSprite_.reset(newCloseSettingSprite_);
 
-	gideSprite_ = new Sprite();
-	gideSprite_->SetTextureNum(15);
-	gideSprite_->Initialize();
-	gideSprite_->SetScale(XMFLOAT2(400, 500));
-	gideSprite_->SetPosition(XMFLOAT2(window_width / 2 + 425, window_height / 2));
+	Sprite* newGideSprite_ = new Sprite();
+	newGideSprite_->SetTextureNum(15);
+	newGideSprite_->Initialize();
+	newGideSprite_->SetScale(XMFLOAT2(400, 500));
+	newGideSprite_->SetPosition(XMFLOAT2(window_width / 2 + 425, window_height / 2));
+	gideSprite_.reset(newGideSprite_);
 
 	this->position_ = baseSprite_->GetPosition();
 
@@ -138,13 +148,13 @@ void Menu::SerectCollision()
 
 	if (!isSetting_) {
 
-		if (collisionManager_->CheckSpriteTo2Dpos(settingSprite_, mousePos)) {
+		if (collisionManager_->CheckSpriteTo2Dpos(settingSprite_.get(), mousePos)) {
 			serect_ = MENUSETTING;
 		}
-		else if (collisionManager_->CheckSpriteTo2Dpos(titleSprite_, mousePos)) {
+		else if (collisionManager_->CheckSpriteTo2Dpos(titleSprite_.get(), mousePos)) {
 			serect_ = MENUTITLE;
 		}
-		else if (collisionManager_->CheckSpriteTo2Dpos(closeSprite_, mousePos)) {
+		else if (collisionManager_->CheckSpriteTo2Dpos(closeSprite_.get(), mousePos)) {
 			serect_ = MENUCLOSE;
 		}
 		else {
@@ -153,13 +163,13 @@ void Menu::SerectCollision()
 	}
 	else {
 
-		if (collisionManager_->CheckSpriteTo2Dpos(closeSettingSprite_, mousePos)) {
+		if (collisionManager_->CheckSpriteTo2Dpos(closeSettingSprite_.get(), mousePos)) {
 			serect_ = SETTINGCLOSE;
 		}
-		else if (collisionManager_->CheckSpriteTo2Dpos(settingMouseLockOnSprite_, mousePos)) {
+		else if (collisionManager_->CheckSpriteTo2Dpos(settingMouseLockOnSprite_.get(), mousePos)) {
 			serect_ = SETTINGMOUSEON;
 		}
-		else if (collisionManager_->CheckSpriteTo2Dpos(settingMouseLockOffSprite_, mousePos)) {
+		else if (collisionManager_->CheckSpriteTo2Dpos(settingMouseLockOffSprite_.get(), mousePos)) {
 			serect_ = SETTINGMOUSEOFF;
 		}
 		else {

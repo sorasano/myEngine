@@ -8,6 +8,20 @@
 #include "Random.h"
 #define PI 3.1415
 
+BackGround::BackGround()
+{
+}
+
+BackGround::~BackGround()
+{
+	for (auto& object : backGroundObjects_) {
+		//要素の解放
+		delete object;
+	}
+	//すべての要素をコンテナから取り除く
+	backGroundObjects_.clear();
+}
+
 void BackGround::Initialize(float adjustPos)
 {
 	//モデル読み込み

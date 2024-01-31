@@ -188,7 +188,7 @@ private:
 	XMFLOAT3 colSize_ = { 2.0f,2.0f,1.0f };
 private:
 	//FBX
-	FbxObject3D* enemyObject_ = nullptr;
+	std::unique_ptr<FbxObject3D> enemyObject_ = nullptr;
 
 	//敵種類	 0 Nothing　何もしない,1 normal 正面にたまを打つだけ 2 homing　ホーミング弾を打つ, 3～5 動きながら正面に弾を打つ
 	int type_ = 0;

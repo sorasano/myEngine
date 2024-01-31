@@ -38,7 +38,7 @@ private:
 	XMFLOAT3 rotation_ = { 0,0,0 };
 	XMFLOAT3 scale_ = { 1000,1000,1000 };
 
-	FbxModel* skydomeModel = nullptr;
-	FbxObject3D* skydomeObject = nullptr;
+	std::unique_ptr<FbxModel> skydomeModel = nullptr;
+	std::unique_ptr<FbxObject3D> skydomeObject = nullptr;
 };
 

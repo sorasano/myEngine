@@ -19,16 +19,16 @@ Enemy::Enemy()
 
 Enemy::~Enemy()
 {
-	FBX_SAFE_DELETE(enemyObject_);
 }
 
 void Enemy::Initialize(FbxModel* EnemyModel,FbxModel* enemyBulletModel)
 {
 
 	//3dオブジェクト生成とモデルのセット
-	enemyObject_ = new FbxObject3D;
-	enemyObject_->Initialize();
-	enemyObject_->SetModel(EnemyModel);
+	FbxObject3D* newEnemyObject_ = new FbxObject3D;
+	newEnemyObject_->Initialize();
+	newEnemyObject_->SetModel(EnemyModel);
+	enemyObject_.reset(newEnemyObject_);
 
 	this->bulletModel_ = enemyBulletModel;
 
