@@ -15,6 +15,14 @@ class BackGround
 {
 public:
 	/**
+	* コンストラクタ
+	*/
+	BackGround();
+	/**
+	* デストラクタ
+	*/
+	~BackGround();
+	/**
 	* 初期化
 	*
 	* @param[in] adjustPos_ 発生させる位置
