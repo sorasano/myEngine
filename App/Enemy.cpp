@@ -277,6 +277,11 @@ CollisionData Enemy::GetColData() const
 	return colData;
 }
 
+void Enemy::SetModel(FbxModel* EnemyModel)
+{
+	enemyObject_->SetModel(EnemyModel);
+}
+
 void Enemy::SetType(int type)
 {
 

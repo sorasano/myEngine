@@ -132,7 +132,10 @@ void GameScene::Initialize()
 	//----------------敵--------------
 
 	//モデル名を指定してファイル読み込み
-	enemyModel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("enemy"));
+	enemyModel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("enemyred"));
+	enemyBlueModel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("enemyblue"));
+	enemyYellowModel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("enemyYellow"));
+
 	enemyBulletModel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("enemyBullet"));
 
 	//csvファイル名前
@@ -662,6 +665,13 @@ void GameScene::SetEnemy()
 	{
 		std::unique_ptr<Enemy>newObject = std::make_unique<Enemy>();
 		newObject->Initialize(enemyModel_.get(), enemyBulletModel_.get());
+
+		if (it->get()->GetType(i) == 1 || it->get()->GetType(i) == 2) {
+			newObject->SetModel(enemyBlueModel_.get());
+		}
+		else if (it->get()->GetType(i) > 2) {
+			newObject->SetModel(enemyYellowModel_.get());
+		}
 
 		newObject->SetPosition(XMFLOAT3(it->get()->GetPosition(i).x, it->get()->GetPosition(i).y, it->get()->GetPosition(i).z + makePos));
 		newObject->SetType(it->get()->GetType(i));

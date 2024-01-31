@@ -140,6 +140,10 @@ public:
 
 
 	/**
+	* モデルセット
+	*/
+	void SetModel(FbxModel* EnemyModel);
+	/**
 	* posセット
 	*/
 	void SetPosition(const XMFLOAT3& pos) { this->position_ = pos; }
