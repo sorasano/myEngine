@@ -4,7 +4,7 @@
 void Menu::Initialize()
 {
 	//インスタンス取得
-	input_ = Input::GetInstance();
+	input_ = MyEngine::Input::GetInstance();
 	collisionManager_ = Collision::GetInstance();
 
 	Sprite* newBaseSprite_ = new Sprite();

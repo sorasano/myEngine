@@ -113,8 +113,8 @@ public:
 
 private:
 	//デバイスとinput
-	DirectXCommon* dxCommon_ = nullptr;
-	Input* input_ = nullptr;
+	MyEngine::DirectXCommon* dxCommon_ = nullptr;
+	MyEngine::Input* input_ = nullptr;
 	ID3D12GraphicsCommandList* commandList = nullptr;
 	//当たり判定
 	Collision* collisionManager_ = nullptr;

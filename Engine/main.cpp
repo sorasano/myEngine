@@ -30,7 +30,7 @@ LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 	//ポインタ
-	WinApp* winApp = WinApp::GetInstance();
+	MyEngine::WinApp* winApp = MyEngine::WinApp::GetInstance();
 	//WindowsAPIの初期化
 	winApp->Initialize();
 	//WindowsAPIの終了処理
@@ -38,13 +38,13 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 	// DirectX初期化処理
 	//インスタンスの取得
-	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
+	MyEngine::DirectXCommon* dxCommon = MyEngine::DirectXCommon::GetInstance();
 	////DirectX初期化
 	dxCommon->Initialize();
 
 	////キーボード処理
 	//インスタンスの取得
-	Input* input = Input::GetInstance();
+	MyEngine::Input* input = MyEngine::Input::GetInstance();
 	//入力の初期化
 	input->Initialize();
 

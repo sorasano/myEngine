@@ -21,7 +21,7 @@ void Camera::StaticInitialize(ID3D12Device* dev)
 void Camera::Initialize()
 {
 	//引数をメンバに移して行列更新
-	this->input_ = Input::GetInstance();
+	this->input_ = MyEngine::Input::GetInstance();
 
 	HRESULT result;
 	//ヒープ設定

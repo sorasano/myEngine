@@ -9,8 +9,8 @@
 
 void ImGuiManager::Initialize()
 {
-	this->winApp_ = WinApp::GetInstance();;
-	this->dxCommon_ = DirectXCommon::GetInstance();
+	this->winApp_ = MyEngine::WinApp::GetInstance();;
+	this->dxCommon_ = MyEngine::DirectXCommon::GetInstance();
 
 	HRESULT result;
 

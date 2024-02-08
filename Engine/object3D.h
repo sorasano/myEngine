@@ -108,7 +108,7 @@ public:
 	* @param[in] dx dxCommon
 	* @param[in] model objモデル
 	*/
-	void Initialize(DirectXCommon* dx,Model* model);
+	void Initialize(MyEngine::DirectXCommon* dx,Model* model);
 	/**
 	* 更新
 	*
@@ -172,7 +172,7 @@ private:
 	//モデル
 	Model* model_ = nullptr;
 	//デバイス
-	DirectXCommon* dx_ = nullptr;
+	MyEngine::DirectXCommon* dx_ = nullptr;
 	//定数バッファ
 	ComPtr<ID3D12Resource> constBuffB0; 
 	ComPtr<ID3D12Resource> constBuffB1;

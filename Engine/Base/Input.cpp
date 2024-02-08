@@ -6,13 +6,13 @@
 #include "Input.h"
 
 //シングルトンインスタンスを取得
-Input* Input::GetInstance()
+MyEngine::Input* MyEngine::Input::GetInstance()
 {
 	static Input instance;
 	return &instance;
 }
 
-void Input::Initialize() {
+void MyEngine::Input::Initialize() {
 	
 	HRESULT result;
 
@@ -60,7 +60,7 @@ void Input::Initialize() {
 	//WindowLock();
 }
 
-void Input::Update() {
+void MyEngine::Input::Update() {
 
 	// キーボード情報の取得開始
 	keyboard->Acquire();
@@ -91,7 +91,7 @@ void Input::Update() {
 
 }
 
-void Input::WindowLock()
+void MyEngine::Input::WindowLock()
 {
 	//マウスをウィンドウ外に出ないように
 
@@ -112,14 +112,14 @@ void Input::WindowLock()
 	isLockInWindow = true;
 }
 
-void Input::WindowUnLock()
+void MyEngine::Input::WindowUnLock()
 {
 	ClipCursor(NULL);
 
 	isLockInWindow = false;
 }
 
-bool Input::CheckInWindow()
+bool MyEngine::Input::CheckInWindow()
 {
 	//ウィンドウ内外判定
 	XMFLOAT2 pos = GetMousePosition();
@@ -154,22 +154,22 @@ bool Input::CheckInWindow()
 //	return false;
 //}
 
-bool Input::IsKeyTrigger(BYTE key_)
+bool MyEngine::Input::IsKeyTrigger(BYTE key_)
 {
 	return (key[key_] && !oldkey[key_]);
 }
 
-bool Input::IsKeyPress(BYTE key_)
+bool MyEngine::Input::IsKeyPress(BYTE key_)
 {
 	return key[key_];
 }
 
-bool Input::IsKeyRelease(BYTE key_)
+bool MyEngine::Input::IsKeyRelease(BYTE key_)
 {
 	return (!key[key_] && oldkey[key_]);
 }
 
-XMFLOAT2 Input::GetMousePosition()
+XMFLOAT2 MyEngine::Input::GetMousePosition()
 {
 
 	//マウス座標取得
@@ -183,7 +183,7 @@ XMFLOAT2 Input::GetMousePosition()
 	return XMFLOAT2((float)p.x,(float)p.y);
 }
 
-bool Input::IsMouseTrigger(MouseButton buttonType)
+bool MyEngine::Input::IsMouseTrigger(MouseButton buttonType)
 {
 	//ウィンドウ外の場合取得しない
 	if (!CheckInWindow()) {
@@ -194,7 +194,7 @@ bool Input::IsMouseTrigger(MouseButton buttonType)
 		mouseState.rgbButtons[LEFT_CLICK] != buttonType);
 }
 
-bool Input::IsMousePress(MouseButton buttonType)
+bool MyEngine::Input::IsMousePress(MouseButton buttonType)
 {
 	//ウィンドウ外の場合取得しない
 	if (!CheckInWindow()) {
@@ -204,7 +204,7 @@ bool Input::IsMousePress(MouseButton buttonType)
 	return mouseState.rgbButtons[LEFT_CLICK] != buttonType;
 }
 
-bool Input::IsMouseRelease(MouseButton buttonType)
+bool MyEngine::Input::IsMouseRelease(MouseButton buttonType)
 {
 	//ウィンドウ外の場合取得しない
 	if (!CheckInWindow()) {
@@ -216,97 +216,97 @@ bool Input::IsMouseRelease(MouseButton buttonType)
 }
 
 
-bool Input::IsPadTrigger(WORD Button)
+bool MyEngine::Input::IsPadTrigger(WORD Button)
 {
 	return (padState.Gamepad.wButtons & Button) && ((oldPadState.Gamepad.wButtons & Button) != Button);
 }
 
-bool Input::IsPadPress(WORD Button)
+bool MyEngine::Input::IsPadPress(WORD Button)
 {
 	return padState.Gamepad.wButtons == Button;
 }
 
-bool Input::IsPadRelease(WORD Button)
+bool MyEngine::Input::IsPadRelease(WORD Button)
 {
 	return (oldPadState.Gamepad.wButtons & Button) && ((padState.Gamepad.wButtons & Button) != Button);
 }
 
-bool Input::IsDownLStickLeft(int deadZone)
+bool MyEngine::Input::IsDownLStickLeft(int deadZone)
 {
 	return padState.Gamepad.sThumbLX < -deadZone;
 }
 
-bool Input::IsTriggerLStickLeft(int deadZone)
+bool MyEngine::Input::IsTriggerLStickLeft(int deadZone)
 {
 	return (padState.Gamepad.sThumbLX < -deadZone) && (oldPadState.Gamepad.sThumbLX >= -deadZone);
 }
 
-bool Input::IsDownLStickRight(int deadZone)
+bool MyEngine::Input::IsDownLStickRight(int deadZone)
 {
 	return padState.Gamepad.sThumbLX > deadZone;
 }
 
-bool Input::IsTriggerLStickRight(int deadZone)
+bool MyEngine::Input::IsTriggerLStickRight(int deadZone)
 {
 	return (padState.Gamepad.sThumbLX > deadZone) && (oldPadState.Gamepad.sThumbLX <= deadZone);
 }
 
-bool Input::IsDownLStickUp(int deadZone)
+bool MyEngine::Input::IsDownLStickUp(int deadZone)
 {
 	return padState.Gamepad.sThumbLY > deadZone;
 }
 
-bool Input::IsTriggerLStickUp(int deadZone)
+bool MyEngine::Input::IsTriggerLStickUp(int deadZone)
 {
 	return (padState.Gamepad.sThumbLY > deadZone) && (oldPadState.Gamepad.sThumbLY <= deadZone);
 }
 
-bool Input::IsDownLStickDown(int deadZone)
+bool MyEngine::Input::IsDownLStickDown(int deadZone)
 {
 	return padState.Gamepad.sThumbLY < -deadZone;
 }
 
-bool Input::IsTriggerLStickDown(int deadZone)
+bool MyEngine::Input::IsTriggerLStickDown(int deadZone)
 {
 	return (padState.Gamepad.sThumbLY < -deadZone) && (oldPadState.Gamepad.sThumbLY >= -deadZone);
 }
 
-bool Input::IsDownRStickLeft(int deadZone)
+bool MyEngine::Input::IsDownRStickLeft(int deadZone)
 {
 	return padState.Gamepad.sThumbRX < -deadZone;
 }
 
-bool Input::IsTriggerRStickLeft(int deadZone)
+bool MyEngine::Input::IsTriggerRStickLeft(int deadZone)
 {
 	return (padState.Gamepad.sThumbRX < -deadZone) && (oldPadState.Gamepad.sThumbRX >= -deadZone);
 }
 
-bool Input::IsDownRStickRight(int deadZone)
+bool MyEngine::Input::IsDownRStickRight(int deadZone)
 {
 	return padState.Gamepad.sThumbRX > deadZone;
 }
 
-bool Input::IsTriggerRStickRight(int deadZone)
+bool MyEngine::Input::IsTriggerRStickRight(int deadZone)
 {
 	return (padState.Gamepad.sThumbRX > deadZone) && (oldPadState.Gamepad.sThumbRX <= deadZone);
 }
 
-bool Input::IsDownRStickUp(int deadZone)
+bool MyEngine::Input::IsDownRStickUp(int deadZone)
 {
 	return padState.Gamepad.sThumbRY > deadZone;
 }
 
-bool Input::IsTriggerRStickUp(int deadZone)
+bool MyEngine::Input::IsTriggerRStickUp(int deadZone)
 {
 	return (padState.Gamepad.sThumbRY > deadZone) && (oldPadState.Gamepad.sThumbRY <= deadZone);
 }
 
-bool Input::IsDownRStickDown(int deadZone)
+bool MyEngine::Input::IsDownRStickDown(int deadZone)
 {
 	return padState.Gamepad.sThumbRY < -deadZone;
 }
 
-bool Input::IsTriggerRStickDown(int deadZone)
+bool MyEngine::Input::IsTriggerRStickDown(int deadZone)
 {
 	return (padState.Gamepad.sThumbRY < -deadZone) && (oldPadState.Gamepad.sThumbRY >= -deadZone);
 }

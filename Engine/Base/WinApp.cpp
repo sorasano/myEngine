@@ -9,14 +9,14 @@
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam);
 
 //シングルトンインスタンスを取得
-WinApp* WinApp::GetInstance()
+MyEngine::WinApp* MyEngine::WinApp::GetInstance()
 {
 	static WinApp instance;
 	return &instance;
 }
 
 // ウィンドウプロシージャ
-LRESULT WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
+LRESULT MyEngine::WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 
 	//ImGui用ウィンドウプロシージャー呼び出し
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam))
@@ -35,7 +35,7 @@ LRESULT WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 }
 
 
-void WinApp::Initialize()
+void MyEngine::WinApp::Initialize()
 {
 
 	w.cbSize = sizeof(WNDCLASSEX);
@@ -68,14 +68,14 @@ void WinApp::Initialize()
 
 
 
-void WinApp::Finalize()
+void MyEngine::WinApp::Finalize()
 {
 	// ウィンドウクラスを登録解除
 	UnregisterClass(w.lpszClassName, w.hInstance);
 
 }
 
-bool WinApp::processMessage()
+bool MyEngine::WinApp::processMessage()
 {
 	MSG msg{}; // メッセージ
 

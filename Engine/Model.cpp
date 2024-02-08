@@ -22,7 +22,7 @@ Model* Model::GetInstance()
 	return &instance;
 }
 
-void Model::Initialize(DirectXCommon* dx, const std::string& filename, const std::string& resourcename)
+void Model::Initialize(MyEngine::DirectXCommon* dx, const std::string& filename, const std::string& resourcename)
 {
 	dx_ = dx;
 

@@ -95,7 +95,7 @@ public:
 private:
 
 	//入力
-	Input* input_;
+	MyEngine::Input* input_;
 	//当たり判定
 	Collision* collisionManager_ = nullptr;
 

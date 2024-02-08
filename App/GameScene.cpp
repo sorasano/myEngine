@@ -18,8 +18,8 @@ GameScene::~GameScene()
 void GameScene::Initialize()
 {
 	//インスタンスを取得
-	this->dxCommon_ = DirectXCommon::GetInstance();;
-	this->input_ = Input::GetInstance();
+	this->dxCommon_ = MyEngine::DirectXCommon::GetInstance();;
+	this->input_ = MyEngine::Input::GetInstance();
 	this->collisionManager_ = Collision::GetInstance();
 
 

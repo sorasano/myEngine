@@ -33,8 +33,8 @@ public:
 	void Draw();
 
 private:
-	WinApp* winApp_;
-	DirectXCommon* dxCommon_;
+	MyEngine::WinApp* winApp_;
+	MyEngine::DirectXCommon* dxCommon_;
 
 	//SRV用デスクリプタヒープ
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>srvHeap_;

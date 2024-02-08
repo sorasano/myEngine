@@ -42,7 +42,7 @@ XMMATRIX ParticleManager::matBillbordY_ = XMMatrixIdentity();
 ////unsigned short ParticleManager::indices[planeCount * 3];
 //
 ////unsigned short ParticleManager::indices[indexCount];
-DirectXCommon* ParticleManager::dx_ = nullptr;
+MyEngine::DirectXCommon* ParticleManager::dx_ = nullptr;
 
 //XMFLOAt3同士の加算処理
 const DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs) {
@@ -62,7 +62,7 @@ ParticleManager::~ParticleManager()
 {
 }
 
-void ParticleManager::StaticInitialize(DirectXCommon* dx)
+void ParticleManager::StaticInitialize(MyEngine::DirectXCommon* dx)
 {
 	// nullptrチェック
 	assert(dx);

@@ -205,7 +205,7 @@ private:
 	std::unique_ptr<FbxModel> bulletModel_ = nullptr;
 
 	//入力
-	Input* input_ = nullptr;
+	MyEngine::Input* input_ = nullptr;
 
 	//操作ロック
 	bool isLockOperation_ = false;

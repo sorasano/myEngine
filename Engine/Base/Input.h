@@ -45,177 +45,178 @@ enum MouseButton {
 	MID_CLICK
 };
 
-class Input final
-{
-private:
+namespace MyEngine {
+	class Input final
+	{
+	private:
 
-	/**
-	* namespace省略
-	*/
-	template <class T> using Comptr = Microsoft::WRL::ComPtr<T>;
+		/**
+		* namespace省略
+		*/
+		template <class T> using Comptr = Microsoft::WRL::ComPtr<T>;
 
-public:
-	/**
-	* シングルトンインスタンスを取得
-	*/
-	static Input* GetInstance();
+	public:
+		/**
+		* シングルトンインスタンスを取得
+		*/
+		static Input* GetInstance();
 
-	/**
-	* コピーコンストラクタの無効
-	*/
-	Input(const Input& obj) = delete;
+		/**
+		* コピーコンストラクタの無効
+		*/
+		Input(const Input& obj) = delete;
 
-	/**
-	* 代入演算子の無効
-	*/
-	Input& operator=(const Input& obj) = delete;
+		/**
+		* 代入演算子の無効
+		*/
+		Input& operator=(const Input& obj) = delete;
 
-private:
+	private:
 
-	/**
-	* コンストラクタ
-	*/
-	Input() = default;
-	/**
-	* デストラクタ
-	*/
-	~Input() = default;
+		/**
+		* コンストラクタ
+		*/
+		Input() = default;
+		/**
+		* デストラクタ
+		*/
+		~Input() = default;
 
-public:
+	public:
 
-	/**
-	* 初期化
-	*/
-	void Initialize();
-	/**
-	* 更新
-	*/
-	void Update();
+		/**
+		* 初期化
+		*/
+		void Initialize();
+		/**
+		* 更新
+		*/
+		void Update();
 
-	/**
-	* ウィンドウ外制限
-	*/	
-	void WindowLock();
+		/**
+		* ウィンドウ外制限
+		*/
+		void WindowLock();
 
-	/**
-	* 	ウィンドウ外制限解除
-	*/
-	void WindowUnLock();
+		/**
+		* 	ウィンドウ外制限解除
+		*/
+		void WindowUnLock();
 
-	/**
-	* 	ウィンドウ内かチェック
-	* 
-	* @return false = ウィンドウ外 true ウィンドウ内
-	*/
-	bool CheckInWindow();
+		/**
+		* 	ウィンドウ内かチェック
+		*
+		* @return false = ウィンドウ外 true ウィンドウ内
+		*/
+		bool CheckInWindow();
 
-	/**
-	* @return bool isLockInWindow取得
-	*/
-	bool GetIsLockInWindow() { return isLockInWindow; }
-
-
-	//入力情報
-
-	//キーボード押下情報
-	/**
-	* キーの入力瞬間チェック
-	*/
-	bool IsKeyTrigger(BYTE key_);
-	/**
-	* キーの押込みをチェック
-	*/
-	bool IsKeyPress(BYTE key_);
-	/**
-	* キーの離しをチェック
-	*/
-	bool IsKeyRelease(BYTE key_);
-
-	//マウス
-
-	/**
-	* 座標取得
-	*/
-	XMFLOAT2 GetMousePosition();
-
-	//マウス押下情報
-	/**
-	* キーの入力瞬間チェック
-	*/
-	bool IsMouseTrigger(MouseButton buttonType);
-	/**
-	* キーの押込みをチェック
-	*/
-	bool IsMousePress(MouseButton keybuttonType_);
-	/**
-	* キーの離しをチェック
-	*/
-	bool IsMouseRelease(MouseButton buttonType);
+		/**
+		* @return bool isLockInWindow取得
+		*/
+		bool GetIsLockInWindow() { return isLockInWindow; }
 
 
-	//パッド押下情報(ボタン)
-	/**
-	* ボタンの入力瞬間をチェック
-	*/
-	bool IsPadTrigger(WORD Button);
-	/**
-	* ボタンの押込みをチェック
-	*/
-	bool IsPadPress(WORD Button);
-	/**
-	* ボタンの離しをチェック
-	*/
-	bool IsPadRelease(WORD Button);
+		//入力情報
+
+		//キーボード押下情報
+		/**
+		* キーの入力瞬間チェック
+		*/
+		bool IsKeyTrigger(BYTE key_);
+		/**
+		* キーの押込みをチェック
+		*/
+		bool IsKeyPress(BYTE key_);
+		/**
+		* キーの離しをチェック
+		*/
+		bool IsKeyRelease(BYTE key_);
+
+		//マウス
+
+		/**
+		* 座標取得
+		*/
+		XMFLOAT2 GetMousePosition();
+
+		//マウス押下情報
+		/**
+		* キーの入力瞬間チェック
+		*/
+		bool IsMouseTrigger(MouseButton buttonType);
+		/**
+		* キーの押込みをチェック
+		*/
+		bool IsMousePress(MouseButton keybuttonType_);
+		/**
+		* キーの離しをチェック
+		*/
+		bool IsMouseRelease(MouseButton buttonType);
 
 
-	//パッド押下情報(左右スティック)
-	/**
-	* 左スティック
-	*/
-	bool IsDownLStickLeft(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
-	bool IsTriggerLStickLeft(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
-	bool IsDownLStickRight(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
-	bool IsTriggerLStickRight(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
-	bool IsDownLStickUp(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
-	bool IsTriggerLStickUp(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
-	bool IsDownLStickDown(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
-	bool IsTriggerLStickDown(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+		//パッド押下情報(ボタン)
+		/**
+		* ボタンの入力瞬間をチェック
+		*/
+		bool IsPadTrigger(WORD Button);
+		/**
+		* ボタンの押込みをチェック
+		*/
+		bool IsPadPress(WORD Button);
+		/**
+		* ボタンの離しをチェック
+		*/
+		bool IsPadRelease(WORD Button);
 
-	/**
-	* 右スティック
-	*/
-	bool IsDownRStickLeft(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
-	bool IsTriggerRStickLeft(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
-	bool IsDownRStickRight(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
-	bool IsTriggerRStickRight(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
-	bool IsDownRStickUp(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
-	bool IsTriggerRStickUp(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
-	bool IsDownRStickDown(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
-	bool IsTriggerRStickDown(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
 
-private:
+		//パッド押下情報(左右スティック)
+		/**
+		* 左スティック
+		*/
+		bool IsDownLStickLeft(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+		bool IsTriggerLStickLeft(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+		bool IsDownLStickRight(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+		bool IsTriggerLStickRight(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+		bool IsDownLStickUp(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+		bool IsTriggerLStickUp(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+		bool IsDownLStickDown(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+		bool IsTriggerLStickDown(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
 
-	ComPtr<IDirectInputDevice8> keyboard;
-	ComPtr<IDirectInput8> directInput;
+		/**
+		* 右スティック
+		*/
+		bool IsDownRStickLeft(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
+		bool IsTriggerRStickLeft(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
+		bool IsDownRStickRight(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
+		bool IsTriggerRStickRight(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
+		bool IsDownRStickUp(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
+		bool IsTriggerRStickUp(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
+		bool IsDownRStickDown(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
+		bool IsTriggerRStickDown(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
 
-	ComPtr<IDirectInputDevice8> mouse;
+	private:
 
-	//キーボード
-	BYTE key[256] = {};
-	BYTE oldkey[256] = {};
+		ComPtr<IDirectInputDevice8> keyboard;
+		ComPtr<IDirectInput8> directInput;
 
-	//パッド
-	XINPUT_STATE padState;
-	XINPUT_STATE oldPadState;
+		ComPtr<IDirectInputDevice8> mouse;
 
-	//マウス
-	DIMOUSESTATE mouseState;
-	DIMOUSESTATE oldMouseState;
+		//キーボード
+		BYTE key[256] = {};
+		BYTE oldkey[256] = {};
 
-	//マウスウィンドウズ画面内に固定されているか
-	bool isLockInWindow = true;
+		//パッド
+		XINPUT_STATE padState;
+		XINPUT_STATE oldPadState;
 
-	//WindowsAPI
-	WinApp* winApp_ = nullptr;
-};
+		//マウス
+		DIMOUSESTATE mouseState;
+		DIMOUSESTATE oldMouseState;
 
+		//マウスウィンドウズ画面内に固定されているか
+		bool isLockInWindow = true;
+
+		//WindowsAPI
+		WinApp* winApp_ = nullptr;
+	};
+}

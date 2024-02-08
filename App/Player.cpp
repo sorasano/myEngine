@@ -23,7 +23,7 @@ Player::~Player()
 void Player::Initialize()
 {
 	//入力のセット
-	this->input_ = Input::GetInstance();
+	this->input_ = MyEngine::Input::GetInstance();
 
 	//モデル名を指定してファイル読み込み
 	playerModel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("player"));

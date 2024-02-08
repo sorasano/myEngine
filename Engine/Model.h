@@ -73,7 +73,7 @@ public:
 	* @param[in] filename objとmtlが入ってるファイルの名前
 	* @param[in] resourcename 貼り付ける画像の名前
 	*/
-	void Initialize(DirectXCommon* dx_, const std::string& filename , const std::string& resourcename);
+	void Initialize(MyEngine::DirectXCommon* dx_, const std::string& filename , const std::string& resourcename);
 
 	/**
 	* 頂点初期化
@@ -135,7 +135,7 @@ public:
 	*/
 	UINT GetIndicesSize() { return (UINT)sizeof(indices.size()); };
 public:
-	DirectXCommon* dx_ = nullptr;
+	MyEngine::DirectXCommon* dx_ = nullptr;
 	ComPtr<ID3D12Resource> constBuffMaterial_;
 public:
 	D3D12_RECT scissorRect{};

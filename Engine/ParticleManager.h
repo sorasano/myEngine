@@ -90,7 +90,7 @@ public: // 静的メンバ関数
 	*
 	* @param[in,out] dx dxCommon
 	*/
-	static void StaticInitialize(DirectXCommon* dx);
+	static void StaticInitialize(MyEngine::DirectXCommon* dx);
 	/**
 	* 静的更新
 	* @param[in] eye 視点座標
@@ -190,7 +190,7 @@ private: // 静的メンバ変数
 	//Y軸周りのビューボード行列
 	static XMMATRIX matBillbordY_;
 
-	static DirectXCommon* dx_;
+	static MyEngine::DirectXCommon* dx_;
 
 private:// 静的メンバ関数
 	/**

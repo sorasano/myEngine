@@ -133,7 +133,7 @@ public:
 private:
 
 	//入力
-	Input* input_ = nullptr;
+	MyEngine::Input* input_ = nullptr;
 
 	//プレイヤー座標
 	XMFLOAT3 playerPos_ = {};

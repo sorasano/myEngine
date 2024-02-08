@@ -6,19 +6,19 @@
 #include "DirectXCommon.h"
 
 //シングルトンインスタンスを取得
-DirectXCommon* DirectXCommon::GetInstance()
+MyEngine::DirectXCommon* MyEngine::DirectXCommon::GetInstance()
 {
 	static DirectXCommon instance;
 	return &instance;
 }
 
-DirectXCommon::~DirectXCommon()
+MyEngine::DirectXCommon::~DirectXCommon()
 {
 	/*delete commandList.Get();*/
 }
 
 //初期化処理
-void DirectXCommon::Initialize()
+void MyEngine::DirectXCommon::Initialize()
 {
 	winApp_ = WinApp::GetInstance();
 
@@ -50,7 +50,7 @@ void DirectXCommon::Initialize()
 }
 
 #pragma region デバイス初期化
-void DirectXCommon::InitializeDevice()
+void MyEngine::DirectXCommon::InitializeDevice()
 {
 	HRESULT result;
 
@@ -124,7 +124,7 @@ void DirectXCommon::InitializeDevice()
 }
 #pragma endregion
 #pragma region コマンドリスト初期化
-void DirectXCommon::InitializeCommand()
+void MyEngine::DirectXCommon::InitializeCommand()
 {
 	HRESULT result;
 	//コマンドアロケータを生成
@@ -150,7 +150,7 @@ void DirectXCommon::InitializeCommand()
 }
 #pragma endregion
 #pragma region スワップチェーン
-void DirectXCommon::InitializeSwapchain()
+void MyEngine::DirectXCommon::InitializeSwapchain()
 {
 	HRESULT result;
 	//スワップチェーンの設定
@@ -179,7 +179,7 @@ void DirectXCommon::InitializeSwapchain()
 }
 #pragma endregion
 #pragma region レンダーターゲットビュー 
-void DirectXCommon::InitializeRenderTargetView()
+void MyEngine::DirectXCommon::InitializeRenderTargetView()
 {
 	// デスクリプタヒープの設定 
 	rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV; // レンダーターゲットビュー 
@@ -211,7 +211,7 @@ void DirectXCommon::InitializeRenderTargetView()
 }
 #pragma endregion
 #pragma region 深度バッファ
-void DirectXCommon::InitializeDepthBuffer()
+void MyEngine::DirectXCommon::InitializeDepthBuffer()
 {
 	HRESULT result;
 
@@ -257,7 +257,7 @@ void DirectXCommon::InitializeDepthBuffer()
 }
 #pragma endregion
 #pragma region フェンス
-void DirectXCommon::InitializeFence()
+void MyEngine::DirectXCommon::InitializeFence()
 {
 	HRESULT result;
 	//フェンスの生成
@@ -266,7 +266,7 @@ void DirectXCommon::InitializeFence()
 #pragma endregion
 
 #pragma region 描画前処理
-void DirectXCommon::PreDraw()
+void MyEngine::DirectXCommon::PreDraw()
 {
 
 	//バックバッファの番号を取得(2つなので0番か1番)
@@ -310,7 +310,7 @@ void DirectXCommon::PreDraw()
 }
 #pragma endregion 
 #pragma region 描画後処理
-void DirectXCommon::PostDraw()
+void MyEngine::DirectXCommon::PostDraw()
 {
 	HRESULT result;
 
@@ -353,7 +353,7 @@ void DirectXCommon::PostDraw()
 	assert(SUCCEEDED(result));
 }
 #pragma endregion
-ComPtr<ID3D12DescriptorHeap> DirectXCommon::CreateDescriptorForImgui()
+ComPtr<ID3D12DescriptorHeap> MyEngine::DirectXCommon::CreateDescriptorForImgui()
 {
 	ComPtr<ID3D12DescriptorHeap>ret;
 
@@ -368,7 +368,7 @@ ComPtr<ID3D12DescriptorHeap> DirectXCommon::CreateDescriptorForImgui()
 	return ret;
 }
 
-void DirectXCommon::InitializeImgui()
+void MyEngine::DirectXCommon::InitializeImgui()
 {
 	HRESULT result;
 

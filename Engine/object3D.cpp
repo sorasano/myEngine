@@ -80,7 +80,7 @@ void DrawObject3d(Object3d2* object, ComPtr<ID3D12GraphicsCommandList> commandLi
 	commandList->DrawIndexedInstanced(numIndices, 1, 0, 0, 0);	//全ての頂点を使って描画
 }
 
-void Object3D::Initialize(DirectXCommon* dx, Model* model)
+void Object3D::Initialize(MyEngine::DirectXCommon* dx, Model* model)
 {
 	this->dx_ = dx;
 	this->model_ = model;
