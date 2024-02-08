@@ -6,10 +6,12 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
-#include "GameScene.h"
+#include "SceneManager.h"
+#include "TitleScene.h"
 #include "FPS.h"
 #include "PostEffect.h"
 #include "ImguiManager.h"
+#include "Input.h"
 
 // ウィンドウプロシージャ
 LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
@@ -61,9 +63,14 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	postEffect->CreateGraphicsPipeLine();
 
 	//ゲームシーン
-	GameScene* gameScene = nullptr;
-	gameScene = new GameScene();
-	gameScene->Initialize();
+	SceneManager* sceneManager = nullptr;
+	sceneManager = new SceneManager();
+	//sceneManager->Initialize();
+
+	//最初のシーンの生成
+	BaseScene* scene = new TitleScene();
+	//シーンマネージャーに最初のシーンをセット
+	sceneManager->SetNextScene(scene);
 
 	//FPSを固定
 	FPS* fps = nullptr;
@@ -90,7 +97,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		imGuiManager->Begin();
 
 		//更新
-		gameScene->Update();
+		sceneManager->Update();
 		postEffect->Update();
 
 		imGuiManager->End();
@@ -106,9 +113,9 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		dxCommon->PreDraw();
 
 		//fbx描画
-		gameScene->Draw();
+		sceneManager->Draw();
 		//スプライト描画
-		gameScene->DrawSprite();
+		sceneManager->DrawSprite();
 
 		//imgui描画
 		imGuiManager->Draw();
@@ -137,10 +144,10 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	imGuiManager->Finalize();
 
 	//gamescene解放
-	delete gameScene;
+	delete sceneManager;
 
 	//fbxLoader解放
-	FbxLoader::GetInstance()->Finalize();
+	//FbxLoader::GetInstance()->Finalize();
 
 	//コンソールへの文字出力
 	OutputDebugStringA("Hello,DirectX!!\n");
