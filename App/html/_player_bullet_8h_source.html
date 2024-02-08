@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.10.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>My Project: PlayerBullet.h ソースファイル</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">My Project
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 構築: Doxygen 1.10.0 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','検索');
+  $(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() { codefold.init(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">読み取り中…</div>
+<div class="SRStatus" id="Searching">検索中…</div>
+<div class="SRStatus" id="NoMatches">一致する文字列を見つけられません</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">PlayerBullet.h</div></div>
+</div><!--header-->
+<div class="contents">
+<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;FbxLoader.h&quot;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;FbxObject3D.h&quot;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;DirectXCommon.h&quot;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;Collision.h&quot;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;MathManager.h&quot;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#pragma once</span></div>
+<div class="foldopen" id="foldopen00014" data-start="{" data-end="};">
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="class_player_bullet.html">   14</a></span><span class="keyword">class </span><a class="code hl_class" href="class_player_bullet.html">PlayerBullet</a></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>{</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <a class="code hl_class" href="class_player_bullet.html">PlayerBullet</a>* <a class="code hl_function" href="class_player_bullet.html#a6d7b14ba4bba67d9937f864397164709">GetInstance</a>();</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    <a class="code hl_function" href="class_player_bullet.html#aff2ce7ed2770a6450664f489c9513375">PlayerBullet</a>();</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <a class="code hl_function" href="class_player_bullet.html#ab29aaaa2a60b5a5c16b99d5cfe328b08">~PlayerBullet</a>();</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_player_bullet.html#a7bdab04a524bf81126f32d71fb40f15a">Initialize</a>(FbxModel* model, <span class="keyword">const</span> XMFLOAT3&amp; position, <span class="keyword">const</span> Vector3&amp; velocity);</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_player_bullet.html#a9a12edc9d0aa91be605f081f3e72831c">Update</a>();</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_player_bullet.html#a007894815cf10f6be68bde370637b907">Draw</a>(ID3D12GraphicsCommandList* cmdList);</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_player_bullet.html#aaf231a9e14898cbb35a64f51419afae1">Move</a>();</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_player_bullet.html#a8148fa8ebc14b20a02e3ec8354e1115a">OnCollision</a>();</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="comment">//ゲッター　セッター　</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="class_player_bullet.html#a209d6c8486f2689f9775f3954e101e8d">   62</a></span>    XMFLOAT3 <a class="code hl_function" href="class_player_bullet.html#a209d6c8486f2689f9775f3954e101e8d">GetPosition</a>()<span class="keyword">const </span>{ <span class="keywordflow">return</span> position_; };</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="class_player_bullet.html#a586bb17cb9a64c73e9bfd1ada5e8878a">   66</a></span>    XMFLOAT3 <a class="code hl_function" href="class_player_bullet.html#a586bb17cb9a64c73e9bfd1ada5e8878a">GetRotation</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> rotation_; };</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno"><a class="line" href="class_player_bullet.html#a4eb76fb33e6e9e4f7a11f517f12c7803">   70</a></span>    XMFLOAT3 <a class="code hl_function" href="class_player_bullet.html#a4eb76fb33e6e9e4f7a11f517f12c7803">GetScale</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> scale_; };</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno"><a class="line" href="class_player_bullet.html#a56d5adca4ac463b8000610f6a48e857a">   74</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="class_player_bullet.html#a56d5adca4ac463b8000610f6a48e857a">GetIsDead</a>()<span class="keyword">const </span>{ <span class="keywordflow">return</span> isDead_; }</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    CollisionData <a class="code hl_function" href="class_player_bullet.html#a807ad6df6c60efdaa2db06a049d82f3d">GetColData</a>()<span class="keyword">const</span>;</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno"><a class="line" href="class_player_bullet.html#aa332fb19272169c3bd6c3a74afccf385">   83</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_player_bullet.html#aa332fb19272169c3bd6c3a74afccf385">SetPosition</a>(<span class="keyword">const</span> XMFLOAT3&amp; pos) { this-&gt;position_ = pos; }</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno"><a class="line" href="class_player_bullet.html#a250872a17ceccaf27ebe4cd54fe013ac">   87</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_player_bullet.html#a250872a17ceccaf27ebe4cd54fe013ac">SetRotation</a>(<span class="keyword">const</span> XMFLOAT3&amp; rot) { this-&gt;rotation_ = rot; }</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno"><a class="line" href="class_player_bullet.html#acf23e50d445300bf1b91f0a1030eb443">   91</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_player_bullet.html#acf23e50d445300bf1b91f0a1030eb443">SetScale</a>(<span class="keyword">const</span> XMFLOAT3&amp; sca) { this-&gt;scale_ = sca; }</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno"><a class="line" href="class_player_bullet.html#a1c94863996eb51e06795eb77a10aceb3">   95</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_player_bullet.html#a1c94863996eb51e06795eb77a10aceb3">SetIsDead</a>(<span class="keywordtype">bool</span> isDead) { this-&gt;isDead_ = isDead; };</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    <span class="comment">//アフィン変換情報</span></div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    XMFLOAT3 position_ = { 0,0,0 };</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    XMFLOAT3 rotation_ = { 0,0,0 };</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    XMFLOAT3 scale_ = { 1,1,1 };</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    <span class="comment">//ワールド変換行列</span></div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    XMMATRIX matWorld_ = {};</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    <span class="comment">//当たり判定用</span></div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    XMFLOAT3 colSize_ = { 0.5f,0.5f,2.0f };</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    <span class="comment">//FBX</span></div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    FbxObject3D* playerBulletObject_ = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    <span class="comment">//移動ベクトル</span></div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    Vector3 velocity_ = {};</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    <span class="comment">//寿命</span></div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    <span class="keyword">static</span> <span class="keyword">const</span> int32_t lifeTime_ = 60 * 5;</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    <span class="comment">//デスタイマー</span></div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    int32_t deathTimer_ = lifeTime_;</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="comment">//デスフラグ</span></div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="keywordtype">bool</span> isDead_ = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>};</div>
+</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span> </div>
+<div class="ttc" id="aclass_player_bullet_html"><div class="ttname"><a href="class_player_bullet.html">PlayerBullet</a></div><div class="ttdef"><b>Definition</b> PlayerBullet.h:15</div></div>
+<div class="ttc" id="aclass_player_bullet_html_a007894815cf10f6be68bde370637b907"><div class="ttname"><a href="class_player_bullet.html#a007894815cf10f6be68bde370637b907">PlayerBullet::Draw</a></div><div class="ttdeci">void Draw(ID3D12GraphicsCommandList *cmdList)</div><div class="ttdef"><b>Definition</b> PlayerBullet.cpp:66</div></div>
+<div class="ttc" id="aclass_player_bullet_html_a1c94863996eb51e06795eb77a10aceb3"><div class="ttname"><a href="class_player_bullet.html#a1c94863996eb51e06795eb77a10aceb3">PlayerBullet::SetIsDead</a></div><div class="ttdeci">void SetIsDead(bool isDead)</div><div class="ttdef"><b>Definition</b> PlayerBullet.h:95</div></div>
+<div class="ttc" id="aclass_player_bullet_html_a209d6c8486f2689f9775f3954e101e8d"><div class="ttname"><a href="class_player_bullet.html#a209d6c8486f2689f9775f3954e101e8d">PlayerBullet::GetPosition</a></div><div class="ttdeci">XMFLOAT3 GetPosition() const</div><div class="ttdef"><b>Definition</b> PlayerBullet.h:62</div></div>
+<div class="ttc" id="aclass_player_bullet_html_a250872a17ceccaf27ebe4cd54fe013ac"><div class="ttname"><a href="class_player_bullet.html#a250872a17ceccaf27ebe4cd54fe013ac">PlayerBullet::SetRotation</a></div><div class="ttdeci">void SetRotation(const XMFLOAT3 &amp;rot)</div><div class="ttdef"><b>Definition</b> PlayerBullet.h:87</div></div>
+<div class="ttc" id="aclass_player_bullet_html_a4eb76fb33e6e9e4f7a11f517f12c7803"><div class="ttname"><a href="class_player_bullet.html#a4eb76fb33e6e9e4f7a11f517f12c7803">PlayerBullet::GetScale</a></div><div class="ttdeci">XMFLOAT3 GetScale() const</div><div class="ttdef"><b>Definition</b> PlayerBullet.h:70</div></div>
+<div class="ttc" id="aclass_player_bullet_html_a56d5adca4ac463b8000610f6a48e857a"><div class="ttname"><a href="class_player_bullet.html#a56d5adca4ac463b8000610f6a48e857a">PlayerBullet::GetIsDead</a></div><div class="ttdeci">bool GetIsDead() const</div><div class="ttdef"><b>Definition</b> PlayerBullet.h:74</div></div>
+<div class="ttc" id="aclass_player_bullet_html_a586bb17cb9a64c73e9bfd1ada5e8878a"><div class="ttname"><a href="class_player_bullet.html#a586bb17cb9a64c73e9bfd1ada5e8878a">PlayerBullet::GetRotation</a></div><div class="ttdeci">XMFLOAT3 GetRotation() const</div><div class="ttdef"><b>Definition</b> PlayerBullet.h:66</div></div>
+<div class="ttc" id="aclass_player_bullet_html_a6d7b14ba4bba67d9937f864397164709"><div class="ttname"><a href="class_player_bullet.html#a6d7b14ba4bba67d9937f864397164709">PlayerBullet::GetInstance</a></div><div class="ttdeci">PlayerBullet * GetInstance()</div><div class="ttdef"><b>Definition</b> PlayerBullet.cpp:9</div></div>
+<div class="ttc" id="aclass_player_bullet_html_a7bdab04a524bf81126f32d71fb40f15a"><div class="ttname"><a href="class_player_bullet.html#a7bdab04a524bf81126f32d71fb40f15a">PlayerBullet::Initialize</a></div><div class="ttdeci">void Initialize(FbxModel *model, const XMFLOAT3 &amp;position, const Vector3 &amp;velocity)</div><div class="ttdef"><b>Definition</b> PlayerBullet.cpp:24</div></div>
+<div class="ttc" id="aclass_player_bullet_html_a807ad6df6c60efdaa2db06a049d82f3d"><div class="ttname"><a href="class_player_bullet.html#a807ad6df6c60efdaa2db06a049d82f3d">PlayerBullet::GetColData</a></div><div class="ttdeci">CollisionData GetColData() const</div><div class="ttdef"><b>Definition</b> PlayerBullet.cpp:83</div></div>
+<div class="ttc" id="aclass_player_bullet_html_a8148fa8ebc14b20a02e3ec8354e1115a"><div class="ttname"><a href="class_player_bullet.html#a8148fa8ebc14b20a02e3ec8354e1115a">PlayerBullet::OnCollision</a></div><div class="ttdeci">void OnCollision()</div><div class="ttdef"><b>Definition</b> PlayerBullet.cpp:78</div></div>
+<div class="ttc" id="aclass_player_bullet_html_a9a12edc9d0aa91be605f081f3e72831c"><div class="ttname"><a href="class_player_bullet.html#a9a12edc9d0aa91be605f081f3e72831c">PlayerBullet::Update</a></div><div class="ttdeci">void Update()</div><div class="ttdef"><b>Definition</b> PlayerBullet.cpp:51</div></div>
+<div class="ttc" id="aclass_player_bullet_html_aa332fb19272169c3bd6c3a74afccf385"><div class="ttname"><a href="class_player_bullet.html#aa332fb19272169c3bd6c3a74afccf385">PlayerBullet::SetPosition</a></div><div class="ttdeci">void SetPosition(const XMFLOAT3 &amp;pos)</div><div class="ttdef"><b>Definition</b> PlayerBullet.h:83</div></div>
+<div class="ttc" id="aclass_player_bullet_html_aaf231a9e14898cbb35a64f51419afae1"><div class="ttname"><a href="class_player_bullet.html#aaf231a9e14898cbb35a64f51419afae1">PlayerBullet::Move</a></div><div class="ttdeci">void Move()</div><div class="ttdef"><b>Definition</b> PlayerBullet.cpp:71</div></div>
+<div class="ttc" id="aclass_player_bullet_html_ab29aaaa2a60b5a5c16b99d5cfe328b08"><div class="ttname"><a href="class_player_bullet.html#ab29aaaa2a60b5a5c16b99d5cfe328b08">PlayerBullet::~PlayerBullet</a></div><div class="ttdeci">~PlayerBullet()</div><div class="ttdef"><b>Definition</b> PlayerBullet.cpp:19</div></div>
+<div class="ttc" id="aclass_player_bullet_html_acf23e50d445300bf1b91f0a1030eb443"><div class="ttname"><a href="class_player_bullet.html#acf23e50d445300bf1b91f0a1030eb443">PlayerBullet::SetScale</a></div><div class="ttdeci">void SetScale(const XMFLOAT3 &amp;sca)</div><div class="ttdef"><b>Definition</b> PlayerBullet.h:91</div></div>
+<div class="ttc" id="aclass_player_bullet_html_aff2ce7ed2770a6450664f489c9513375"><div class="ttname"><a href="class_player_bullet.html#aff2ce7ed2770a6450664f489c9513375">PlayerBullet::PlayerBullet</a></div><div class="ttdeci">PlayerBullet()</div><div class="ttdef"><b>Definition</b> PlayerBullet.cpp:15</div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+構築:&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.10.0
+</small></address>
+</body>
+</html>
