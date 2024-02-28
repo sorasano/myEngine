@@ -1,35 +1,36 @@
-#include "SceneManager.h"
+ï»¿#include "SceneManager.h"
 
 SceneManager::~SceneManager()
 {
-	//ÅŒã‚ÌƒV[ƒ“‚ÌI—¹‚Æ‰ð•ú
+	//æœ€å¾Œã®ã‚·ãƒ¼ãƒ³ã®çµ‚äº†ã¨è§£æ”¾
 	scene_->Finalize();
 	delete scene_;
 }
 
 void SceneManager::Update()
 {
-	//ƒV[ƒ“Ø‚è‘Ö‚¦‹@\
+	//ã‚·ãƒ¼ãƒ³åˆ‡ã‚Šæ›¿ãˆæ©Ÿæ§‹
 
-	//ŽŸƒV[ƒ“‚Ì—\–ñ‚ª‚ ‚é‚È‚ç
+	//æ¬¡ã‚·ãƒ¼ãƒ³ã®äºˆç´„ãŒã‚ã‚‹ãªã‚‰
 	if (nextScene_) {
-		//‹ŒƒV[ƒ“‚ÌI—¹
+		//æ—§ã‚·ãƒ¼ãƒ³ã®çµ‚äº†
 		if (scene_) {
 			scene_->Finalize();
 			delete scene_;
 		}
 
-		//ƒV[ƒ“ƒ}ƒl[ƒWƒƒ[‚ðƒZƒbƒg
-		scene_->SetSceneManager(this);
-
-		//ƒV[ƒ“Ø‚è‘Ö‚¦
+		//ã‚·ãƒ¼ãƒ³åˆ‡ã‚Šæ›¿ãˆ
 		scene_ = nextScene_;
 		nextScene_ = nullptr;
-		//ŽŸƒV[ƒ“‚ð‰Šú‰»‚·‚é
+
+		//ã‚·ãƒ¼ãƒ³ãƒžãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã‚’ã‚»ãƒƒãƒˆ
+		scene_->SetSceneManager(this);
+
+		//æ¬¡ã‚·ãƒ¼ãƒ³ã‚’åˆæœŸåŒ–ã™ã‚‹
 		scene_->Initialize();
 	}
 
-	//ŽÀs’†ƒV[ƒ“‚ðXV‚·‚é
+	//å®Ÿè¡Œä¸­ã‚·ãƒ¼ãƒ³ã‚’æ›´æ–°ã™ã‚‹
 	scene_->Update();
 }
 

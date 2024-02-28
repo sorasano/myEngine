@@ -7,7 +7,7 @@
 #include <sstream>
 #include <iomanip>
 #include "SceneManager.h"
-#include "TitleScene.h"
+#include "InitScene.h"
 #include "FPS.h"
 #include "PostEffect.h"
 #include "ImguiManager.h"
@@ -68,7 +68,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	//sceneManager->Initialize();
 
 	//最初のシーンの生成
-	BaseScene* scene = new TitleScene();
+	BaseScene* scene = new InitScene();
 	//シーンマネージャーに最初のシーンをセット
 	sceneManager->SetNextScene(scene);
 
@@ -148,9 +148,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 	//fbxLoader解放
 	//FbxLoader::GetInstance()->Finalize();
-
-	//コンソールへの文字出力
-	OutputDebugStringA("Hello,DirectX!!\n");
 
 	return 0;
 }

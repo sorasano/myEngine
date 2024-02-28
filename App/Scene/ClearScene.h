@@ -1,6 +1,6 @@
-/**
+ï»¿/**
 * @file ClearScene.h
-* @brief@ƒNƒŠƒAƒV[ƒ“
+* @briefã€€ã‚¯ãƒªã‚¢ã‚·ãƒ¼ãƒ³
 */
 
 
@@ -11,24 +11,24 @@ class ClearScene : public BaseScene
 {
 public:
 	/**
-	* ‰Šú‰»
+	* åˆæœŸåŒ–
 	*
 	*/
 	void Initialize() override;
 	/**
-	* XV
+	* æ›´æ–°
 	*/
 	void Update() override;
 	/**
-	* •`‰æ
+	* æç”»
 	*/
 	void Draw() override;
 	/**
-	* ƒXƒvƒ‰ƒCƒg•`‰æ
+	* ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»
 	*/
 	void DrawSprite() override;
 	/**
-	* I—¹ˆ—
+	* çµ‚äº†å‡¦ç†
 	*/
 	void Finalize() override;
 };

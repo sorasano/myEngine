@@ -1,14 +1,17 @@
 ﻿/**
-* @file TitleScene.h
-* @brief　タイトルシーン
+* @file InitScene.h
+* @brief　初期化シーン
 */
 
 #pragma once
-#include "BaseScene.h"
+#include "SceneManager.h"
+#include "TitleScene.h"
 
-class TitleScene : public BaseScene
+class InitScene :
+    public BaseScene
 {
 public:
+
 	/**
 	* 初期化
 	*

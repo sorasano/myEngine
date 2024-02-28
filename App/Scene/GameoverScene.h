@@ -1,6 +1,6 @@
-/**
+ï»¿/**
 * @file GameoverScene.h
-* @brief@ƒQ[ƒ€ƒI[ƒo[ƒV[ƒ“
+* @briefã€€ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼ã‚·ãƒ¼ãƒ³
 */
 
 #pragma once
@@ -10,24 +10,24 @@ class GameoverScene : public BaseScene
 {
 public:
 	/**
-	* ‰Šú‰»
+	* åˆæœŸåŒ–
 	*
 	*/
 	void Initialize() override;
 	/**
-	* XV
+	* æ›´æ–°
 	*/
 	void Update() override;
 	/**
-	* •`‰æ
+	* æç”»
 	*/
 	void Draw() override;
 	/**
-	* ƒXƒvƒ‰ƒCƒg•`‰æ
+	* ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»
 	*/
 	void DrawSprite() override;
 	/**
-	* I—¹ˆ—
+	* çµ‚äº†å‡¦ç†
 	*/
 	void Finalize() override;
 };

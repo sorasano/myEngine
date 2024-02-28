@@ -1,6 +1,6 @@
-/**
+ï»¿/**
 * @file BossScene.h
-* @brief@ƒ{ƒXƒV[ƒ“
+* @briefã€€ãƒœã‚¹ã‚·ãƒ¼ãƒ³
 */
 
 #pragma once
@@ -10,25 +10,26 @@ class BossScene : public BaseScene
 {
 public:
 	/**
-	* ‰Šú‰»
+	* åˆæœŸåŒ–
 	*
 	*/
 	void Initialize() override;
 	/**
-	* XV
+	* æ›´æ–°
 	*/
 	void Update() override;
 	/**
-	* •`‰æ
+	* æç”»
 	*/
 	void Draw() override;
 	/**
-	* ƒXƒvƒ‰ƒCƒg•`‰æ
+	* ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»
 	*/
 	void DrawSprite() override;
 	/**
-	* I—¹ˆ—
+	* çµ‚äº†å‡¦ç†
 	*/
 	void Finalize() override;
+
 };
 

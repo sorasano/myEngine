@@ -1,6 +1,6 @@
-/**
+ï»¿/**
 * @file GamePlayScene.h
-* @brief@ƒvƒŒƒCƒV[ƒ“
+* @briefã€€ãƒ—ãƒ¬ã‚¤ã‚·ãƒ¼ãƒ³
 */
 
 #pragma once
@@ -10,24 +10,24 @@ class GamePlayScene : public BaseScene
 {
 public:
 	/**
-	* ‰Šú‰»
+	* åˆæœŸåŒ–
 	*
 	*/
 	void Initialize() override;
 	/**
-	* XV
+	* æ›´æ–°
 	*/
 	void Update() override;
 	/**
-	* •`‰æ
+	* æç”»
 	*/
 	void Draw() override;
 	/**
-	* ƒXƒvƒ‰ƒCƒg•`‰æ
+	* ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»
 	*/
 	void DrawSprite() override;
 	/**
-	* I—¹ˆ—
+	* çµ‚äº†å‡¦ç†
 	*/
 	void Finalize() override;
 };

@@ -1,4 +1,4 @@
-#include "ClearScene.h"
+﻿#include "ClearScene.h"
 
 void ClearScene::Initialize()
 {

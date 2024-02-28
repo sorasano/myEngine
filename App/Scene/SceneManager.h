@@ -1,6 +1,6 @@
-/**
+ï»¿/**
 * @file TitleScene.h
-* @brief@ƒV[ƒ“‚ÌØ‚è‘Ö‚¦AÀs
+* @briefã€€ã‚·ãƒ¼ãƒ³ã®åˆ‡ã‚Šæ›¿ãˆã€å®Ÿè¡Œ
 */
 
 #pragma once
@@ -10,32 +10,32 @@ class SceneManager
 {
 public:
 	/**
-	* ƒfƒXƒgƒ‰ƒNƒ^
+	* ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	*/
 	~SceneManager();
 
 	/**
-	* ŸƒV[ƒ“—\–ñ
+	* æ¬¡ã‚·ãƒ¼ãƒ³äºˆç´„
 	*/
 	void SetNextScene(BaseScene* nextScene) { nextScene_ = nextScene; }
 
 	/**
-	* XV
+	* æ›´æ–°
 	*/
 	void Update();
 	/**
-	* •`‰æ
+	* æç”»
 	*/
 	void Draw();
 	/**
-	* ƒXƒvƒ‰ƒCƒg•`‰æ
+	* ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»
 	*/
 	void DrawSprite();
 
 private:
-	//¡‚ÌƒV[ƒ“(Às’†ƒV[ƒ“)
+	//ä»Šã®ã‚·ãƒ¼ãƒ³(å®Ÿè¡Œä¸­ã‚·ãƒ¼ãƒ³)
 	BaseScene* scene_ = nullptr;
-	//Ÿ‚ÌƒV[ƒ“
+	//æ¬¡ã®ã‚·ãƒ¼ãƒ³
 	BaseScene* nextScene_ = nullptr;
 };
 
