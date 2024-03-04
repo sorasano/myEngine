@@ -35,6 +35,9 @@ class SceneManager;
 class BaseScene {
 
 public:
+
+	BaseScene();
+
 	/**
 	* デストラクタ
 	*/
