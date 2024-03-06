@@ -6,12 +6,14 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
-#include "SceneManager.h"
-#include "InitScene.h"
+
 #include "FPS.h"
+#include "Input.h"
 #include "PostEffect.h"
 #include "ImguiManager.h"
-#include "Input.h"
+
+#include "SceneManager.h"
+#include "TitleScene.h"
 
 // ウィンドウプロシージャ
 LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
@@ -62,13 +64,13 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	postEffect->Initialize();
 	postEffect->CreateGraphicsPipeLine();
 
-	//ゲームシーン
+	//シーンマネージャー
 	SceneManager* sceneManager = nullptr;
 	sceneManager = new SceneManager();
 	//sceneManager->Initialize();
 
 	//最初のシーンの生成
-	BaseScene* scene = new InitScene();
+	BaseScene* scene = new TitleScene();
 	//シーンマネージャーに最初のシーンをセット
 	sceneManager->SetNextScene(scene);
 

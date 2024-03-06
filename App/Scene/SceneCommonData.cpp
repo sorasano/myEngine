@@ -1,8 +1,7 @@
-﻿#include "InitScene.h"
+﻿#include "SceneCommonData.h"
 
-void InitScene::Initialize()
+SceneCommonData::SceneCommonData()
 {
-
 	//インスタンスを取得
 	this->dxCommon_ = MyEngine::DirectXCommon::GetInstance();;
 	this->input_ = MyEngine::Input::GetInstance();
@@ -166,24 +165,5 @@ void InitScene::Initialize()
 	Menu* newMenu = new Menu();
 	newMenu->Initialize();
 	menu_.reset(newMenu);
-}
 
-void InitScene::Update()
-{
-	//次シーンの生成
-	BaseScene* scene = new TitleScene();
-	//シーン切り替え依頼
-	sceneManager_->SetNextScene(scene);
-}
-
-void InitScene::Draw()
-{
-}
-
-void InitScene::DrawSprite()
-{
-}
-
-void InitScene::Finalize()
-{
 }

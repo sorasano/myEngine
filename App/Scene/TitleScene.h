@@ -4,10 +4,13 @@
 */
 
 #pragma once
+#include "SceneManager.h"
 #include "BaseScene.h"
+#include "GamePlayScene.h"
 
 class TitleScene : public BaseScene
 {
+
 public:
 	/**
 	* 初期化
@@ -30,6 +33,15 @@ public:
 	* 終了処理
 	*/
 	void Finalize() override;
+
+	/**
+	* シーン切り替え
+	*/
+	void ChangeScene() override;
+	/**
+	* 当たり判定
+	*/
+	void Collition() override;
 
 };
 

@@ -4,6 +4,7 @@
 */
 
 #pragma once
+#include "SceneManager.h"
 #include "BaseScene.h"
 
 class SceneManager

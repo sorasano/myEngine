@@ -2,199 +2,48 @@
 
 BaseScene::BaseScene()
 {
+	CommonInitialize();
+}
 
-	//インスタンスを取得
-	this->dxCommon_ = MyEngine::DirectXCommon::GetInstance();;
-	this->input_ = MyEngine::Input::GetInstance();
-	this->collisionManager_ = Collision::GetInstance();
+BaseScene::BaseScene(SceneCommonData* cData)
+{
+	cData_ = cData;
+}
 
-
-	//カメラ初期化
-	Camera* newCamera = new Camera();
-	newCamera->StaticInitialize(dxCommon_->GetDevice());
-	newCamera->Initialize();
-	camera_.reset(newCamera);
-
-	// パーティクル静的初期化
-	ParticleManager::StaticInitialize(dxCommon_);
-
-	//スプライトマネージャー
-	SpriteManager::SetDevice(dxCommon_->GetDevice());
-	SpriteManager* newSpriteManager = new SpriteManager();
-	newSpriteManager->Initialize();
-	spriteManager_.reset(newSpriteManager);
-
-	//------テクスチャ------
-	spriteManager_->LoadFile(0, "title.png");
-	spriteManager_->LoadFile(1, "clear.png");
-	spriteManager_->LoadFile(2, "gameover.png");
-	spriteManager_->LoadFile(3, "blue1x1.png");
-	spriteManager_->LoadFile(4, "generalPurpose.png");
-	spriteManager_->LoadFile(5, "reticle.png");
-
-	//メニュー用
-	spriteManager_->LoadFile(6, "UI/menuUI.png");
-	spriteManager_->LoadFile(7, "menu/menuBase.png");
-	spriteManager_->LoadFile(8, "menu/menuSetting.png");
-	spriteManager_->LoadFile(9, "menu/menuTitle.png");
-	spriteManager_->LoadFile(10, "menu/menuClose.png");
-	//メニュー設定画面
-	spriteManager_->LoadFile(11, "menu/setting/settingBase.png");
-	spriteManager_->LoadFile(12, "menu/setting/ON.png");
-	spriteManager_->LoadFile(13, "menu/setting/OFF.png");
-	spriteManager_->LoadFile(14, "menu/setting/settingMouse.png");
-	//ガイド
-	spriteManager_->LoadFile(15, "menu/guide.png");
-
-
-	//-----スプライト------
-	Sprite::SetDevice(dxCommon_->GetDevice());
-	Sprite::SetSpriteManager(spriteManager_.get());
-	Sprite::CreateGraphicsPipeLine();
-
-	Sprite* newTitleSprite = new Sprite();
-	newTitleSprite->SetTextureNum(0);
-	newTitleSprite->Initialize();
-	newTitleSprite->SetScale(XMFLOAT2(1280, 720));
-	newTitleSprite->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
-	titleSprite_.reset(newTitleSprite);
-
-	Sprite* newClearSprite_ = new Sprite();
-	newClearSprite_->SetTextureNum(1);
-	newClearSprite_->Initialize();
-	newClearSprite_->SetScale(XMFLOAT2(1280, 720));
-	newClearSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
-	clearSprite_.reset(newClearSprite_);
-
-	Sprite* newGameoverSprite_ = new Sprite();
-	newGameoverSprite_->SetTextureNum(2);
-	newGameoverSprite_->Initialize();
-	newGameoverSprite_->SetScale(XMFLOAT2(1280, 720));
-	newGameoverSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
-	gameoverSprite_.reset(newGameoverSprite_);
-
-	Sprite* newMenuUISprite_ = new Sprite();
-	newMenuUISprite_->SetTextureNum(6);
-	newMenuUISprite_->Initialize();
-	newMenuUISprite_->SetScale(XMFLOAT2(100, 100));
-	newMenuUISprite_->SetPosition(XMFLOAT2(window_width - 50, window_height - 50));
-	menuUISprite_.reset(newMenuUISprite_);
-
-	//----------FBX----------
-
-	//fbxLoadr汎用初期化
-	FbxLoader::GetInstance()->Initialize(dxCommon_->GetDevice());
-
-	//デバイスをセット
-	FbxObject3D::SetDevice(dxCommon_->GetDevice());
-	FbxObject3D::SetCamera(camera_.get());
-	//グラフィックスパイプライン生成
-	FbxObject3D::CreateGraphicsPipeline();
-
-	//----------背景----------
-
-	for (int i = 0; i < backGroundSize_; i++) {
-		std::unique_ptr<BackGround>newBackGround = std::make_unique<BackGround>();
-		newBackGround->Initialize(adjustPos_);
-
-		//現在の位置+1つ分のサイズで次のマップの位置にセット
-		adjustPos_ = newBackGround->GetPosition().z + newBackGround->GetSize();
-
-		backGrounds_.push_back(std::move(newBackGround));
-	}
-
-	//スカイドーム初期化
-	Skydome* newSkydome = new Skydome();
-	newSkydome->Initialize();
-	skydome_.reset(newSkydome);
-
-	//------------プレイヤー----------
-
-	//プレイヤー初期化
-	Player* newPlayer = new Player();
-	newPlayer->Initialize();
-	player_.reset(newPlayer);
-
-	//----------------敵--------------
-
-	//モデル名を指定してファイル読み込み
-	enemyModel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("enemyred"));
-	enemyBlueModel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("enemyblue"));
-	enemyYellowModel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("enemyYellow"));
-
-	enemyBulletModel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("enemyBullet"));
-
-	//csvファイル名前
-	enemyCsvsName_ = {
-	"enemy1",
-	"enemy2",
-	"enemy3",
-	"enemy4",
-	"enemy5"
-	};
-
-	enemyCSVSize_ = static_cast<int>(enemyCsvsName_.size());
-
-	//csvデータをファイル数分,配列に入力
-	for (int i = 0; i < enemyCSVSize_; i++) {
-
-		//ファイルの名前を取得
-		std::string fileName = enemyCsvsName_[i];
-
-		std::unique_ptr<CSVLoader>newEnemyCsv = std::make_unique<CSVLoader>();
-		newEnemyCsv->LoadCSV(fileName);
-		enemyCsvs_.push_back(std::move(newEnemyCsv));
-
-	}
-
-	//ボス
-	Boss* newBoss = new Boss();
-	newBoss->Initialize();
-	boss_.reset(newBoss);
-
-	//演出
-	PerformanceManager* newPerformanceManager = new PerformanceManager();
-	newPerformanceManager->Initialize(camera_.get(), player_.get(), boss_.get());
-	performanceManager_.reset(newPerformanceManager);
-
-	//パーティクルマネージャー
-	ParticleManager* newParticleManager = new ParticleManager();
-	newParticleManager->Initialize("Resources/effect/effect1.png");
-	particleManager_.reset(newParticleManager);
-
-	//メニュー
-	Menu* newMenu = new Menu();
-	newMenu->Initialize();
-	menu_.reset(newMenu);
+void BaseScene::CommonInitialize()
+{
+	//共通変数初期化
+	SceneCommonData* newCData = new SceneCommonData;
+	cData_ = newCData;
 }
 
 void BaseScene::CommonUpdate()
 {
 	//カメラ更新
-	camera_->Update(player_->GetPosition());
+	cData_->camera_->Update(cData_->player_->GetPosition());
 
 	//背景
 	UpdateBackGround();
 
 	//演出
-	performanceManager_->Update();
+	cData_->performanceManager_->Update();
 
 	//パーティクル更新
-	particleManager_->Update();
+	cData_->particleManager_->Update();
 
 	//パーティクルマネージャー静的更新
-	ParticleManager::StaticUpdate(camera_->GetEye(), camera_->GetTarget());
+	ParticleManager::StaticUpdate(cData_->camera_->GetEye(), cData_->camera_->GetTarget());
 }
 
 void BaseScene::CommonDraw()
 {
 	//スカイドーム
-	skydome_->Draw(dxCommon_->GetCommandList());
+	cData_->skydome_->Draw(cData_->dxCommon_->GetCommandList());
 
 	//背景
-	for (std::unique_ptr<BackGround>& backGround : backGrounds_) {
-		if (UpadateRange(camera_->GetEye(), backGround->GetPosition())) {
-			backGround->Draw(dxCommon_->GetCommandList());
+	for (std::unique_ptr<BackGround>& backGround : cData_->backGrounds_) {
+		if (UpadateRange(cData_->camera_->GetEye(), backGround->GetPosition())) {
+			backGround->Draw(cData_->dxCommon_->GetCommandList());
 		}
 	}
 }
@@ -202,11 +51,52 @@ void BaseScene::CommonDraw()
 void BaseScene::CommonDrawSprite()
 {
 	//演出
-
-	performanceManager_->DrawSprite(dxCommon_->GetCommandList());
+	cData_->performanceManager_->DrawSprite(cData_->dxCommon_->GetCommandList());
 
 	//パーティクル
-	particleManager_->Draw();
+	cData_->particleManager_->Draw();
+}
+
+void BaseScene::PlaySceneInitialize()
+{
+	//プレイヤー
+	cData_->player_->SetPosition(XMFLOAT3{ cData_->camera_->GetEye().x,cData_->camera_->GetEye().y - 10,cData_->camera_->GetEye().z });
+	//player_->Update();
+
+	//敵
+	SetEnemy();
+	cData_->phase_ = 1;
+}
+
+void BaseScene::SetEnemy()
+{
+	//発生させる位置はスカイドームの端
+	float makePos = cData_->player_->GetPosition().z + cData_->skydome_->GetEdge();
+
+	//何番目のCSVをセットするか(ランダム)
+	int setNum = static_cast<int>(Random(0, cData_->enemyCSVSize_ - 0.001f));
+	auto it = cData_->enemyCsvs_.begin();
+	setNum = 0;
+	std::advance(it, setNum);
+
+	for (int i = 0; i < it->get()->GetSize(); i++)
+	{
+		std::unique_ptr<Enemy>newObject = std::make_unique<Enemy>();
+		newObject->Initialize(cData_->enemyModel_.get(), cData_->enemyBulletModel_.get());
+
+		if (it->get()->GetType(i) == 1 || it->get()->GetType(i) == 2) {
+			newObject->SetModel(cData_->enemyBlueModel_.get());
+		}
+		else if (it->get()->GetType(i) > 2) {
+			newObject->SetModel(cData_->enemyYellowModel_.get());
+		}
+
+		newObject->SetPosition(XMFLOAT3(it->get()->GetPosition(i).x, it->get()->GetPosition(i).y, it->get()->GetPosition(i).z + makePos));
+		newObject->SetType(it->get()->GetType(i));
+		newObject->SetStopInScreen(it->get()->GetStopInScreen(i));
+
+		cData_->enemys_.push_back(std::move(newObject));
+	}
 }
 
 bool BaseScene::UpadateRange(const XMFLOAT3& cameraPos, const XMFLOAT3& pos)
@@ -215,7 +105,7 @@ bool BaseScene::UpadateRange(const XMFLOAT3& cameraPos, const XMFLOAT3& pos)
 	if (cameraPos.x - pos.x < 20.0f && cameraPos.x - pos.x > -20.0f) { return true; }
 	if (cameraPos.y - pos.y < 10.0f && cameraPos.y - pos.y > -10.0f) { return true; }
 	//スカイドームまでを更新描画
-	if (cameraPos.z - pos.z < -10.0f && cameraPos.z - pos.z > -skydome_->GetEdge()) { return true; }
+	if (cameraPos.z - pos.z < -10.0f && cameraPos.z - pos.z > -cData_->skydome_->GetEdge()) { return true; }
 
 	return false;
 }
@@ -223,27 +113,77 @@ bool BaseScene::UpadateRange(const XMFLOAT3& cameraPos, const XMFLOAT3& pos)
 void BaseScene::UpdateBackGround()
 {
 	//背景
-	for (std::unique_ptr<BackGround>& backGround : backGrounds_)
+	for (std::unique_ptr<BackGround>& backGround : cData_->backGrounds_)
 	{
 		backGround->Update();
 
 		//背景の位置をカメラが通り過ぎたら
-		if (backGround->GetPosition().z + backGround->GetSize() * 2.5 < camera_->GetEye().z) {
+		if (backGround->GetPosition().z + backGround->GetSize() * 2.5 < cData_->camera_->GetEye().z) {
 
 			//過ぎたオブジェクトを削除
 			backGround->DeleteObject();
 
 			//オブジェクトを配置しなおす
-			backGround->SetObject(adjustPos_);
+			backGround->SetObject(cData_->adjustPos_);
 
 			//現在の位置+1つ分のサイズで次のマップの位置にセット
-			adjustPos_ = backGround->GetPosition().z + backGround->GetSize();
+			cData_->adjustPos_ = backGround->GetPosition().z + backGround->GetSize();
 
 		}
 
 	}
 
 	//スカイドーム
-	skydome_->Update(camera_->GetEye().z);
+	cData_->skydome_->Update(cData_->camera_->GetEye().z);
+}
+
+bool BaseScene::MenuUIColision()
+{
+	XMFLOAT2 mousePos = cData_->input_->GetMousePosition();
+
+	if (cData_->collisionManager_->CheckSpriteTo2Dpos(cData_->menuUISprite_.get(), mousePos)) {
+
+		cData_->performanceManager_->MenuUIRotPerformance(cData_->menuUISprite_.get());
+
+		if (cData_->input_->IsMouseTrigger(LEFT_CLICK)) {
+
+			return true;
+		}
+	}
+
+	return false;
+}
+
+void BaseScene::Reset()
+{
+	//プレイヤー
+	cData_->player_->Reset();
+
+	//敵
+	cData_->enemys_.clear();
+	cData_->phase_ = 0;
+
+	//ボス
+	cData_->boss_->Reset();
+
+	//カメラ
+	cData_->camera_->Reset();
+
+	cData_->menu_->Reset();
+
+
+	//背景
+	//オブジェクトを全削除
+	cData_->backGrounds_.clear();
+
+	//オブジェクトを配置しなおす
+	cData_->adjustPos_ = 0;
+	for (int i = 0; i < cData_->backGroundSize_; i++) {
+		std::unique_ptr<BackGround>newBackGround = std::make_unique<BackGround>();
+		newBackGround->Initialize(cData_->adjustPos_);
+		//現在の位置+1つ分のサイズで次のマップの位置にセット
+		cData_->adjustPos_ = newBackGround->GetPosition().z + newBackGround->GetSize();
+		cData_->backGrounds_.push_back(std::move(newBackGround));
+	}
 }
 

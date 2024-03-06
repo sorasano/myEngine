@@ -4,6 +4,7 @@
 */
 
 #pragma once
+#include "SceneManager.h"
 #include "BaseScene.h"
 
 class BossScene : public BaseScene
@@ -31,5 +32,13 @@ public:
 	*/
 	void Finalize() override;
 
+	/**
+	* シーン切り替え
+	*/
+	void ChangeScene() override;
+	/**
+	* 当たり判定
+	*/
+	void Collition() override;
 };
 
