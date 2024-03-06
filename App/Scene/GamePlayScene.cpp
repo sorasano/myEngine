@@ -3,6 +3,13 @@
 void GamePlayScene::Initialize()
 {
 	cData_->scene_ = PLAY;
+
+	//プレイヤー
+	cData_->player_->SetPosition(XMFLOAT3{ cData_->camera_->GetEye().x,cData_->camera_->GetEye().y - 10,cData_->camera_->GetEye().z });
+	//敵
+	SetEnemy();
+	cData_->phase_ = 1;
+
 }
 
 void GamePlayScene::Update()
@@ -215,10 +222,20 @@ void GamePlayScene::CheckEnemy()
 			if (!cData_->player_->GetAddSpeed()) {
 				//加速スピードがない場合そのまま終了
 				cData_->performanceManager_->SetPerformanceNum(GAMEOVERBOSS);
+
+				//次シーンの生成
+				BaseScene* scene = new GameoverScene(cData_);
+				//シーン切り替え依頼
+				sceneManager_->SetNextScene(scene);
 			}
 			else {
 				//加速スピードがある場合ボス戦へ
 				cData_->performanceManager_->SetPerformanceNum(INBOSS);
+
+				//次シーンの生成
+				BaseScene* scene = new BossScene(cData_);
+				//シーン切り替え依頼
+				sceneManager_->SetNextScene(scene);
 			}
 
 		}

@@ -7,12 +7,14 @@
 #include "SceneManager.h"
 #include "BaseScene.h"
 
+#include "GameoverScene.h"
+#include "BossScene.h"
+
 class GamePlayScene : public BaseScene
 {
 public:
 	GamePlayScene(SceneCommonData* cData) : BaseScene(cData) {};
 
-public:
 	/**
 	* 初期化
 	*

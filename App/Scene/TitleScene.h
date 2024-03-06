@@ -10,8 +10,12 @@
 
 class TitleScene : public BaseScene
 {
-
 public:
+
+	TitleScene() : BaseScene() {};
+
+	TitleScene(SceneCommonData* cData) : BaseScene(cData) {};
+
 	/**
 	* 初期化
 	*

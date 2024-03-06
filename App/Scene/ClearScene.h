@@ -8,9 +8,13 @@
 #include "SceneManager.h"
 #include "BaseScene.h"
 
+#include "TitleScene.h"
+
 class ClearScene : public BaseScene
 {
 public:
+	ClearScene(SceneCommonData* cData) : BaseScene(cData) {};
+
 	/**
 	* 初期化
 	*

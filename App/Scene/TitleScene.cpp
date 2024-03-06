@@ -3,6 +3,7 @@
 void TitleScene::Initialize()
 {
 	cData_->scene_ = TITLE;
+	Reset();
 }
 
 void TitleScene::Update()
@@ -69,7 +70,6 @@ void TitleScene::ChangeScene()
 
 		//次シーンの生成
 		BaseScene* scene = new GamePlayScene(cData_);
-
 		//シーン切り替え依頼
 		sceneManager_->SetNextScene(scene);
 	}
