@@ -61,7 +61,6 @@ void BaseScene::PlaySceneInitialize()
 {
 	//プレイヤー
 	cData_->player_->SetPosition(XMFLOAT3{ cData_->camera_->GetEye().x,cData_->camera_->GetEye().y - 10,cData_->camera_->GetEye().z });
-	//player_->Update();
 
 	//敵
 	SetEnemy();

@@ -2,7 +2,6 @@
 
 void GameoverScene::Initialize()
 {
-	cData_->scene_ = GAMEOVER;
 }
 
 void GameoverScene::Update()
@@ -68,6 +67,20 @@ void GameoverScene::ChangeScene()
 		BaseScene* scene = new TitleScene(cData_);
 		//シーン切り替え依頼
 		sceneManager_->SetNextScene(scene);
+	}
+
+	//-----演出終了でのシーン切り替え-----
+	if (cData_->scene_ != cData_->performanceManager_->GetIsChangeScene()) {
+
+		//シーンを切り替え
+		cData_->scene_ = cData_->performanceManager_->GetIsChangeScene();
+
+		if (cData_->scene_ == TITLE) {
+			//次シーンの生成
+			BaseScene* scene = new TitleScene(cData_);
+			//シーン切り替え依頼
+			sceneManager_->SetNextScene(scene);
+		}
 	}
 }
 

@@ -2,13 +2,6 @@
 
 void GamePlayScene::Initialize()
 {
-	cData_->scene_ = PLAY;
-
-	//プレイヤー
-	cData_->player_->SetPosition(XMFLOAT3{ cData_->camera_->GetEye().x,cData_->camera_->GetEye().y - 10,cData_->camera_->GetEye().z });
-	//敵
-	SetEnemy();
-	cData_->phase_ = 1;
 
 }
 
@@ -27,6 +20,9 @@ void GamePlayScene::Update()
 
 	//当たり判定
 	Collition();
+
+	//スプライト
+	cData_->menuUISprite_->Update();
 
 	//共通処理
 	CommonUpdate();
@@ -77,6 +73,38 @@ void GamePlayScene::ChangeScene()
 	if (MenuUIColision()) {
 		cData_->performanceManager_->SetIsOldScene(PLAY);
 		cData_->performanceManager_->SetPerformanceNum(OPENMENU);
+	}
+
+	//-----演出終了でのシーン切り替え-----
+	if (cData_->scene_ != cData_->performanceManager_->GetIsChangeScene()) {
+
+		//前シーンがメニューシーンか
+		bool oldSceneMenu = false;
+		if (cData_->scene_ == MENU) {
+			oldSceneMenu = true;
+		}
+
+		//シーンを切り替え
+		cData_->scene_ = cData_->performanceManager_->GetIsChangeScene();
+
+		if (cData_->scene_ == BOSS) {
+			//次シーンの生成
+			BaseScene* scene = new BossScene(cData_);
+			//シーン切り替え依頼
+			sceneManager_->SetNextScene(scene);
+		}
+		else if (cData_->scene_ == GAMEOVER) {
+			//次シーンの生成
+			BaseScene* scene = new GameoverScene(cData_);
+			//シーン切り替え依頼
+			sceneManager_->SetNextScene(scene);
+		}
+		else if (cData_->scene_ == MENU) {
+			//次シーンの生成
+			BaseScene* scene = new MenuScene(cData_);
+			//シーン切り替え依頼
+			sceneManager_->SetNextScene(scene);
+		}
 	}
 }
 
@@ -222,20 +250,10 @@ void GamePlayScene::CheckEnemy()
 			if (!cData_->player_->GetAddSpeed()) {
 				//加速スピードがない場合そのまま終了
 				cData_->performanceManager_->SetPerformanceNum(GAMEOVERBOSS);
-
-				//次シーンの生成
-				BaseScene* scene = new GameoverScene(cData_);
-				//シーン切り替え依頼
-				sceneManager_->SetNextScene(scene);
 			}
 			else {
 				//加速スピードがある場合ボス戦へ
 				cData_->performanceManager_->SetPerformanceNum(INBOSS);
-
-				//次シーンの生成
-				BaseScene* scene = new BossScene(cData_);
-				//シーン切り替え依頼
-				sceneManager_->SetNextScene(scene);
 			}
 
 		}

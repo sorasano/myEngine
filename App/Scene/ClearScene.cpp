@@ -2,7 +2,6 @@
 
 void ClearScene::Initialize()
 {
-	cData_->scene_ = CLEAR;
 }
 
 void ClearScene::Update()
@@ -49,15 +48,26 @@ void ClearScene::Finalize()
 
 void ClearScene::ChangeScene()
 {
+	//-----シーン切り替え時演出の開始-----
 	//タイトルに戻る演出
 	if (cData_->input_->IsMouseTrigger(LEFT_CLICK) && !cData_->performanceManager_->GetIsPerformance()) {
 		cData_->performanceManager_->SetPerformanceNum(RETURNTITLE);
-
-		//次シーンの生成
-		BaseScene* scene = new TitleScene(cData_);
-		//シーン切り替え依頼
-		sceneManager_->SetNextScene(scene);
 	}
+
+	//-----演出終了でのシーン切り替え-----
+	if (cData_->scene_ != cData_->performanceManager_->GetIsChangeScene()) {
+
+		//シーンを切り替え
+		cData_->scene_ = cData_->performanceManager_->GetIsChangeScene();
+
+		if (cData_->scene_ == TITLE) {
+			//次シーンの生成
+			BaseScene* scene = new TitleScene(cData_);
+			//シーン切り替え依頼
+			sceneManager_->SetNextScene(scene);
+		}
+	}
+
 
 }
 

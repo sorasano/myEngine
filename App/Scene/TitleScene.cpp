@@ -2,7 +2,6 @@
 
 void TitleScene::Initialize()
 {
-	cData_->scene_ = TITLE;
 	Reset();
 }
 
@@ -43,7 +42,7 @@ void TitleScene::Draw()
 
 void TitleScene::DrawSprite()
 {
-	if (!cData_->performanceManager_->GetIsPerformance()) {
+	if (!cData_->performanceManager_->GetIsPerformance() && cData_->scene_ == TITLE) {
 		cData_->titleSprite_->Draw(cData_->dxCommon_->GetCommandList());
 	}
 
@@ -68,10 +67,15 @@ void TitleScene::ChangeScene()
 	//-----演出終了でのシーン切り替え-----
 	if (cData_->scene_ != cData_->performanceManager_->GetIsChangeScene()) {
 
-		//次シーンの生成
-		BaseScene* scene = new GamePlayScene(cData_);
-		//シーン切り替え依頼
-		sceneManager_->SetNextScene(scene);
+		//シーンを切り替え
+		cData_->scene_ = cData_->performanceManager_->GetIsChangeScene();
+
+		if (cData_->scene_ == PLAY) {
+			//次シーンの生成
+			BaseScene* scene = new GamePlayScene(cData_);
+			//シーン切り替え依頼
+			sceneManager_->SetNextScene(scene);
+		}
 	}
 
 }

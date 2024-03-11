@@ -2,7 +2,6 @@
 
 void BossScene::Initialize()
 {
-	cData_->scene_ = BOSS;
 	cData_->boss_->SetPosition(XMFLOAT3{ 0,0,cData_->player_->GetPosition().z + 26.0f });
 }
 
@@ -58,6 +57,8 @@ void BossScene::Finalize()
 
 void BossScene::ChangeScene()
 {
+
+	//-----シーン切り替え時演出の開始-----
 	//ボスが死んだらクリア
 	if (cData_->boss_->GetIsDead()) {
 		cData_->performanceManager_->SetPerformanceNum(CLEARBOSS);
@@ -73,6 +74,36 @@ void BossScene::ChangeScene()
 		cData_->performanceManager_->SetIsOldScene(BOSS);
 		cData_->performanceManager_->SetPerformanceNum(OPENMENU);
 
+	}
+
+	//-----演出終了でのシーン切り替え-----
+	if (cData_->scene_ != cData_->performanceManager_->GetIsChangeScene()) {
+
+		//前シーンがメニューシーンか
+		bool oldSceneMenu = false;
+		if (cData_->scene_ == MENU) {
+			oldSceneMenu = true;
+		}
+
+		//シーンを切り替え
+		cData_->scene_ = cData_->performanceManager_->GetIsChangeScene();
+
+		if (cData_->scene_ == CLEAR) {
+			//次シーンの生成
+			BaseScene* scene = new ClearScene(cData_);
+			//シーン切り替え依頼
+			sceneManager_->SetNextScene(scene);
+		}else if (cData_->scene_ == GAMEOVER) {
+			//次シーンの生成
+			BaseScene* scene = new GameoverScene(cData_);
+			//シーン切り替え依頼
+			sceneManager_->SetNextScene(scene);
+		}else if (cData_->scene_ == MENU) {
+			//次シーンの生成
+			BaseScene* scene = new MenuScene(cData_);
+			//シーン切り替え依頼
+			sceneManager_->SetNextScene(scene);
+		}
 	}
 }
 

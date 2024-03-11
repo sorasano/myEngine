@@ -1,20 +1,17 @@
-﻿/**
-* @file GamePlayScene.h
-* @brief　プレイシーン
-*/
-
-#pragma once
+﻿#pragma once
 #include "SceneManager.h"
 #include "BaseScene.h"
 
-#include "GameoverScene.h"
+#include "GamePlayScene.h"
 #include "BossScene.h"
-#include "MenuScene.h"
 
-class GamePlayScene : public BaseScene
+class MenuScene : public BaseScene
 {
 public:
-	GamePlayScene(SceneCommonData* cData) : BaseScene(cData) {};
+
+	MenuScene() : BaseScene() {};
+
+	MenuScene(SceneCommonData* cData) : BaseScene(cData) {};
 
 	/**
 	* 初期化
@@ -39,17 +36,12 @@ public:
 	void Finalize() override;
 
 	/**
-	 シーン切り替え
+	* シーン切り替え
 	*/
 	void ChangeScene() override;
 	/**
 	* 当たり判定
 	*/
 	void Collition() override;
-
-	/**
-	* 敵生存確認
-	*/
-	void CheckEnemy();
 };
 
