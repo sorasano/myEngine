@@ -127,11 +127,11 @@ public:
 	/**
 	* @return float スピード取得
 	*/
-	float GetSpeed() const { return speedZ_ + addSpeed_; }
+	float GetSpeed() const { return speedZ_ + mainAddSpeed_; }
 	/**
 	* @return float 加速スピード取得
 	*/
-	float GetAddSpeed() const { return addSpeed_; }
+	float GetAddSpeed() const { return mainAddSpeed_; }
 	/**
 	* @return CollisionData 当たり判定情報取得
 	*/
@@ -195,7 +195,7 @@ private:
 	XMFLOAT3 colSize_ = { 1.0f,1.0f,1.0f };
 
 	//2D座標
-	XMFLOAT2 position2D_ = {0,0};
+	XMFLOAT2 position2D_ = { 0,0 };
 
 private:
 	//FBX
@@ -217,15 +217,25 @@ private:
 	//移動スピード(z)
 	float speedZ_ = 0.5f;
 
+	//(メイン)
 	//基礎スピード以外の加速スピード
-	float addSpeed_ = 0.0f;
-	//敵を倒した時の加速量
-	float addSpeedByEnemy_ = 0.25f;
-	//敵に被弾した時の減速
-	float subSpeedByEnemy_ = 0.5f;
-
+	float mainAddSpeed_ = 0.0f;
+	//レベルアップしたときの加速量
+	float mainAddSpeedBySub_ = 1.0f;
+	//レベルダウンしたときの加速量
+	float mainSubSpeedBySub_ = 1.0f;
 	//最大加速量
-	const float MaxSpeed_ = 5.0f;
+	const float MainMaxSpeed_ = 5.0f;
+
+	//(サブ)
+	//基礎スピード以外の加速スピード
+	float subAddSpeed_ = 0.0f;
+	//敵を倒した時の加速量
+	float subAddSpeedByEnemy_ = 0.5f;
+	//敵に被弾した時の減速
+	float subSubSpeedByEnemy_ = 1.0f;
+	//最大加速量
+	const float SubMaxSpeed_ = 5.0f;
 
 	//無敵時間
 	bool isInvincible_ = false;
@@ -248,13 +258,16 @@ private:
 
 	//レティクルまでの距離(カメラからプレイヤーの距離+プレイヤーからレティクルの距離)
 	const float reticleDirection_ = 30.0f + 26.0f;
-	
+
 	//-----スプライト------
-	std::unique_ptr<Sprite> speedSprite_;
+	std::unique_ptr<Sprite> mainSpeedSprite_;
+	std::unique_ptr<Sprite> subSpeedSprite_;
 
 	//スケールはxが変動、yが固定
-	XMFLOAT2 speedSpriteScale_ = { 0,32 };
-	XMFLOAT2 speedSpritePosition_ = { window_width / 2,window_height - 64 };
+	XMFLOAT2 mainSpeedSpriteScale_ = { 0,32 };
+	XMFLOAT2 mainSpeedSpritePosition_ = { window_width / 2,window_height - 64 };
+	XMFLOAT2 subSpeedSpriteScale_ = { 0,32 };
+	XMFLOAT2 subSpeedSpritePosition_ = { window_width / 2,window_height - 32 };
 
 	//スプライトの左右両端をどのくらい開けるか
 	float speedSpriteXSpace_ = 64;
@@ -278,8 +291,9 @@ private:
 
 	//基礎スピード
 	float initSpeedZ_ = 0.5f;
-	//追加スピード
-	float initAddSpeed_ = 0.0f;
+	//追加スピード(メイン)
+	float initMainAddSpeed_ = 0.0f;
+	//追加スピード(サブ)
+	float initSubAddSpeed_ = 0.0f;
 
 };
-

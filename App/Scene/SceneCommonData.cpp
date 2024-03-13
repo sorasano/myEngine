@@ -45,6 +45,8 @@ SceneCommonData::SceneCommonData()
 	//ガイド
 	spriteManager_->LoadFile(15, "menu/guide.png");
 
+	spriteManager_->LoadFile(16, "green1x1.png");
+
 
 	//-----スプライト------
 	Sprite::SetDevice(dxCommon_->GetDevice());

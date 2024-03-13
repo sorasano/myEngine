@@ -27,7 +27,7 @@ void Player::Initialize()
 
 	//モデル名を指定してファイル読み込み
 	playerModel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("player"));
-	bulletModel_.reset( FbxLoader::GetInstance()->LoadModelFromFile("playerBullet"));
+	bulletModel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("playerBullet"));
 
 	//3dオブジェクト生成とモデルのセット
 	FbxObject3D* newPlayerObject_ = new FbxObject3D;
@@ -50,11 +50,18 @@ void Player::Initialize()
 
 	//スピードUI
 
-	Sprite* newSpeedSprite_ = new Sprite();
-	newSpeedSprite_->SetTextureNum(3);
-	newSpeedSprite_->Initialize();
-	newSpeedSprite_->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
-	speedSprite_.reset(newSpeedSprite_);
+	Sprite* newMainSpeedSprite_ = new Sprite();
+	newMainSpeedSprite_->SetTextureNum(3);
+	newMainSpeedSprite_->Initialize();
+	newMainSpeedSprite_->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
+	mainSpeedSprite_.reset(newMainSpeedSprite_);
+
+
+	Sprite* newSubSpeedSprite_ = new Sprite();
+	newSubSpeedSprite_->SetTextureNum(16);
+	newSubSpeedSprite_->Initialize();
+	newSubSpeedSprite_->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
+	subSpeedSprite_.reset(newSubSpeedSprite_);
 
 	Reset();
 }
@@ -97,7 +104,7 @@ void Player::UpdateMatrix()
 void Player::UpdateClearScene()
 {
 	//移動
-	position_.z += speedZ_ + addSpeed_;
+	position_.z += speedZ_ + mainAddSpeed_;
 
 	UpdateMatrix();
 }
@@ -147,27 +154,41 @@ void Player::DrawSprite(ID3D12GraphicsCommandList* cmdList)
 	}
 
 	//スピードUI
-	speedSprite_->Draw(cmdList);
+	mainSpeedSprite_->Draw(cmdList);
+
+	subSpeedSprite_->Draw(cmdList);
+
 }
 
 void Player::SpeedUpByEnemy()
 {
-	if (addSpeed_ + addSpeedByEnemy_ >= MaxSpeed_) {
-		addSpeed_ = MaxSpeed_;
+	if (subAddSpeed_ + subAddSpeedByEnemy_ >= SubMaxSpeed_) {
+
+		//サブスピードがマックスになったらメインスピードを上げる
+		subAddSpeed_ = 0;
+
+		mainAddSpeed_ += mainAddSpeedBySub_;
+
 	}
 	else {
-		addSpeed_ += addSpeedByEnemy_;
+		subAddSpeed_ += subAddSpeedByEnemy_;
 	}
+
+
 }
 
 void Player::SpeedDownByEnemy()
 {
 	if (!isInvincible_) {
-		if (addSpeed_ - subSpeedByEnemy_ <= 0) {
-			addSpeed_ = 0;
+		if (subAddSpeed_ - subSubSpeedByEnemy_ <= 0) {
+
+			//サブスピードが0になったらメインスピードを下げる
+			subAddSpeed_ = SubMaxSpeed_;
+
+			mainAddSpeed_ -= mainSubSpeedBySub_;
 		}
 		else {
-			addSpeed_ -= subSpeedByEnemy_;
+			subAddSpeed_ -= subSubSpeedByEnemy_;
 		}
 	}
 }
@@ -197,7 +218,7 @@ void Player::Move()
 		}
 	}
 
-	position_.z += speedZ_ + addSpeed_;
+	position_.z += speedZ_ + mainAddSpeed_;
 
 }
 
@@ -241,8 +262,7 @@ void Player::MakeBullet()
 	velocity *= bulletSpeed_;
 
 	//z軸は自機も動いているためそのスピードも足す
-	velocity.z += (speedZ_ + addSpeed_);
-
+	velocity.z += (speedZ_ + mainAddSpeed_);
 	//弾の生成
 	std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
 	newBullet->Initialize(bulletModel_.get(), position_, velocity);
@@ -311,23 +331,40 @@ void Player::UpdateRaticle(const XMMATRIX& matVP)
 
 void Player::UpdateSprite()
 {
-
-	//スピードUIスプライト
+	//スピードUIスプライト(サブ)
 	{
 		//今のスピードが最大スピードの何割か計算しスケールをそれに合わせる
 
 		//今のスピード(基礎スピードはのぞく)が何割か
-		float speedRate = addSpeed_ / MaxSpeed_;
+		float speedRate = subAddSpeed_ / SubMaxSpeed_;
 		//スプライトの最大サイズ
 		float speedSpriteMaxSize = window_width - (speedSpriteXSpace_ * 2);
 
 		//最大サイズと今のスピードの割合をかける
-		speedSpriteScale_.x = speedSpriteMaxSize * speedRate;
+		subSpeedSpriteScale_.x = speedSpriteMaxSize * speedRate;
 
 		//更新
-		speedSprite_->SetScale(speedSpriteScale_);
-		speedSprite_->SetPosition(speedSpritePosition_);
-		speedSprite_->Update();
+		subSpeedSprite_->SetScale(subSpeedSpriteScale_);
+		subSpeedSprite_->SetPosition(subSpeedSpritePosition_);
+		subSpeedSprite_->Update();
+	}
+
+	//スピードUIスプライト(メイン)
+	{
+		//今のスピードが最大スピードの何割か計算しスケールをそれに合わせる
+
+		//今のスピード(基礎スピードはのぞく)が何割か
+		float speedRate = mainAddSpeed_ / MainMaxSpeed_;
+		//スプライトの最大サイズ
+		float speedSpriteMaxSize = window_width - (speedSpriteXSpace_ * 2);
+
+		//最大サイズと今のスピードの割合をかける
+		mainSpeedSpriteScale_.x = speedSpriteMaxSize * speedRate;
+
+		//更新
+		mainSpeedSprite_->SetScale(mainSpeedSpriteScale_);
+		mainSpeedSprite_->SetPosition(mainSpeedSpritePosition_);
+		mainSpeedSprite_->Update();
 	}
 
 	//レティクルスプライト
@@ -359,7 +396,8 @@ void Player::Reset()
 	position_ = initPosition_;
 	//速度
 	speedZ_ = initSpeedZ_;
-	addSpeed_ = initAddSpeed_;
+	mainAddSpeed_ = initMainAddSpeed_;
+	subAddSpeed_ = initSubAddSpeed_;
 
 	//レティクル
 	//reticlePosition_ = { 0,0 };
@@ -402,6 +440,3 @@ void Player::SetBulletIsDead(bool isDead, int i)
 
 	it->get()->SetIsDead(isDead);
 }
-
-
-
