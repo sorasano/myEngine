@@ -222,7 +222,7 @@ private:
 	float mainAddSpeed_ = 0.0f;
 	//レベルアップしたときの加速量
 	float mainAddSpeedBySub_ = 1.0f;
-	//レベルダウンしたときの加速量
+	//レベルダウンしたときの減速量
 	float mainSubSpeedBySub_ = 1.0f;
 	//最大加速量
 	const float MainMaxSpeed_ = 5.0f;

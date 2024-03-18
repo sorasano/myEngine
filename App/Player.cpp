@@ -182,10 +182,15 @@ void Player::SpeedDownByEnemy()
 	if (!isInvincible_) {
 		if (subAddSpeed_ - subSubSpeedByEnemy_ <= 0) {
 
-			//サブスピードが0になったらメインスピードを下げる
-			subAddSpeed_ = SubMaxSpeed_;
-
-			mainAddSpeed_ -= mainSubSpeedBySub_;
+			//メインスピードがあるかどうか
+			if (mainAddSpeed_ - mainSubSpeedBySub_ > 0) {
+				//サブスピードが0になったらメインスピードを下げる
+				subAddSpeed_ = SubMaxSpeed_;
+				mainAddSpeed_ -= mainSubSpeedBySub_;
+			}
+			else {
+				subAddSpeed_ = 0;
+			}
 		}
 		else {
 			subAddSpeed_ -= subSubSpeedByEnemy_;

@@ -187,7 +187,6 @@
     <ClCompile Include="Engine\fbx\FbxLoader.cpp" />
     <ClCompile Include="Engine\fbx\FbxModel.cpp" />
     <ClCompile Include="Engine\fbx\FbxObject3d.cpp" />
-    <ClCompile Include="App\GameScene.cpp" />
     <ClCompile Include="Engine\Loader\CSVLoader.cpp" />
     <ClCompile Include="Engine\Loader\JsonLoader.cpp" />
     <ClCompile Include="Engine\main.cpp" />
@@ -323,7 +322,6 @@
     <ClInclude Include="Engine\fbx\FbxLoader.h" />
     <ClInclude Include="Engine\fbx\FbxModel.h" />
     <ClInclude Include="Engine\fbx\FbxObject3d.h" />
-    <ClInclude Include="App\GameScene.h" />
     <ClInclude Include="Engine\Loader\CSVLoader.h" />
     <ClInclude Include="Engine\Loader\json.hpp" />
     <ClInclude Include="Engine\Loader\JsonLoader.h" />
