@@ -65,7 +65,7 @@ public:
 
 	//フェーズ
 	int phase_ = 0;
-	const int MaxPhase_ = 1;
+	const int MaxPhase_ = 3;
 
 	//-----リソース-----
 

@@ -85,10 +85,10 @@ void BaseScene::SetEnemy()
 		std::unique_ptr<Enemy>newObject = std::make_unique<Enemy>();
 		newObject->Initialize(cData_->enemyModel_.get(), cData_->enemyBulletModel_.get());
 
-		if (it->get()->GetType(i) == 1 || it->get()->GetType(i) == 2) {
+		if (it->get()->GetType(i) == HOMING) {
 			newObject->SetModel(cData_->enemyBlueModel_.get());
 		}
-		else if (it->get()->GetType(i) > 2) {
+		else if (it->get()->GetType(i) > NORMAL) {
 			newObject->SetModel(cData_->enemyYellowModel_.get());
 		}
 
