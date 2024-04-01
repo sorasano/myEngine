@@ -53,33 +53,33 @@ SceneCommonData::SceneCommonData()
 	Sprite::SetSpriteManager(spriteManager_.get());
 	Sprite::CreateGraphicsPipeLine();
 
-	Sprite* newTitleSprite = new Sprite();
+	std::unique_ptr<Sprite> newTitleSprite = std::make_unique<Sprite>();
 	newTitleSprite->SetTextureNum(0);
 	newTitleSprite->Initialize();
 	newTitleSprite->SetScale(XMFLOAT2(1280, 720));
 	newTitleSprite->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
-	titleSprite_.reset(newTitleSprite);
+	titleSprite_.swap(newTitleSprite);
 
-	Sprite* newClearSprite_ = new Sprite();
+	std::unique_ptr<Sprite> newClearSprite_ = std::make_unique<Sprite>();
 	newClearSprite_->SetTextureNum(1);
 	newClearSprite_->Initialize();
 	newClearSprite_->SetScale(XMFLOAT2(1280, 720));
 	newClearSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
-	clearSprite_.reset(newClearSprite_);
+	clearSprite_.swap(newClearSprite_);
 
-	Sprite* newGameoverSprite_ = new Sprite();
+	std::unique_ptr<Sprite> newGameoverSprite_ = std::make_unique<Sprite>();
 	newGameoverSprite_->SetTextureNum(2);
 	newGameoverSprite_->Initialize();
 	newGameoverSprite_->SetScale(XMFLOAT2(1280, 720));
 	newGameoverSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
-	gameoverSprite_.reset(newGameoverSprite_);
+	gameoverSprite_.swap(newGameoverSprite_);
 
-	Sprite* newMenuUISprite_ = new Sprite();
+	std::unique_ptr<Sprite> newMenuUISprite_ = std::make_unique<Sprite>();
 	newMenuUISprite_->SetTextureNum(6);
 	newMenuUISprite_->Initialize();
 	newMenuUISprite_->SetScale(XMFLOAT2(100, 100));
 	newMenuUISprite_->SetPosition(XMFLOAT2(window_width - 50, window_height - 50));
-	menuUISprite_.reset(newMenuUISprite_);
+	menuUISprite_.swap(newMenuUISprite_);
 
 	//----------FBX----------
 

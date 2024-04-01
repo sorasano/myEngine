@@ -7,76 +7,76 @@ void Menu::Initialize()
 	input_ = MyEngine::Input::GetInstance();
 	collisionManager_ = Collision::GetInstance();
 
-	Sprite* newBaseSprite_ = new Sprite();
+	std::unique_ptr<Sprite> newBaseSprite_ =std::make_unique<Sprite>();
 	newBaseSprite_->SetTextureNum(7);
 	newBaseSprite_->Initialize();
 	newBaseSprite_->SetScale(XMFLOAT2(400, 500));
 	newBaseSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
-	baseSprite_.reset(newBaseSprite_);
+	baseSprite_.swap(newBaseSprite_);
 
-	Sprite* newSettingSprite_ = new Sprite();
+	std::unique_ptr<Sprite> newSettingSprite_ =std::make_unique<Sprite>();
 	newSettingSprite_->SetTextureNum(8);
 	newSettingSprite_->Initialize();
 	newSettingSprite_->SetScale(XMFLOAT2(400, 100));
 	newSettingSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2 - 50));
-	settingSprite_.reset(newSettingSprite_);
+	settingSprite_.swap(newSettingSprite_);
 
-	Sprite* newTitleSprite_ = new Sprite();
+	std::unique_ptr<Sprite> newTitleSprite_ =std::make_unique<Sprite>();
 	newTitleSprite_->SetTextureNum(9);
 	newTitleSprite_->Initialize();
 	newTitleSprite_->SetScale(XMFLOAT2(400, 100));
 	newTitleSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2 + 50));
-	titleSprite_.reset(newTitleSprite_);
+	titleSprite_.swap(newTitleSprite_);
 
-	Sprite* newCloseSprite_ = new Sprite();
+	std::unique_ptr<Sprite> newCloseSprite_ =std::make_unique<Sprite>();
 	newCloseSprite_->SetTextureNum(10);
 	newCloseSprite_->Initialize();
 	newCloseSprite_->SetScale(XMFLOAT2(400, 100));
 	newCloseSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2 + 150));
-	closeSprite_.reset(newCloseSprite_);
+	closeSprite_.swap(newCloseSprite_);
 
 	//-----セッティング------
-	Sprite* newBaseSettingSprite = new Sprite();
+	std::unique_ptr<Sprite> newBaseSettingSprite =std::make_unique<Sprite>();
 	newBaseSettingSprite->SetTextureNum(11);
 	newBaseSettingSprite->Initialize();
 	newBaseSettingSprite->SetScale(XMFLOAT2(800, 500));
 	newBaseSettingSprite->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
-	baseSettingSprite.reset(newBaseSettingSprite);
+	baseSettingSprite.swap(newBaseSettingSprite);
 
-	Sprite* newSettingMouseLockSprite_ = new Sprite();
+	std::unique_ptr<Sprite> newSettingMouseLockSprite_ =std::make_unique<Sprite>();
 	newSettingMouseLockSprite_->SetTextureNum(14);
 	newSettingMouseLockSprite_->Initialize();
 	newSettingMouseLockSprite_->SetScale(XMFLOAT2(800, 100));
 	newSettingMouseLockSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2 - 50));
-	settingMouseLockSprite_.reset(newSettingMouseLockSprite_);
+	settingMouseLockSprite_.swap(newSettingMouseLockSprite_);
 
-	Sprite* newSettingMouseLockOnSprite_ = new Sprite();
+	std::unique_ptr<Sprite> newSettingMouseLockOnSprite_ =std::make_unique<Sprite>();
 	newSettingMouseLockOnSprite_->SetTextureNum(12);
 	newSettingMouseLockOnSprite_->Initialize();
 	newSettingMouseLockOnSprite_->SetScale(XMFLOAT2(200, 100));
 	newSettingMouseLockOnSprite_->SetPosition(XMFLOAT2(window_width / 2 - 100, window_height / 2 + 50));
-	settingMouseLockOnSprite_.reset(newSettingMouseLockOnSprite_);
+	settingMouseLockOnSprite_.swap(newSettingMouseLockOnSprite_);
 
-	Sprite* newSettingMouseLockOffSprite_ = new Sprite();
+	std::unique_ptr<Sprite> newSettingMouseLockOffSprite_ =std::make_unique<Sprite>();
 	newSettingMouseLockOffSprite_->SetTextureNum(13);
 	newSettingMouseLockOffSprite_->Initialize();
 	newSettingMouseLockOffSprite_->SetScale(XMFLOAT2(200, 100));
 	newSettingMouseLockOffSprite_->SetPosition(XMFLOAT2(window_width / 2 + 100, window_height / 2 + 50));
-	settingMouseLockOffSprite_.reset(newSettingMouseLockOffSprite_);
+	settingMouseLockOffSprite_.swap(newSettingMouseLockOffSprite_);
 
-	Sprite* newCloseSettingSprite_ = new Sprite();
+	std::unique_ptr<Sprite> newCloseSettingSprite_ =std::make_unique<Sprite>();
 	newCloseSettingSprite_->SetTextureNum(10);
 	newCloseSettingSprite_->Initialize();
 	newCloseSettingSprite_->SetScale(XMFLOAT2(400, 100));
 	newCloseSettingSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2 + 150));
-	closeSettingSprite_.reset(newCloseSettingSprite_);
+	closeSettingSprite_.swap(newCloseSettingSprite_);
 
-	Sprite* newGideSprite_ = new Sprite();
+	std::unique_ptr<Sprite> newGideSprite_ =std::make_unique<Sprite>();
 	newGideSprite_->SetTextureNum(15);
 	newGideSprite_->Initialize();
 	newGideSprite_->SetScale(XMFLOAT2(400, 500));
 	newGideSprite_->SetPosition(XMFLOAT2(window_width / 2 + 425, window_height / 2));
-	gideSprite_.reset(newGideSprite_);
+	gideSprite_.swap(newGideSprite_);
 
 	this->position_ = baseSprite_->GetPosition();
 

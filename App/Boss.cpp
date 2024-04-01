@@ -28,10 +28,10 @@ void Boss::Initialize()
 	bulletModel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("bossBullet"));
 
 	//3dオブジェクト生成とモデルのセット
-	FbxObject3D* newBossObject_ = new FbxObject3D;
+	std::unique_ptr<FbxObject3D> newBossObject_ = std::make_unique<FbxObject3D>();
 	newBossObject_->Initialize();
 	newBossObject_->SetModel(normalBossModel_.get());
-	bossObject_.reset(newBossObject_);
+	bossObject_.swap(newBossObject_);
 
 	Reset();
 }

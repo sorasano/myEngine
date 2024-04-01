@@ -30,38 +30,38 @@ void Player::Initialize()
 	bulletModel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("playerBullet"));
 
 	//3dオブジェクト生成とモデルのセット
-	FbxObject3D* newPlayerObject_ = new FbxObject3D;
+	std::unique_ptr<FbxObject3D> newPlayerObject_ = std::make_unique<FbxObject3D>();
 	newPlayerObject_->Initialize();
 	newPlayerObject_->SetModel(playerModel_.get());
-	playerObject_.reset(newPlayerObject_);
+	playerObject_.swap(newPlayerObject_);
 
 	//スプライト
 
 	//レティクル
 	for (int i = 0; i < reticleSpriteSize_; i++) {
-		Sprite* newReticleSprite = new Sprite();
+		std::unique_ptr<Sprite> newReticleSprite = std::make_unique<Sprite>();
 		newReticleSprite->SetTextureNum(5);
 		newReticleSprite->Initialize();
 		newReticleSprite->SetScale(reticleScale_);
 
 
-		reticleSprites_.push_back(newReticleSprite);
+		reticleSprites_.push_back(std::move(newReticleSprite));
 	}
 
 	//スピードUI
 
-	Sprite* newMainSpeedSprite_ = new Sprite();
+	std::unique_ptr<Sprite> newMainSpeedSprite_ = std::make_unique<Sprite>();
 	newMainSpeedSprite_->SetTextureNum(3);
 	newMainSpeedSprite_->Initialize();
 	newMainSpeedSprite_->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
-	mainSpeedSprite_.reset(newMainSpeedSprite_);
+	mainSpeedSprite_.swap(newMainSpeedSprite_);
 
 
-	Sprite* newSubSpeedSprite_ = new Sprite();
+	std::unique_ptr<Sprite> newSubSpeedSprite_ = std::make_unique<Sprite>();
 	newSubSpeedSprite_->SetTextureNum(16);
 	newSubSpeedSprite_->Initialize();
 	newSubSpeedSprite_->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
-	subSpeedSprite_.reset(newSubSpeedSprite_);
+	subSpeedSprite_.swap(newSubSpeedSprite_);
 
 	Reset();
 }
@@ -149,7 +149,7 @@ void Player::DrawClearScene(ID3D12GraphicsCommandList* cmdList)
 void Player::DrawSprite(ID3D12GraphicsCommandList* cmdList)
 {
 	//レティクル
-	for (Sprite*& reticleSprite : reticleSprites_) {
+	for (std::unique_ptr<Sprite>& reticleSprite : reticleSprites_) {
 		reticleSprite->Draw(cmdList);
 	}
 

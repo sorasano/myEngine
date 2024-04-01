@@ -249,7 +249,7 @@ private:
 	//--------レティクル--------
 
 	//レティクルスプライト
-	std::vector<Sprite*> reticleSprites_;
+	std::vector<std::unique_ptr<Sprite>> reticleSprites_;
 	//レティクルスプライト数
 	int reticleSpriteSize_ = 3;
 	//一番手前のサイズ

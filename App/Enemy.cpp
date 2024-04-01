@@ -25,10 +25,10 @@ void Enemy::Initialize(FbxModel* EnemyModel,FbxModel* enemyBulletModel)
 {
 
 	//3dオブジェクト生成とモデルのセット
-	FbxObject3D* newEnemyObject_ = new FbxObject3D;
+	std::unique_ptr<FbxObject3D> newEnemyObject_ = std::make_unique<FbxObject3D>();
 	newEnemyObject_->Initialize();
 	newEnemyObject_->SetModel(EnemyModel);
-	enemyObject_.reset(newEnemyObject_);
+	enemyObject_.swap(newEnemyObject_);
 
 	this->bulletModel_ = enemyBulletModel;
 

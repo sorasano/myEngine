@@ -233,7 +233,7 @@ private:
 
 	//-----演出-----
 	//スプライト
-	std::vector<Sprite*> titleReturnSprites_ = {};
+	std::vector<std::unique_ptr<Sprite>> titleReturnSprites_ = {};
 	//スプライト大きさ
 	XMFLOAT2 titleReturnSpriteSize = { window_width  + 200, window_height };
 	
