@@ -46,7 +46,8 @@ public:
 	std::unique_ptr<PerformanceManager> performanceManager_ = nullptr;
 
 	//パーティクル
-	std::unique_ptr<ParticleManager> particleManager_ = nullptr;
+	std::unique_ptr<ParticleManager> destroyParticle_ = nullptr;
+	std::unique_ptr<ParticleManager> landingParticle_ = nullptr;
 
 	//メニュー
 	std::unique_ptr<Menu> menu_;
@@ -64,7 +65,7 @@ public:
 
 	//フェーズ
 	int phase_ = 0;
-	const int MaxPhase_ = 3;
+	const int MaxPhase_ = 1;
 
 	//-----リソース-----
 

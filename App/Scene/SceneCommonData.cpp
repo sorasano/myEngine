@@ -158,10 +158,17 @@ SceneCommonData::SceneCommonData()
 	newPerformanceManager->Initialize(camera_.get(), player_.get(), boss_.get());
 	performanceManager_.reset(newPerformanceManager);
 
-	//パーティクルマネージャー
-	ParticleManager* newParticleManager = new ParticleManager();
-	newParticleManager->Initialize("Resources/effect/effect1.png");
-	particleManager_.reset(newParticleManager);
+	//パーティクル
+
+	//撃破
+	ParticleManager* newDestroyParticle_ = new ParticleManager();
+	newDestroyParticle_->Initialize("effect1.png");
+	destroyParticle_.reset(newDestroyParticle_);
+
+	//着弾
+	ParticleManager* newLandingParticle_ = new ParticleManager();
+	newLandingParticle_->Initialize("effect2.png");
+	landingParticle_.reset(newLandingParticle_);
 
 	//メニュー
 	Menu* newMenu = new Menu();

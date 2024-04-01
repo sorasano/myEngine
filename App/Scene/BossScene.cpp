@@ -125,7 +125,7 @@ void BossScene::Collition()
 
 					//自機の弾を消し、パーティクル生成
 					cData_->player_->SetBulletIsDead(true, i);
-					cData_->particleManager_->MakeParticle(PLAYERBULLETLANDING, cData_->player_->GetBulletPosition(i));
+					cData_->landingParticle_->MakeParticle(cData_->player_->GetBulletPosition(i));
 
 					//スコアを加算
 				}
@@ -150,6 +150,8 @@ void BossScene::Collition()
 					//当たったら敵の弾を消し、自機のスピードを下げスコアを減算
 					cData_->boss_->SetBulletIsDead(true, i);
 					cData_->player_->SpeedDownByEnemy();
+					//パーティクル生成
+					cData_->landingParticle_->MakeParticle(cData_->player_->GetBulletPosition(i));
 
 				}
 			}

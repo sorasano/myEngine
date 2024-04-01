@@ -44,6 +44,9 @@ XMMATRIX ParticleManager::matBillbordY_ = XMMatrixIdentity();
 ////unsigned short ParticleManager::indices[indexCount];
 MyEngine::DirectXCommon* ParticleManager::dx_ = nullptr;
 
+/// 静的メンバ変数の実態
+const std::string ParticleManager::baseDirectory = "Resources/effect/";
+
 //XMFLOAt3同士の加算処理
 const DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs) {
 	XMFLOAT3 result;
@@ -371,14 +374,16 @@ void ParticleManager::LoadTexture(const std::string& resourcename)
 	TexMetadata metadata_{};
 	ScratchImage scratchImg_{};
 
+	//連結してフルパスを得る
+	const std::string fullpath = baseDirectory + resourcename;
+
 	//ユニコード文字列に変換する
 	wchar_t wfilepath[128];
 	MultiByteToWideChar(CP_ACP, 0,
-	resourcename.c_str(), -1, wfilepath, _countof(wfilepath));
+	fullpath.c_str(), -1, wfilepath, _countof(wfilepath));
 
 	// WICテクスチャのロード
 	result = LoadFromWICFile(wfilepath, WIC_FLAGS_NONE, &metadata_, scratchImg_);
-
 
 	ScratchImage mipChain{};
 	// ミップマップ生成
@@ -726,23 +731,7 @@ void ParticleManager::Add(int life, const XMFLOAT3& position, const XMFLOAT3& ve
 	p.num_flame = life;
 }
 
-void ParticleManager::MakeParticle(int particlename, const XMFLOAT3& position)
-{
-	switch (particlename) {
-		//敵撃破演出
-	case ENEMYDESTROY:
-		EnemyDestroyParticleInitialize(position);
-		break;
-		//プレイヤー弾着弾演出
-	case PLAYERBULLETLANDING:
-		PlayerBulletLandingParticleInitialize(position);
-		break;
-
-	}
-
-}
-
-void ParticleManager::EnemyDestroyParticleInitialize(const XMFLOAT3& position)
+void ParticleManager::MakeParticle(const XMFLOAT3& position)
 {
 	for (int i = 0; i < 100; i++) {
 		//X,Y,Zすべてpositionから[+1.0f,-1.0f]でランダムに分布
@@ -769,34 +758,5 @@ void ParticleManager::EnemyDestroyParticleInitialize(const XMFLOAT3& position)
 
 	}
 }
-
-void ParticleManager::PlayerBulletLandingParticleInitialize(const XMFLOAT3& position)
-{
-	for (int i = 0; i < 100; i++) {
-		//X,Y,Zすべてpositionから[+1.0f,-1.0f]でランダムに分布
-
-		XMFLOAT3 pos{};
-		pos.x = Random(position.x - 1.0f, position.x + 1.0f);
-		pos.y = Random(position.y - 1.0f, position.y + 1.0f);
-		pos.z = Random(position.z - 1.0f, position.z + 1.0f);
-
-		//X,Y,Zすべて[-0.05f,+0.05f]でランダムに分布
-		const float md_vel = 0.05f;
-		XMFLOAT3 vel{};
-		vel.x = Random(-md_vel, md_vel);
-		vel.y = Random(-md_vel, md_vel);
-		vel.z = Random(-md_vel, md_vel);
-
-		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		XMFLOAT3 acc{};
-		const float md_acc = -0.001f;
-		acc.y = Random(md_acc, 0);
-
-		//追加
-		Add(enemyDestroyParticleTime_, pos, vel, acc);
-
-	}
-}
-
 
 

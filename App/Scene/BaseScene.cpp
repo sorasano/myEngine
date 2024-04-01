@@ -29,7 +29,9 @@ void BaseScene::CommonUpdate()
 	cData_->performanceManager_->Update();
 
 	//パーティクル更新
-	cData_->particleManager_->Update();
+		//パーティクル更新
+	cData_->destroyParticle_->Update();
+	cData_->landingParticle_->Update();
 
 	//パーティクルマネージャー静的更新
 	ParticleManager::StaticUpdate(cData_->camera_->GetEye(), cData_->camera_->GetTarget());
@@ -54,7 +56,8 @@ void BaseScene::CommonDrawSprite()
 	cData_->performanceManager_->DrawSprite(cData_->dxCommon_->GetCommandList());
 
 	//パーティクル
-	cData_->particleManager_->Draw();
+	cData_->destroyParticle_->Draw();
+	cData_->landingParticle_->Draw();
 }
 
 void BaseScene::PlaySceneInitialize()

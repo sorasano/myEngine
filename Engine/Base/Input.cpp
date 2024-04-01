@@ -57,7 +57,7 @@ void MyEngine::Input::Initialize() {
 	assert(SUCCEEDED(result));
 
 	//マウスをウィンドウ外に出ないように
-	//WindowLock();
+	WindowLock();
 }
 
 void MyEngine::Input::Update() {

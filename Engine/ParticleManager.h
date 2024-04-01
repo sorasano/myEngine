@@ -33,6 +33,10 @@ private: // エイリアス
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
 
+public:
+	//モデル格納ルートパス
+	static const std::string baseDirectory;
+
 public: // サブクラス
 	// 頂点データ構造体
 	struct VertexPos
@@ -250,42 +254,22 @@ public: // メンバ関数
 	/**
 	* パーティクル生成
 	*
-	* @param[in] particlename パーティクル種類名
 	*/
-	void MakeParticle(int particlename, const XMFLOAT3& position);
-
-	/**
-	* 敵撃破パーティクル初期化
-	*/
-	void EnemyDestroyParticleInitialize(const XMFLOAT3& position);
-
-	/**
-	* プレイヤー弾着弾パーティクル初期化
-	*/
-	void PlayerBulletLandingParticleInitialize(const XMFLOAT3& position);
+	void MakeParticle(const XMFLOAT3& position);
 
 private: // メンバ変数
 
 	ComPtr<ID3D12Resource> constBuff_; // 定数バッファ
 	// テクスチャバッファ
 	ComPtr<ID3D12Resource> texbuff_;
-	//画像データ用
-	//std::vector<DirectX::TexMetadata> metadata_;
-	//std::vector<DirectX::ScratchImage> scratchImg_;
 
 	// ローカルスケール
 	XMFLOAT3 scale_ = { 1,1,1 };
 	//パーティクル配列
 	std::forward_list<Particle> particles_;
 
-	//------パーティクル種類別変数------
-	//敵撃破パーティクル
 	//パーティクル時間
 	const int enemyDestroyParticleTime_ = 30;
-
-	//プレイヤー弾着弾パーティクル
-	//パーティクル時間
-	const int playerBulletLandingParticleTime_ = 30;
 
 };
 

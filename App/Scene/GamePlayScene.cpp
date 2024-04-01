@@ -125,11 +125,13 @@ void GamePlayScene::Collition()
 						//当たったら敵は消してパーティクル生成
 						enemy->SetISDesd(true);
 						//敵撃破パーティクル生成
-						cData_->particleManager_->MakeParticle(ENEMYDESTROY, enemy->GetPosition());
+						cData_->destroyParticle_->MakeParticle(enemy->GetPosition());
 
 						//自機の弾を消し、自機のスピードを上げスコアを加算
 						cData_->player_->SetBulletIsDead(true, i);
 						cData_->player_->SpeedUpByEnemy();
+						//弾着弾パーティクル
+						cData_->landingParticle_->MakeParticle(enemy->GetPosition());
 
 					}
 				}
@@ -150,7 +152,7 @@ void GamePlayScene::Collition()
 				//当たったら敵は消してパーティクル生成
 				enemy->SetISDesd(true);
 				//敵撃破パーティクル生成
-				cData_->particleManager_->MakeParticle(ENEMYDESTROY, enemy->GetPosition());
+				cData_->destroyParticle_->MakeParticle(enemy->GetPosition());
 
 				//自機のスピードを下げ,少し無敵時間に
 				cData_->player_->SpeedDownByEnemy();
@@ -212,6 +214,8 @@ void GamePlayScene::Collition()
 						//当たったら敵の弾を消し、自機のスピードを下げげスコアを減算
 						enemy->SetBulletIsDead(true, i);
 						cData_->player_->SpeedDownByEnemy();
+						//弾着弾パーティクル
+						cData_->landingParticle_->MakeParticle(enemy->GetPosition());
 
 					}
 				}
