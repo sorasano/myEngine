@@ -66,6 +66,8 @@ public:
 	*/
 	void DrawSprite(ID3D12GraphicsCommandList* cmdList);
 
+private:
+
 	//演出
 	/**
 	* タイトル→プレイシーン遷移演出
@@ -95,12 +97,17 @@ public:
 	* メニューを閉じる演出
 	*/
 	void CloseMenuPerformance();
+
+public:
+
 	/**
 	* メニューUI回転演出
 	* 
 	* @return 回転後座標
 	*/
 	void MenuUIRotPerformance(Sprite* menuUI);
+
+public:
 
 	//ゲッター　セッター　
 	/**

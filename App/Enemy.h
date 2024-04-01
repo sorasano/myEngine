@@ -71,7 +71,12 @@ public:
 	* @param[out] cmdList コマンドリスト
 	*/
 	void Draw(ID3D12GraphicsCommandList* cmdList);
+	/**
+	* 移動反射
+	*/
+	void Reflection();
 
+private:
 
 	/**
 	* 移動
@@ -85,10 +90,7 @@ public:
 	* Y移動
 	*/
 	void MoveY();
-	/**
-	* 移動反射
-	*/
-	void Reflection();
+
 
 	/**
 	* 画面内に停滞させる
@@ -107,6 +109,8 @@ public:
 	* 弾生成
 	*/
 	void MakeBullet();
+
+public:
 
 	//ゲッター　セッター　
 	/**

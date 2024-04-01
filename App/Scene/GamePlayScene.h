@@ -38,6 +38,8 @@ public:
 	*/
 	void Finalize() override;
 
+private:
+
 	/**
 	 シーン切り替え
 	*/

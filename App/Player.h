@@ -38,10 +38,6 @@ public:
 	*/
 	void Update(const XMMATRIX& matVP);
 	/**
-	* 行列更新
-	*/
-	void UpdateMatrix();
-	/**
 	* クリアシーン更新
 	*/
 	void UpdateClearScene();
@@ -77,6 +73,14 @@ public:
 	* スピードダウン
 	*/
 	void SpeedDownByEnemy();
+
+	/**
+	* リセット
+	*/
+	void Reset();
+
+private:
+
 	/**
 	* 移動操作
 	*/
@@ -96,7 +100,10 @@ public:
 	*/
 	void MakeBullet();
 
-
+	/**
+	* 行列更新
+	*/
+	void UpdateMatrix();
 	/**
 	* レティクル更新
 	*/
@@ -105,11 +112,8 @@ public:
 	* スプライト更新
 	*/
 	void UpdateSprite();
-	/**
-	* リセット
-	*/
-	void Reset();
 
+public:
 
 	//ゲッター　セッター　
 	/**
@@ -219,7 +223,7 @@ private:
 
 	//(メイン)
 	//基礎スピード以外の加速スピード
-	float mainSpeed_ = 0.0f;
+	float mainSpeed_ = 1.0f;
 	//レベルアップしたときの加速量
 	float mainUpSpeed_ = 1.0f;
 	//レベルダウンしたときの減速量
@@ -290,10 +294,10 @@ private:
 	XMFLOAT3 initScale_ = { 1,1,1 };
 
 	//基礎スピード
-	float initSpeedZ_ = 0.5f;
+	float initSpeedZ_ = speedZ_;
 	//追加スピード(メイン)
-	float initMainAddSpeed_ = 0.0f;
+	float initMainAddSpeed_ = mainSpeed_;
 	//追加スピード(サブ)
-	float initSubAddSpeed_ = 0.0f;
+	float initSubAddSpeed_ = subSpeed_;
 
 };

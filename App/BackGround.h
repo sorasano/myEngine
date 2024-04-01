@@ -45,6 +45,14 @@ public:
 	* @param[in] adjustPos_ 発生させる位置
 	*/
 	void SetObject(float adjustPos);
+
+	/**
+	* オブジェクトの削除
+	*/
+	void DeleteObject();
+
+private:
+
 	/**
 	* 配置データをロード
 	*
@@ -57,10 +65,8 @@ public:
 	* @param[in] adjustPos_ 発生させる位置
 	*/
 	void ArrangementObject(float adjustPos);
-	/**
-	* オブジェクトの削除
-	*/
-	void DeleteObject();
+
+public:
 
 	//ゲッター
 	/**

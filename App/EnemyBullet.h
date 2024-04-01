@@ -45,6 +45,9 @@ public:
 	* @param[out] cmdList_ コマンドリスト
 	*/
 	void Draw(ID3D12GraphicsCommandList* cmdList);
+
+private:
+
 	/**
 	* 移動
 	*/
@@ -53,6 +56,8 @@ public:
 	* 当たった時の挙動
 	*/
 	void OnCollision();
+
+public:
 
 	//ゲッター　セッター　
 	/**

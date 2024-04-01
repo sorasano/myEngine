@@ -64,6 +64,14 @@ public:
 	* 更新
 	*/
 	void Update(const XMFLOAT3& playerPos);
+
+	/**
+	* リセット
+	*/
+	void Reset();
+
+private:
+
 	/**
 	* 行列更新
 	*/
@@ -86,11 +94,8 @@ public:
 	* デバックモード
 	*/
 	void DebugMode();
-	/**
-	* リセット
-	*/
-	void Reset();
 
+public:
 
 	/**
 	* @return XMMATRIX ビュープロジェクション取得

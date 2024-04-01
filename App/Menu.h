@@ -43,6 +43,21 @@ public:
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
 	/**
+	* リセット(メニューを閉じる度)
+	*/
+	void CloseReset();
+	/**
+	* リセット(ゲームループ一周後)
+	*/
+	void Reset();
+	/**
+	* リセット(設定など全要素)
+	*/
+	void AllReset();
+
+private:
+
+	/**
 	* 選択判定
 	*/
 	void SerectCollision();
@@ -58,6 +73,8 @@ public:
 	* 選択されているもの表示(設定画面)
 	*/
 	void SerectDecided();
+
+public:
 
 
 	/**
@@ -79,18 +96,7 @@ public:
 	*/
 	bool GetIsSerect()const { return isSerect_; }
 
-	/**
-	* リセット(メニューを閉じる度)
-	*/
-	void CloseReset();
-	/**
-	* リセット(ゲームループ一周後)
-	*/
-	void Reset();
-	/**
-	* リセット(設定など全要素)
-	*/
-	void AllReset();
+
 
 private:
 

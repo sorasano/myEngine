@@ -72,10 +72,7 @@ public:
 	* @param[in] pSpeed プレイヤースピード
 	*/
 	void Update(const XMFLOAT3& pPos, float pSpeed);
-	/**
-	* 行列更新
-	*/
-	void UpdateMatrix();
+
 	/**
 	* クリアシーン更新
 	*/
@@ -90,7 +87,17 @@ public:
 	* @param[out] cmdList_ コマンドリスト
 	*/
 	void Draw(ID3D12GraphicsCommandList* cmdList);
+	/**
+	* リセット
+	*/
+	void Reset();
 
+private:
+
+	/**
+	* 行列更新
+	*/
+	void UpdateMatrix();
 	/**
 	* 移動
 	*/
@@ -119,10 +126,7 @@ public:
 	*/
 	void MakeBullet(const Vector3& velocity);
 
-	/**
-	* リセット
-	*/
-	void Reset();
+public:
 
 	//ゲッター　セッター　
 	/**

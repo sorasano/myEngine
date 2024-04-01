@@ -40,23 +40,12 @@ public:
 	* スプライト描画
 	*/
 	virtual void DrawSprite() = 0;
+
 	/**
 	* 終了処理
 	*/
 	virtual void Finalize() = 0;
 
-	/**
-	* シーン切り替え
-	*/
-	virtual void ChangeScene() = 0;
-	/**
-	* 当たり判定
-	*/
-	virtual void Collition() = 0;
-
-	//セッター
-	virtual void SetSceneManager(SceneManager* sceneManager) { sceneManager_ = sceneManager; }
-	virtual void SetSceneCommonData(SceneCommonData* sceneCommonData) { cData_ = sceneCommonData; }
 
 	//共通処理
 	/**
@@ -80,11 +69,12 @@ public:
 	* プレイシーン初期化
 	*/
 	void PlaySceneInitialize();
+
+
 	/**
 	* 敵配置
 	*/
 	void SetEnemy();
-
 	/**
 	* 更新範囲
 	*
@@ -93,12 +83,6 @@ public:
 	* @return bool 更新範囲内ならtrue
 	*/
 	bool UpadateRange(const XMFLOAT3& cameraPos, const XMFLOAT3& pos);
-
-	/**
-	* 背景更新
-	*/
-	void UpdateBackGround();
-
 	/**
 	* メニューUI判定
 	*
@@ -110,6 +94,28 @@ public:
 	* リセット
 	*/
 	void Reset();
+
+private:
+
+	/**
+	* シーン切り替え
+	*/
+	virtual void ChangeScene() = 0;
+	/**
+	* 当たり判定
+	*/
+	virtual void Collition() = 0;
+	/**
+	* 背景更新
+	*/
+	void UpdateBackGround();
+
+
+public:
+
+	//セッター
+	virtual void SetSceneManager(SceneManager* sceneManager) { sceneManager_ = sceneManager; }
+	virtual void SetSceneCommonData(SceneCommonData* sceneCommonData) { cData_ = sceneCommonData; }
 
 protected:
 
