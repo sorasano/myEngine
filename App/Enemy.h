@@ -137,7 +137,10 @@ public:
 	* @return CollisionData 弾当たり判定情報取得
 	*/
 	CollisionData GetBulletColData(int i) const;
-
+	/**
+	* @return XMFLOAT3 弾の座標取得
+	*/
+	XMFLOAT3 GetBulletPosition(int i)const;
 
 	/**
 	* モデルセット

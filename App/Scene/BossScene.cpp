@@ -151,7 +151,7 @@ void BossScene::Collition()
 					cData_->boss_->SetBulletIsDead(true, i);
 					cData_->player_->SpeedDownByEnemy();
 					//パーティクル生成
-					cData_->landingParticle_->MakeParticle(cData_->player_->GetBulletPosition(i));
+					cData_->landingParticle_->MakeParticle(cData_->boss_->GetBulletPosition(i));
 
 				}
 			}

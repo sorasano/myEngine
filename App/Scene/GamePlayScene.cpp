@@ -131,7 +131,7 @@ void GamePlayScene::Collition()
 						cData_->player_->SetBulletIsDead(true, i);
 						cData_->player_->SpeedUpByEnemy();
 						//弾着弾パーティクル
-						cData_->landingParticle_->MakeParticle(enemy->GetPosition());
+						cData_->landingParticle_->MakeParticle(cData_->player_->GetBulletPosition(i));
 
 					}
 				}
@@ -215,7 +215,7 @@ void GamePlayScene::Collition()
 						enemy->SetBulletIsDead(true, i);
 						cData_->player_->SpeedDownByEnemy();
 						//弾着弾パーティクル
-						cData_->landingParticle_->MakeParticle(enemy->GetPosition());
+						cData_->landingParticle_->MakeParticle(enemy->GetBulletPosition(i));
 
 					}
 				}

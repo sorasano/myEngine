@@ -329,6 +329,14 @@ CollisionData Enemy::GetBulletColData(int i) const
 	return it->get()->GetColData();
 }
 
+XMFLOAT3 Enemy::GetBulletPosition(int i) const
+{
+	auto it = bullets_.begin();
+	std::advance(it, i);
+
+	return it->get()->GetPosition();
+}
+
 void Enemy::SetBulletIsDead(bool isDead, int i)
 {
 	auto it = bullets_.begin();
