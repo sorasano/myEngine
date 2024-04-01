@@ -6,12 +6,6 @@
 #include "PlayerBullet.h"
 #include <cmath>
 
-PlayerBullet* PlayerBullet::GetInstance()
-{
-	static PlayerBullet instance;
-	return &instance;
-}
-
 PlayerBullet::PlayerBullet()
 {
 }

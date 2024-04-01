@@ -15,10 +15,6 @@ class PlayerBullet
 {
 public:
 	/**
-	* シングルトンインスタンス
-	*/
-	PlayerBullet* GetInstance();
-	/**
 	* コンストラクタ
 	*/
 	PlayerBullet();

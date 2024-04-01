@@ -14,10 +14,7 @@
 class BossBullet
 {
 public:
-	/**
-	* シングルトンインスタンス
-	*/
-	BossBullet* GetInstance();
+
 	/**
 	* コンストラクタ
 	*/

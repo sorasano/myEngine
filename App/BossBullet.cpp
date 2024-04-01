@@ -6,12 +6,6 @@
 #include "BossBullet.h"
 #include <cmath>
 
-BossBullet* BossBullet::GetInstance()
-{
-	static BossBullet instance;
-	return &instance;
-}
-
 BossBullet::BossBullet()
 {
 }

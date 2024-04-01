@@ -14,10 +14,7 @@
 class EnemyBullet
 {
 public:
-	/**
-	* シングルトンインスタンス
-	*/
-	EnemyBullet* GetInstance();
+
 	/**
 	* コンストラクタ
 	*/

@@ -6,12 +6,6 @@
 #include "EnemyBullet.h"
 #include <cmath>
 
-EnemyBullet* EnemyBullet::GetInstance()
-{
-	static EnemyBullet instance;
-	return &instance;
-}
-
 EnemyBullet::EnemyBullet()
 {
 }
