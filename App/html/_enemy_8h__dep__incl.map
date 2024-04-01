@@ -1,9 +1,0 @@
-<map id="Enemy.h" name="Enemy.h">
-<area shape="rect" id="Node000001" title="敵の処理" alt="" coords="72,5,146,32"/>
-<area shape="rect" id="Node000002" href="$_enemy_8cpp.html" title="敵の処理" alt="" coords="5,80,93,107"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,46,61,81,57,78,87,42"/>
-<area shape="rect" id="Node000003" href="$_game_scene_8h.html" title="ゲームシーン" alt="" coords="117,80,221,107"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="131,42,161,78,157,81,127,46"/>
-<area shape="rect" id="Node000004" href="$_game_scene_8cpp.html" title="ゲームシーン" alt="" coords="110,155,228,181"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="172,122,172,154,166,154,166,122"/>
-</map>

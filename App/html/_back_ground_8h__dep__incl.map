@@ -1,9 +1,0 @@
-<map id="BackGround.h" name="BackGround.h">
-<area shape="rect" id="Node000001" title="背景の処理" alt="" coords="80,5,185,32"/>
-<area shape="rect" id="Node000002" href="$_back_ground_8cpp.html" title="背景の処理" alt="" coords="5,80,124,107"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,45,78,81,74,78,108,42"/>
-<area shape="rect" id="Node000003" href="$_game_scene_8h.html" title="ゲームシーン" alt="" coords="148,80,253,107"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="157,42,191,78,187,81,153,45"/>
-<area shape="rect" id="Node000004" href="$_game_scene_8cpp.html" title="ゲームシーン" alt="" coords="141,155,260,181"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="203,122,203,154,198,154,198,122"/>
-</map>

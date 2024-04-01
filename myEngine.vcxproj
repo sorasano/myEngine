@@ -78,12 +78,12 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)Engine\fbx;$(SolutionDir)Engine\Math;$(SolutionDir)External\DirectXTex;$(SolutionDir)Engine\Base;$(SolutionDir)External\fbx_sdk\include;$(SolutionDir)Engine\2d;$(SolutionDir)Engine;$(SolutionDir)External\imgui;$(SolutionDir)App;$(SolutionDir)Engine\Loader;$(SolutionDir)App\Scene</IncludePath>
+    <IncludePath>$(SolutionDir)Engine\fbx;$(SolutionDir)Engine\Math;$(SolutionDir)External\DirectXTex;$(SolutionDir)Engine\Base;$(SolutionDir)External\fbx_sdk\include;$(SolutionDir)Engine\2d;$(SolutionDir)Engine;$(SolutionDir)External\imgui;$(SolutionDir)App;$(SolutionDir)Engine\Loader;$(SolutionDir)App\Scene;$(SolutionDir)Engine\obj;$(SolutionDir)App\bullet;$(SolutionDir)App\backGround</IncludePath>
     <LibraryPath>$(ProjectDir)External\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)Engine\fbx;$(SolutionDir)Engine\Math;$(SolutionDir)External\DirectXTex;$(SolutionDir)Engine\Base;$(SolutionDir)External\fbx_sdk\include;$(SolutionDir)Engine\2d;$(SolutionDir)Engine;$(SolutionDir)External\imgui;$(SolutionDir)App;$(SolutionDir)Engine\Loader;$(SolutionDir)App\Scene</IncludePath>
+    <IncludePath>$(SolutionDir)Engine\fbx;$(SolutionDir)Engine\Math;$(SolutionDir)External\DirectXTex;$(SolutionDir)Engine\Base;$(SolutionDir)External\fbx_sdk\include;$(SolutionDir)Engine\2d;$(SolutionDir)Engine;$(SolutionDir)External\imgui;$(SolutionDir)App;$(SolutionDir)Engine\Loader;$(SolutionDir)App\Scene;$(SolutionDir)Engine\obj;$(SolutionDir)App\bullet;$(SolutionDir)App\backGround</IncludePath>
     <LibraryPath>$(ProjectDir)External\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -158,6 +158,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="App\backGround\BackGround.cpp" />
+    <ClCompile Include="App\backGround\Skydome.cpp" />
+    <ClCompile Include="App\bullet\BossBullet.cpp" />
+    <ClCompile Include="App\bullet\EnemyBullet.cpp" />
+    <ClCompile Include="App\bullet\PlayerBullet.cpp" />
     <ClCompile Include="App\Menu.cpp" />
     <ClCompile Include="App\PerformanceManager.cpp" />
     <ClCompile Include="App\Scene\BaseScene.cpp" />
@@ -172,18 +177,15 @@
     <ClCompile Include="Engine\2d\PostEffect.cpp" />
     <ClCompile Include="Engine\2d\Sprite.cpp" />
     <ClCompile Include="Engine\2d\SpriteManager.cpp" />
-    <ClCompile Include="App\BackGround.cpp" />
     <ClCompile Include="Engine\Base\DirectXCommon.cpp" />
     <ClCompile Include="Engine\Base\FPS.cpp" />
     <ClCompile Include="Engine\Base\ImGuiManager.cpp" />
     <ClCompile Include="Engine\Base\Input.cpp" />
     <ClCompile Include="Engine\Base\WinApp.cpp" />
     <ClCompile Include="App\Boss.cpp" />
-    <ClCompile Include="App\BossBullet.cpp" />
     <ClCompile Include="Engine\Camera.cpp" />
     <ClCompile Include="Engine\Collision.cpp" />
     <ClCompile Include="App\Enemy.cpp" />
-    <ClCompile Include="App\EnemyBullet.cpp" />
     <ClCompile Include="Engine\fbx\FbxLoader.cpp" />
     <ClCompile Include="Engine\fbx\FbxModel.cpp" />
     <ClCompile Include="Engine\fbx\FbxObject3d.cpp" />
@@ -196,11 +198,9 @@
     <ClCompile Include="Engine\Math\SplineCurve.cpp" />
     <ClCompile Include="Engine\Math\Vector2.cpp" />
     <ClCompile Include="Engine\Math\Vector3.cpp" />
-    <ClCompile Include="Engine\Model.cpp" />
-    <ClCompile Include="Engine\object3D.cpp" />
     <ClCompile Include="App\Player.cpp" />
-    <ClCompile Include="App\PlayerBullet.cpp" />
-    <ClCompile Include="App\Skydome.cpp" />
+    <ClCompile Include="Engine\obj\Model.cpp" />
+    <ClCompile Include="Engine\obj\object3D.cpp" />
     <ClCompile Include="Engine\ParticleManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -292,33 +292,35 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="App\backGround\BackGround.h" />
+    <ClInclude Include="App\backGround\Skydome.h" />
+    <ClInclude Include="App\bullet\BossBullet.h" />
+    <ClInclude Include="App\bullet\EnemyBullet.h" />
+    <ClInclude Include="App\bullet\PlayerBullet.h" />
     <ClInclude Include="App\Menu.h" />
     <ClInclude Include="App\PerformanceManager.h" />
-    <ClInclude Include="App\Scene.h" />
     <ClInclude Include="App\Scene\BaseScene.h" />
     <ClInclude Include="App\Scene\BossScene.h" />
     <ClInclude Include="App\Scene\ClearScene.h" />
     <ClInclude Include="App\Scene\GameoverScene.h" />
     <ClInclude Include="App\Scene\GamePlayScene.h" />
     <ClInclude Include="App\Scene\MenuScene.h" />
+    <ClInclude Include="App\Scene\Scene.h" />
     <ClInclude Include="App\Scene\SceneCommonData.h" />
     <ClInclude Include="App\Scene\SceneManager.h" />
     <ClInclude Include="App\Scene\TitleScene.h" />
     <ClInclude Include="Engine\2d\PostEffect.h" />
     <ClInclude Include="Engine\2d\Sprite.h" />
     <ClInclude Include="Engine\2d\SpriteManager.h" />
-    <ClInclude Include="App\BackGround.h" />
     <ClInclude Include="Engine\Base\DirectXCommon.h" />
     <ClInclude Include="Engine\Base\FPS.h" />
     <ClInclude Include="Engine\Base\ImGuiManager.h" />
     <ClInclude Include="Engine\Base\Input.h" />
     <ClInclude Include="Engine\Base\WinApp.h" />
     <ClInclude Include="App\Boss.h" />
-    <ClInclude Include="App\BossBullet.h" />
     <ClInclude Include="Engine\Camera.h" />
     <ClInclude Include="Engine\Collision.h" />
     <ClInclude Include="App\Enemy.h" />
-    <ClInclude Include="App\EnemyBullet.h" />
     <ClInclude Include="Engine\fbx\FbxLoader.h" />
     <ClInclude Include="Engine\fbx\FbxModel.h" />
     <ClInclude Include="Engine\fbx\FbxObject3d.h" />
@@ -331,11 +333,9 @@
     <ClInclude Include="Engine\Math\SplineCurve.h" />
     <ClInclude Include="Engine\Math\Vector2.h" />
     <ClInclude Include="Engine\Math\Vector3.h" />
-    <ClInclude Include="Engine\Model.h" />
-    <ClInclude Include="Engine\object3D.h" />
     <ClInclude Include="App\Player.h" />
-    <ClInclude Include="App\PlayerBullet.h" />
-    <ClInclude Include="App\Skydome.h" />
+    <ClInclude Include="Engine\obj\Model.h" />
+    <ClInclude Include="Engine\obj\object3D.h" />
     <ClInclude Include="Engine\ParticleManager.h" />
   </ItemGroup>
   <ItemGroup>

@@ -66,6 +66,18 @@
     <Filter Include="ヘッダー ファイル\Particle">
       <UniqueIdentifier>{03d8043a-4aad-4ed9-b253-210a5a4bfbf0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\bullet">
+      <UniqueIdentifier>{4322c948-c31e-4c84-93a5-fd37e5ed76c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\bullet">
+      <UniqueIdentifier>{abbf8c67-db23-47fa-b0b9-c0f68f82a7dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\backGround">
+      <UniqueIdentifier>{fc948308-ebb1-4605-9e6d-3f5320055943}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\backGround">
+      <UniqueIdentifier>{c5d294bf-9228-4b79-92d4-a95af8e7a55f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Base\DirectXCommon.cpp">
@@ -95,12 +107,6 @@
     <ClCompile Include="Engine\fbx\FbxObject3d.cpp">
       <Filter>ソース ファイル\fbx</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\object3D.cpp">
-      <Filter>ソース ファイル\obj</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Model.cpp">
-      <Filter>ソース ファイル\obj</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Base\FPS.cpp">
       <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
@@ -119,13 +125,7 @@
     <ClCompile Include="App\Enemy.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\main.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="App\Player.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="App\PlayerBullet.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Loader\JsonLoader.cpp">
@@ -134,12 +134,6 @@
     <ClCompile Include="Engine\Loader\CSVLoader.cpp">
       <Filter>ソース ファイル\Loader</Filter>
     </ClCompile>
-    <ClCompile Include="App\BackGround.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="App\EnemyBullet.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Collision.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -147,9 +141,6 @@
       <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
     <ClCompile Include="App\Boss.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="App\BossBullet.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="App\PerformanceManager.cpp">
@@ -163,12 +154,6 @@
     </ClCompile>
     <ClCompile Include="Engine\Math\SplineCurve.cpp">
       <Filter>ソース ファイル\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Math\MathManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="App\Skydome.cpp">
-      <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="App\Scene\BaseScene.cpp">
       <Filter>ソース ファイル\Scene</Filter>
@@ -199,6 +184,33 @@
     </ClCompile>
     <ClCompile Include="App\Scene\TitleScene.cpp">
       <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\obj\Model.cpp">
+      <Filter>ソース ファイル\obj</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\obj\object3D.cpp">
+      <Filter>ソース ファイル\obj</Filter>
+    </ClCompile>
+    <ClCompile Include="App\bullet\BossBullet.cpp">
+      <Filter>ソース ファイル\bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="App\bullet\EnemyBullet.cpp">
+      <Filter>ソース ファイル\bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="App\bullet\PlayerBullet.cpp">
+      <Filter>ソース ファイル\bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="App\backGround\BackGround.cpp">
+      <Filter>ソース ファイル\backGround</Filter>
+    </ClCompile>
+    <ClCompile Include="App\backGround\Skydome.cpp">
+      <Filter>ソース ファイル\backGround</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\main.cpp">
+      <Filter>ソース ファイル\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Math\MathManager.cpp">
+      <Filter>ソース ファイル\Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -296,17 +308,8 @@
     <ClInclude Include="Engine\fbx\FbxObject3d.h">
       <Filter>ヘッダー ファイル\fbx</Filter>
     </ClInclude>
-    <ClInclude Include="App\PlayerBullet.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="App\Enemy.h">
       <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Model.h">
-      <Filter>ヘッダー ファイル\obj</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\object3D.h">
-      <Filter>ヘッダー ファイル\obj</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Base\FPS.h">
       <Filter>ヘッダー ファイル\Base</Filter>
@@ -329,25 +332,13 @@
     <ClInclude Include="Engine\Loader\JsonLoader.h">
       <Filter>ヘッダー ファイル\Loader</Filter>
     </ClInclude>
-    <ClInclude Include="App\BackGround.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="App\EnemyBullet.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Collision.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Base\ImGuiManager.h">
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
-    <ClInclude Include="App\Skydome.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="App\Boss.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="App\BossBullet.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="App\PerformanceManager.h">
@@ -389,14 +380,35 @@
     <ClInclude Include="App\Scene\SceneCommonData.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="App\Scene.h">
-      <Filter>ヘッダー ファイル\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="App\Scene\MenuScene.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ParticleManager.h">
       <Filter>ヘッダー ファイル\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\obj\Model.h">
+      <Filter>ヘッダー ファイル\obj</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\obj\object3D.h">
+      <Filter>ヘッダー ファイル\obj</Filter>
+    </ClInclude>
+    <ClInclude Include="App\bullet\BossBullet.h">
+      <Filter>ヘッダー ファイル\bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="App\bullet\EnemyBullet.h">
+      <Filter>ヘッダー ファイル\bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="App\bullet\PlayerBullet.h">
+      <Filter>ヘッダー ファイル\bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="App\Scene\Scene.h">
+      <Filter>ヘッダー ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="App\backGround\BackGround.h">
+      <Filter>ヘッダー ファイル\backGround</Filter>
+    </ClInclude>
+    <ClInclude Include="App\backGround\Skydome.h">
+      <Filter>ヘッダー ファイル\backGround</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
