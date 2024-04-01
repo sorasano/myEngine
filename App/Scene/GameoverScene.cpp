@@ -62,11 +62,6 @@ void GameoverScene::ChangeScene()
 	//汎用演出
 	if (cData_->input_->IsMouseTrigger(LEFT_CLICK) && !cData_->performanceManager_->GetIsPerformance()) {
 		cData_->performanceManager_->SetPerformanceNum(RETURNTITLE);
-
-		//次シーンの生成
-		BaseScene* scene = new TitleScene(cData_);
-		//シーン切り替え依頼
-		sceneManager_->SetNextScene(scene);
 	}
 
 	//-----演出終了でのシーン切り替え-----
