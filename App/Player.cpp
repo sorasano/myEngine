@@ -104,7 +104,7 @@ void Player::UpdateMatrix()
 void Player::UpdateClearScene()
 {
 	//移動
-	position_.z += speedZ_ + mainAddSpeed_;
+	position_.z += speedZ_ + mainSpeed_;
 
 	UpdateMatrix();
 }
@@ -162,16 +162,17 @@ void Player::DrawSprite(ID3D12GraphicsCommandList* cmdList)
 
 void Player::SpeedUpByEnemy()
 {
-	if (subAddSpeed_ + subAddSpeedByEnemy_ >= SubMaxSpeed_) {
+	//スピードを加速するとサブスピードがマックスになるか
+	if (subSpeed_ + subUpSpeed_ >= SubMaxSpeed_) {
 
-		//サブスピードがマックスになったらメインスピードを上げる
-		subAddSpeed_ = 0;
-
-		mainAddSpeed_ += mainAddSpeedBySub_;
+		//サブスピードがマックスになったらメインスピードを上げ、サブスピードを0に
+		mainSpeed_ += mainUpSpeed_;
+		subSpeed_ = 0;
 
 	}
 	else {
-		subAddSpeed_ += subAddSpeedByEnemy_;
+		//ならなければそのまま加速
+		subSpeed_ += subUpSpeed_;
 	}
 
 
@@ -180,20 +181,36 @@ void Player::SpeedUpByEnemy()
 void Player::SpeedDownByEnemy()
 {
 	if (!isInvincible_) {
-		if (subAddSpeed_ - subSubSpeedByEnemy_ <= 0) {
+
+		//減速するとサブスピードが0以下になるか
+		if (subSpeed_ - subDownSpeed_ <= 0) {
 
 			//メインスピードがあるかどうか
-			if (mainAddSpeed_ - mainSubSpeedBySub_ > 0) {
-				//サブスピードが0になったらメインスピードを下げる
-				subAddSpeed_ = SubMaxSpeed_;
-				mainAddSpeed_ -= mainSubSpeedBySub_;
+			if (mainSpeed_ ) {
+
+				//メインスピードを減速した場合0以下になるか
+				if (mainSpeed_ - mainDownSpeed_ <= 0) {
+
+					//なるならメインスピードを0にしサブスピードをマックスに
+					mainSpeed_ = 0;
+					subSpeed_ = SubMaxSpeed_;
+
+				}
+				else {
+					//ならなければそのまま減速しサブスピードをマックスに
+					mainSpeed_ -= mainDownSpeed_;
+					subSpeed_ = SubMaxSpeed_;
+				}
+
 			}
 			else {
-				subAddSpeed_ = 0;
+				//ない場合サブスピードは0に
+				subSpeed_ = 0;
 			}
 		}
 		else {
-			subAddSpeed_ -= subSubSpeedByEnemy_;
+			//ならない場合そのまま減速
+			subSpeed_ -= subDownSpeed_;
 		}
 	}
 }
@@ -223,7 +240,7 @@ void Player::Move()
 		}
 	}
 
-	position_.z += speedZ_ + mainAddSpeed_;
+	position_.z += speedZ_ + mainSpeed_;
 
 }
 
@@ -267,7 +284,7 @@ void Player::MakeBullet()
 	velocity *= bulletSpeed_;
 
 	//z軸は自機も動いているためそのスピードも足す
-	velocity.z += (speedZ_ + mainAddSpeed_);
+	velocity.z += (speedZ_ + mainSpeed_);
 	//弾の生成
 	std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
 	newBullet->Initialize(bulletModel_.get(), position_, velocity);
@@ -341,7 +358,7 @@ void Player::UpdateSprite()
 		//今のスピードが最大スピードの何割か計算しスケールをそれに合わせる
 
 		//今のスピード(基礎スピードはのぞく)が何割か
-		float speedRate = subAddSpeed_ / SubMaxSpeed_;
+		float speedRate = subSpeed_ / SubMaxSpeed_;
 		//スプライトの最大サイズ
 		float speedSpriteMaxSize = window_width - (speedSpriteXSpace_ * 2);
 
@@ -359,7 +376,7 @@ void Player::UpdateSprite()
 		//今のスピードが最大スピードの何割か計算しスケールをそれに合わせる
 
 		//今のスピード(基礎スピードはのぞく)が何割か
-		float speedRate = mainAddSpeed_ / MainMaxSpeed_;
+		float speedRate = mainSpeed_ / MainMaxSpeed_;
 		//スプライトの最大サイズ
 		float speedSpriteMaxSize = window_width - (speedSpriteXSpace_ * 2);
 
@@ -401,8 +418,8 @@ void Player::Reset()
 	position_ = initPosition_;
 	//速度
 	speedZ_ = initSpeedZ_;
-	mainAddSpeed_ = initMainAddSpeed_;
-	subAddSpeed_ = initSubAddSpeed_;
+	mainSpeed_ = initMainAddSpeed_;
+	subSpeed_ = initSubAddSpeed_;
 
 	//レティクル
 	//reticlePosition_ = { 0,0 };

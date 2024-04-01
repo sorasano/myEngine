@@ -127,11 +127,11 @@ public:
 	/**
 	* @return float スピード取得
 	*/
-	float GetSpeed() const { return speedZ_ + mainAddSpeed_; }
+	float GetSpeed() const { return speedZ_ + mainSpeed_; }
 	/**
 	* @return float 加速スピード取得
 	*/
-	float GetAddSpeed() const { return mainAddSpeed_; }
+	float GetAddSpeed() const { return mainSpeed_; }
 	/**
 	* @return CollisionData 当たり判定情報取得
 	*/
@@ -219,21 +219,21 @@ private:
 
 	//(メイン)
 	//基礎スピード以外の加速スピード
-	float mainAddSpeed_ = 0.0f;
+	float mainSpeed_ = 0.0f;
 	//レベルアップしたときの加速量
-	float mainAddSpeedBySub_ = 1.0f;
+	float mainUpSpeed_ = 1.0f;
 	//レベルダウンしたときの減速量
-	float mainSubSpeedBySub_ = 1.0f;
+	float mainDownSpeed_ = 1.0f;
 	//最大加速量
 	const float MainMaxSpeed_ = 5.0f;
 
 	//(サブ)
 	//基礎スピード以外の加速スピード
-	float subAddSpeed_ = 0.0f;
+	float subSpeed_ = 0.0f;
 	//敵を倒した時の加速量
-	float subAddSpeedByEnemy_ = 0.5f;
+	float subUpSpeed_ = 0.5f;
 	//敵に被弾した時の減速
-	float subSubSpeedByEnemy_ = 1.0f;
+	float subDownSpeed_ = 1.0f;
 	//最大加速量
 	const float SubMaxSpeed_ = 5.0f;
 
