@@ -78,12 +78,12 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)Engine\fbx;$(SolutionDir)Engine\Math;$(SolutionDir)External\DirectXTex;$(SolutionDir)Engine\Base;$(SolutionDir)External\fbx_sdk\include;$(SolutionDir)Engine\2d;$(SolutionDir)Engine;$(SolutionDir)External\imgui;$(SolutionDir)App;$(SolutionDir)Engine\Loader;$(SolutionDir)App\Scene;$(SolutionDir)Engine\obj;$(SolutionDir)App\bullet;$(SolutionDir)App\backGround</IncludePath>
+    <IncludePath>$(SolutionDir)Engine\fbx;$(SolutionDir)Engine\Math;$(SolutionDir)External\DirectXTex;$(SolutionDir)Engine\Base;$(SolutionDir)External\fbx_sdk\include;$(SolutionDir)Engine\2d;$(SolutionDir)Engine;$(SolutionDir)External\imgui;$(SolutionDir)App;$(SolutionDir)Engine\Loader;$(SolutionDir)App\Scene;$(SolutionDir)Engine\object3d;$(SolutionDir)App\bullet;$(SolutionDir)App\backGround</IncludePath>
     <LibraryPath>$(ProjectDir)External\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)Engine\fbx;$(SolutionDir)Engine\Math;$(SolutionDir)External\DirectXTex;$(SolutionDir)Engine\Base;$(SolutionDir)External\fbx_sdk\include;$(SolutionDir)Engine\2d;$(SolutionDir)Engine;$(SolutionDir)External\imgui;$(SolutionDir)App;$(SolutionDir)Engine\Loader;$(SolutionDir)App\Scene;$(SolutionDir)Engine\obj;$(SolutionDir)App\bullet;$(SolutionDir)App\backGround</IncludePath>
+    <IncludePath>$(SolutionDir)Engine\fbx;$(SolutionDir)Engine\Math;$(SolutionDir)External\DirectXTex;$(SolutionDir)Engine\Base;$(SolutionDir)External\fbx_sdk\include;$(SolutionDir)Engine\2d;$(SolutionDir)Engine;$(SolutionDir)External\imgui;$(SolutionDir)App;$(SolutionDir)Engine\Loader;$(SolutionDir)App\Scene;$(SolutionDir)Engine\object3d;$(SolutionDir)App\bullet;$(SolutionDir)App\backGround</IncludePath>
     <LibraryPath>$(ProjectDir)External\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -199,8 +199,8 @@
     <ClCompile Include="Engine\Math\Vector2.cpp" />
     <ClCompile Include="Engine\Math\Vector3.cpp" />
     <ClCompile Include="App\Player.cpp" />
-    <ClCompile Include="Engine\obj\Model.cpp" />
-    <ClCompile Include="Engine\obj\object3D.cpp" />
+    <ClCompile Include="Engine\Obj\Model.cpp" />
+    <ClCompile Include="Engine\Obj\object3D.cpp" />
     <ClCompile Include="Engine\ParticleManager.cpp" />
   </ItemGroup>
   <ItemGroup>
