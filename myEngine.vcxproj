@@ -199,8 +199,8 @@
     <ClCompile Include="Engine\Math\Vector2.cpp" />
     <ClCompile Include="Engine\Math\Vector3.cpp" />
     <ClCompile Include="App\Player.cpp" />
-    <ClCompile Include="Engine\Obj\Model.cpp" />
-    <ClCompile Include="Engine\Obj\object3D.cpp" />
+    <ClCompile Include="Engine\object3d\Model.cpp" />
+    <ClCompile Include="Engine\object3d\object3D.cpp" />
     <ClCompile Include="Engine\ParticleManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -334,8 +334,8 @@
     <ClInclude Include="Engine\Math\Vector2.h" />
     <ClInclude Include="Engine\Math\Vector3.h" />
     <ClInclude Include="App\Player.h" />
-    <ClInclude Include="Engine\obj\Model.h" />
-    <ClInclude Include="Engine\obj\object3D.h" />
+    <ClInclude Include="Engine\object3d\Model.h" />
+    <ClInclude Include="Engine\object3d\object3D.h" />
     <ClInclude Include="Engine\ParticleManager.h" />
   </ItemGroup>
   <ItemGroup>

@@ -206,10 +206,10 @@
     <ClCompile Include="Engine\Math\MathManager.cpp">
       <Filter>ソース ファイル\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Obj\Model.cpp">
+    <ClCompile Include="Engine\object3d\Model.cpp">
       <Filter>ソース ファイル\obj</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Obj\object3D.cpp">
+    <ClCompile Include="Engine\object3d\object3D.cpp">
       <Filter>ソース ファイル\obj</Filter>
     </ClCompile>
   </ItemGroup>
@@ -404,10 +404,10 @@
     <ClInclude Include="App\backGround\Skydome.h">
       <Filter>ヘッダー ファイル\backGround</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\obj\Model.h">
+    <ClInclude Include="Engine\object3d\Model.h">
       <Filter>ヘッダー ファイル\obj</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\obj\object3D.h">
+    <ClInclude Include="Engine\object3d\object3D.h">
       <Filter>ヘッダー ファイル\obj</Filter>
     </ClInclude>
   </ItemGroup>
