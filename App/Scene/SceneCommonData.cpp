@@ -47,6 +47,7 @@ SceneCommonData::SceneCommonData()
 
 	spriteManager_->LoadFile(16, "green1x1.png");
 
+	spriteManager_->LoadFile(17, "UI/speedGauge.png");
 
 	//-----スプライト------
 	Sprite::SetDevice(dxCommon_->GetDevice());

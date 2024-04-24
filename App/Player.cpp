@@ -63,6 +63,16 @@ void Player::Initialize()
 	newSubSpeedSprite_->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
 	subSpeedSprite_.swap(newSubSpeedSprite_);
 
+	std::unique_ptr<Sprite> newSpeedGaugeSprite_ = std::make_unique<Sprite>();
+	newSpeedGaugeSprite_->SetTextureNum(17);
+	newSpeedGaugeSprite_->Initialize();
+	newSpeedGaugeSprite_->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
+
+	newSpeedGaugeSprite_->SetPosition(speedGaugeSpritePosition_);
+	speedGaugeSpriteScale_.x = speedSpriteMaxSize;
+	newSpeedGaugeSprite_->SetScale(speedGaugeSpriteScale_);
+	speedGaugeSprite_.swap(newSpeedGaugeSprite_);
+
 	Reset();
 }
 
@@ -157,6 +167,8 @@ void Player::DrawSprite(ID3D12GraphicsCommandList* cmdList)
 	mainSpeedSprite_->Draw(cmdList);
 
 	subSpeedSprite_->Draw(cmdList);
+
+	speedGaugeSprite_->Draw(cmdList);
 
 }
 
@@ -353,14 +365,16 @@ void Player::UpdateRaticle(const XMMATRIX& matVP)
 
 void Player::UpdateSprite()
 {
+
+	//スピードゲージUI
+	speedGaugeSprite_->Update();
+
 	//スピードUIスプライト(サブ)
 	{
 		//今のスピードが最大スピードの何割か計算しスケールをそれに合わせる
 
 		//今のスピード(基礎スピードはのぞく)が何割か
 		float speedRate = subSpeed_ / SubMaxSpeed_;
-		//スプライトの最大サイズ
-		float speedSpriteMaxSize = window_width - (speedSpriteXSpace_ * 2);
 
 		//最大サイズと今のスピードの割合をかける
 		subSpeedSpriteScale_.x = speedSpriteMaxSize * speedRate;
@@ -377,8 +391,6 @@ void Player::UpdateSprite()
 
 		//今のスピード(基礎スピードはのぞく)が何割か
 		float speedRate = mainSpeed_ / MainMaxSpeed_;
-		//スプライトの最大サイズ
-		float speedSpriteMaxSize = window_width - (speedSpriteXSpace_ * 2);
 
 		//最大サイズと今のスピードの割合をかける
 		mainSpeedSpriteScale_.x = speedSpriteMaxSize * speedRate;

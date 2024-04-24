@@ -223,7 +223,7 @@ private:
 
 	//(メイン)
 	//基礎スピード以外の加速スピード
-	float mainSpeed_ = 1.0f;
+	float mainSpeed_ = 0.0f;
 	//レベルアップしたときの加速量
 	float mainUpSpeed_ = 1.0f;
 	//レベルダウンしたときの減速量
@@ -235,7 +235,7 @@ private:
 	//基礎スピード以外の加速スピード
 	float subSpeed_ = 0.0f;
 	//敵を倒した時の加速量
-	float subUpSpeed_ = 0.5f;
+	float subUpSpeed_ = 1.0f;
 	//敵に被弾した時の減速
 	float subDownSpeed_ = 1.0f;
 	//最大加速量
@@ -266,6 +266,7 @@ private:
 	//-----スプライト------
 	std::unique_ptr<Sprite> mainSpeedSprite_;
 	std::unique_ptr<Sprite> subSpeedSprite_;
+	std::unique_ptr<Sprite> speedGaugeSprite_;
 
 	//スケールはxが変動、yが固定
 	XMFLOAT2 mainSpeedSpriteScale_ = { 0,32 };
@@ -273,8 +274,13 @@ private:
 	XMFLOAT2 subSpeedSpriteScale_ = { 0,32 };
 	XMFLOAT2 subSpeedSpritePosition_ = { window_width / 2,window_height - 32 };
 
+	XMFLOAT2 speedGaugeSpriteScale_ = { 0,32 };
+	XMFLOAT2 speedGaugeSpritePosition_ = { window_width / 2,window_height - 32 };
+
 	//スプライトの左右両端をどのくらい開けるか
 	float speedSpriteXSpace_ = 64;
+	//スプライトの最大サイズ
+	float speedSpriteMaxSize = window_width - (speedSpriteXSpace_ * 2);
 
 private:
 
