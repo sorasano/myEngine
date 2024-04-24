@@ -106,16 +106,16 @@ SceneCommonData::SceneCommonData()
 	}
 
 	//スカイドーム初期化
-	Skydome* newSkydome = new Skydome();
+	std::unique_ptr<Skydome> newSkydome = std::make_unique<Skydome>();
 	newSkydome->Initialize();
-	skydome_.reset(newSkydome);
+	skydome_.swap(newSkydome);
 
 	//------------プレイヤー----------
 
 	//プレイヤー初期化
-	Player* newPlayer = new Player();
+	std::unique_ptr<Player> newPlayer = std::make_unique<Player>();
 	newPlayer->Initialize();
-	player_.reset(newPlayer);
+	player_.swap(newPlayer);
 
 	//----------------敵--------------
 
@@ -150,30 +150,30 @@ SceneCommonData::SceneCommonData()
 	}
 
 	//ボス
-	Boss* newBoss = new Boss();
+	std::unique_ptr<Boss> newBoss = std::make_unique<Boss>();
 	newBoss->Initialize();
-	boss_.reset(newBoss);
+	boss_.swap(newBoss);
 
 	//演出
-	PerformanceManager* newPerformanceManager = new PerformanceManager();
+	std::unique_ptr<PerformanceManager> newPerformanceManager = std::make_unique<PerformanceManager>();
 	newPerformanceManager->Initialize(camera_.get(), player_.get(), boss_.get());
-	performanceManager_.reset(newPerformanceManager);
+	performanceManager_.swap(newPerformanceManager);
 
 	//パーティクル
 
 	//撃破
-	ParticleManager* newDestroyParticle_ = new ParticleManager();
+	std::unique_ptr<ParticleManager> newDestroyParticle_ = std::make_unique<ParticleManager>();
 	newDestroyParticle_->Initialize("effect1.png");
-	destroyParticle_.reset(newDestroyParticle_);
+	destroyParticle_.swap(newDestroyParticle_);
 
 	//着弾
-	ParticleManager* newLandingParticle_ = new ParticleManager();
+	std::unique_ptr<ParticleManager> newLandingParticle_ = std::make_unique<ParticleManager>();
 	newLandingParticle_->Initialize("effect2.png");
-	landingParticle_.reset(newLandingParticle_);
+	landingParticle_.swap(newLandingParticle_);
 
 	//メニュー
-	Menu* newMenu = new Menu();
+	std::unique_ptr<Menu> newMenu = std::make_unique<Menu>();
 	newMenu->Initialize();
-	menu_.reset(newMenu);
+	menu_.swap(newMenu);
 
 }
