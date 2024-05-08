@@ -41,6 +41,13 @@ Vector3 Vector3::cross(const Vector3& v) const
 		x * v.y - y * v.x };
 }
 
+void Vector3::zero()
+{
+	this->x = 0;
+	this->y = 0;
+	this->z = 0;
+}
+
 Vector3 Vector3::operator+() const
 {
 	return*this;

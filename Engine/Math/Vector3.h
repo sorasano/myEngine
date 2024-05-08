@@ -55,6 +55,10 @@ public:
 	* @return Vector3 外積
 	*/
 	Vector3 cross(const Vector3& v)const;
+	/**
+	* 全要素に0を代入
+	*/
+	void zero();
 
 // 単項演算子オーバーロード
 	Vector3 operator+() const;

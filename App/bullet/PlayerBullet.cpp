@@ -64,9 +64,7 @@ void PlayerBullet::Draw(ID3D12GraphicsCommandList* cmdList)
 
 void PlayerBullet::Move()
 {
-	position_.x += velocity_.x;
-	position_.y += velocity_.y;
-	position_.z += velocity_.z;
+	VecAddXMFLOAT3(position_, velocity_);
 }
 
 void PlayerBullet::OnCollision()

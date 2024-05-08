@@ -64,9 +64,7 @@ void EnemyBullet::Draw(ID3D12GraphicsCommandList* cmdList)
 
 void EnemyBullet::Move()
 {
-	position_.x += velocity_.x;
-	position_.y += velocity_.y;
-	position_.z += velocity_.z;
+	VecAddXMFLOAT3(position_, velocity_);
 }
 
 void EnemyBullet::OnCollision()

@@ -116,9 +116,11 @@ void Boss::Draw(ID3D12GraphicsCommandList* cmdList)
 
 void Boss::Move()
 {
-	//自機に追従
-	position_.z += playerSpeed_;
+	//ベクトルのリセット
+	moveVec_.zero();
 
+	//自機に追従
+	moveVec_.z = +playerSpeed_;
 
 	switch (moveType_)
 	{
@@ -139,6 +141,8 @@ void Boss::Move()
 		break;
 	}
 
+	//ベクトルの加算
+	VecAddXMFLOAT3(position_, moveVec_);
 }
 
 void Boss::MoveX()
@@ -146,7 +150,7 @@ void Boss::MoveX()
 	if (moveX_) {
 
 		if (position_.x < moveMaxX_) {
-			position_.x += moveSpeed_;
+			moveVec_.x = +moveSpeed_;
 		}
 		else {
 			moveX_ = false;
@@ -156,7 +160,7 @@ void Boss::MoveX()
 	else {
 
 		if (position_.x > -moveMaxX_) {
-			position_.x -= moveSpeed_;
+			moveVec_.x = -moveSpeed_;
 		}
 		else {
 			moveX_ = true;
@@ -169,7 +173,7 @@ void Boss::MoveY()
 	if (moveY_) {
 
 		if (position_.y < moveMaxY_) {
-			position_.y += moveSpeed_;
+			moveVec_.y = +moveSpeed_;
 		}
 		else {
 			moveY_ = false;
@@ -179,7 +183,7 @@ void Boss::MoveY()
 	else {
 
 		if (position_.y > -moveMaxY_) {
-			position_.y -= moveSpeed_;
+			moveVec_.y = -moveSpeed_;
 		}
 		else {
 			moveY_ = true;

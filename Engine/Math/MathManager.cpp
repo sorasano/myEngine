@@ -34,3 +34,10 @@ XMMATRIX MatrixInverse(const XMMATRIX& mat)
 	return result;
 
 }
+
+void VecAddXMFLOAT3(XMFLOAT3& f3, const Vector3& v3)
+{
+	f3.x += v3.x;
+	f3.y += v3.y;
+	f3.z += v3.z;
+}

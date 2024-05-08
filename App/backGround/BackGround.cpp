@@ -14,12 +14,7 @@ BackGround::BackGround()
 
 BackGround::~BackGround()
 {
-	for (auto& object : backGroundObjects_) {
-		//要素の解放
-		delete object;
-	}
-	//すべての要素をコンテナから取り除く
-	backGroundObjects_.clear();
+	DeleteObject();
 }
 
 void BackGround::Initialize(float adjustPos)

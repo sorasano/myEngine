@@ -25,3 +25,11 @@ using XMMATRIX = DirectX::XMMATRIX;
 * @param[in] mat 元行列
 */
 XMMATRIX MatrixInverse(const XMMATRIX& mat);
+
+/**
+* vector3とxmfloat3の合成
+*
+* @param[in,out] f3 float3
+* @param[in] v3 vector3
+*/
+void VecAddXMFLOAT3(XMFLOAT3& f3,const Vector3& v3);

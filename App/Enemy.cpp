@@ -83,6 +83,8 @@ void Enemy::Draw(ID3D12GraphicsCommandList* cmdList)
 
 void Enemy::Move()
 {
+	//ベクトルのリセット
+	moveVec_.zero();
 
 	switch (moveType_)
 	{
@@ -103,6 +105,8 @@ void Enemy::Move()
 		break;
 	}
 
+	//ベクトルの加算
+	VecAddXMFLOAT3(position_, moveVec_);
 }
 
 void Enemy::MoveX()
@@ -110,7 +114,7 @@ void Enemy::MoveX()
 	if (moveX_) {
 
 		if (position_.x < moveMaxX_) {
-			position_.x += moveSpeed_;
+			moveVec_.x = +moveSpeed_;
 		}
 		else {
 			moveX_ = false;
@@ -120,7 +124,7 @@ void Enemy::MoveX()
 	else {
 
 		if (position_.x > -moveMaxX_) {
-			position_.x -= moveSpeed_;
+			moveVec_.x = -moveSpeed_;
 		}
 		else {
 			moveX_= true;
@@ -133,7 +137,7 @@ void Enemy::MoveY()
 	if (moveY_) {
 
 		if (position_.y < moveMaxY_) {
-			position_.y += moveSpeed_;
+			moveVec_.y = +moveSpeed_;
 		}
 		else {
 			moveY_ = false;
@@ -143,7 +147,7 @@ void Enemy::MoveY()
 	else {
 
 		if (position_.y > -moveMaxY_) {
-			position_.y -= moveSpeed_;
+			moveVec_.y = -moveSpeed_;
 		}
 		else {
 			moveY_ = true;

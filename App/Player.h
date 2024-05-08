@@ -17,10 +17,6 @@ class Player
 
 public:
 	/**
-	* シングルトンインスタンス
-	*/
-	Player* GetInstance();
-	/**
 	* コンストラクタ
 	*/
 	Player();
@@ -220,6 +216,8 @@ private:
 	float speedXY_ = 0.5f;
 	//移動スピード(z)
 	float speedZ_ = 0.5f;
+	//移動ベクトル
+	Vector3 moveVec_ = {};
 
 	//(メイン)
 	//基礎スピード以外の加速スピード

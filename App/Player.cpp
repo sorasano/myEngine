@@ -6,12 +6,6 @@
 #include "Player.h"
 #include "Imgui.h"
 
-Player* Player::GetInstance()
-{
-	static Player instance;
-	return &instance;
-}
-
 Player::Player()
 {
 }
@@ -30,10 +24,10 @@ void Player::Initialize()
 	bulletModel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("playerBullet"));
 
 	//3dオブジェクト生成とモデルのセット
-	std::unique_ptr<FbxObject3D> newPlayerObject_ = std::make_unique<FbxObject3D>();
-	newPlayerObject_->Initialize();
-	newPlayerObject_->SetModel(playerModel_.get());
-	playerObject_.swap(newPlayerObject_);
+	std::unique_ptr<FbxObject3D> newPlayerObject = std::make_unique<FbxObject3D>();
+	newPlayerObject->Initialize();
+	newPlayerObject->SetModel(playerModel_.get());
+	playerObject_.swap(newPlayerObject);
 
 	//スプライト
 
@@ -229,6 +223,9 @@ void Player::SpeedDownByEnemy()
 
 void Player::Move()
 {
+	//ベクトルのリセット
+	moveVec_.zero();
+
 	//キーボード操作
 	if (!isLockOperation_) {
 
@@ -236,23 +233,27 @@ void Player::Move()
 
 			//座標を移動する処理
 			if (input_->IsKeyPress(DIK_W)) {
-				if (MoveMax_.y > position_.y) { position_.y += speedXY_; }
+				if (MoveMax_.y > position_.y) { moveVec_.y = +speedXY_; }
 			}
 			else if (input_->IsKeyPress(DIK_S)) {
-				if (-MoveMax_.y < position_.y) { position_.y -= speedXY_; }
+				if (-MoveMax_.y < position_.y) { moveVec_.y = -speedXY_; }
 			}
 
 			if (input_->IsKeyPress(DIK_A)) {
-				if (-MoveMax_.x < position_.x) { position_.x -= speedXY_; }
+				if (-MoveMax_.x < position_.x) { moveVec_.x = -speedXY_; }
 			}
 			else if (input_->IsKeyPress(DIK_D)) {
-				if (MoveMax_.x > position_.x) { position_.x += speedXY_; }
+				if (MoveMax_.x > position_.x) { moveVec_.x = +speedXY_; }
 			}
 
 		}
 	}
 
-	position_.z += speedZ_ + mainSpeed_;
+	//奥移動
+	moveVec_.z = speedZ_ + mainSpeed_;
+
+	//ベクトルの加算
+	VecAddXMFLOAT3(position_,moveVec_);
 
 }
 

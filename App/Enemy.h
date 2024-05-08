@@ -227,6 +227,9 @@ private:
 	//移動スピード
 	float moveSpeed_ = 0.1f;
 
+	//移動ベクトル
+	Vector3 moveVec_ = {};
+
 	//----------弾----------
 	FbxModel* bulletModel_ = nullptr;
 	std::list<std::unique_ptr<EnemyBullet>> bullets_;

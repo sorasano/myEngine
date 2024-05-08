@@ -261,6 +261,8 @@ private:
 	float moveMaxY_ = 10;
 	//移動スピード
 	float moveSpeed_ = 0.1f;
+	//移動ベクトル
+	Vector3 moveVec_ = {};
 
 	//----------弾----------
 	std::list<std::unique_ptr<BossBullet>> bullets_;
