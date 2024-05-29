@@ -21,6 +21,18 @@ SpriteManager* Sprite::spriteManager_ = nullptr;
 ComPtr<ID3D12RootSignature>Sprite::rootsignature_;
 ComPtr<ID3D12PipelineState>Sprite::pipelinestate_;
 
+Sprite::Sprite()
+{
+}
+
+Sprite::Sprite(int textureNum, XMFLOAT2 scale, XMFLOAT2 position)
+{
+	SetTextureNum(textureNum);
+	Initialize();
+	SetScale(scale);
+	SetPosition(position);
+}
+
 void Sprite::Initialize()
 {
 	HRESULT result;

@@ -52,32 +52,36 @@ SceneCommonData::SceneCommonData()
 	Sprite::SetSpriteManager(spriteManager_.get());
 	Sprite::CreateGraphicsPipeLine();
 
-	std::unique_ptr<Sprite> newTitleSprite = std::make_unique<Sprite>();
-	newTitleSprite->SetTextureNum(0);
-	newTitleSprite->Initialize();
-	newTitleSprite->SetScale(XMFLOAT2(1280, 720));
-	newTitleSprite->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
+	std::unique_ptr<Sprite> newTitleSprite = 
+		std::make_unique<Sprite>(
+			0, 
+			XMFLOAT2(1280, 720),
+			XMFLOAT2(window_width / 2, window_height / 2)
+		);
 	titleSprite_.swap(newTitleSprite);
 
-	std::unique_ptr<Sprite> newClearSprite_ = std::make_unique<Sprite>();
-	newClearSprite_->SetTextureNum(1);
-	newClearSprite_->Initialize();
-	newClearSprite_->SetScale(XMFLOAT2(1280, 720));
-	newClearSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
+	std::unique_ptr<Sprite> newClearSprite_ =
+		std::make_unique<Sprite>(
+			1,
+			XMFLOAT2(1280, 720),
+			XMFLOAT2(window_width / 2, window_height / 2)
+		);
 	clearSprite_.swap(newClearSprite_);
 
-	std::unique_ptr<Sprite> newGameoverSprite_ = std::make_unique<Sprite>();
-	newGameoverSprite_->SetTextureNum(2);
-	newGameoverSprite_->Initialize();
-	newGameoverSprite_->SetScale(XMFLOAT2(1280, 720));
-	newGameoverSprite_->SetPosition(XMFLOAT2(window_width / 2, window_height / 2));
+	std::unique_ptr<Sprite> newGameoverSprite_ = 
+		std::make_unique<Sprite>(
+			2,
+			XMFLOAT2(1280, 720),
+			XMFLOAT2(window_width / 2, window_height / 2)
+		);
 	gameoverSprite_.swap(newGameoverSprite_);
 
-	std::unique_ptr<Sprite> newMenuUISprite_ = std::make_unique<Sprite>();
-	newMenuUISprite_->SetTextureNum(6);
-	newMenuUISprite_->Initialize();
-	newMenuUISprite_->SetScale(XMFLOAT2(100, 100));
-	newMenuUISprite_->SetPosition(XMFLOAT2(window_width - 50, window_height - 50));
+	std::unique_ptr<Sprite> newMenuUISprite_ = 
+		std::make_unique<Sprite>(
+			6,
+			XMFLOAT2(100, 100),
+			XMFLOAT2(window_width - 50, window_height - 50)
+		);
 	menuUISprite_.swap(newMenuUISprite_);
 
 	//----------FBX----------

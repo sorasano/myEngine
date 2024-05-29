@@ -33,12 +33,12 @@ void Player::Initialize()
 
 	//レティクル
 	for (int i = 0; i < reticleSpriteSize_; i++) {
-		std::unique_ptr<Sprite> newReticleSprite = std::make_unique<Sprite>();
-		newReticleSprite->SetTextureNum(5);
-		newReticleSprite->Initialize();
-		newReticleSprite->SetScale(reticleScale_);
-
-
+		std::unique_ptr<Sprite> newReticleSprite = 
+			std::make_unique<Sprite>(
+				5,
+				reticleScale_,
+				XMFLOAT2(0,0)
+			);
 		reticleSprites_.push_back(std::move(newReticleSprite));
 	}
 
@@ -47,24 +47,20 @@ void Player::Initialize()
 	std::unique_ptr<Sprite> newMainSpeedSprite_ = std::make_unique<Sprite>();
 	newMainSpeedSprite_->SetTextureNum(3);
 	newMainSpeedSprite_->Initialize();
-	newMainSpeedSprite_->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
 	mainSpeedSprite_.swap(newMainSpeedSprite_);
-
 
 	std::unique_ptr<Sprite> newSubSpeedSprite_ = std::make_unique<Sprite>();
 	newSubSpeedSprite_->SetTextureNum(16);
 	newSubSpeedSprite_->Initialize();
-	newSubSpeedSprite_->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
 	subSpeedSprite_.swap(newSubSpeedSprite_);
 
-	std::unique_ptr<Sprite> newSpeedGaugeSprite_ = std::make_unique<Sprite>();
-	newSpeedGaugeSprite_->SetTextureNum(17);
-	newSpeedGaugeSprite_->Initialize();
-	newSpeedGaugeSprite_->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
-
-	newSpeedGaugeSprite_->SetPosition(speedGaugeSpritePosition_);
 	speedGaugeSpriteScale_.x = speedSpriteMaxSize;
-	newSpeedGaugeSprite_->SetScale(speedGaugeSpriteScale_);
+	std::unique_ptr<Sprite> newSpeedGaugeSprite_ = 
+		std::make_unique<Sprite>(
+			17,
+			speedGaugeSpriteScale_,
+			speedGaugeSpritePosition_
+		);
 	speedGaugeSprite_.swap(newSpeedGaugeSprite_);
 
 	Reset();

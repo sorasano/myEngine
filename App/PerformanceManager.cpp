@@ -17,11 +17,12 @@ void PerformanceManager::Initialize(Camera* camera, Player* player, Boss* boss)
 
 	//スプライト
 	for (int i = 0; i < titleReturnSpritesSize_; i++) {
-		std::unique_ptr<Sprite> gPSprite = std::make_unique<Sprite>();
-		gPSprite->SetTextureNum(4);
-		gPSprite->Initialize();
-		gPSprite->SetScale(titleReturnSpriteSize);
-
+		std::unique_ptr<Sprite> gPSprite = 
+			std::make_unique<Sprite>(
+				4,
+				titleReturnSpriteSize,
+				XMFLOAT2(0,0)
+		);
 		titleReturnSprites_.push_back(std::move(gPSprite));
 	}
 }

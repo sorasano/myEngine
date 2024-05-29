@@ -39,7 +39,19 @@ public:	//サブクラス
 		XMFLOAT2 uv;
 	};
 
-public:	//メンバ関数
+public: //メンバ関数
+
+	//コンストラクタ
+	Sprite();
+	/**
+	* 初期化セット用コンストラクタ
+	*
+	* @param[in] textureNum セットするテクスチャ番号
+	* @param[in] scale 画像のサイズ
+	* @param[in] position 画像の座標
+	*/
+	Sprite(int textureNum, XMFLOAT2 scale, XMFLOAT2 position);
+
 
 	/**
 	*	初期化
