@@ -109,6 +109,9 @@ private:
 	*/
 	void UpdateSprite();
 
+	//スクリーン→ワールド座標変換	
+	void ScreenToWorldCoordinateTransformation(const XMMATRIX& matVP);
+
 public:
 
 	//ゲッター　セッター　

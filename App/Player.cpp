@@ -312,55 +312,7 @@ void Player::UpdateRaticle(const XMMATRIX& matVP)
 		reticle2DPosition_ = input_->GetMousePosition();
 	}
 
-	//ImGui::Begin("mouseposition");
-	//ImGui::Text("%f,%f", input_->GetMousePosition().x, input_->GetMousePosition().y);
-	//ImGui::End();
-
-	//スクリーン→ワールド座標変換	
-	{
-
-		//ビューポート行列
-		XMMATRIX viewPort;
-		viewPort = DirectX::XMMatrixIdentity();
-		viewPort.r[0].m128_f32[0] = window_width / 2;
-		viewPort.r[1].m128_f32[1] = -window_height / 2;
-		viewPort.r[3].m128_f32[0] = window_width / 2;
-		viewPort.r[3].m128_f32[1] = window_height / 2;
-
-		//ビュープロジェクションビュー行列
-		XMMATRIX matViewProjectionViewPort = matVP * viewPort;
-
-		//ビュープロジェクションビュー行列の逆行列を取得
-		XMMATRIX matInverseVPV = MatrixInverse(matViewProjectionViewPort);
-
-		//スクリーン→ワールド座標変換
-		Vector3 nearClip = { reticle2DPosition_.x , reticle2DPosition_.y ,0 };
-		Vector3 farClip = { reticle2DPosition_.x , reticle2DPosition_.y ,1 };
-
-		nearClip = XMMATRIXTransform(nearClip, matInverseVPV);
-		farClip = XMMATRIXTransform(farClip, matInverseVPV);
-
-		//マウスレイベクトル
-		Vector3 mouseDirection = farClip - nearClip;
-		mouseDirection.normalize();
-
-		//ニアクリップ面上からマウスレイベクトルの方向にreticleDirection進んだ距離
-		reticle3DPosition_ = nearClip + (mouseDirection * reticleDirection_);
-
-		//プレイヤーの2d座標の算出(ワールド→スクリーン座標計算)
-		Vector3 playerPosition = { position_.x,position_.y,position_.z };
-		playerPosition = XMMATRIXTransform(playerPosition, matViewProjectionViewPort);
-		position2D_ = { playerPosition.x,playerPosition.y };
-
-		//XMMATRIX a = matViewProjectionViewPort;
-		//ImGui::Begin("a");
-		//ImGui::Text("%f,%f,%f,%f\n%f,%f,%f,%f\n%f,%f,%f,%f\n%f,%f,%f,%f\n",
-		//	a.r[0].m128_f32[0], a.r[0].m128_f32[1],a.r[0].m128_f32[2], a.r[0].m128_f32[3],
-		//	a.r[1].m128_f32[0], a.r[1].m128_f32[1], a.r[1].m128_f32[2], a.r[1].m128_f32[3],
-		//	a.r[2].m128_f32[0], a.r[2].m128_f32[1], a.r[2].m128_f32[2], a.r[2].m128_f32[3],
-		//	a.r[3].m128_f32[0], a.r[3].m128_f32[1], a.r[3].m128_f32[2], a.r[3].m128_f32[3]);
-		//ImGui::End();
-	}
+	ScreenToWorldCoordinateTransformation(matVP);
 
 }
 
@@ -422,6 +374,43 @@ void Player::UpdateSprite()
 			reticleSprites_[i]->Update();
 		}
 	}
+
+}
+
+void Player::ScreenToWorldCoordinateTransformation(const XMMATRIX& matVP)
+{
+	//ビューポート行列
+	XMMATRIX viewPort;
+	viewPort = DirectX::XMMatrixIdentity();
+	viewPort.r[0].m128_f32[0] = window_width / 2;
+	viewPort.r[1].m128_f32[1] = -window_height / 2;
+	viewPort.r[3].m128_f32[0] = window_width / 2;
+	viewPort.r[3].m128_f32[1] = window_height / 2;
+
+	//ビュープロジェクションビュー行列
+	XMMATRIX matViewProjectionViewPort = matVP * viewPort;
+
+	//ビュープロジェクションビュー行列の逆行列を取得
+	XMMATRIX matInverseVPV = MatrixInverse(matViewProjectionViewPort);
+
+	//スクリーン→ワールド座標変換
+	Vector3 nearClip = { reticle2DPosition_.x , reticle2DPosition_.y ,0 };
+	Vector3 farClip = { reticle2DPosition_.x , reticle2DPosition_.y ,1 };
+
+	nearClip = XMMATRIXTransform(nearClip, matInverseVPV);
+	farClip = XMMATRIXTransform(farClip, matInverseVPV);
+
+	//マウスレイベクトル
+	Vector3 mouseDirection = farClip - nearClip;
+	mouseDirection.normalize();
+
+	//ニアクリップ面上からマウスレイベクトルの方向にreticleDirection進んだ距離
+	reticle3DPosition_ = nearClip + (mouseDirection * reticleDirection_);
+
+	//プレイヤーの2d座標の算出(ワールド→スクリーン座標計算)
+	Vector3 playerPosition = { position_.x,position_.y,position_.z };
+	playerPosition = XMMATRIXTransform(playerPosition, matViewProjectionViewPort);
+	position2D_ = { playerPosition.x,playerPosition.y };
 
 }
 
