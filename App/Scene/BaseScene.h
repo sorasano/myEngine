@@ -84,12 +84,6 @@ public:
 	* @return bool 更新範囲内ならtrue
 	*/
 	bool UpadateRange(const XMFLOAT3& cameraPos, const XMFLOAT3& pos);
-	/**
-	* メニューUI判定
-	*
-	* @return true = UIが押された
-	*/
-	bool MenuUIColision();
 
 	/**
 	* リセット

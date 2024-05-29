@@ -148,23 +148,6 @@ void BaseScene::UpdateBackGround()
 	cData_->skydome_->Update(cData_->camera_->GetEye().z);
 }
 
-bool BaseScene::MenuUIColision()
-{
-	XMFLOAT2 mousePos = cData_->input_->GetMousePosition();
-
-	if (Collision::CheckSpriteTo2Dpos(cData_->menuUISprite_.get(), mousePos)) {
-
-		cData_->performanceManager_->MenuUIRotPerformance(cData_->menuUISprite_.get());
-
-		if (cData_->input_->IsMouseTrigger(LEFT_CLICK)) {
-
-			return true;
-		}
-	}
-
-	return false;
-}
-
 void BaseScene::Reset()
 {
 	//プレイヤー

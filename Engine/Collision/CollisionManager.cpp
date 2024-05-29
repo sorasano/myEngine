@@ -18,8 +18,14 @@ void CollisionManager::Update()
 		EnemyToPlayer();
 		EnemyToEnemy();
 		PlayerToEnemyBullet();
+
+		MenuUIColision();
 		break;
 	case BOSS:
+		BossToPlayerBullet();
+		PlayerToBossBullet();
+
+		MenuUIColision();
 		break;
 	case CLEAR:
 		break;
@@ -142,4 +148,69 @@ void CollisionManager::PlayerToEnemyBullet()
 			}
 		}
 	}
+}
+
+void CollisionManager::BossToPlayerBullet()
+{
+		if (cData_->player_->GetBulletSize() != 0) {
+
+		for (int i = 0; i < cData_->player_->GetBulletSize(); i++) {
+
+
+			if (!cData_->boss_->GetIsDead()) {
+				//当たったか
+				if (Collision::CheckSquareToSquare(cData_->boss_->GetColData(), cData_->player_->GetBulletColData(i))) {
+
+					//当たったらhpをへらす
+					cData_->boss_->HitBullet();
+
+					//自機の弾を消し、パーティクル生成
+					cData_->player_->SetBulletIsDead(true, i);
+					cData_->landingParticle_->MakeParticle(cData_->player_->GetBulletPosition(i));
+
+					//スコアを加算
+				}
+			}
+
+		}
+	}
+}
+
+void CollisionManager::PlayerToBossBullet()
+{	
+	if (cData_->boss_->GetBulletSize() != 0) {
+
+		for (int i = 0; i < cData_->boss_->GetBulletSize(); i++) {
+
+			if (!cData_->boss_->GetIsDead()) {
+				//当たったか
+				if (Collision::CheckSquareToSquare(cData_->player_->GetColData(), cData_->boss_->GetBulletColData(i))) {
+
+					//当たったら敵の弾を消し、自機のスピードを下げスコアを減算
+					cData_->boss_->SetBulletIsDead(true, i);
+					cData_->player_->SpeedDownByEnemy();
+					//パーティクル生成
+					cData_->landingParticle_->MakeParticle(cData_->boss_->GetBulletPosition(i));
+
+				}
+			}
+		}
+	}
+}
+
+bool CollisionManager::MenuUIColision()
+{
+	XMFLOAT2 mousePos = cData_->input_->GetMousePosition();
+
+	if (Collision::CheckSpriteTo2Dpos(cData_->menuUISprite_.get(), mousePos)) {
+
+		cData_->performanceManager_->MenuUIRotPerformance(cData_->menuUISprite_.get());
+
+		if (cData_->input_->IsMouseTrigger(LEFT_CLICK)) {
+
+			return true;
+		}
+	}
+
+	return false;
 }

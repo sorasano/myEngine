@@ -59,6 +59,22 @@ public:
 	*/
 	void PlayerToEnemyBullet();
 
+	/**
+	* ボスと自機の弾の弾
+	*/
+	void BossToPlayerBullet();
+	/**
+	* 自機とボスの弾
+	*/
+	void PlayerToBossBullet();
+
+	/**
+	* メニューUI判定
+	*
+	* @return true = UIが押された
+	*/
+	bool MenuUIColision();
+
 private:
 	//共通データ
 	SceneCommonData* cData_;

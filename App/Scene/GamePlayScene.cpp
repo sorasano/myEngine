@@ -67,7 +67,7 @@ void GamePlayScene::ChangeScene()
 	CheckEnemy();
 
 	//メニュー
-	if (MenuUIColision()) {
+	if (collisionManager_->MenuUIColision()) {
 		cData_->performanceManager_->SetIsOldScene(PLAY);
 		cData_->performanceManager_->SetPerformanceNum(OPENMENU);
 	}

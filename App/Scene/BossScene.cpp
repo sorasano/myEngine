@@ -68,7 +68,7 @@ void BossScene::ChangeScene()
 	}
 
 	//メニュー
-	if (MenuUIColision()) {
+	if (collisionManager_->MenuUIColision()) {
 		cData_->performanceManager_->SetIsOldScene(BOSS);
 		cData_->performanceManager_->SetPerformanceNum(OPENMENU);
 
@@ -104,58 +104,4 @@ void BossScene::ChangeScene()
 		}
 	}
 }
-//
-//void BossScene::Collition()
-//{
-//#pragma region ボスと自機の弾の当たり判定
-//
-//	if (cData_->player_->GetBulletSize() != 0) {
-//
-//		for (int i = 0; i < cData_->player_->GetBulletSize(); i++) {
-//
-//
-//			if (!cData_->boss_->GetIsDead()) {
-//				//当たったか
-//				if (cData_->collisionManager_->CheckSquareToSquare(cData_->boss_->GetColData(), cData_->player_->GetBulletColData(i))) {
-//
-//					//当たったらhpをへらす
-//					cData_->boss_->HitBullet();
-//
-//					//自機の弾を消し、パーティクル生成
-//					cData_->player_->SetBulletIsDead(true, i);
-//					cData_->landingParticle_->MakeParticle(cData_->player_->GetBulletPosition(i));
-//
-//					//スコアを加算
-//				}
-//			}
-//
-//		}
-//	}
-//
-//#pragma endregion 
-//
-//#pragma region 自機とボスの弾
-//
-//
-//	if (cData_->boss_->GetBulletSize() != 0) {
-//
-//		for (int i = 0; i < cData_->boss_->GetBulletSize(); i++) {
-//
-//			if (!cData_->boss_->GetIsDead()) {
-//				//当たったか
-//				if (cData_->collisionManager_->CheckSquareToSquare(cData_->player_->GetColData(), cData_->boss_->GetBulletColData(i))) {
-//
-//					//当たったら敵の弾を消し、自機のスピードを下げスコアを減算
-//					cData_->boss_->SetBulletIsDead(true, i);
-//					cData_->player_->SpeedDownByEnemy();
-//					//パーティクル生成
-//					cData_->landingParticle_->MakeParticle(cData_->boss_->GetBulletPosition(i));
-//
-//				}
-//			}
-//		}
-//	}
-//
-//
-//#pragma endregion 
-//}
+
