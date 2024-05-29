@@ -5,7 +5,6 @@ void Menu::Initialize()
 {
 	//インスタンス取得
 	input_ = MyEngine::Input::GetInstance();
-	collisionManager_ = Collision::GetInstance();
 
 	std::unique_ptr<Sprite> newBaseSprite_ =std::make_unique<Sprite>();
 	newBaseSprite_->SetTextureNum(7);
@@ -148,13 +147,13 @@ void Menu::SerectCollision()
 
 	if (!isSetting_) {
 
-		if (collisionManager_->CheckSpriteTo2Dpos(settingSprite_.get(), mousePos)) {
+		if (Collision::CheckSpriteTo2Dpos(settingSprite_.get(), mousePos)) {
 			serect_ = MENUSETTING;
 		}
-		else if (collisionManager_->CheckSpriteTo2Dpos(titleSprite_.get(), mousePos)) {
+		else if (Collision::CheckSpriteTo2Dpos(titleSprite_.get(), mousePos)) {
 			serect_ = MENUTITLE;
 		}
-		else if (collisionManager_->CheckSpriteTo2Dpos(closeSprite_.get(), mousePos)) {
+		else if (Collision::CheckSpriteTo2Dpos(closeSprite_.get(), mousePos)) {
 			serect_ = MENUCLOSE;
 		}
 		else {
@@ -163,13 +162,13 @@ void Menu::SerectCollision()
 	}
 	else {
 
-		if (collisionManager_->CheckSpriteTo2Dpos(closeSettingSprite_.get(), mousePos)) {
+		if (Collision::CheckSpriteTo2Dpos(closeSettingSprite_.get(), mousePos)) {
 			serect_ = SETTINGCLOSE;
 		}
-		else if (collisionManager_->CheckSpriteTo2Dpos(settingMouseLockOnSprite_.get(), mousePos)) {
+		else if (Collision::CheckSpriteTo2Dpos(settingMouseLockOnSprite_.get(), mousePos)) {
 			serect_ = SETTINGMOUSEON;
 		}
-		else if (collisionManager_->CheckSpriteTo2Dpos(settingMouseLockOffSprite_.get(), mousePos)) {
+		else if (Collision::CheckSpriteTo2Dpos(settingMouseLockOffSprite_.get(), mousePos)) {
 			serect_ = SETTINGMOUSEOFF;
 		}
 		else {

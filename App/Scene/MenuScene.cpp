@@ -77,24 +77,20 @@ void MenuScene::ChangeScene()
 
 		if (cData_->scene_ == PLAY) {
 			//次シーンの生成
-			BaseScene* scene = new GamePlayScene(cData_);
+			BaseScene* scene = new GamePlayScene(cData_, collisionManager_);
 			//シーン切り替え依頼
 			sceneManager_->SetNextScene(scene);
 		}
 		else if (cData_->scene_ == BOSS) {
 			//次シーンの生成
-			BaseScene* scene = new BossScene(cData_);
+			BaseScene* scene = new BossScene(cData_, collisionManager_);
 			//シーン切り替え依頼
 			sceneManager_->SetNextScene(scene);
 		}else if (cData_->scene_ == TITLE) {
 			//次シーンの生成
-			BaseScene* scene = new TitleScene(cData_);
+			BaseScene* scene = new TitleScene(cData_, collisionManager_);
 			//シーン切り替え依頼
 			sceneManager_->SetNextScene(scene);
 		}
 	}
-}
-
-void MenuScene::Collition()
-{
 }

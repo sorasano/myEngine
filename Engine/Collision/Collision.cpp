@@ -5,12 +5,6 @@
 
 #include "Collision.h"
 
-Collision* Collision::GetInstance()
-{
-	static Collision instance;
-	return &instance;
-}
-
 bool Collision::CheckSquareToSquare(const CollisionData& A, const CollisionData& B)
 {
 	float positionAX1 = A.position.x - A.size.x / 2;

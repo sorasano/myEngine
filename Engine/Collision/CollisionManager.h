@@ -1,0 +1,66 @@
+﻿#pragma once
+#include "SceneCommonData.h"
+#include "Collision.h"
+
+class CollisionManager final
+{
+public:
+	/**
+	* シングルトンインスタンスを取得
+	*/
+	static CollisionManager* GetInstance();
+
+	/**
+	* コピーコンストラクタの無効
+	*/
+	CollisionManager(const CollisionManager& obj) = delete;
+
+	/**
+	* 代入演算子の無効
+	*/
+	CollisionManager& operator=(const CollisionManager& obj) = delete;
+
+public:
+
+	/**
+	* コンストラクタ
+	*/
+	CollisionManager() = default;
+	/**
+	* デストラクタ
+	*/
+	~CollisionManager() = default;
+
+public:
+
+	/**
+	* 初期化
+	*/
+	void Initialize(SceneCommonData* cData);
+	/**
+	* 更新
+	*/
+	void Update();
+
+	/**
+	* 敵と自機の弾の当たり判定
+	*/
+	void EnemyToPlayerBullet();
+	/**
+	* 敵と自機の当たり判定
+	*/
+	void EnemyToPlayer();
+	/**
+	* 敵と敵
+	*/
+	void EnemyToEnemy();
+	/**
+	* 自機と敵の弾
+	*/
+	void PlayerToEnemyBullet();
+
+private:
+	//共通データ
+	SceneCommonData* cData_;
+};
+

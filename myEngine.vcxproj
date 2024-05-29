@@ -78,12 +78,12 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)Engine\fbx;$(SolutionDir)Engine\Math;$(SolutionDir)External\DirectXTex;$(SolutionDir)Engine\Base;$(SolutionDir)External\fbx_sdk\include;$(SolutionDir)Engine\2d;$(SolutionDir)Engine;$(SolutionDir)External\imgui;$(SolutionDir)App;$(SolutionDir)Engine\Loader;$(SolutionDir)App\Scene;$(SolutionDir)Engine\object3d;$(SolutionDir)App\bullet;$(SolutionDir)App\backGround</IncludePath>
+    <IncludePath>$(SolutionDir)Engine\fbx;$(SolutionDir)Engine\Math;$(SolutionDir)External\DirectXTex;$(SolutionDir)Engine\Base;$(SolutionDir)External\fbx_sdk\include;$(SolutionDir)Engine\2d;$(SolutionDir)Engine;$(SolutionDir)External\imgui;$(SolutionDir)App;$(SolutionDir)Engine\Loader;$(SolutionDir)App\Scene;$(SolutionDir)Engine\object3d;$(SolutionDir)App\bullet;$(SolutionDir)App\backGround;$(SolutionDir)Engine\Collision</IncludePath>
     <LibraryPath>$(ProjectDir)External\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)Engine\fbx;$(SolutionDir)Engine\Math;$(SolutionDir)External\DirectXTex;$(SolutionDir)Engine\Base;$(SolutionDir)External\fbx_sdk\include;$(SolutionDir)Engine\2d;$(SolutionDir)Engine;$(SolutionDir)External\imgui;$(SolutionDir)App;$(SolutionDir)Engine\Loader;$(SolutionDir)App\Scene;$(SolutionDir)Engine\object3d;$(SolutionDir)App\bullet;$(SolutionDir)App\backGround</IncludePath>
+    <IncludePath>$(SolutionDir)Engine\fbx;$(SolutionDir)Engine\Math;$(SolutionDir)External\DirectXTex;$(SolutionDir)Engine\Base;$(SolutionDir)External\fbx_sdk\include;$(SolutionDir)Engine\2d;$(SolutionDir)Engine;$(SolutionDir)External\imgui;$(SolutionDir)App;$(SolutionDir)Engine\Loader;$(SolutionDir)App\Scene;$(SolutionDir)Engine\object3d;$(SolutionDir)App\bullet;$(SolutionDir)App\backGround;$(SolutionDir)Engine\Collision</IncludePath>
     <LibraryPath>$(ProjectDir)External\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -125,6 +125,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -184,8 +185,9 @@
     <ClCompile Include="Engine\Base\WinApp.cpp" />
     <ClCompile Include="App\Boss.cpp" />
     <ClCompile Include="Engine\Camera.cpp" />
-    <ClCompile Include="Engine\Collision.cpp" />
     <ClCompile Include="App\Enemy.cpp" />
+    <ClCompile Include="Engine\Collision\Collision.cpp" />
+    <ClCompile Include="Engine\Collision\CollisionManager.cpp" />
     <ClCompile Include="Engine\fbx\FbxLoader.cpp" />
     <ClCompile Include="Engine\fbx\FbxModel.cpp" />
     <ClCompile Include="Engine\fbx\FbxObject3d.cpp" />
@@ -319,8 +321,9 @@
     <ClInclude Include="Engine\Base\WinApp.h" />
     <ClInclude Include="App\Boss.h" />
     <ClInclude Include="Engine\Camera.h" />
-    <ClInclude Include="Engine\Collision.h" />
     <ClInclude Include="App\Enemy.h" />
+    <ClInclude Include="Engine\Collision\Collision.h" />
+    <ClInclude Include="Engine\Collision\CollisionManager.h" />
     <ClInclude Include="Engine\fbx\FbxLoader.h" />
     <ClInclude Include="Engine\fbx\FbxModel.h" />
     <ClInclude Include="Engine\fbx\FbxObject3d.h" />

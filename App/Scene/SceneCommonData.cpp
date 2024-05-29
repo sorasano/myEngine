@@ -5,8 +5,6 @@ SceneCommonData::SceneCommonData()
 	//インスタンスを取得
 	this->dxCommon_ = MyEngine::DirectXCommon::GetInstance();;
 	this->input_ = MyEngine::Input::GetInstance();
-	this->collisionManager_ = Collision::GetInstance();
-
 
 	//カメラ初期化
 	Camera* newCamera = new Camera();

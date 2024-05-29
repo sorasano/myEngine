@@ -19,7 +19,7 @@ struct CollisionData {
 	float radius = 0.0f;
 };
 
-class Collision final
+class Collision
 {
 private:	//エイリアス
 	//Microsoft::WRL::を省略
@@ -29,22 +29,6 @@ private:	//エイリアス
 	using XMFLOAT3 = DirectX::XMFLOAT3;
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
-
-public:
-	/**
-	* シングルトンインスタンスを取得
-	*/
-	static Collision* GetInstance();
-
-	/**
-	* コピーコンストラクタの無効
-	*/
-	Collision(const Collision& obj) = delete;
-
-	/**
-	* 代入演算子の無効
-	*/
-	Collision& operator=(const Collision& obj) = delete;
 
 private:
 
@@ -66,7 +50,7 @@ public:
 	* @param[in] B 2つめの矩形
 	* @return bool 当たっていたらtrue
 	*/
-	bool CheckSquareToSquare(const CollisionData& A, const CollisionData& B);
+	static bool CheckSquareToSquare(const CollisionData& A, const CollisionData& B);
 	/**
 	* 球同士の当たり判定
 	*
@@ -74,7 +58,7 @@ public:
 	* @param[in] B 2つめの球
 	* @return bool 当たっていたらtrue
 	*/
-	bool CheckSphereToSphere(const CollisionData& A, const CollisionData& B);
+	static bool CheckSphereToSphere(const CollisionData& A, const CollisionData& B);
 
 	/**
 	* スプライトとの当たり判定(座標がスプライトの中心点の場合)
@@ -83,7 +67,7 @@ public:
 	* @param[in] B 2d座標
 	* @return bool 当たっていたらtrue
 	*/
-	bool CheckSpriteTo2Dpos(const Sprite* sprite, const XMFLOAT2& pos);
+	static bool CheckSpriteTo2Dpos(const Sprite* sprite, const XMFLOAT2& pos);
 
 };
 

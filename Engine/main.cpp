@@ -52,7 +52,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	//シーンマネージャー
 	SceneManager* sceneManager = nullptr;
 	sceneManager = new SceneManager();
-	//sceneManager->Initialize();
+	
+
 
 	//最初のシーンの生成
 	BaseScene* scene = new TitleScene();

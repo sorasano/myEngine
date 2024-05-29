@@ -14,7 +14,7 @@ public:
 
 	TitleScene() : BaseScene() {};
 
-	TitleScene(SceneCommonData* cData) : BaseScene(cData) {};
+	TitleScene(SceneCommonData* cData, CollisionManager* collisionManager) : BaseScene(cData, collisionManager) {};
 
 	/**
 	* 初期化
@@ -44,10 +44,6 @@ private:
 	* シーン切り替え
 	*/
 	void ChangeScene() override;
-	/**
-	* 当たり判定
-	*/
-	void Collition() override;
 
 };
 

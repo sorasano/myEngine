@@ -6,6 +6,7 @@
 
 #pragma once
 #include "SceneCommonData.h"
+#include "CollisionManager.h"
 
 //前方宣言
 class SceneManager;
@@ -16,7 +17,7 @@ public:
 
 	BaseScene();
 
-	BaseScene(SceneCommonData* cData);
+	BaseScene(SceneCommonData* cData, CollisionManager* collisionManager);
 
 	/**
 	* デストラクタ
@@ -102,10 +103,6 @@ private:
 	*/
 	virtual void ChangeScene() = 0;
 	/**
-	* 当たり判定
-	*/
-	virtual void Collition() = 0;
-	/**
 	* 背景更新
 	*/
 	void UpdateBackGround();
@@ -115,14 +112,18 @@ public:
 
 	//セッター
 	virtual void SetSceneManager(SceneManager* sceneManager) { sceneManager_ = sceneManager; }
+	virtual void SetCollisionManager(CollisionManager* collisionManager) { collisionManager_ = collisionManager; }
 	virtual void SetSceneCommonData(SceneCommonData* sceneCommonData) { cData_ = sceneCommonData; }
 
 protected:
 
 	//シーンマネージャ(借りてくる)
 	SceneManager* sceneManager_ = nullptr;
+	//当たり判定マネージャー
+	CollisionManager* collisionManager_ = nullptr;
 
 	//他共通データ
 	SceneCommonData* cData_;
+
 };
 

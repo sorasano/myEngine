@@ -78,6 +78,12 @@
     <Filter Include="ヘッダー ファイル\backGround">
       <UniqueIdentifier>{c5d294bf-9228-4b79-92d4-a95af8e7a55f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Collision">
+      <UniqueIdentifier>{c99dc602-b66d-46df-a72c-7ad4633fa2f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Collision">
+      <UniqueIdentifier>{182e62a0-e884-413f-818e-d5b97bff6ff9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Base\DirectXCommon.cpp">
@@ -133,9 +139,6 @@
     </ClCompile>
     <ClCompile Include="Engine\Loader\CSVLoader.cpp">
       <Filter>ソース ファイル\Loader</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Collision.cpp">
-      <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Base\ImGuiManager.cpp">
       <Filter>ソース ファイル\Base</Filter>
@@ -211,6 +214,12 @@
     </ClCompile>
     <ClCompile Include="Engine\main.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Collision\Collision.cpp">
+      <Filter>ソース ファイル\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Collision\CollisionManager.cpp">
+      <Filter>ソース ファイル\Collision</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -332,9 +341,6 @@
     <ClInclude Include="Engine\Loader\JsonLoader.h">
       <Filter>ヘッダー ファイル\Loader</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Collision.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Base\ImGuiManager.h">
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
@@ -409,6 +415,12 @@
     </ClInclude>
     <ClInclude Include="Engine\object3d\object3D.h">
       <Filter>ヘッダー ファイル\obj</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Collision\Collision.h">
+      <Filter>ヘッダー ファイル\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Collision\CollisionManager.h">
+      <Filter>ヘッダー ファイル\Collision</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

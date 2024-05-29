@@ -5,9 +5,10 @@ BaseScene::BaseScene()
 	CommonInitialize();
 }
 
-BaseScene::BaseScene(SceneCommonData* cData)
+BaseScene::BaseScene(SceneCommonData* cData, CollisionManager* collisionManager)
 {
 	cData_ = cData;
+	collisionManager_ = collisionManager;
 }
 
 void BaseScene::CommonInitialize()
@@ -15,10 +16,19 @@ void BaseScene::CommonInitialize()
 	//共通変数初期化
 	SceneCommonData* newCData = new SceneCommonData;
 	cData_ = newCData;
+
+	//当たり判定マネージャー初期化
+	CollisionManager* newCollisionManager_ = new CollisionManager();
+	collisionManager_ = newCollisionManager_;
+	collisionManager_->Initialize(cData_);
+
 }
 
 void BaseScene::CommonUpdate()
 {
+	//当たり判定更新
+	collisionManager_->Update();
+
 	//カメラ更新
 	cData_->camera_->Update(cData_->player_->GetPosition());
 
@@ -29,7 +39,7 @@ void BaseScene::CommonUpdate()
 	cData_->performanceManager_->Update();
 
 	//パーティクル更新
-		//パーティクル更新
+	//パーティクル更新
 	cData_->destroyParticle_->Update();
 	cData_->landingParticle_->Update();
 
@@ -142,7 +152,7 @@ bool BaseScene::MenuUIColision()
 {
 	XMFLOAT2 mousePos = cData_->input_->GetMousePosition();
 
-	if (cData_->collisionManager_->CheckSpriteTo2Dpos(cData_->menuUISprite_.get(), mousePos)) {
+	if (Collision::CheckSpriteTo2Dpos(cData_->menuUISprite_.get(), mousePos)) {
 
 		cData_->performanceManager_->MenuUIRotPerformance(cData_->menuUISprite_.get());
 

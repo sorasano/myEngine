@@ -12,7 +12,6 @@
 #include "FbxObject3d.h"
 #include "CSVLoader.h"
 #include "JsonLoader.h"
-#include "Collision.h"
 #include "PerformanceManager.h"
 #include "Menu.h"
 
@@ -36,8 +35,6 @@ public:
 	MyEngine::DirectXCommon* dxCommon_ = nullptr;
 	MyEngine::Input* input_ = nullptr;
 	ID3D12GraphicsCommandList* commandList = nullptr;
-	//当たり判定
-	Collision* collisionManager_ = nullptr;
 
 	//カメラ
 	std::unique_ptr<Camera> camera_{};
