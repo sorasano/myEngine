@@ -49,5 +49,10 @@ private:
 	* 敵生存確認
 	*/
 	void CheckEnemy();
+
+	/**
+	* 敵削除処理
+	*/
+	void DeleteEnemy();
 };
 

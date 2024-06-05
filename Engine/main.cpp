@@ -53,8 +53,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	SceneManager* sceneManager = nullptr;
 	sceneManager = new SceneManager();
 	
-
-
 	//最初のシーンの生成
 	BaseScene* scene = new TitleScene();
 	//シーンマネージャーに最初のシーンをセット
@@ -119,23 +117,14 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 	}
 
-	//WindowsAPI解放
-	//delete winApp;
-
-	//DirextX解放
-	//delete dxCommon;
-
-	//入力開放
-	//delete input;
-
 	//imgui解放
 	imGuiManager->Finalize();
 
 	//gamescene解放
 	delete sceneManager;
 
-	//fbxLoader解放
-	//FbxLoader::GetInstance()->Finalize();
+	//ポストエフェクト解放
+	delete postEffect;
 
 	return 0;
 }
