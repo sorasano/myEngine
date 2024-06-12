@@ -268,7 +268,7 @@ private:
 	std::list<std::unique_ptr<BossBullet>> bullets_;
 
 	//弾の発射クールタイム
-	const int BulletCoolTime_ = 50;
+	const int BulletCoolTime_ = 2;
 	int bulletCoolTimer_ = 0;
 
 	//弾の速度
