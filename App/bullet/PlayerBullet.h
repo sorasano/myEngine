@@ -98,7 +98,7 @@ private:
 	//アフィン変換情報
 	XMFLOAT3 position_ = { 0,0,0 };
 	XMFLOAT3 rotation_ = { 0,0,0 };
-	XMFLOAT3 scale_ = { 1,1,1 };
+	XMFLOAT3 scale_ = { 1.5f,1.5f,1.5f };
 
 	//ワールド変換行列
 	XMMATRIX matWorld_ = {};

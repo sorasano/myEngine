@@ -163,6 +163,10 @@ public:
 	* @return XMFLOAT2 reticle2DPosition_取得
 	*/
 	XMFLOAT2 GetReticlePosition() const { return reticle2DPosition_; }
+	/**
+	* @return XMFLOAT2 playerDirection取得
+	*/
+	float GetPlayerDirection() const { return playerDirection; }
 
 	/**
 	* posセット
@@ -190,10 +194,9 @@ public:
 	*/
 	void SetIsLockOperation(bool isLockOperation) { this->isLockOperation_ = isLockOperation; };
 	/**
-	* enemyPosition_セット
+	* reticleDirection_セット
 	*/
-	void SetEnemyPosition_(XMFLOAT3 enemyPosition) { this->enemyPosition_ = enemyPosition; };
-
+	void SetReticleDirection_(float reticleDirection) { this->reticleDirection_ = reticleDirection; };
 
 	/**
 	* 弾死亡情報セット
@@ -283,9 +286,6 @@ private:
 	//レティクルまでの距離(プレイヤーからレティクルの距離)
 	float reticleDirection_ = playerDirection + 26.0f;
 
-	//一番近い敵の座標
-	XMFLOAT3 enemyPosition_ = { 0,0,0 };
-
 	//-----スプライト------
 	std::unique_ptr<Sprite> mainSpeedSprite_;
 	std::unique_ptr<Sprite> subSpeedSprite_;
@@ -311,11 +311,11 @@ private:
 	std::list<std::unique_ptr<PlayerBullet>> bullets_;
 
 	//弾の発射クールタイム
-	const int BulletCoolTime_ = 5;
+	const int BulletCoolTime_ = 2;
 	int bulletCoolTimer_ = 0;
 
 	//弾の速度
-	float bulletSpeed_ = 2;
+	float bulletSpeed_ = 3;
 
 	//初期情報(リセット用)
 	XMFLOAT3 initPosition_ = { 0,0,0 };

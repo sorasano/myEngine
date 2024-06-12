@@ -27,6 +27,8 @@ void CollisionManager::Update()
 		BossToPlayerBullet();
 		PlayerToBossBullet();
 
+		ReticleToBoss2D();
+
 		MenuUIColision();
 		break;
 	case CLEAR:
@@ -154,7 +156,7 @@ void CollisionManager::PlayerToEnemyBullet()
 
 void CollisionManager::BossToPlayerBullet()
 {
-		if (cData_->player_->GetBulletSize() != 0) {
+	if (cData_->player_->GetBulletSize() != 0) {
 
 		for (int i = 0; i < cData_->player_->GetBulletSize(); i++) {
 
@@ -179,7 +181,7 @@ void CollisionManager::BossToPlayerBullet()
 }
 
 void CollisionManager::PlayerToBossBullet()
-{	
+{
 	if (cData_->boss_->GetBulletSize() != 0) {
 
 		for (int i = 0; i < cData_->boss_->GetBulletSize(); i++) {
@@ -221,7 +223,7 @@ void CollisionManager::ReticleToEnemy2D()
 {
 	//一番レティクルに近い敵番号
 	int mostNearNum = 0;
-	//一番レティクルに近い敵座標
+	//一番レティクルに近い敵との距離
 	float mostNearLeg = 10000.0f;
 
 	//レティクル座標
@@ -239,7 +241,7 @@ void CollisionManager::ReticleToEnemy2D()
 		//レティクルと敵の距離
 		Vector2 reticleToEnemyVec = eVec - rVec;
 		float reticleToEnemyLeg = reticleToEnemyVec.length();
-		
+
 		//距離が一番近いか
 		if (mostNearLeg > reticleToEnemyLeg) {
 			//近かったら更新
@@ -251,7 +253,23 @@ void CollisionManager::ReticleToEnemy2D()
 
 	}
 
-	//プレイヤーに一番近い敵座標をセット
-	cData_->player_->SetEnemyPosition_(cData_->enemys_[mostNearNum]->GetPosition());
+	//プレイヤーの射撃z軸をセット
+	if (cData_->enemys_.size() != 0) {
+		float reticleDirection =
+			cData_->player_->GetPlayerDirection() +
+			(cData_->enemys_[mostNearNum]->GetPosition().z - cData_->player_->GetPosition().z);
+
+		cData_->player_->SetReticleDirection_(reticleDirection);
+	}
+}
+
+void CollisionManager::ReticleToBoss2D()
+{
+	//プレイヤーの射撃z軸をセット
+
+	float reticleDirection =
+		cData_->player_->GetPlayerDirection() +
+		(cData_->boss_->GetPosition().z - cData_->player_->GetPosition().z);
+	cData_->player_->SetReticleDirection_(reticleDirection);
 
 }

@@ -303,13 +303,9 @@ void Player::MakeBullet()
 void Player::UpdateRaticle(const XMMATRIX& matVP)
 {
 	//マウス座標の取得、代入
-
 	if (input_->CheckInWindow()) {
 		reticle2DPosition_ = input_->GetMousePosition();
 	}
-
-	//z軸を一番近い敵に合わせる
-	reticleDirection_ = playerDirection + (enemyPosition_.z - position_.z);
 
 	//座標変換
 	ScreenToWorldCoordinateTransformation(matVP);

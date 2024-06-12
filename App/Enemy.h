@@ -208,7 +208,7 @@ private:
 	XMMATRIX matWorld_ = {};
 
 	//当たり判定用
-	XMFLOAT3 colSize_ = { 2.0f,2.0f,1.0f };
+	XMFLOAT3 colSize_ = { 3.0f,3.0f,3.0f };
 private:
 	//FBX
 	std::unique_ptr<FbxObject3D> enemyObject_ = nullptr;
