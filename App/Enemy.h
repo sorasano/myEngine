@@ -63,8 +63,9 @@ public:
 	*
 	* @param[in] pPos プレイヤー座標
 	* @param[in] pSpeed プレイヤースピード
+	* @param[in] matVP ビュープロジェクション
 	*/
-	void Update(const XMFLOAT3& pPos,float pSpeed);
+	void Update(const XMFLOAT3& pPos,float pSpeed, const XMMATRIX& matVP);
 	/**
 	* 描画
 	*
@@ -75,6 +76,14 @@ public:
 	* 移動反射
 	*/
 	void Reflection();
+
+	/**
+	* スクリーン座標(2d)取得
+	*
+	* @param[in] matVP コマンドリスト
+	*/
+	//ワールド→スクリーン座標変換	
+	void WorldToScreenTransformation(const XMMATRIX& matVP);
 
 private:
 
@@ -129,6 +138,10 @@ public:
 	* @return bool isDead_取得
 	*/
 	bool GetIsDead()const { return isDead_; }
+	/**
+	* @return XMFLOAT3 2Dposition取得
+	*/
+	XMFLOAT2 GetPosition2D()const { return position2D_; };
 	/**
 	* @return CollisionData 当たり判定情報取得
 	*/
@@ -187,6 +200,9 @@ private:
 	XMFLOAT3 position_ = { 0,0,0 };
 	XMFLOAT3 rotation_ = { 0,0,0 };
 	XMFLOAT3 scale_ = { 1,1,1 };
+
+	//2D座標
+	XMFLOAT2 position2D_ = { 0,0 };
 
 	//ワールド変換行列
 	XMMATRIX matWorld_ = {};

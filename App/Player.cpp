@@ -308,8 +308,11 @@ void Player::UpdateRaticle(const XMMATRIX& matVP)
 		reticle2DPosition_ = input_->GetMousePosition();
 	}
 
-	ScreenToWorldCoordinateTransformation(matVP);
+	//z軸を一番近い敵に合わせる
+	reticleDirection_ = playerDirection + (enemyPosition_.z - position_.z);
 
+	//座標変換
+	ScreenToWorldCoordinateTransformation(matVP);
 }
 
 void Player::UpdateSprite()
@@ -418,9 +421,6 @@ void Player::Reset()
 	speedZ_ = initSpeedZ_;
 	mainSpeed_ = initMainAddSpeed_;
 	subSpeed_ = initSubAddSpeed_;
-
-	//レティクル
-	//reticlePosition_ = { 0,0 };
 
 	//弾
 	bullets_.clear();

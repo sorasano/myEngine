@@ -69,5 +69,6 @@ public:
 	*/
 	static bool CheckSpriteTo2Dpos(const Sprite* sprite, const XMFLOAT2& pos);
 
+
 };
 

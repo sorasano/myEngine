@@ -11,7 +11,10 @@ void TitleScene::Update()
 	for (std::unique_ptr<Enemy>& enemy : cData_->enemys_)
 	{
 		if (UpadateRange(cData_->camera_->GetEye(), enemy->GetPosition())) {
-			enemy->Update(cData_->player_->GetPosition(), cData_->player_->GetSpeed());
+			enemy->Update(
+				cData_->player_->GetPosition(),
+				cData_->player_->GetSpeed(),
+				cData_->camera_->GetViewProjection());
 		}
 	}
 

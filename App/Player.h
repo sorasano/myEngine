@@ -31,6 +31,8 @@ public:
 	void Initialize();
 	/**
 	* 更新
+	*
+	* @param[in] matVP ビュープロジェクション
 	*/
 	void Update(const XMMATRIX& matVP);
 	/**
@@ -102,6 +104,8 @@ private:
 	void UpdateMatrix();
 	/**
 	* レティクル更新
+	*
+	*@param[in] matVP ビュープロジェクション
 	*/
 	void UpdateRaticle(const XMMATRIX& matVP);
 	/**
@@ -109,7 +113,11 @@ private:
 	*/
 	void UpdateSprite();
 
-	//スクリーン→ワールド座標変換	
+	/**
+	* レティクルのスクリーン→ワールド座標変換、プレイヤーのワールド→スクリーン座標変換
+	*
+	* @param[in] matVP ビュープロジェクション
+	*/
 	void ScreenToWorldCoordinateTransformation(const XMMATRIX& matVP);
 
 public:
@@ -151,6 +159,10 @@ public:
 	* @return XMFLOAT3 弾の座標取得
 	*/
 	XMFLOAT3 GetBulletPosition(int i)const;
+	/**
+	* @return XMFLOAT2 reticle2DPosition_取得
+	*/
+	XMFLOAT2 GetReticlePosition() const { return reticle2DPosition_; }
 
 	/**
 	* posセット
@@ -177,6 +189,11 @@ public:
 	* isLockOperation_セット
 	*/
 	void SetIsLockOperation(bool isLockOperation) { this->isLockOperation_ = isLockOperation; };
+	/**
+	* enemyPosition_セット
+	*/
+	void SetEnemyPosition_(XMFLOAT3 enemyPosition) { this->enemyPosition_ = enemyPosition; };
+
 
 	/**
 	* 弾死亡情報セット
@@ -224,7 +241,7 @@ private:
 
 	//(メイン)
 	//基礎スピード以外の加速スピード
-	float mainSpeed_ = 0.0f;
+	float mainSpeed_ = 1.0f;
 	//レベルアップしたときの加速量
 	float mainUpSpeed_ = 1.0f;
 	//レベルダウンしたときの減速量
@@ -261,8 +278,13 @@ private:
 	//レティクル座標(3D)
 	Vector3 reticle3DPosition_ = { 0,0,0 };
 
-	//レティクルまでの距離(カメラからプレイヤーの距離+プレイヤーからレティクルの距離)
-	const float reticleDirection_ = 30.0f + 26.0f;
+	//カメラからプレイヤーの距離
+	const float playerDirection = 30.0f;
+	//レティクルまでの距離(プレイヤーからレティクルの距離)
+	float reticleDirection_ = playerDirection + 26.0f;
+
+	//一番近い敵の座標
+	XMFLOAT3 enemyPosition_ = { 0,0,0 };
 
 	//-----スプライト------
 	std::unique_ptr<Sprite> mainSpeedSprite_;

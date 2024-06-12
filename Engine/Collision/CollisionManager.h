@@ -75,6 +75,9 @@ public:
 	*/
 	bool MenuUIColision();
 
+	//レティクル座標がどの敵2D座標に一番近いか
+	void ReticleToEnemy2D();
+
 private:
 	//共通データ
 	SceneCommonData* cData_;

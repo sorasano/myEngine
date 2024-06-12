@@ -19,6 +19,8 @@ void CollisionManager::Update()
 		EnemyToEnemy();
 		PlayerToEnemyBullet();
 
+		ReticleToEnemy2D();
+
 		MenuUIColision();
 		break;
 	case BOSS:
@@ -213,4 +215,43 @@ bool CollisionManager::MenuUIColision()
 	}
 
 	return false;
+}
+
+void CollisionManager::ReticleToEnemy2D()
+{
+	//一番レティクルに近い敵番号
+	int mostNearNum = 0;
+	//一番レティクルに近い敵座標
+	float mostNearLeg = 10000.0f;
+
+	//レティクル座標
+	Vector2 rVec = { cData_->player_->GetReticlePosition().x,cData_->player_->GetReticlePosition().y };
+
+	//イテレーター
+	int it = 0;
+
+	for (std::unique_ptr<Enemy>& enemy : cData_->enemys_)
+	{
+
+		//敵座標
+		Vector2 eVec = { enemy->GetPosition2D().x, enemy->GetPosition2D().y };
+
+		//レティクルと敵の距離
+		Vector2 reticleToEnemyVec = eVec - rVec;
+		float reticleToEnemyLeg = reticleToEnemyVec.length();
+		
+		//距離が一番近いか
+		if (mostNearLeg > reticleToEnemyLeg) {
+			//近かったら更新
+			mostNearLeg = reticleToEnemyLeg;
+			mostNearNum = it;
+		}
+
+		it++;
+
+	}
+
+	//プレイヤーに一番近い敵座標をセット
+	cData_->player_->SetEnemyPosition_(cData_->enemys_[mostNearNum]->GetPosition());
+
 }

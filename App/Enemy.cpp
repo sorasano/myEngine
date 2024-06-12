@@ -34,7 +34,7 @@ void Enemy::Initialize(FbxModel* EnemyModel,FbxModel* enemyBulletModel)
 
 }
 
-void Enemy::Update(const XMFLOAT3& pPos, float pSpeed)
+void Enemy::Update(const XMFLOAT3& pPos, float pSpeed, const XMMATRIX& matVP)
 {
 	//プレイヤー情報更新
 	this->playerPosition_ = pPos;
@@ -65,6 +65,9 @@ void Enemy::Update(const XMFLOAT3& pPos, float pSpeed)
 	enemyObject_->SetScale(scale_);
 	enemyObject_->SetRotate(rotation_);
 	enemyObject_->Update();
+
+	//2D座標の取得
+	WorldToScreenTransformation(matVP);
 }
 
 void Enemy::Draw(ID3D12GraphicsCommandList* cmdList)
@@ -79,6 +82,28 @@ void Enemy::Draw(ID3D12GraphicsCommandList* cmdList)
 		}
 	}
 
+}
+
+void Enemy::WorldToScreenTransformation(const XMMATRIX& matVP)
+{
+	//ビューポート行列
+	XMMATRIX viewPort;
+	viewPort = DirectX::XMMatrixIdentity();
+	viewPort.r[0].m128_f32[0] = window_width / 2;
+	viewPort.r[1].m128_f32[1] = -window_height / 2;
+	viewPort.r[3].m128_f32[0] = window_width / 2;
+	viewPort.r[3].m128_f32[1] = window_height / 2;
+
+	//ビュープロジェクションビュー行列
+	XMMATRIX matViewProjectionViewPort = matVP * viewPort;
+
+	//ビュープロジェクションビュー行列の逆行列を取得
+	XMMATRIX matInverseVPV = MatrixInverse(matViewProjectionViewPort);
+
+	//プレイヤーの2d座標の算出(ワールド→スクリーン座標計算)
+	Vector3 enemyPosition = { position_.x,position_.y,position_.z };
+	enemyPosition = XMMATRIXTransform(enemyPosition, matViewProjectionViewPort);
+	position2D_ = { enemyPosition.x,enemyPosition.y };
 }
 
 void Enemy::Move()

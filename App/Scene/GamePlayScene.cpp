@@ -14,7 +14,10 @@ void GamePlayScene::Update()
 	for (std::unique_ptr<Enemy>& enemy : cData_->enemys_)
 	{
 		if (UpadateRange(cData_->camera_->GetEye(), enemy->GetPosition())) {
-			enemy->Update(cData_->player_->GetPosition(), cData_->player_->GetSpeed());
+			enemy->Update(
+				cData_->player_->GetPosition(), 
+				cData_->player_->GetSpeed(), 
+				cData_->camera_->GetViewProjection());
 		}
 	}
 
@@ -135,15 +138,18 @@ void GamePlayScene::CheckEnemy()
 
 void GamePlayScene::DeleteEnemy()
 {
-	for (std::unique_ptr<Enemy>& enemy : cData_->enemys_) {
+
+	for (int i = 0; i < cData_->enemys_.size(); i++) {
 
 		//カメラより後ろに行ったら死亡
-		if (enemy->GetPosition().z < cData_->camera_->GetEye().z) {
-			enemy->SetISDesd(true);
+		if (cData_->enemys_[i]->GetPosition().z < cData_->camera_->GetEye().z) {
+			cData_->enemys_[i]->SetISDesd(true);
 		}
 
+		//デスフラグがtrueであればリストから削除
+		if (cData_->enemys_[i]->GetIsDead()) {
+			cData_->enemys_.erase(cData_->enemys_.begin() + i);
+		}
 	}
 
-	//デスフラグがtrueであればリストから削除
-	cData_->enemys_.remove_if([](std::unique_ptr<Enemy>& enemy) {return enemy->GetIsDead(); });
 }

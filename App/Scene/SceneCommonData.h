@@ -52,7 +52,7 @@ public:
 	std::unique_ptr<Player> player_;
 
 	//敵
-	std::list<std::unique_ptr<Enemy>> enemys_;
+	std::vector<std::unique_ptr<Enemy>> enemys_;
 
 	//ボス
 	std::unique_ptr<Boss> boss_;
