@@ -13,7 +13,7 @@ class GameoverScene : public BaseScene
 {
 
 public:
-	GameoverScene(SceneCommonData* cData, CollisionManager* collisionManager) : BaseScene(cData, collisionManager) {};
+	GameoverScene(std::unique_ptr<SceneCommonData>& cData, CollisionManager* collisionManager) : BaseScene(cData, collisionManager) {};
 
 	/**
 	* 初期化

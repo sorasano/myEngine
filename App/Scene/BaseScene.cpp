@@ -5,22 +5,22 @@ BaseScene::BaseScene()
 	CommonInitialize();
 }
 
-BaseScene::BaseScene(SceneCommonData* cData, CollisionManager* collisionManager)
+BaseScene::BaseScene(std::unique_ptr<SceneCommonData>& cData, CollisionManager* collisionManager)
 {
-	cData_ = cData;
+	cData_ = std::move(cData);
 	collisionManager_ = collisionManager;
 }
 
 void BaseScene::CommonInitialize()
 {
 	//共通変数初期化
-	SceneCommonData* newCData = new SceneCommonData;
-	cData_ = newCData;
+	std::unique_ptr<SceneCommonData> newCData = std::make_unique<SceneCommonData>();
+	cData_ = std::move(newCData);
 
 	//当たり判定マネージャー初期化
 	CollisionManager* newCollisionManager_ = new CollisionManager();
 	collisionManager_ = newCollisionManager_;
-	collisionManager_->Initialize(cData_);
+	collisionManager_->Initialize(cData_.get());
 
 }
 

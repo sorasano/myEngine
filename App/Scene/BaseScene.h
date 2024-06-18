@@ -17,7 +17,7 @@ public:
 
 	BaseScene();
 
-	BaseScene(SceneCommonData* cData, CollisionManager* collisionManager);
+	BaseScene(std::unique_ptr<SceneCommonData>& cData, CollisionManager* collisionManager);
 
 	/**
 	* デストラクタ
@@ -107,7 +107,7 @@ public:
 	//セッター
 	virtual void SetSceneManager(SceneManager* sceneManager) { sceneManager_ = sceneManager; }
 	virtual void SetCollisionManager(CollisionManager* collisionManager) { collisionManager_ = collisionManager; }
-	virtual void SetSceneCommonData(SceneCommonData* sceneCommonData) { cData_ = sceneCommonData; }
+	virtual void SetSceneCommonData(std::unique_ptr<SceneCommonData> sceneCommonData) { cData_ = std::move(sceneCommonData); }
 
 protected:
 
@@ -117,7 +117,7 @@ protected:
 	CollisionManager* collisionManager_ = nullptr;
 
 	//他共通データ
-	SceneCommonData* cData_;
+	std::unique_ptr<SceneCommonData> cData_;
 
 };
 

@@ -13,7 +13,7 @@
 class ClearScene : public BaseScene
 {
 public:
-	ClearScene(SceneCommonData* cData, CollisionManager* collisionManager) : BaseScene(cData, collisionManager) {};
+	ClearScene(std::unique_ptr<SceneCommonData>&  cData, CollisionManager* collisionManager) : BaseScene(cData, collisionManager) {};
 
 	/**
 	* 初期化
