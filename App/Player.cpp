@@ -29,6 +29,11 @@ void Player::Initialize()
 	newPlayerObject->SetModel(playerModel_.get());
 	playerObject_.swap(newPlayerObject);
 
+	//モデルの角度調整
+	this->rotation_.x = static_cast<float>(90 * (PI / 180));
+	this->rotation_.y = static_cast<float>(90 * (PI / 180));
+
+
 	//スプライト
 
 	//レティクル

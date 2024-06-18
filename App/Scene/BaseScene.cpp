@@ -87,8 +87,8 @@ void BaseScene::SetEnemy()
 	//何番目のCSVをセットするか(ランダム)
 	int setNum = static_cast<int>(Random(0, cData_->enemyCSVSize_ - 0.001f));
 	auto it = cData_->enemyCsvs_.begin();
+	setNum = 0;
 	std::advance(it, setNum);
-
 	for (int i = 0; i < it->get()->GetSize(); i++)
 	{
 		std::unique_ptr<Enemy>newObject = std::make_unique<Enemy>();
@@ -99,6 +99,11 @@ void BaseScene::SetEnemy()
 		}
 		else if (it->get()->GetType(i) > NORMAL) {
 			newObject->SetModel(cData_->enemyYellowModel_.get());
+
+			XMFLOAT3 rotation = {};
+			rotation.x = static_cast<float>(180 * (PI / 180));
+			rotation.y = static_cast<float>(90 * (PI / 180));
+			newObject->SetRotation(rotation);
 		}
 
 		newObject->SetPosition(XMFLOAT3(it->get()->GetPosition(i).x, it->get()->GetPosition(i).y, it->get()->GetPosition(i).z + makePos));

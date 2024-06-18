@@ -59,6 +59,11 @@ void Enemy::Update(const XMFLOAT3& pPos, float pSpeed, const XMMATRIX& matVP)
 				BulletUpdate();
 			}
 		}
+
+		//ホーミング敵のみの更新
+		if (shotType_ == HOMING) {
+			HomingUpdate();
+		}
 	}
 
 	enemyObject_->SetPosition(position_);
@@ -224,6 +229,47 @@ void Enemy::StopInScreen()
 
 }
 
+void Enemy::HomingUpdate()
+{
+	Vector3 velocity = GetEnemyToPlayerVec();
+
+	//角度をベクトルから求めてモデルに反映
+	//Y軸周り角度
+	this->rotation_.y = std::atan2(velocity.x, velocity.z - playerSpeed_);
+
+	//横軸方向の長さを求める
+	Vector3 velocityXZ = { velocity.x,0.0f,velocity.z - playerSpeed_ };
+	float length = velocityXZ.length();
+
+	//X軸周り角度
+	this->rotation_.x = std::atan2(-velocity.y, length);
+
+	//ImGui::Begin("aaa");
+	//ImGui::Text("%f,%f,%f", rotation_.x, rotation_.y, rotation_.z);
+	//ImGui::End();
+
+}
+
+Vector3 Enemy::GetEnemyToPlayerVec()
+{
+
+	Vector3 velocity = {};
+
+	//自機と敵のベクトルを取る
+	Vector3 playerVec_ = { playerPosition_.x ,playerPosition_.y,playerPosition_.z };
+	Vector3 enemyVec = { position_.x,position_.y,position_.z + playerSpeed_ };
+
+	velocity = playerVec_ - enemyVec;
+
+	//正規化する
+	velocity.normalize();
+	//速度をかける
+	velocity *= bulletSpeed_;
+	velocity.z += playerSpeed_;
+
+	return velocity;
+}
+
 void Enemy::Shot()
 {
 	bulletCoolTimer_++;
@@ -274,17 +320,7 @@ void Enemy::MakeBullet()
 
 	case HOMINGSHOT:
 
-		//自機と敵のベクトルを取る
-		Vector3 playerVec_ = { playerPosition_.x ,playerPosition_.y,playerPosition_.z};
-		Vector3 enemyVec = { position_.x,position_.y,position_.z + playerSpeed_ };
-
-		velocity = playerVec_ - enemyVec;
-
-		//正規化をして速度をかける
-		velocity.normalize();
-		velocity *= bulletSpeed_;
-
-		velocity.z += playerSpeed_;
+		velocity = GetEnemyToPlayerVec();
 
 		break;
 	}

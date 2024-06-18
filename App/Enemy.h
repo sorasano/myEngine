@@ -107,6 +107,16 @@ private:
 	void StopInScreen();
 
 	/**
+	* ホーミング敵の更新 角度を自機に向ける
+	*/
+	void HomingUpdate();
+
+	/**
+	* 敵から自機のベクトルを取る
+	*/
+	Vector3 GetEnemyToPlayerVec();
+
+	/**
 	* 弾発射
 	*/
 	void Shot();
@@ -264,5 +274,6 @@ private:
 	//------プレイヤー------
 	XMFLOAT3 playerPosition_ = {};
 	float playerSpeed_ = 0.0f;
+
 };
 
