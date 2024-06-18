@@ -75,7 +75,7 @@ void TitleScene::ChangeScene()
 
 		if (cData_->scene_ == PLAY) {
 			//次シーンの生成
-			BaseScene* scene = new GamePlayScene(cData_, collisionManager_);
+			BaseScene* scene = new GamePlayScene(collisionManager_);
 			//シーン切り替え依頼
 			sceneManager_->SetNextScene(scene);
 		}

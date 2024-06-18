@@ -14,7 +14,7 @@
 class GamePlayScene : public BaseScene
 {
 public:
-	GamePlayScene(std::unique_ptr<SceneCommonData>& cData, CollisionManager* collisionManager) : BaseScene(cData, collisionManager) {};
+	GamePlayScene(CollisionManager* collisionManager) : BaseScene(collisionManager) {};
 
 	/**
 	* 初期化

@@ -13,8 +13,12 @@ void SceneManager::Update()
 
 	//次シーンの予約があるなら
 	if (nextScene_) {
+
 		//旧シーンの終了
 		if (scene_) {
+			//共通データの移動
+			nextScene_->SetSceneCommonData(scene_->GetSceneCommonData());
+
 			scene_->Finalize();
 			delete scene_;
 		}

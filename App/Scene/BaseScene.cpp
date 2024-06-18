@@ -5,9 +5,8 @@ BaseScene::BaseScene()
 	CommonInitialize();
 }
 
-BaseScene::BaseScene(std::unique_ptr<SceneCommonData>& cData, CollisionManager* collisionManager)
+BaseScene::BaseScene(CollisionManager* collisionManager)
 {
-	cData_ = std::move(cData);
 	collisionManager_ = collisionManager;
 }
 

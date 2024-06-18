@@ -13,7 +13,7 @@
 class BossScene : public BaseScene
 {
 public:
-	BossScene(std::unique_ptr<SceneCommonData>& cData, CollisionManager* collisionManager) : BaseScene(cData, collisionManager) {};
+	BossScene(CollisionManager* collisionManager) : BaseScene(collisionManager) {};
 
 	/**
 	* 初期化

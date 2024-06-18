@@ -11,7 +11,7 @@ public:
 
 	MenuScene() : BaseScene() {};
 
-	MenuScene(std::unique_ptr<SceneCommonData>& cData, CollisionManager* collisionManager) : BaseScene(cData, collisionManager) {};
+	MenuScene( CollisionManager* collisionManager) : BaseScene(collisionManager) {};
 
 	/**
 	* 初期化

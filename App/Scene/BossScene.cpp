@@ -88,17 +88,17 @@ void BossScene::ChangeScene()
 
 		if (cData_->scene_ == CLEAR) {
 			//次シーンの生成
-			BaseScene* scene = new ClearScene(cData_, collisionManager_);
+			BaseScene* scene = new ClearScene(collisionManager_);
 			//シーン切り替え依頼
 			sceneManager_->SetNextScene(scene);
 		}else if (cData_->scene_ == GAMEOVER) {
 			//次シーンの生成
-			BaseScene* scene = new GameoverScene(cData_, collisionManager_);
+			BaseScene* scene = new GameoverScene(collisionManager_);
 			//シーン切り替え依頼
 			sceneManager_->SetNextScene(scene);
 		}else if (cData_->scene_ == MENU) {
 			//次シーンの生成
-			BaseScene* scene = new MenuScene(cData_, collisionManager_);
+			BaseScene* scene = new MenuScene(collisionManager_);
 			//シーン切り替え依頼
 			sceneManager_->SetNextScene(scene);
 		}

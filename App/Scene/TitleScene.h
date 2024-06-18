@@ -14,7 +14,7 @@ public:
 
 	TitleScene() : BaseScene() {};
 
-	TitleScene(std::unique_ptr<SceneCommonData>& cData, CollisionManager* collisionManager) : BaseScene(cData, collisionManager) {};
+	TitleScene(CollisionManager* collisionManager) : BaseScene(collisionManager) {};
 
 	/**
 	* 初期化

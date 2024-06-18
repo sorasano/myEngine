@@ -62,7 +62,7 @@ void ClearScene::ChangeScene()
 
 		if (cData_->scene_ == TITLE) {
 			//次シーンの生成
-			BaseScene* scene = new TitleScene(cData_,collisionManager_);
+			BaseScene* scene = new TitleScene(collisionManager_);
 			//シーン切り替え依頼
 			sceneManager_->SetNextScene(scene);
 		}
