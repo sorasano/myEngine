@@ -1,17 +1,20 @@
 /**
-* @file Player.cpp
+* @file Player.h
 * @brief プレイヤーの処理
 */
+
+#pragma once
 
 #include "FbxLoader.h"
 #include "FbxObject3D.h"
 #include "DirectXCommon.h"
+
 #include "PlayerBullet.h"
 #include "Sprite.h"
+#include "Shadow.h"
 
 #include "MathManager.h"
 
-#pragma once
 class Player
 {
 
@@ -35,6 +38,10 @@ public:
 	* @param[in] matVP ビュープロジェクション
 	*/
 	void Update(const XMMATRIX& matVP);
+	/**
+	* 行列更新
+	*/
+	void UpdateMatrix();
 	/**
 	* クリアシーン更新
 	*/
@@ -98,10 +105,6 @@ private:
 	*/
 	void MakeBullet();
 
-	/**
-	* 行列更新
-	*/
-	void UpdateMatrix();
 	/**
 	* レティクル更新
 	*
@@ -329,4 +332,6 @@ private:
 	//追加スピード(サブ)
 	float initSubAddSpeed_ = subSpeed_;
 
+	//影
+	std::unique_ptr<Shadow > shadow_;
 };

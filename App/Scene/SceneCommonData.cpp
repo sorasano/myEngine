@@ -126,6 +126,10 @@ SceneCommonData::SceneCommonData()
 	enemyBlueModel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("enemyblue"));
 	enemyYellowModel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("enemyYellow"));
 
+	enemyShadowModel_.reset(FbxLoader::GetInstance()->LoadShadowModelFromFile("enemyred"));
+	enemyBlueShadowModel_.reset(FbxLoader::GetInstance()->LoadShadowModelFromFile("enemyblue"));
+	enemyYellowShadowModel_.reset(FbxLoader::GetInstance()->LoadShadowModelFromFile("enemyYellow"));
+
 	enemyBulletModel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("enemyBullet"));
 
 	//csvファイル名前

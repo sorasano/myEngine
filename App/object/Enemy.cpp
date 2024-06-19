@@ -21,7 +21,7 @@ Enemy::~Enemy()
 {
 }
 
-void Enemy::Initialize(FbxModel* EnemyModel,FbxModel* enemyBulletModel)
+void Enemy::Initialize(FbxModel* EnemyModel,FbxModel* enemyBulletModel, FbxModel* EnemyShadowModel)
 {
 
 	//3dオブジェクト生成とモデルのセット
@@ -30,8 +30,13 @@ void Enemy::Initialize(FbxModel* EnemyModel,FbxModel* enemyBulletModel)
 	newEnemyObject_->SetModel(EnemyModel);
 	enemyObject_.swap(newEnemyObject_);
 
+	//弾モデル
 	this->bulletModel_ = enemyBulletModel;
 
+	//影
+	std::unique_ptr<Shadow> newShadow = std::make_unique<Shadow>();
+	newShadow->Initialize(EnemyShadowModel);
+	shadow_.swap(newShadow);
 }
 
 void Enemy::Update(const XMFLOAT3& pPos, float pSpeed, const XMMATRIX& matVP)
@@ -66,19 +71,33 @@ void Enemy::Update(const XMFLOAT3& pPos, float pSpeed, const XMMATRIX& matVP)
 		}
 	}
 
-	enemyObject_->SetPosition(position_);
-	enemyObject_->SetScale(scale_);
-	enemyObject_->SetRotate(rotation_);
-	enemyObject_->Update();
+
+	//影更新
+	shadow_->Update(position_, rotation_);
+
+	//行列更新
+	UpdateMatrix();
 
 	//2D座標の取得
 	WorldToScreenTransformation(matVP);
 }
 
+void Enemy::UpdateMatrix()
+{
+	enemyObject_->SetPosition(position_);
+	enemyObject_->SetScale(scale_);
+	enemyObject_->SetRotate(rotation_);
+	enemyObject_->Update();
+}
+
 void Enemy::Draw(ID3D12GraphicsCommandList* cmdList)
 {
 	if (!isDead_) {
+		//自機
 		enemyObject_->Draw(cmdList);
+
+		//影
+		shadow_->Draw(cmdList);
 
 		//弾
 		for (std::unique_ptr<EnemyBullet>& bullet : bullets_)
@@ -345,6 +364,11 @@ CollisionData Enemy::GetColData() const
 void Enemy::SetModel(FbxModel* EnemyModel)
 {
 	enemyObject_->SetModel(EnemyModel);
+}
+
+void Enemy::SetShadowModel(FbxModel* EnemyModel)
+{
+	shadow_->SetModel(EnemyModel);
 }
 
 void Enemy::SetType(int type)

@@ -84,6 +84,12 @@
     <Filter Include="ヘッダー ファイル\Collision">
       <UniqueIdentifier>{182e62a0-e884-413f-818e-d5b97bff6ff9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\object">
+      <UniqueIdentifier>{64041100-2098-4899-8fa6-5cb70328078c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\object">
+      <UniqueIdentifier>{61b8bc04-5a8e-4069-ab01-4a97e19f118b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Base\DirectXCommon.cpp">
@@ -128,12 +134,6 @@
     <ClCompile Include="Engine\Camera.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="App\Enemy.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="App\Player.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Loader\JsonLoader.cpp">
       <Filter>ソース ファイル\Loader</Filter>
     </ClCompile>
@@ -142,9 +142,6 @@
     </ClCompile>
     <ClCompile Include="Engine\Base\ImGuiManager.cpp">
       <Filter>ソース ファイル\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="App\Boss.cpp">
-      <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="App\PerformanceManager.cpp">
       <Filter>ソース ファイル</Filter>
@@ -221,6 +218,18 @@
     <ClCompile Include="Engine\Collision\CollisionManager.cpp">
       <Filter>ソース ファイル\Collision</Filter>
     </ClCompile>
+    <ClCompile Include="App\object\Boss.cpp">
+      <Filter>ソース ファイル\object</Filter>
+    </ClCompile>
+    <ClCompile Include="App\object\Enemy.cpp">
+      <Filter>ソース ファイル\object</Filter>
+    </ClCompile>
+    <ClCompile Include="App\object\Player.cpp">
+      <Filter>ソース ファイル\object</Filter>
+    </ClCompile>
+    <ClCompile Include="App\object\Shadow.cpp">
+      <Filter>ソース ファイル\object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\FBX.hlsli">
@@ -293,9 +302,6 @@
     <ClInclude Include="Engine\Base\WinApp.h">
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
-    <ClInclude Include="App\Player.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Camera.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -316,9 +322,6 @@
     </ClInclude>
     <ClInclude Include="Engine\fbx\FbxObject3d.h">
       <Filter>ヘッダー ファイル\fbx</Filter>
-    </ClInclude>
-    <ClInclude Include="App\Enemy.h">
-      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Base\FPS.h">
       <Filter>ヘッダー ファイル\Base</Filter>
@@ -343,9 +346,6 @@
     </ClInclude>
     <ClInclude Include="Engine\Base\ImGuiManager.h">
       <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="App\Boss.h">
-      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="App\PerformanceManager.h">
       <Filter>ヘッダー ファイル</Filter>
@@ -421,6 +421,18 @@
     </ClInclude>
     <ClInclude Include="Engine\Collision\CollisionManager.h">
       <Filter>ヘッダー ファイル\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="App\object\Boss.h">
+      <Filter>ヘッダー ファイル\object</Filter>
+    </ClInclude>
+    <ClInclude Include="App\object\Enemy.h">
+      <Filter>ヘッダー ファイル\object</Filter>
+    </ClInclude>
+    <ClInclude Include="App\object\Player.h">
+      <Filter>ヘッダー ファイル\object</Filter>
+    </ClInclude>
+    <ClInclude Include="App\object\Shadow.h">
+      <Filter>ヘッダー ファイル\object</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

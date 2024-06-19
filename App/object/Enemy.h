@@ -11,6 +11,7 @@
 
 #include "ParticleManager.h"
 #include "EnemyBullet.h"
+#include "Shadow.h"
 
 #include "Collision.h"
 
@@ -56,8 +57,9 @@ public:
 	*
 	* @param[in] EnemyModel 敵FBXモデル
 	* @param[in] enemyBulletModel 弾FBXモデル
+	* @param[in] enemyBulletModel 敵影モデル
 	*/
-	void Initialize(FbxModel* EnemyModel, FbxModel* enemyBulletModel);
+	void Initialize(FbxModel* EnemyModel, FbxModel* enemyBulletModel, FbxModel* EnemyShadowModel);
 	/**
 	* 更新
 	*
@@ -66,6 +68,10 @@ public:
 	* @param[in] matVP ビュープロジェクション
 	*/
 	void Update(const XMFLOAT3& pPos,float pSpeed, const XMMATRIX& matVP);
+	/**
+	* 行列更新
+	*/
+	void UpdateMatrix();
 	/**
 	* 描画
 	*
@@ -174,6 +180,10 @@ public:
 	*/
 	void SetModel(FbxModel* EnemyModel);
 	/**
+	* 影モデルセット
+	*/
+	void SetShadowModel(FbxModel* EnemyModel);
+	/**
 	* posセット
 	*/
 	void SetPosition(const XMFLOAT3& pos) { this->position_ = pos; }
@@ -274,6 +284,9 @@ private:
 	//------プレイヤー------
 	XMFLOAT3 playerPosition_ = {};
 	float playerSpeed_ = 0.0f;
+
+	//------影-----
+	std::unique_ptr<Shadow> shadow_;
 
 };
 

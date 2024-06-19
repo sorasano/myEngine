@@ -140,7 +140,7 @@ void Camera::UpdatePlayerTurningMode()
 	target_ = playerPos_;
 
 	//高さ(Y)は固定
-	eye_.y = playerPos_.y;
+	eye_.y = playerPos_.y + 10;
 
 	//XZは旋回
 	{

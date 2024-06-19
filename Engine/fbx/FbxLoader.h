@@ -50,6 +50,13 @@ public:
 	*/
 	FbxModel* LoadModelFromFile(const string& modelName);
 	/**
+	* 影モデルの読み込み
+	*
+	* @param[in] modelName fbxモデルの名前
+	* @return FbxModel fbxモデル
+	*/
+	FbxModel* LoadShadowModelFromFile(const string& modelName);
+	/**
 	* 	再起敵にノード構成を解析
 	*
 	* @param[in,out] model モデル
@@ -128,6 +135,10 @@ private:
 private:
 	//テクスチャがない場合の標準テクスチャファイル名
 	static const string defaultTextureFileName_;
+	//影用テクスチャ
+	static const string shadowTextureFileName_;
+	//影モデルか
+	bool isShadow = false;
 
 private:
 	/**

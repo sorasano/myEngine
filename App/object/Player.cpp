@@ -33,6 +33,11 @@ void Player::Initialize()
 	this->rotation_.x = static_cast<float>(90 * (PI / 180));
 	this->rotation_.y = static_cast<float>(90 * (PI / 180));
 
+	//影
+	std::unique_ptr<Shadow> newShadow = std::make_unique<Shadow>();
+	newShadow->Initialize(FbxLoader::GetInstance()->LoadShadowModelFromFile("player"));
+	shadow_.swap(newShadow);
+
 
 	//スプライト
 
@@ -91,9 +96,13 @@ void Player::Update(const XMMATRIX& matVP)
 		}
 	}
 
+	//影更新
+	shadow_->Update(position_, rotation_);
+
 	//スプライトの更新
 	UpdateSprite();
 
+	//行列更新
 	UpdateMatrix();
 
 }
@@ -144,6 +153,8 @@ void Player::Draw(ID3D12GraphicsCommandList* cmdList)
 		bullet->Draw(cmdList);
 	}
 
+	//影
+	shadow_->Draw(cmdList);
 }
 
 void Player::DrawClearScene(ID3D12GraphicsCommandList* cmdList)

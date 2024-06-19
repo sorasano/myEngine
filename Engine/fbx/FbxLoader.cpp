@@ -12,6 +12,8 @@ using namespace DirectX;
 const std::string FbxLoader::baseDirectory = "Resources/fbx/";
 //テクスチャがない場合の標準テクスチャファイル名
 const std::string FbxLoader::defaultTextureFileName_ = "white1x1.png";
+//影用テクスチャ
+const std::string FbxLoader::shadowTextureFileName_ = "black1x1.png";
 
 FbxLoader* FbxLoader::GetInstance()
 {
@@ -79,6 +81,14 @@ FbxModel* FbxLoader::LoadModelFromFile(const string& modelName)
 	model->CreateBuffers(device_);
 
 	return model;
+}
+
+FbxModel* FbxLoader::LoadShadowModelFromFile(const string& modelName)
+{
+	//影フラグをオンに
+	isShadow = true;
+
+	return LoadModelFromFile(modelName);;
 }
 
 void FbxLoader::ParseNodeRecursive(FbxModel* model, FbxNode* fbxNode, Node* parent)
@@ -287,6 +297,8 @@ void FbxLoader::ParseMaterial(FbxModel* model, FbxNode* fbxNode)
 		//テクスチャを読み込んだかどうかを表すフラグ
 		bool textureLoaded = false;
 
+
+
 		if (material)
 		{
 			//FbxSurfaceLambertクラスかどうかを調べる
@@ -306,20 +318,28 @@ void FbxLoader::ParseMaterial(FbxModel* model, FbxNode* fbxNode)
 				model->diffuse.z = (float)diffuse.Get()[2];
 			}
 
-			//ディフューズテクスチャを取り出す
-			const FbxProperty diffuseProperty = material->FindProperty(FbxSurfaceMaterial::sDiffuse);
-			if (diffuseProperty.IsValid())
-			{
-				const FbxFileTexture* texture = diffuseProperty.GetSrcObject<FbxFileTexture>();
-				if (texture)
+			//影の場合テクスチャを黒に
+			if(isShadow){
+				LoadTexture(model, baseDirectory + shadowTextureFileName_);
+				isShadow = false;
+				textureLoaded = true;
+			}
+			else {
+				//ディフューズテクスチャを取り出す
+				const FbxProperty diffuseProperty = material->FindProperty(FbxSurfaceMaterial::sDiffuse);
+				if (diffuseProperty.IsValid())
 				{
-					const char* filepath = texture->GetFileName();
-					//ファイルパスからファイル名抽出
-					string path_str(filepath);
-					string name = ExtractFileName(path_str);
-					//テクスチャ読み込み
-					LoadTexture(model, baseDirectory + model->name + "/" + name);
-					textureLoaded = true;
+					const FbxFileTexture* texture = diffuseProperty.GetSrcObject<FbxFileTexture>();
+					if (texture)
+					{
+						const char* filepath = texture->GetFileName();
+						//ファイルパスからファイル名抽出
+						string path_str(filepath);
+						string name = ExtractFileName(path_str);
+						//テクスチャ読み込み
+						LoadTexture(model, baseDirectory + model->name + "/" + name);
+						textureLoaded = true;
+					}
 				}
 			}
 		}

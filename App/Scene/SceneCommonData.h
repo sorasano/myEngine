@@ -70,6 +70,11 @@ public:
 	std::unique_ptr<FbxModel> enemyModel_ = nullptr;
 	std::unique_ptr<FbxModel> enemyBlueModel_ = nullptr;
 	std::unique_ptr<FbxModel> enemyYellowModel_ = nullptr;
+
+	std::unique_ptr<FbxModel> enemyShadowModel_ = nullptr;
+	std::unique_ptr<FbxModel> enemyBlueShadowModel_ = nullptr;
+	std::unique_ptr<FbxModel> enemyYellowShadowModel_ = nullptr;
+
 	std::unique_ptr<FbxModel> enemyBulletModel_ = nullptr;
 
 	//スカイドーム

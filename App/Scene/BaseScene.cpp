@@ -91,14 +91,21 @@ void BaseScene::SetEnemy()
 	std::advance(it, setNum);
 	for (int i = 0; i < it->get()->GetSize(); i++)
 	{
+		//Enemyの初期化
 		std::unique_ptr<Enemy>newObject = std::make_unique<Enemy>();
-		newObject->Initialize(cData_->enemyModel_.get(), cData_->enemyBulletModel_.get());
+		newObject->Initialize(
+			cData_->enemyModel_.get(),
+			cData_->enemyBulletModel_.get(),
+			cData_->enemyShadowModel_.get());
 
+		//モデルのセット
 		if (it->get()->GetType(i) == HOMING) {
 			newObject->SetModel(cData_->enemyBlueModel_.get());
+			newObject->SetShadowModel(cData_->enemyBlueShadowModel_.get());
 		}
 		else if (it->get()->GetType(i) > NORMAL) {
 			newObject->SetModel(cData_->enemyYellowModel_.get());
+			newObject->SetShadowModel(cData_->enemyYellowShadowModel_.get());
 
 			XMFLOAT3 rotation = {};
 			rotation.x = static_cast<float>(180 * (PI / 180));
