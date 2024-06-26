@@ -6,13 +6,11 @@ Shadow::Shadow() {
 
 void Shadow::Initialize(FbxModel* model)
 {
-	//モデルのセット
-	shadowModel_.reset(model);
 
 	//3dオブジェクト生成とモデルのセット
 	std::unique_ptr<FbxObject3D> newShadowObject = std::make_unique<FbxObject3D>();
 	newShadowObject->Initialize();
-	newShadowObject->SetModel(shadowModel_.get());
+	newShadowObject->SetModel(model);
 	shadowObject_.swap(newShadowObject);
 
 }

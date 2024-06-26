@@ -48,7 +48,6 @@ private:
 
 	//fbx
 	std::unique_ptr<FbxObject3D> shadowObject_ = nullptr;
-	std::unique_ptr<FbxModel> shadowModel_ = nullptr;
 
 	//アフィン変換情報
 	XMFLOAT3 position_ = { 0,0,0 };

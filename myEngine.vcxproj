@@ -83,7 +83,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)Engine\fbx;$(SolutionDir)Engine\Math;$(SolutionDir)External\DirectXTex;$(SolutionDir)Engine\Base;$(SolutionDir)External\fbx_sdk\include;$(SolutionDir)Engine\2d;$(SolutionDir)Engine;$(SolutionDir)External\imgui;$(SolutionDir)App;$(SolutionDir)Engine\Loader;$(SolutionDir)App\Scene;$(SolutionDir)Engine\object3d;$(SolutionDir)App\bullet;$(SolutionDir)App\backGround;$(SolutionDir)Engine\Collision</IncludePath>
+    <IncludePath>$(SolutionDir)Engine\fbx;$(SolutionDir)Engine\Math;$(SolutionDir)External\DirectXTex;$(SolutionDir)Engine\Base;$(SolutionDir)External\fbx_sdk\include;$(SolutionDir)Engine\2d;$(SolutionDir)Engine;$(SolutionDir)External\imgui;$(SolutionDir)App;$(SolutionDir)Engine\Loader;$(SolutionDir)App\Scene;$(SolutionDir)Engine\object3d;$(SolutionDir)App\bullet;$(SolutionDir)App\backGround;$(SolutionDir)Engine\Collision;$(SolutionDir)App\object</IncludePath>
     <LibraryPath>$(ProjectDir)External\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
