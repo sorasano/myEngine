@@ -653,7 +653,7 @@ void PerformanceManager::SpeedUpPerformance()
 	camera_->SetEye(cameraEye);
 
 	//---target
-	XMFLOAT3 cameraTarget = camera_->GetInitTarget();
+	XMFLOAT3 cameraTarget = player_->GetPosition();
 	cameraTarget.z = player_->GetPosition().z;
 
 	//カメラに座標の引き渡し

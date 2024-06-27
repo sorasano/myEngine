@@ -75,39 +75,62 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 			break;
 		}
 
+		//fps
 		fps->FpsControlBegin();
 
 		//キー
 		input->Update();
 
+		//imgui
 		imGuiManager->Begin();
 
-		//更新
+		//---更新---
 		sceneManager->Update();
 		postEffect->Update();
 
+		//---更新---
+
+		//imgui
 		imGuiManager->End();
 
-		//レンダーテクスチャへの描画
-		//postEffect->PreDrawScene(dxCommon->GetCommandList());
-		//gameScene->Draw();
-		//postEffect->PostDrawScene(dxCommon->GetCommandList());
-		//ポストエフェクト
-		//postEffect->Draw(dxCommon->GetCommandList());
 
-		//描画前処理
-		dxCommon->PreDraw();
+		//---描画---
 
-		//fbx描画
-		sceneManager->Draw();
+		//ブラーフラグが立っていたら
+		if (sceneManager->GetIsBlur()) {
+			//レンダーテクスチャへの描画
+			postEffect->PreDrawScene(dxCommon->GetCommandList());
+
+			//fbx描画
+			sceneManager->Draw();
+
+			postEffect->PostDrawScene(dxCommon->GetCommandList());
+
+			//描画前処理
+			dxCommon->PreDraw();
+			//ポストエフェクト
+			postEffect->Draw(dxCommon->GetCommandList());
+		}
+		else {
+			//描画前処理
+			dxCommon->PreDraw();
+
+			//fbx描画
+			sceneManager->Draw();
+		}
+
 		//スプライト描画
 		sceneManager->DrawSprite();
 
 		//imgui描画
 		imGuiManager->Draw();
+
+		//---描画---
+
 		//描画後処理
 		dxCommon->PostDraw();
 
+		//fps
 		fps->FpsControlEnd();
 
 		//escキーで終了
