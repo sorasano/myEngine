@@ -277,7 +277,7 @@ private:
 	//基礎スピード以外の加速スピード
 	float mainSpeed_ = 1.0f;
 	//レベルアップしたときの加速量
-	float mainUpSpeed_ = 1.0f;
+	float mainUpSpeed_ = 0.5f;
 	//レベルダウンしたときの減速量
 	float mainDownSpeed_ = 1.0f;
 	//最大加速量
@@ -287,7 +287,7 @@ private:
 	//基礎スピード以外の加速スピード
 	float subSpeed_ = 0.0f;
 	//敵を倒した時の加速量
-	float subUpSpeed_ = 0.2f;
+	float subUpSpeed_ = 0.5f;
 	//最大加速量
 	const float SubMaxSpeed_ = 5.0f;
 

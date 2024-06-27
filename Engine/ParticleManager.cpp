@@ -639,16 +639,16 @@ bool ParticleManager::Initialize(const std::string& resourcename)
 	return true;
 }
 
-void ParticleManager::Update()
+void ParticleManager::Update(XMFLOAT3 cameraPos)
 {
-	HRESULT result;
+
 	UpdateViewMatrix();
 
-
-	//寿命が尽きたパーティクルを全削除
+	//寿命が尽きたパーティクルを削除
 	particles_.remove_if([](Particle& x) {return x.frame >= x.num_flame; });
 
-	//自機に近づいたパーティクルを削除
+	//死亡フラグの立ったパーティクルを削除
+	particles_.remove_if([](Particle& x) {return x.isDead; });
 
 	//全パーティクル更新
 	for (std::forward_list<Particle>::iterator it = particles_.begin(); it != particles_.end(); it++) {
@@ -660,29 +660,13 @@ void ParticleManager::Update()
 		//速度による移動
 		it->position_ = it->position_ + it->velocity;
 
-	}
-
-	//頂点バッファへデータ転送
-	VertexPos* vertMap_ = nullptr;
-	result = vertBuff_->Map(0, nullptr, (void**)&vertMap_);
-	if (SUCCEEDED(result)) {
-		//パーティクルの情報を1つずつ反映
-		for (std::forward_list<Particle>::iterator it = particles_.begin(); it != particles_.end(); it++) {
-			//座標
-			vertMap_->pos = it->position_;
-			//次の頂点へ
-			vertMap_++;
+		//カメラの近くに来たパーティクルを削除
+		if (it->position_.z <= cameraPos.z + 10) {
+			it->isDead = true;
 		}
-		vertBuff_->Unmap(0, nullptr);
 	}
 
-
-	// 定数バッファへデータ転送
-	ConstBufferData* constMap = nullptr;
-	result = constBuff_->Map(0, nullptr, (void**)&constMap);
-	constMap->mat = matView_ * matProjection_;	// 行列の合成
-	constMap->matbBillboard = matBillbord_;
-	constBuff_->Unmap(0, nullptr);
+	BuffUpdate();
 }
 
 void ParticleManager::Draw()
@@ -759,6 +743,33 @@ void ParticleManager::MakeParticle(const XMFLOAT3& position)
 		Add(enemyDestroyParticleTime_, pos, vel, acc);
 
 	}
+}
+
+void ParticleManager::BuffUpdate()
+{
+	HRESULT result;
+
+	//頂点バッファへデータ転送
+	VertexPos* vertMap_ = nullptr;
+	result = vertBuff_->Map(0, nullptr, (void**)&vertMap_);
+	if (SUCCEEDED(result)) {
+		//パーティクルの情報を1つずつ反映
+		for (std::forward_list<Particle>::iterator it = particles_.begin(); it != particles_.end(); it++) {
+			//座標
+			vertMap_->pos = it->position_;
+			//次の頂点へ
+			vertMap_++;
+		}
+		vertBuff_->Unmap(0, nullptr);
+	}
+
+
+	// 定数バッファへデータ転送
+	ConstBufferData* constMap = nullptr;
+	result = constBuff_->Map(0, nullptr, (void**)&constMap);
+	constMap->mat = matView_ * matProjection_;	// 行列の合成
+	constMap->matbBillboard = matBillbord_;
+	constBuff_->Unmap(0, nullptr);
 }
 
 

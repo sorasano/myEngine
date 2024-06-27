@@ -39,8 +39,8 @@ void BaseScene::CommonUpdate()
 
 	//パーティクル更新
 	//パーティクル更新
-	cData_->destroyParticle_->Update();
-	cData_->landingParticle_->Update();
+	cData_->destroyParticle_->Update(cData_->camera_->GetEye());
+	cData_->landingParticle_->Update(cData_->camera_->GetEye());
 
 	//パーティクルマネージャー静的更新
 	ParticleManager::StaticUpdate(cData_->camera_->GetEye(), cData_->camera_->GetTarget());

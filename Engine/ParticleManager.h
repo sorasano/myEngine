@@ -66,7 +66,8 @@ public: // サブクラス
 		int frame = 0;
 		//終了フレーム
 		int num_flame = 0;
-
+		//死亡フラグ
+		bool isDead = false;
 	};
 
 private: // 定数
@@ -236,8 +237,10 @@ public: // メンバ関数
 	bool Initialize(const std::string& resourcename);
 	/**
 	* 更新
+	* 
+	* @param[in] cameraPos カメラ座標
 	*/
-	void Update();
+	void Update(XMFLOAT3 cameraPos);
 	/**
 	* 描画
 	*/
@@ -256,6 +259,11 @@ public: // メンバ関数
 	*
 	*/
 	void MakeParticle(const XMFLOAT3& position);
+
+	/**
+	* バッファーの更新
+	*/
+	void BuffUpdate();
 
 private: // メンバ変数
 
