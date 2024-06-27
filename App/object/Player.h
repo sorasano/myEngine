@@ -287,7 +287,7 @@ private:
 	//基礎スピード以外の加速スピード
 	float subSpeed_ = 0.0f;
 	//敵を倒した時の加速量
-	float subUpSpeed_ = 1.0f;
+	float subUpSpeed_ = 0.2f;
 	//最大加速量
 	const float SubMaxSpeed_ = 5.0f;
 
