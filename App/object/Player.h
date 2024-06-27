@@ -73,11 +73,22 @@ public:
 	/**
 	* スピードアップ
 	*/
-	void SpeedUpByEnemy();
+	void SpeedUp();
 	/**
 	* スピードダウン
+	* 
+	* @param[in] downSpeed 減速量
 	*/
-	void SpeedDownByEnemy();
+	void SpeedDown(const float downSpeed);
+
+	/**
+	* 敵,弾に当たった時
+	*/
+	void CollEnemy();
+	/**
+	* ボス,弾に当たった時
+	*/
+	void CollBoss();
 
 	/**
 	* リセット
@@ -266,10 +277,14 @@ private:
 	float subSpeed_ = 0.0f;
 	//敵を倒した時の加速量
 	float subUpSpeed_ = 1.0f;
-	//敵に被弾した時の減速
-	float subDownSpeed_ = 1.0f;
 	//最大加速量
 	const float SubMaxSpeed_ = 5.0f;
+
+	//敵に被弾した時の減速
+	float enemyDownSpeed_ = 1.0f;
+	//敵(ボス)に被弾した時の減速
+	float bossDownSpeed_ = 3.0f;
+
 
 	//無敵時間
 	bool isInvincible_ = false;

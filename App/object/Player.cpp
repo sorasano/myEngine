@@ -125,6 +125,9 @@ void Player::UpdateClearScene()
 	//移動
 	position_.z += speedZ_ + mainSpeed_;
 
+	//影更新
+	shadow_->Update(position_, rotation_);
+
 	UpdateMatrix();
 }
 
@@ -133,6 +136,10 @@ void Player::UpdateGameoverScene()
 	//移動
 	position_.z += speedZ_;
 
+	//影更新
+	shadow_->Update(position_, rotation_);
+
+	//行列更新
 	UpdateMatrix();
 
 	//弾があったら削除
@@ -187,15 +194,24 @@ void Player::DrawSprite(ID3D12GraphicsCommandList* cmdList)
 
 }
 
-void Player::SpeedUpByEnemy()
+void Player::SpeedUp()
 {
 	//スピードを加速するとサブスピードがマックスになるか
 	if (subSpeed_ + subUpSpeed_ >= SubMaxSpeed_) {
 
-		//サブスピードがマックスになったらメインスピードを上げ、サブスピードを0に
-		mainSpeed_ += mainUpSpeed_;
-		subSpeed_ = 0;
+		//メインスピードが加速したらマックス以上になるか
+		if (mainSpeed_ + mainUpSpeed_ >= MainMaxSpeed_) {
+			//なるならメインスピードを最大値に固定
+			mainSpeed_ = MainMaxSpeed_;
+			subSpeed_ = SubMaxSpeed_;
+		}
+		else {
+			//ならないとき
 
+			//メインスピードを上げ、サブスピードを0に
+			mainSpeed_ += mainUpSpeed_;
+			subSpeed_ = 0;
+		}
 	}
 	else {
 		//ならなければそのまま加速
@@ -205,12 +221,12 @@ void Player::SpeedUpByEnemy()
 
 }
 
-void Player::SpeedDownByEnemy()
+void Player::SpeedDown(const float downSpeed)
 {
 	if (!isInvincible_) {
 
 		//減速するとサブスピードが0以下になるか
-		if (subSpeed_ - subDownSpeed_ <= 0) {
+		if (subSpeed_ - downSpeed <= 0) {
 
 			//メインスピードがあるかどうか
 			if (mainSpeed_ ) {
@@ -237,9 +253,25 @@ void Player::SpeedDownByEnemy()
 		}
 		else {
 			//ならない場合そのまま減速
-			subSpeed_ -= subDownSpeed_;
+			subSpeed_ -= downSpeed;
 		}
 	}
+}
+
+void Player::CollEnemy()
+{
+	//スピードを下げる
+	SpeedDown(enemyDownSpeed_);
+	//無敵時間に
+	isInvincible_ = true;
+}
+
+void Player::CollBoss()
+{
+	//スピードを下げる
+	SpeedDown(bossDownSpeed_);
+	//無敵時間に
+	isInvincible_ = true;
 }
 
 void Player::Move()

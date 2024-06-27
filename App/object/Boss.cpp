@@ -103,9 +103,10 @@ void Boss::UpdateGameoverScene()
 {
 	//移動
 	const float speed = -1.0f;
-
 	position_.z += speed;
 
+	//影更新
+	shadow_->Update(position_, rotation_);
 	UpdateMatrix();
 
 	//弾があったら削除

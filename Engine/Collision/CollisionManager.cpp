@@ -53,14 +53,17 @@ void CollisionManager::EnemyToPlayerBullet()
 					//当たったか
 					if (Collision::CheckSquareToSquare(enemy->GetColData(), cData_->player_->GetBulletColData(i))) {
 
-						//当たったら敵は消してパーティクル生成
+						//自機
+						//弾を消す
+						cData_->player_->SetBulletIsDead(true, i);
+						//スピードを上げる
+						cData_->player_->SpeedUp();
+
+						//敵
 						enemy->SetISDesd(true);
+
 						//敵撃破パーティクル生成
 						cData_->destroyParticle_->MakeParticle(enemy->GetPosition());
-
-						//自機の弾を消し、自機のスピードを上げスコアを加算
-						cData_->player_->SetBulletIsDead(true, i);
-						cData_->player_->SpeedUpByEnemy();
 						//弾着弾パーティクル
 						cData_->landingParticle_->MakeParticle(cData_->player_->GetBulletPosition(i));
 
@@ -79,14 +82,12 @@ void CollisionManager::EnemyToPlayer()
 			//当たったか
 			if (Collision::CheckSquareToSquare(enemy->GetColData(), cData_->player_->GetColData())) {
 
-				//当たったら敵は消してパーティクル生成
+				//自機
+				cData_->player_->CollEnemy();
+				//敵
 				enemy->SetISDesd(true);
 				//敵撃破パーティクル生成
 				cData_->destroyParticle_->MakeParticle(enemy->GetPosition());
-
-				//自機のスピードを下げ,少し無敵時間に
-				cData_->player_->SpeedDownByEnemy();
-				cData_->player_->SetIsInvincible(true);
 
 			}
 		}
@@ -141,9 +142,12 @@ void CollisionManager::PlayerToEnemyBullet()
 					//当たったか
 					if (Collision::CheckSquareToSquare(cData_->player_->GetColData(), enemy->GetBulletColData(i))) {
 
-						//当たったら敵の弾を消し、自機のスピードを下げげスコアを減算
+						//自機
+						cData_->player_->CollEnemy();
+
+						//敵
 						enemy->SetBulletIsDead(true, i);
-						cData_->player_->SpeedDownByEnemy();
+
 						//弾着弾パーティクル
 						cData_->landingParticle_->MakeParticle(enemy->GetBulletPosition(i));
 
@@ -165,14 +169,17 @@ void CollisionManager::BossToPlayerBullet()
 				//当たったか
 				if (Collision::CheckSquareToSquare(cData_->boss_->GetColData(), cData_->player_->GetBulletColData(i))) {
 
+					//自機
+					//自機の弾を消す
+					cData_->player_->SetBulletIsDead(true, i);
+
+					//ボス
 					//当たったらhpをへらす
 					cData_->boss_->HitBullet();
 
-					//自機の弾を消し、パーティクル生成
-					cData_->player_->SetBulletIsDead(true, i);
+					//弾着弾パーティクル
 					cData_->landingParticle_->MakeParticle(cData_->player_->GetBulletPosition(i));
 
-					//スコアを加算
 				}
 			}
 
@@ -190,9 +197,12 @@ void CollisionManager::PlayerToBossBullet()
 				//当たったか
 				if (Collision::CheckSquareToSquare(cData_->player_->GetColData(), cData_->boss_->GetBulletColData(i))) {
 
-					//当たったら敵の弾を消し、自機のスピードを下げスコアを減算
+					//自機
+					cData_->player_->CollBoss();
+
+					//敵の弾を消す
 					cData_->boss_->SetBulletIsDead(true, i);
-					cData_->player_->SpeedDownByEnemy();
+
 					//パーティクル生成
 					cData_->landingParticle_->MakeParticle(cData_->boss_->GetBulletPosition(i));
 
