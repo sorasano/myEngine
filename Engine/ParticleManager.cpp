@@ -648,6 +648,8 @@ void ParticleManager::Update()
 	//寿命が尽きたパーティクルを全削除
 	particles_.remove_if([](Particle& x) {return x.frame >= x.num_flame; });
 
+	//自機に近づいたパーティクルを削除
+
 	//全パーティクル更新
 	for (std::forward_list<Particle>::iterator it = particles_.begin(); it != particles_.end(); it++) {
 
