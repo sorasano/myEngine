@@ -8,12 +8,12 @@
 #include "FbxLoader.h"
 #include "FbxObject3D.h"
 #include "DirectXCommon.h"
-
-#include "PlayerBullet.h"
 #include "Sprite.h"
-#include "Shadow.h"
 
 #include "MathManager.h"
+
+#include "PlayerBullet.h"
+#include "Shadow.h"
 
 class Player
 {

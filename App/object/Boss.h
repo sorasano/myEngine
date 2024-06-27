@@ -9,10 +9,11 @@
 #include "FbxObject3D.h"
 #include "DirectXCommon.h"
 
-#include "ParticleManager.h"
-#include "BossBullet.h"
-
 #include "Collision.h"
+#include "ParticleManager.h"
+
+#include "BossBullet.h"
+#include "Shadow.h"
 
 enum BossNormalAction {
 	BOSSNOTHING,
@@ -251,6 +252,9 @@ private:
 	int hp_ = 50;
 	//2段階目になるhp
 	int changeHardHp_ = 25;
+
+	//影
+	std::unique_ptr<Shadow> shadow_;
 
 	//-------移動-------
 	//移動 trueが+に移動中でfalseが-に移動中

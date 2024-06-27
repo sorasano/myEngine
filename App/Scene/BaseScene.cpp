@@ -103,14 +103,9 @@ void BaseScene::SetEnemy()
 			newObject->SetModel(cData_->enemyBlueModel_.get());
 			newObject->SetShadowModel(cData_->enemyBlueShadowModel_.get());
 		}
-		else if (it->get()->GetType(i) > NORMAL) {
+		else if (it->get()->GetType(i) >= NORMAL) {
 			newObject->SetModel(cData_->enemyYellowModel_.get());
 			newObject->SetShadowModel(cData_->enemyYellowShadowModel_.get());
-
-			XMFLOAT3 rotation = {};
-			rotation.x = static_cast<float>(180 * (PI / 180));
-			rotation.y = static_cast<float>(90 * (PI / 180));
-			newObject->SetRotation(rotation);
 		}
 
 		newObject->SetPosition(XMFLOAT3(it->get()->GetPosition(i).x, it->get()->GetPosition(i).y, it->get()->GetPosition(i).z + makePos));

@@ -30,6 +30,10 @@ void Enemy::Initialize(FbxModel* EnemyModel,FbxModel* enemyBulletModel, FbxModel
 	newEnemyObject_->SetModel(EnemyModel);
 	enemyObject_.swap(newEnemyObject_);
 
+	//モデルの角度調整
+	this->rotation_.x = static_cast<float>(90 * (PI / 180));
+	this->rotation_.y = static_cast<float>(270 * (PI / 180));
+
 	//弾モデル
 	this->bulletModel_ = enemyBulletModel;
 
@@ -250,22 +254,22 @@ void Enemy::StopInScreen()
 
 void Enemy::HomingUpdate()
 {
-	Vector3 velocity = GetEnemyToPlayerVec();
+	//モデルの角度調整
+	rotation_.x = static_cast<float>(90 * (PI / 180));
+	rotation_.y = static_cast<float>(270 * (PI / 180));
 
-	//角度をベクトルから求めてモデルに反映
-	//Y軸周り角度
-	this->rotation_.y = std::atan2(velocity.x, velocity.z - playerSpeed_);
+	//Vector3 velocity = GetEnemyToPlayerVec();
 
-	//横軸方向の長さを求める
-	Vector3 velocityXZ = { velocity.x,0.0f,velocity.z - playerSpeed_ };
-	float length = velocityXZ.length();
+	////角度をベクトルから求めてモデルに反映
+	////Y軸周り角度
+	//this->rotation_.y = std::atan2(velocity.x, velocity.z - playerSpeed_);
 
-	//X軸周り角度
-	this->rotation_.x = std::atan2(-velocity.y, length);
+	////横軸方向の長さを求める
+	//Vector3 velocityXZ = { velocity.x,0.0f,velocity.z - playerSpeed_ };
+	//float length = velocityXZ.length();
 
-	//ImGui::Begin("aaa");
-	//ImGui::Text("%f,%f,%f", rotation_.x, rotation_.y, rotation_.z);
-	//ImGui::End();
+	////X軸周り角度
+	//this->rotation_.x = std::atan2(-velocity.y, length);
 
 }
 
