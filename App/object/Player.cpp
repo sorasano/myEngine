@@ -22,12 +22,22 @@ void Player::Initialize()
 	//モデル名を指定してファイル読み込み
 	playerModel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("player"));
 	bulletModel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("playerBullet"));
+	barrierModel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("playerBarrier"));
 
 	//3dオブジェクト生成とモデルのセット
 	std::unique_ptr<FbxObject3D> newPlayerObject = std::make_unique<FbxObject3D>();
 	newPlayerObject->Initialize();
 	newPlayerObject->SetModel(playerModel_.get());
 	playerObject_.swap(newPlayerObject);
+
+	//バリア
+	std::unique_ptr<FbxObject3D> newBarrierObject = std::make_unique<FbxObject3D>();
+	newBarrierObject->Initialize();
+	newBarrierObject->SetModel(barrierModel_.get());
+	barrierObject_.swap(newBarrierObject);
+
+	XMFLOAT3 barrierScale = { 3.0f,3.0f,3.0f };
+	barrierObject_->SetScale(barrierScale);
 
 	//モデルの角度調整
 	this->rotation_.x = static_cast<float>(90 * (PI / 180));
@@ -37,8 +47,6 @@ void Player::Initialize()
 	std::unique_ptr<Shadow> newShadow = std::make_unique<Shadow>();
 	newShadow->Initialize(FbxLoader::GetInstance()->LoadShadowModelFromFile("player"));
 	shadow_.swap(newShadow);
-
-
 	//スプライト
 
 	//レティクル
@@ -88,13 +96,7 @@ void Player::Update(const XMMATRIX& matVP)
 	BulletUpdate();
 
 	//無敵時間更新
-	if (isInvincible_) {
-		invincibleTimer_++;
-		if (invincibleTimer_ > InvincibleTime_) {
-			isInvincible_ = false;
-			invincibleTimer_ = 0;
-		}
-	}
+	UpdateInvincible();
 
 	//影更新
 	shadow_->Update(position_, rotation_);
@@ -113,6 +115,9 @@ void Player::UpdateMatrix()
 	playerObject_->SetScale(scale_);
 	playerObject_->SetRotate(rotation_);
 	playerObject_->Update();
+
+	//バリア
+	barrierObject_->Update();
 }
 
 void Player::UpdateClearScene()
@@ -139,15 +144,16 @@ void Player::UpdateGameoverScene()
 
 void Player::Draw(ID3D12GraphicsCommandList* cmdList)
 {
-	if (isInvincible_) {
 
-	}
-	else {
-		playerObject_->Draw(cmdList);
+	//プレイヤー
+	playerObject_->Draw(cmdList);
+
+	//バリア
+	if (isInvincible_) {
+		barrierObject_->Draw(cmdList);
 	}
 
 	//弾
-
 	for (std::unique_ptr<PlayerBullet>& bullet : bullets_)
 	{
 		bullet->Draw(cmdList);
@@ -160,6 +166,9 @@ void Player::Draw(ID3D12GraphicsCommandList* cmdList)
 void Player::DrawClearScene(ID3D12GraphicsCommandList* cmdList)
 {
 	playerObject_->Draw(cmdList);
+
+	shadow_->Draw(cmdList);
+
 }
 
 void Player::DrawSprite(ID3D12GraphicsCommandList* cmdList)
@@ -386,6 +395,21 @@ void Player::UpdateSprite()
 		}
 	}
 
+}
+
+void Player::UpdateInvincible()
+{
+	//無敵時間更新
+	if (isInvincible_) {
+		invincibleTimer_++;
+		if (invincibleTimer_ > InvincibleTime_) {
+			isInvincible_ = false;
+			invincibleTimer_ = 0;
+		}
+	}
+
+	//バリア座標セット
+	barrierObject_->SetPosition(position_);
 }
 
 void Player::ScreenToWorldCoordinateTransformation(const XMMATRIX& matVP)

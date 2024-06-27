@@ -116,6 +116,9 @@ private:
 	*/
 	void UpdateSprite();
 
+	//無敵時間更新
+	void UpdateInvincible();
+
 	/**
 	* レティクルのスクリーン→ワールド座標変換、プレイヤーのワールド→スクリーン座標変換
 	*
@@ -226,9 +229,12 @@ private:
 private:
 	//FBX
 	std::unique_ptr<FbxObject3D> playerObject_ = nullptr;
+	std::unique_ptr<FbxObject3D> barrierObject_ = nullptr;
+
 	//モデル
 	std::unique_ptr<FbxModel> playerModel_ = nullptr;
 	std::unique_ptr<FbxModel> bulletModel_ = nullptr;
+	std::unique_ptr<FbxModel> barrierModel_ = nullptr;
 
 	//入力
 	MyEngine::Input* input_ = nullptr;
@@ -267,7 +273,7 @@ private:
 
 	//無敵時間
 	bool isInvincible_ = false;
-	const int InvincibleTime_ = 10;
+	const int InvincibleTime_ = 30;
 	int invincibleTimer_ = 0;
 
 	//--------レティクル--------
