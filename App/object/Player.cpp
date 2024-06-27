@@ -204,6 +204,7 @@ void Player::SpeedUp()
 			//なるならメインスピードを最大値に固定
 			mainSpeed_ = MainMaxSpeed_;
 			subSpeed_ = SubMaxSpeed_;
+
 		}
 		else {
 			//ならないとき
@@ -211,6 +212,9 @@ void Player::SpeedUp()
 			//メインスピードを上げ、サブスピードを0に
 			mainSpeed_ += mainUpSpeed_;
 			subSpeed_ = 0;
+
+			//スピードアップフラグ
+			isSpeedUp_ = true;
 		}
 	}
 	else {
@@ -439,6 +443,13 @@ void Player::UpdateInvincible()
 			invincibleTimer_ = 0;
 		}
 	}
+
+	//スピードアップ中は無敵
+	if (isSpeedUp_) {
+		isInvincible_ = true;
+		invincibleTimer_ = 0;
+	}
+
 
 	//バリア座標セット
 	barrierObject_->SetPosition(position_);

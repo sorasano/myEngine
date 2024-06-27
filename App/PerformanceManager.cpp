@@ -17,18 +17,23 @@ void PerformanceManager::Initialize(Camera* camera, Player* player, Boss* boss)
 
 	//スプライト
 	for (int i = 0; i < titleReturnSpritesSize_; i++) {
-		std::unique_ptr<Sprite> gPSprite = 
+		std::unique_ptr<Sprite> gPSprite =
 			std::make_unique<Sprite>(
 				4,
 				titleReturnSpriteSize,
-				XMFLOAT2(0,0)
-		);
+				XMFLOAT2(0, 0)
+			);
 		titleReturnSprites_.push_back(std::move(gPSprite));
 	}
 }
 
 void PerformanceManager::Update()
 {
+
+	//スピードアップ演出取得
+	if (player_->GetIsSpeedUp() && !isPerformance_) {
+		SetPerformanceNum(SPEEDUP);
+	}
 
 	//演出が始まったったタイミング取得
 	if (isPerformance_ == true && oldIsPerformance_ == false) {
@@ -40,6 +45,7 @@ void PerformanceManager::Update()
 
 	oldIsPerformance_ = isPerformance_;
 
+	//演出ごとの更新
 	if (isPerformance_) {
 
 		switch (performanceNum_) {
@@ -62,10 +68,11 @@ void PerformanceManager::Update()
 		case OPENMENU:
 			OpenMenuPerformance();
 			break;
-
 		case CLOSEMENU:
 			CloseMenuPerformance();
 			break;
+		case SPEEDUP:
+			SpeedUpPerformance();
 		}
 	}
 
@@ -547,6 +554,111 @@ void PerformanceManager::CloseMenuPerformance()
 	//シーンを開いた時のシーンへ
 	isChangeScene_ = oldScene_;
 	isPerformance_ = false;
+}
+
+void PerformanceManager::SpeedUpPerformance()
+{
+	//演出初期化
+	if (startPerformance_) {
+		//イージング用のデータを設定
+		speedUpEaseStartPosition = { 0,camera_->GetInitEye().y,0 };
+		speedUpEaseEndPosition = speedUpEasePositionLeave;
+		speedUpEaseEndPosition.y += camera_->GetInitEye().y;
+
+		//フェーズ進行
+		speedUpPhase_ = SP_LEAVE;
+
+		//イージング用数値の初期化
+		speedUpEaseing.Start(seppedUpLeaveEaseingTime_);
+
+		//カメラのモードを演出モードに
+		camera_->SetMode(PERFORMANCEMODE);
+	}
+
+	switch (speedUpPhase_) {
+	case SP_LEAVE:
+
+		//取得したイージング用の開始位置と終了位置でイージングを行う
+		speedUpEye_ = EaseIn3D(
+			speedUpEaseStartPosition,
+			speedUpEaseEndPosition,
+			speedUpEaseing.timeRate);
+
+		if (!speedUpEaseing.GetActive()) {
+			//演出を次のフェーズへ
+			speedUpPhase_ = SP_WAIT;
+		}
+
+		break;
+
+	case SP_WAIT:
+
+		//秒数分待機
+		seppedUpWaitCoolTimer_++;
+
+		//秒数が経過したら (秒数 * 60フレーム)
+		if (seppedUpWaitCoolTimer_ >= seppedUpWaitTime_) {
+			//イージング用のデータを設定しなおす
+			speedUpEaseing.Start(seppedUpReturnEaseingTime_);
+			//イージング用のデータを再設定
+			speedUpEaseStartPosition = speedUpEaseEndPosition;
+			speedUpEaseEndPosition = { 0,camera_->GetInitEye().y,0 };;
+
+			//演出を次のフェーズへ
+			speedUpPhase_ = SP_RETURN;
+
+			seppedUpWaitCoolTimer_ = 0;
+		}
+
+		break;
+
+	case SP_RETURN:
+
+		//取得したイージング用の開始位置と終了位置でイージングを行う
+		speedUpEye_ = EaseIn3D(
+			speedUpEaseStartPosition,
+			speedUpEaseEndPosition,
+			speedUpEaseing.timeRate);
+
+		//演出終了
+		if (!speedUpEaseing.GetActive()) {
+
+			//パフォーマンスフラグ
+			isPerformance_ = false;
+			//カメラのモードを自機追従モードに
+			camera_->SetMode(PLAYERFOLLOWMODE);
+			//プレイヤースピードアップフラグ終わり
+			player_->SetIsSpeedUp(false);
+
+		}
+
+		break;
+	}
+
+	//イージングの更新
+	speedUpEaseing.Update();
+
+	//---カメラ更新---
+
+	//---eye
+	XMFLOAT3 cameraEye = camera_->GetEye();
+	//一定スピードで進み続ける
+	cameraEye.z = player_->GetPosition().z - camera_->GetplayerRange();
+
+	//イージング座標の追加
+	cameraEye.z += speedUpEye_.z;
+	cameraEye.y = speedUpEye_.y;
+
+	//カメラに座標の引き渡し
+	camera_->SetEye(cameraEye);
+
+	//---target
+	XMFLOAT3 cameraTarget = camera_->GetInitTarget();
+	cameraTarget.z = player_->GetPosition().z;
+
+	//カメラに座標の引き渡し
+	camera_->SetTarget(cameraTarget);
+
 }
 
 void PerformanceManager::MenuUIRotPerformance(Sprite* menuUI)

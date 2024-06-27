@@ -184,6 +184,10 @@ public:
 	* @return XMFLOAT2 playerDirection取得
 	*/
 	float GetPlayerDirection() const { return playerDirection; }
+	/**
+	* @return bool isSpeedUp取得
+	*/
+	bool GetIsSpeedUp() const { return isSpeedUp_; }
 
 	/**
 	* posセット
@@ -214,6 +218,10 @@ public:
 	* reticleDirection_セット
 	*/
 	void SetReticleDirection_(float reticleDirection) { this->reticleDirection_ = reticleDirection; };
+	/**
+	* isSpeedUpセット
+	*/
+	void SetIsSpeedUp(bool isSpeedUp) { this->isSpeedUp_ = isSpeedUp; };
 
 	/**
 	* 弾死亡情報セット
@@ -252,6 +260,9 @@ private:
 
 	//操作ロック
 	bool isLockOperation_ = false;
+
+	//スピードアップフラグ
+	bool isSpeedUp_ = false;
 
 	//移動範囲
 	const XMFLOAT2 MoveMax_ = { 20.0f,10.0f };

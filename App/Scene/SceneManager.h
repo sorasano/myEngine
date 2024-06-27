@@ -33,6 +33,13 @@ public:
 	*/
 	void DrawSprite();
 
+	/**
+	* ブラー要求フラグ
+	* 
+	* return bool playerのスピードアップフラグ
+	*/
+	bool GetIsBlur() { return scene_->GetSceneCommonData()->player_->GetIsSpeedUp(); }
+
 private:
 	//今のシーン(実行中シーン)
 	BaseScene* scene_ = nullptr;

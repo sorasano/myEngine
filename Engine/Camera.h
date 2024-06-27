@@ -109,6 +109,16 @@ public:
 	* @return XMFLOAT3 target_取得
 	*/
 	XMFLOAT3 GetTarget() { return target_; }
+
+	/**
+	* @return XMFLOAT3 initEye_取得
+	*/
+	XMFLOAT3 GetInitEye() { return initEye_; }
+	/**
+	* @return XMFLOAT3 initTarget_取得
+	*/
+	XMFLOAT3 GetInitTarget() { return initTarget_; }
+
 	/**
 	* @return int mode_取得
 	*/

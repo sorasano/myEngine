@@ -21,6 +21,7 @@ enum Performance {
 	RETURNTITLE,//タイトルに戻るとき
 	OPENMENU,//メニューを開く
 	CLOSEMENU,//メニューを閉じる
+	SPEEDUP//スピードアップ演出
 };
 
 //クリア演出フェーズ
@@ -44,13 +45,20 @@ enum TitleReturnPhase {
 	TP_END//演出終了
 };
 
+//スピードアップ演出
+enum SpeedUpPhase {
+	SP_LEAVE,//離れる
+	SP_WAIT,//停滞
+	SP_RETURN,//戻る
+};
+
 class PerformanceManager
 {
 public:
 	/**
 	* 初期化
 	*/
-	void Initialize(Camera* camera,Player* player,Boss* boss);
+	void Initialize(Camera* camera, Player* player, Boss* boss);
 	/**
 	* 更新
 	*/
@@ -97,12 +105,16 @@ private:
 	* メニューを閉じる演出
 	*/
 	void CloseMenuPerformance();
+	/**
+	* スピードアップ演出
+	*/
+	void SpeedUpPerformance();
 
 public:
 
 	/**
 	* メニューUI回転演出
-	* 
+	*
 	* @return 回転後座標
 	*/
 	void MenuUIRotPerformance(Sprite* menuUI);
@@ -135,7 +147,7 @@ public:
 private:
 
 	//カメラ
-	Camera *camera_;
+	Camera* camera_;
 	//プレイヤー
 	Player* player_;
 	//ボス
@@ -235,8 +247,8 @@ private:
 	//スプライト
 	std::vector<std::unique_ptr<Sprite>> titleReturnSprites_ = {};
 	//スプライト大きさ
-	XMFLOAT2 titleReturnSpriteSize = { window_width  + 200, window_height };
-	
+	XMFLOAT2 titleReturnSpriteSize = { window_width + 200, window_height };
+
 	//スプライト数
 	int titleReturnSpritesSize_ = 2;
 	//座標
@@ -284,6 +296,32 @@ private:
 	float menuUIRot = 0.0f;
 	//メニューUI回転度数
 	float menuUIAddRot = 1.0f;
+
+	//-----スピードアップ演出-----
+
+	//現在座標
+	XMFLOAT3 speedUpEye_ = {};
+
+	//イージング開始座標
+	XMFLOAT3 speedUpEaseStartPosition;
+	//イージング終了位置
+	XMFLOAT3 speedUpEaseEndPosition;
+	//イージング演出用データ
+	Easing speedUpEaseing;
+
+	//どのくらい引くか
+	XMFLOAT3 speedUpEasePositionLeave = { 0.0f, 5.0f, -5.0f };
+
+	//演出時間
+	float seppedUpLeaveEaseingTime_ = 0.5f;
+	int seppedUpWaitTime_ = 60 * 1;//(フレーム)
+	float seppedUpReturnEaseingTime_ = 0.5f;
+
+	//タイマー
+	int seppedUpWaitCoolTimer_ = 0;
+	
+	//フェーズ
+	int speedUpPhase_ = 0;
 
 };
 
