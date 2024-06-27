@@ -332,8 +332,8 @@ private:
 	XMFLOAT2 subSpeedSpriteScale_ = { 0,32 };
 	XMFLOAT2 subSpeedSpritePosition_ = { window_width / 2,window_height - 32 };
 
-	XMFLOAT2 speedGaugeSpriteScale_ = { 0,32 };
-	XMFLOAT2 speedGaugeSpritePosition_ = { window_width / 2,window_height - 32 };
+	XMFLOAT2 speedGaugeSpriteScale_ = { 0,64 };
+	XMFLOAT2 speedGaugeSpritePosition_ = { window_width / 2,window_height - 48 };
 
 	//スプライトの左右両端をどのくらい開けるか
 	float speedSpriteXSpace_ = 64;
