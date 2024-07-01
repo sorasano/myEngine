@@ -115,6 +115,8 @@ private:	//静的メンバ変数
 	static const float clearColor[4];
 
 private:	//メンバ変数
+	//頂点バッファ
+	ComPtr<ID3D12Resource> vertBuff_ = nullptr;
 	//頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vbView_;
 	//頂点データ
