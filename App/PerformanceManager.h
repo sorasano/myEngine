@@ -130,6 +130,10 @@ public:
 	* @return int isChangeScene取得
 	*/
 	int GetIsChangeScene() const { return isChangeScene_; };
+	/**
+	* @return int performanceNum取得
+	*/
+	int GetPerformanceNum() const { return performanceNum_; };
 
 	/**
 	* performanceNumセット

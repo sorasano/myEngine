@@ -41,7 +41,8 @@ void BossScene::Draw()
 
 void BossScene::DrawSprite()
 {
-	if (!cData_->performanceManager_->GetIsPerformance()) {
+	//クリア演出中のみ非表示
+	if (!cData_->performanceManager_->GetIsPerformance() && cData_->performanceManager_->GetPerformanceNum() != CLEARBOSS) {
 		cData_->player_->DrawSprite(cData_->dxCommon_->GetCommandList());
 	}
 

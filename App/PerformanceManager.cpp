@@ -321,12 +321,14 @@ void PerformanceManager::BossGameoverPerformance()
 		player_->SetIsLockOperation(true);
 		//プレイヤーの座標、スピードを取得
 		gameoverPlayerPosition = player_->GetPosition();
+		gameoverPlayerPosition.y -= 1;
+
 		gameoverPlayerSpeed = player_->GetSpeed();
 
 		//イージング用のデータを設定
 		gemeoverDownEaseing_.Start(gemeoverEaseingTime_);
-		gemeoverDownEaseStartPosition_ = player_->GetPosition();
-		gemeoverDownEaseEndPosition_ = player_->GetPosition();
+		gemeoverDownEaseStartPosition_ = gameoverPlayerPosition;
+		gemeoverDownEaseEndPosition_ = gameoverPlayerPosition;
 		gemeoverDownEaseEndPosition_.y = gemeoverDownPosition_;
 
 		gameoverPhase_ = GP_PLAYERMOVE;
