@@ -47,7 +47,7 @@ void Boss::Initialize()
 
 }
 
-void Boss::Update(const XMFLOAT3& pPos, float pSpeed)
+void Boss::Update(const XMFLOAT3& pPos, float pSpeed, float cameraZ)
 {
 	//プレイヤー情報更新
 	this->playerPosition_ = pPos;
@@ -74,7 +74,7 @@ void Boss::Update(const XMFLOAT3& pPos, float pSpeed)
 			//プレイヤーのスピードで発射し始める座標を変更
 			shotStartPos_ = ShotStart_ * playerSpeed_;
 			if (position_.z < playerPosition_.z + shotStartPos_) {
-				BulletUpdate();
+				BulletUpdate(cameraZ);
 			}
 		}
 
@@ -302,7 +302,7 @@ void Boss::Shot()
 
 }
 
-void Boss::BulletUpdate()
+void Boss::BulletUpdate(float cameraZ)
 {
 	//プレイヤーより前にいる敵の弾のみ発射
 	if (position_.z > playerPosition_.z) {
@@ -312,7 +312,7 @@ void Boss::BulletUpdate()
 	//敵の弾更新
 	for (std::unique_ptr<BossBullet>& bullet : bullets_)
 	{
-		bullet->Update();
+		bullet->EnemyUpdate(cameraZ);
 	}
 
 	//デスフラグの立った弾を削除

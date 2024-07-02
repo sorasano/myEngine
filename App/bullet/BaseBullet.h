@@ -28,6 +28,14 @@ public:
 	* 更新
 	*/
 	void Update();
+
+	/**
+	* 敵,ボス更新
+	*
+	* @param[in] deletePos カメラZ座標
+	*/
+	void EnemyUpdate(float cameraZ);
+
 	/**
 	* 描画
 	*

@@ -21,5 +21,6 @@ public:
 	* @param[in] playerSpeed プレイヤーのスピード
 	*/
 	void Initialize(FbxModel* model, const XMFLOAT3& position, const Vector3& velocity, float playerSpeed);
+
 };
 

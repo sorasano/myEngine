@@ -66,8 +66,9 @@ public:
 	* @param[in] pPos プレイヤー座標
 	* @param[in] pSpeed プレイヤースピード
 	* @param[in] matVP ビュープロジェクション
+	* @param[in] deletePos カメラZ座標
 	*/
-	void Update(const XMFLOAT3& pPos,float pSpeed, const XMMATRIX& matVP);
+	void Update(const XMFLOAT3& pPos,float pSpeed, const XMMATRIX& matVP,float cameraZ);
 	/**
 	* 行列更新
 	*/
@@ -128,8 +129,10 @@ private:
 	void Shot();
 	/**
 	* 弾更新
+	* 
+	* 	* @param[in] deletePos カメラZ座標
 	*/
-	void BulletUpdate();
+	void BulletUpdate(float cameraZ);
 	/**
 	* 弾生成
 	*/

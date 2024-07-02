@@ -11,7 +11,12 @@ void BossScene::Update()
 	cData_->player_->Update(cData_->camera_->GetViewProjection());
 
 	//ボス
-	cData_->boss_->Update(cData_->player_->GetPosition(), cData_->player_->GetSpeed());
+	cData_->boss_->Update(
+		cData_->player_->GetPosition(), 
+		cData_->player_->GetSpeed(),
+		cData_->camera_->GetEye().z
+	
+	);
 
 
 	//スプライト

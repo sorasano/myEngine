@@ -71,8 +71,9 @@ public:
 	*
 	* @param[in] pPos プレイヤー座標
 	* @param[in] pSpeed プレイヤースピード
+	* @param[in] deletePos カメラZ座標
 	*/
-	void Update(const XMFLOAT3& pPos, float pSpeed);
+	void Update(const XMFLOAT3& pPos, float pSpeed, float cameraZ);
 
 	/**
 	* クリアシーン更新
@@ -118,8 +119,10 @@ private:
 	void Shot();
 	/**
 	* 弾更新
+	* 
+	* @param[in] deletePos カメラZ座標
 	*/
-	void BulletUpdate();
+	void BulletUpdate(float cameraZ);
 	/**
 	* 弾生成
 	*
@@ -250,9 +253,12 @@ private:
 	//ボス2段階目フラグ
 	bool isBossHardMode_ = 0;
 	//hp
-	int hp_ = 50;
+	int hp_ = 200;
+	//hp
+	int initHp_ = hp_;
+
 	//2段階目になるhp
-	int changeHardHp_ = 25;
+	int changeHardHp_ = 100;
 
 	//影
 	std::unique_ptr<Shadow> shadow_;
@@ -291,8 +297,5 @@ private:
 	XMFLOAT3 initPosition_ = { 0,0,0 };
 	XMFLOAT3 initRotation_ = { 0,0,0 };
 	XMFLOAT3 initScale_ = { 1,1,1 };
-
-	//hp
-	int initHp_ = 50;
 };
 

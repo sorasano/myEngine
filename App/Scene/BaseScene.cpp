@@ -87,7 +87,6 @@ void BaseScene::SetEnemy()
 	//何番目のCSVをセットするか(ランダム)
 	int setNum = static_cast<int>(Random(0, cData_->enemyCSVSize_ - 0.001f));
 	auto it = cData_->enemyCsvs_.begin();
-	setNum = 0;
 	std::advance(it, setNum);
 	for (int i = 0; i < it->get()->GetSize(); i++)
 	{

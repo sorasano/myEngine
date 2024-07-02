@@ -43,7 +43,7 @@ void Enemy::Initialize(FbxModel* EnemyModel,FbxModel* enemyBulletModel, FbxModel
 	shadow_.swap(newShadow);
 }
 
-void Enemy::Update(const XMFLOAT3& pPos, float pSpeed, const XMMATRIX& matVP)
+void Enemy::Update(const XMFLOAT3& pPos, float pSpeed, const XMMATRIX& matVP,float cameraZ)
 {
 	//プレイヤー情報更新
 	this->playerPosition_ = pPos;
@@ -65,7 +65,7 @@ void Enemy::Update(const XMFLOAT3& pPos, float pSpeed, const XMMATRIX& matVP)
 			shotStartPos_ = ShotStart_ * playerSpeed_;
 
 			if (position_.z < playerPosition_.z + shotStartPos_) {
-				BulletUpdate();
+				BulletUpdate(cameraZ);
 			}
 		}
 
@@ -305,7 +305,7 @@ void Enemy::Shot()
 
 }
 
-void Enemy::BulletUpdate()
+void Enemy::BulletUpdate(float cameraZ)
 {
 	//プレイヤーより前にいる敵の弾のみ発射
 	if (position_.z > playerPosition_.z) {
@@ -315,7 +315,7 @@ void Enemy::BulletUpdate()
 	//敵の弾更新
 	for (std::unique_ptr<EnemyBullet>& bullet : bullets_)
 	{
-		bullet->Update();
+		bullet->EnemyUpdate(cameraZ);
 	}
 
 	//デスフラグの立った弾を削除

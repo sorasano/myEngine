@@ -32,3 +32,4 @@ void BossBullet::Initialize(FbxModel* model, const XMFLOAT3& position, const Vec
 	this->rotation_.x = std::atan2(-velocity_.y, length);
 
 }
+

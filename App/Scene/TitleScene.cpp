@@ -14,7 +14,9 @@ void TitleScene::Update()
 			enemy->Update(
 				cData_->player_->GetPosition(),
 				cData_->player_->GetSpeed(),
-				cData_->camera_->GetViewProjection());
+				cData_->camera_->GetViewProjection(),
+				cData_->camera_->GetEye().z
+				);
 		}
 	}
 

@@ -11,17 +11,30 @@ BaseBullet::BaseBullet()
 
 void BaseBullet::Update()
 {
-	Move();
-
 	//一定時間経過で弾削除
 	if (--deathTimer_ <= 0) {
-		isDead_ = true;
+	isDead_ = true;
 	}
+
+	Move();
 
 	bulletObject_->SetPosition(position_);
 	bulletObject_->SetScale(scale_);
 	bulletObject_->SetRotate(rotation_);
 	bulletObject_->Update();
+}
+
+void BaseBullet::EnemyUpdate(float cameraZ)
+{
+
+	float deletePos = cameraZ + 5;
+
+	//一定位置で削除
+	if (deletePos >= position_.z) {
+		isDead_ = true;
+	}
+
+	Update();
 }
 
 void BaseBullet::Draw(ID3D12GraphicsCommandList* cmdList)
