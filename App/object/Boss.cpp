@@ -26,6 +26,7 @@ void Boss::Initialize()
 	normalBossModel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("normalBoss"));
 	hardBossModel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("hardBoss"));
 	bulletModel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("bossBullet"));
+	shadowModel_.reset(FbxLoader::GetInstance()->LoadShadowModelFromFile("normalBoss"));
 
 	//3dオブジェクト生成とモデルのセット
 	std::unique_ptr<FbxObject3D> newBossObject_ = std::make_unique<FbxObject3D>();
@@ -41,7 +42,7 @@ void Boss::Initialize()
 
 	//影
 	std::unique_ptr<Shadow> newShadow = std::make_unique<Shadow>();
-	newShadow->Initialize(FbxLoader::GetInstance()->LoadShadowModelFromFile("player"));
+	newShadow->Initialize(shadowModel_.get());
 	shadow_.swap(newShadow);
 
 }

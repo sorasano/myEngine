@@ -225,6 +225,7 @@ private:
 	std::unique_ptr<FbxModel> normalBossModel_ = nullptr;
 	std::unique_ptr<FbxModel> hardBossModel_ = nullptr;
 	std::unique_ptr<FbxModel> bulletModel_ = nullptr;
+	std::unique_ptr<FbxModel> shadowModel_ = nullptr;
 
 	//死亡フラグ
 	bool isDead_ = false;
