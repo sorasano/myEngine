@@ -30,7 +30,9 @@ void BossScene::Draw()
 	CommonDraw();
 
 	//自機
-	cData_->player_->Draw(cData_->dxCommon_->GetCommandList());
+	if (!cData_->performanceManager_->GetIsPerformance()) {
+		cData_->player_->Draw(cData_->dxCommon_->GetCommandList());
+	}
 
 	//ボス
 	cData_->boss_->Draw(cData_->dxCommon_->GetCommandList());
