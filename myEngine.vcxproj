@@ -161,6 +161,7 @@
   <ItemGroup>
     <ClCompile Include="App\backGround\BackGround.cpp" />
     <ClCompile Include="App\backGround\Skydome.cpp" />
+    <ClCompile Include="App\bullet\BaseBullet.cpp" />
     <ClCompile Include="App\bullet\BossBullet.cpp" />
     <ClCompile Include="App\bullet\EnemyBullet.cpp" />
     <ClCompile Include="App\bullet\PlayerBullet.cpp" />
@@ -297,6 +298,7 @@
   <ItemGroup>
     <ClInclude Include="App\backGround\BackGround.h" />
     <ClInclude Include="App\backGround\Skydome.h" />
+    <ClInclude Include="App\bullet\BaseBullet.h" />
     <ClInclude Include="App\bullet\BossBullet.h" />
     <ClInclude Include="App\bullet\EnemyBullet.h" />
     <ClInclude Include="App\bullet\PlayerBullet.h" />

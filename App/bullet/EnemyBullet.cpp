@@ -6,22 +6,13 @@
 #include "EnemyBullet.h"
 #include <cmath>
 
-EnemyBullet::EnemyBullet()
-{
-}
-
-EnemyBullet::~EnemyBullet()
-{
-	FBX_SAFE_DELETE(EnemyBulletObject_);
-}
-
 void EnemyBullet::Initialize(FbxModel* model, const XMFLOAT3& position, const Vector3& velocity, float playerSpeed)
 {
 
 	//3dオブジェクト生成とモデルのセット
-	EnemyBulletObject_ = new FbxObject3D;
-	EnemyBulletObject_->Initialize();
-	EnemyBulletObject_->SetModel(model);
+	bulletObject_ = new FbxObject3D;
+	bulletObject_->Initialize();
+	bulletObject_->SetModel(model);
 
 	//座標、スピードをセット
 	this->position_ = position;
@@ -40,44 +31,4 @@ void EnemyBullet::Initialize(FbxModel* model, const XMFLOAT3& position, const Ve
 	//X軸周り角度
 	this->rotation_.x = std::atan2(-velocity_.y, length);
 
-}
-
-void EnemyBullet::Update()
-{
-	Move();
-
-	//一定時間経過で弾削除
-	if (--deathTimer_ <= 0) {
-		isDead_ = true;
-	}
-
-	EnemyBulletObject_->SetPosition(position_);
-	EnemyBulletObject_->SetScale(scale_);
-	EnemyBulletObject_->SetRotate(rotation_);
-	EnemyBulletObject_->Update();
-}
-
-void EnemyBullet::Draw(ID3D12GraphicsCommandList* cmdList)
-{
-	EnemyBulletObject_->Draw(cmdList);
-}
-
-void EnemyBullet::Move()
-{
-	VecAddXMFLOAT3(position_, velocity_);
-}
-
-void EnemyBullet::OnCollision()
-{
-	isDead_ = true;
-}
-
-CollisionData EnemyBullet::GetColData() const
-{
-	CollisionData colData;
-
-	colData.position = this->position_;
-	colData.size = this->colSize_;
-
-	return colData;
 }
