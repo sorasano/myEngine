@@ -140,6 +140,8 @@ private:
 private:	//メンバ変数
 	//使用するテクスチャの番号
 	int textureNum_ = 0;
+	//頂点バッファ
+	ComPtr<ID3D12Resource> vertBuff_ = nullptr;
 	//頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vbView_ = {};
 	//頂点データ
