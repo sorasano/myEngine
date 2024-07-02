@@ -23,6 +23,7 @@ void Player::Initialize()
 	playerModel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("player"));
 	bulletModel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("playerBullet"));
 	barrierModel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("playerBarrier"));
+	shadowModel_.reset(FbxLoader::GetInstance()->LoadShadowModelFromFile("player"));
 
 	//3dオブジェクト生成とモデルのセット
 	std::unique_ptr<FbxObject3D> newPlayerObject = std::make_unique<FbxObject3D>();
@@ -45,7 +46,7 @@ void Player::Initialize()
 
 	//影
 	std::unique_ptr<Shadow> newShadow = std::make_unique<Shadow>();
-	newShadow->Initialize(FbxLoader::GetInstance()->LoadShadowModelFromFile("player"));
+	newShadow->Initialize(shadowModel_.get());
 	shadow_.swap(newShadow);
 	//スプライト
 

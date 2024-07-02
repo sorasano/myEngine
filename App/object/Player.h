@@ -254,6 +254,7 @@ private:
 	std::unique_ptr<FbxModel> playerModel_ = nullptr;
 	std::unique_ptr<FbxModel> bulletModel_ = nullptr;
 	std::unique_ptr<FbxModel> barrierModel_ = nullptr;
+	std::unique_ptr<FbxModel> shadowModel_ = nullptr;
 
 	//入力
 	MyEngine::Input* input_ = nullptr;
